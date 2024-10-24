@@ -1,0 +1,100 @@
+and ISUB) as well as two logical (Boolean) operations (IAND and IOR) can be performed using the two top words on the stack as operands. In all the arithmetic and
+logical operations, two words are popped from the stack and the result pushed back
+onto it. Four branch instructions are provided, one unconditional (GOTO) and three
+conditional ones (IFEQ, IFLT, and IF ICMPEQ). All the branch instructions, if taken,
+adjust the value of PC by the size of their (16-bit signed) offset, which follows the
+opcode in the instruction. This offset is added to the address of the opcode. There
+
+SEC. 4.2
+
+AN EXAMPLE ISA: IJVM
+
+263
+
+are also IJVM instructions for swapping the top two words on the stack (SWAP),
+duplicating the top word (DUP), and removing it (POP).
+Some instructions have multiple formats, allowing a short form for commonly
+used versions. In IJVM we have included two of the various mechanisms JVM
+uses to accomplish this. In one case we have skipped the short form in favor of the
+more general one. In another case we show how the prefix instruction WIDE can be
+used to modify the ensuing instruction.
+Finally, there is an instruction (INVOKEVIRTUAL) for invoking another method,
+and another instruction (IRETURN) for exiting the method and returning control to
+the method that invoked it. Due to the complexity of the mechanism we have
+slightly simplified the definition, making it possible to produce a straightforward
+mechanism for invoking a call and return. The restriction is that, unlike Java, we
+allow a method to invoke only a method existing within its own object. This
+restriction severely cripples the object orientation but allows us to present a much
+simpler mechanism, by avoiding the requirement to locate the method dynamically.
+(If you are not familiar with object-oriented programming, you can safely ignore
+this remark. What we have done is turn Java back into a nonobject-oriented language, such as C or Pascal.) On all computers except JVM, the address of the procedure to call is determined directly by the CALL instruction, so our approach is actually the normal case, not the exception.
+The mechanism for invoking a method is as follows. First, the callr pushes
+onto the stack a reference (pointer) to the object to be called. (This reference is not
+needed in IJVM since no other object may be specified, but it is retained for consistency with JVM.) In Fig. 4-12(a) this reference is indicated by OBJREF. Then
+the caller pushes the method’s parameters onto the stack, in this example, Parameter 1, Parameter 2, and Parameter 3. Finally, INVOKEVIRTUAL is executed.
+The INVOKEVIRTUAL instruction includes a displacement which indicates the
+position in the constant pool that contains the start address within the nethod area
+for the method being invoked. However, while the method code resides at the location pointed to by this pointer, the first 4 bytes in the method area contain special
+data. The first 2 bytes are interpreted as a 16-bit integer indicating the number of
+parameters for the method (the parameters themselves have previously been
+pushed onto the stack). For this count, OBJREF is counted as a parameter: parameter 0. This 16-bit integer, together with the value of SP, provides the location of
+OBJREF. Note that LV points to OBJREF rather than the first real parameter. The
+choice of where LV points is somewhat arbitrary.
+The second 2 bytes in the method area are interpreted as another 16-bit integer
+indicating the size of the local variable area for the method being invoked. This is
+necessary because a new stack will be established for the method, beginning immediately above the local variable frame. Finally, the fifth byte in the method area
+contains the first opcode to be executed.
+The actual sequence that occurs for INVOKEVIRTUAL is as follows and is
+depicted in Fig. 4-12. The two unsigned index bytes that follow the opcode are
+
+264
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+Stack after
+INVOKEVIRTUAL
+Caller's LV
+Caller's PC
+Space for
+caller's local
+variables
+
+Stack before
+INVOKEVIRTUAL
+Pushed
+parameters
+
+Caller's
+local
+variable
+frame
+
+Parameter 3
+Parameter 2
+Parameter 1
+OBJREF
+Previous LV
+Previous PC
+
+SP
+
+Caller's
+local
+variables
+Parameter 2
+Parameter 1
+Link ptr
+(a)
+
+SP
+
+Stack base
+after
+INVOKEVIRTUAL
+
+Stack base
+before
+INVOKEVIRTUAL
+LV
+

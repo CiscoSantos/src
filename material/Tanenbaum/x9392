@@ -1,0 +1,100 @@
+Message-passing interface, 637–639
+Message-passing multicomputer, 616–652
+Metal oxide semiconductor, 150
+Method, 392
+Method area, 260
+Metric units, 49–50
+MFT (see Master File Table)
+Mic-1, 253, 253–258, 267–282
+Mic-2, 291–293
+Mic-3, 293–300
+Mic-4, 300–303
+Mickey, 120
+Micro assembly language, 268–271
+Micro-op cache, 325
+Micro-operation, 300
+
+761
+
+INDEX
+Microarchitecture,
+ARM, 329–324
+ATmega168, 334–336
+Core i7, 323–329
+Mic-1, 267–282
+Mic-2, 291–293
+Mic-3, 293–300
+Mic-4, 300–303
+OMAP4430, 329–334
+three-bus, 287
+Microarchitecture level, 6, 243–338
+design, 283–303
+examples, 323–336
+Microarchitecture of the Core i7 CPU, 323
+Microcode, 11–13
+Microcontroller, 33–35
+Microdrive, 137
+Microinstruction, 62, 251–258
+Microinstruction register, 255
+Microprogram, 6, 695
+Microprogram counter, 255
+Microprogramming, 9, 12–13
+Microsoft assembler, 520
+Microstep, 297
+Milestones in computer architecture, 13–28
+MIMD (see Multiple Instruction stream
+Multiple Data stream computer)
+Minislot, 134
+MIPS, 14
+MIPS computer, 62
+MIR (see MicroInstruction Register)
+Miss ratio, 84
+MMU (see Memory Management Unit)
+MMX (see MultiMedia eXtensions)
+Mnemonic, 692, 715
+Modem, 127–129
+Modulation, 128
+Modulator demodulator, 128
+Monadic operations, 388–390
+Monitor, 115–117
+Moore, Gordon, 28
+Moore’s law, 28
+MOS (see Metal Oxide Semiconductor)
+Motherboard, 108
+Motif, 485
+Motion Picture Experts Group, 571
+Motorola 68000, 61
+Mouse, 118–120
+MPC (see MicroProgram Counter)
+MPEG-2, 571
+
+MPI (see Message Passing Interface)
+MPP (see Massively Parallel Processor)
+MS-DOS, 25
+Multicomputer, 73, 587–591, 616–652, 621–631
+BlueGene, 622–626
+Google cluster, 632–636
+MPP, 593
+Red Storm, 626–631
+Multicomputer performance, 650–652
+Multicomputer software, 636–639, 636–646
+MULTICS (see MULTiplexed Information and
+Computing Service)
+Multilevel machine, 5–13
+Multilevel machines, evolution, 8–13
+Multimedia extensions, 41
+Multiple instruction stream multiple data
+stream computer, 591–592
+Multiplexed bus, 191
+Multiplexed information and computing
+service, 454–455, 545–547
+Multiplexer, 159–161
+Multiprocessor, 72–73, 586–616
+COMA, 614–616
+Core i7, 569
+heterogeneous, 570–574
+NUMA, 606–610
+symmetric, 587, 598–606
+vs. multicomputer, 586–593
+Multiprogramming, 22
+Multisession CD-ROM, 105

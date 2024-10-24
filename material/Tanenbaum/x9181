@@ -1,0 +1,100 @@
+ADD, and BEQ.
+Most modern computers have a memory that is organized as a sequence of
+bytes, with 4 or 8 bytes grouped together into words. There are normally also between 8 and 32 registers present, each one containing one word. On some machines (e.g., Core i7), references to words in memory do not have to be aligned on
+natural boundaries in memory, while on others (e.g., OMAP4430 ARM), they must
+be. But even if words do not have to be aligned, performance is better if they are.
+Instructions generally have one, two, or three operands, which are addressed
+using immediate, direct, register, indexed, or other addressing modes. Some machines have a large number of complex addressing modes. In many cases, compilers are unable to use them in a effective way, so they are unused. Instructions are
+generally available for moving data, dyadic and monadic operations, including
+arithmetic and Boolean operations, branches, procedure calls, and loops, and
+sometimes for I/O. Typical instructions move a word from memory to a register
+(or vice versa), add, subtract, multiply, or divide two registers or a register and a
+memory word, or compare two items in registers or memory. It is not unusual for a
+computer to have well over 200 instructions in its repertoire. CISC machines often
+have many more.
+Control flow at level 2 is achieved using a variety of primitives, including
+branches, procedure calls, coroutine calls, traps, and interrupts. Branches are used
+to terminate one instruction sequence and begin a new one at a (possibly distant)
+location in memory. Procedures are used as an abstraction mechanism, to allow a
+part of the program to be isolated as a unit and called from multiple places.
+Abstraction using procedures in one form or another is the basis of all modern programming. Without procedures or the equivalent, it would be impossible to write
+any modern software. Coroutines allow two threads of control to work simultaneously. Traps are used to signal exceptional situations, such as arithmetic overflow. Interrupts allow I/O to take place in parallel with the main computation, with
+the CPU getting a signal as soon as the I/O has been completed.
+The Towers of Hanoi is a fun little problem with a nice recursive solution that
+we examined. Iterative solutions to it have been found, but they are far more complicated and less elegant than the recursive one we studied.
+Last, the IA-64 architecture uses the EPIC model of computing to make it easy
+for programs to exploit parallelism. It uses instruction groups, predication, and
+speculative LOADs to gain speed. All in all, it may represent a significant advance
+over the Core i7, but it puts much of the burden of parallelization on the compiler.
+Still, doing work at compile time is always better than doing it at run time.
+
+SEC. 5.9
+
+SUMMARY
+
+431
+
+PROBLEMS
+1. A word on a little-endian computer with 32-bit words has the numerical value of 3. If
+it is transmitted to a big-endian computer byte by byte and stored there, with byte 0 in
+byte 0, byte 1 in byte 1, and so forth, what is its numerical value on the big endian machine if read as a 32-bit integer?
+2. Various computers and operating systems in the past have used separate instruction and
+data spaces, allowing up to 2k program addresses and also 2k data addresses using a kbit address. For example, for k = 32, a program could access 4 GB of instructions and
+also 4 GB of data, for a total address space of 8 GB. Since it is impossible for a program to overwrite itself when this scheme is in use, how could the operating system
+load programs into memory?
+3. Design an expanding opcode to allow all the following to be encoded in a 32-bit instruction:
+15 instructions with two 12-bit addresses and one 4-bit register number
+650 instructions with one 12-bit address and one 4-bit register number
+80 instructions with no addresses or registers
+4. A certain machine has 16-bit instructions and 6-bit addresses. Some instructions have
+one address and others have two. If there are n two-address instructions, what is the
+maximum number of one-address instructions?
+5. Is it possible to design an expanding opcode to allow the following to be encoded in a
+12-bit instruction? A register is 3 bits.
+4 instructions with three registers
+255 instructions with one register
+16 instructions with zero registers
+6. Given the memory values below and a one-address machine with an accumulator, what
+values do the following instructions load into the accumulator?
+word 20 contains 40
+word 30 contains 50
+word 40 contains 60
+word 50 contains 70
+a.
+b.
+c.
+d.
+e.
+f.
+
+LOAD IMMEDIATE 20
+LOAD DIRECT 20
+LOAD INDIRECT 20
+LOAD IMMEDIATE 30
+LOAD DIRECT 30
+LOAD INDIRECT 30
+
+7. Compare 0-, 1-, 2-, and 3-address machines by writing programs to compute
+X = (A + B × C) / (D − E × F)
+for each of the four machines. The instructions available for use are as follows:
+
+432
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+0 Address
+
+1 Address
+
+2 Address
+
+PUSH M
+POP M
+ADD
+SUB
+MUL
+DIV
+
+LOAD M
+STORE M
+ADD M

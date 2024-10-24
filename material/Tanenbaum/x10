@@ -1,0 +1,100 @@
+the digital computer. In retrospect, this would not be a bad patent to own. After
+years of litigation, the courts decided that the Eckert-Mauchley patent was invalid
+and that John Atanasoff invented the digital computer, even though he never
+patented it, effectively putting the invention in the public domain.
+
+18
+
+INTRODUCTION
+
+CHAP. 1
+
+While Eckert and Mauchley were working on the EDVAC, one of the people
+involved in the ENIAC project, John von Neumann, went to Princeton’s Institute of
+Advanced Studies to build his own version of the EDVAC, the IAS machine. Von
+Neumann was a genius in the same league as Leonardo Da Vinci. He spoke many
+languages, was an expert in the physical sciences and mathematics, and had total
+recall of everything he ever heard, saw, or read. He was able to quote verbatim
+from memory the text of books he had read years earlier. At the time he became
+interested in computers, he was already the most eminent mathematician in the
+world.
+It was soon apparent to him that programming computers with huge numbers
+of switches and cables was slow, tedious, and inflexible. He came to realize that
+the program could be represented in digital form in the computer’s memory, along
+with the data. He also saw that the clumsy serial decimal arithmetic used by the
+ENIAC, with each digit represented by 10 vacuum tubes (1 on and 9 off) could be
+replaced by using parallel binary arithmetic, something Atanasoff had realized
+years earlier.
+The basic design, which he first described, is now known as a von Neumann
+machine. It was used in the EDSAC, the first stored-program computer, and even
+now, more than half a century later, is still the basis for nearly all digital computers. This design, and the IAS machine, built in collaboration with Herman
+Goldstine, has had such an enormous influence that it is worth describing briefly.
+Although Von Neumann’s name is always attached to this design, Goldstine and
+others made major contributions to it as well. A sketch of the architecture is given
+in Fig. 1-5.
+Memory
+
+Control
+unit
+
+Arithmetic
+logic unit
+
+Input
+
+Output
+Accumulator
+
+Figure 1-5. The original von Neumann machine.
+
+The von Neumann machine had five basic parts: the memory, the arithmetic
+logic unit, the control unit, and the input and output equipment. The memory consisted of 4096 words, a word holding 40 bits, each a 0 or a 1. Each word held either two 20-bit instructions or a 40-bit signed integer. The instructions had 8 bits
+devoted to telling the instruction type and 12 bits for specifying one of the 4096
+
+SEC. 1.2
+
+MILESTONES IN COMPUTER ARCHITECTURE
+
+19
+
+memory words. Together, the arithmetic logic unit and the control unit formed the
+‘‘brain’’ of the computer. In modern computers they are combined onto a single
+chip called the CPU (Central Processing Unit).
+Inside the arithmetic logic unit was a special internal 40-bit register called the
+accumulator. A typical instruction added a word of memory to the accumulator
+or stored the contents of the accumulator in memory. The machine did not have
+floating-point arithmetic because von Neumann felt that any competent mathematician ought to be able to keep track of the decimal point (actually the binary point)
+in his or her head.
+At about the same time von Neumann was building the IAS machine, researchers at M.I.T. were also building a computer. Unlike IAS, ENIAC and other
+machines of its type, which had long word lengths and were intended for heavy
+number crunching, the M.I.T. machine, the Whirlwind I, had a 16-bit word and was
+designed for real-time control. This project led to the invention of the magnetic
+core memory by Jay Forrester, and then eventually to the first commercial
+minicomputer.
+While all this was going on, IBM was a small company engaged in the business of producing card punches and mechanical card-sorting machines. Although
+IBM had provided some of Aiken’s financing, it was not terribly interested in computers until it produced the 701 in 1953, long after Eckert and Mauchley’s company was number one in the commercial market with its UNIVAC computer. The
+701 had 2048 36-bit words, with two instructions per word. It was the first in a
+series of scientific machines that came to dominate the industry within a decade.
+Three years later came the 704, which initially had 4096 words of core memory,
+36-bit instructions, and a new innovation, floating-point hardware. In 1958, IBM
+began production of its last vacuum-tube machine, the 709, which was basically a
+beefed-up 704.
+
+1.2.3 The Second Generation—Transistors (1955–1965)
+The transistor was invented at Bell Labs in 1948 by John Bardeen, Walter Brattain, and William Shockley, for which they were awarded the 1956 Nobel Prize in
+physics. Within 10 years the transistor revolutionized computers, and by the late
+1950s, vacuum tube computers were obsolete. The first transistorized computer
+was built at M.I.T.’s Lincoln Laboratory, a 16-bit machine along the lines of the
+Whirlwind I. It was called the TX-0 (Transistorized eXperimental computer 0)
+and was merely intended as a device to test the much fancier TX-2.
+The TX-2 never amounted to much, but one of the engineers working at the
+Laboratory, Kenneth Olsen, formed a company, Digital Equipment Corporation
+(DEC), in 1957 to manufacture a commercial machine much like the TX-0. It was
+four years before this machine, the PDP-1, appeared, primarily because the venture
+capitalists who funded DEC firmly believed that there was no market for computers. After all, T.J. Watson, former president of IBM, once said that the world
+
+20
+
+INTRODUCTION
+
+CHAP. 1

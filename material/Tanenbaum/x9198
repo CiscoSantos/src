@@ -1,0 +1,100 @@
+64K virtual
+Offset
+page no.
+
+1M virtual
+Offset
+page no.
+
+16M virtual
+Offset
+page no.
+
+Physical
+Address
+
+4K page
+frame
+
+Offset
+
+64K page
+Offset
+frame
+
+1M page
+frame
+
+Offset
+
+16M page
+Offset
+frame
+
+20
+
+12
+
+12
+
+20
+
+Bits
+
+20
+
+12
+
+16
+
+16
+
+16
+
+16
+
+12
+
+20
+
+10
+
+10
+
+22
+
+22
+
+Figure 6-17. Virtual-to-physical mappings on the OMAP4430 ARM CPU.
+
+The OMAP4430 ARM CPU uses a page-table structure similar to that of the
+Core i7. The page-table mapping for a 4-KB virtual address page is shown in
+Fig. 6-18(a). The first-level descriptor table is indexed with the most significant 12
+bits of the virtual address. The first-level descriptor-table entry indicates the physical address of the second-level descriptor table. This address, combined with the
+next 8 bits of the virtual address, produce the page-descriptor address. The page
+descriptor contains the address of the physical page frame plus permission information regarding page accesses.
+
+SEC. 6.1
+
+461
+
+VIRTUAL MEMORY
+
+The OMAP4430 ARM CPU virtual memory mapping accommodates four
+page sizes. Page sizes of 1 MB and 16 MB are mapped with a page descriptor located in the first-level descriptor table. There is no need for second-level tables in
+this case, as all of the entries would point to the same large physical page. The
+64-KB pages descriptors are located in the second-level descriptor table. Because
+each entry of the second-level descriptor table maps 4 KB of virtual address page
+to a 4-KB physical address page, 64-KB pages require 16 identical descriptors in
+the second-level descriptor table. Now why would any sane OS programmer
+declare a page as 64 KB in size when the same space would be required to map the
+page to more flexible 4-KB pages? Because, as we will see shortly, 64-KB pages
+require fewer TLB entries, which are a critical resource to good performance.
+Nothing slows a program down more than a constricting memory bottleneck. If
+you were keeping score in Fig. 6-18, you probably noticed that for every program
+memory access two additional memory accesses are required for address translation. This 200% overhead in memory accesses for virtual address translation would
+bring any program to a crawl. To avoid this bottleneck, the OMAP4430 ARM CPU
+incorporates a hardware table called a TLB (Translation Lookaside Buffer) that
+quickly maps virtual page numbers onto physical-page-frame numbers. For the
+4-KB page size, there are 220 virtual page numbers, which is over 1 million. Clearly, not all of them can be mapped.
+Page table (walked by MMU on TLB misses)

@@ -1,0 +1,100 @@
+Read in next-to-top word on stack
+H = top of stack
+Add top two words; write to new top of stack
+Read in next-to-top word on stack
+H = top of stack
+Subtract TOS from Fetched TOS-1
+Read in next-to-top word on stack
+H = top of stack
+AND Fetched TOS-1 with TOS
+Read in next-to-top word on stack
+H = top of stack
+OR Fetched TOS-1 with TOS
+Increment SP; copy to MAR
+Write new stack word
+Read in next-to-top word on stack
+Wait for read
+Copy new word to TOS
+Read 2nd word from stack; set MAR to SP
+Prepare to write new 2nd word
+Save new TOS; write 2nd word to stack
+Copy old TOS to MDR
+Write old TOS to 2nd place on stack
+Update TOS
+Set up MAR for writing to new top of stack
+Update stack in TOS and memory
+Move LV + index to MAR; read operand
+Increment SP; Move new SP to MAR
+Update stack in TOS and memory
+Set MAR to LV + index
+Copy TOS for storing
+Decrement SP; read new TOS
+Wait for read
+Update TOS
+Next address is 0x100 ored with opcode
+Identical to iload1 but using 2-byte index
+Identical to istore1 but using 2-byte index
+Same as wide iload1 but indexing off CPP
+Set MAR to LV + index for read
+Set H to constant
+Increment by constant and update
+Copy PC to H
+Add offset and update PC
+Have to wait for IFU to fetch new opcode
+Dispatch to next instruction
+Read in next-to-top word on stack
+Save TOS in OPC temporarily
+Put new top of stack in TOS
+Branch on N bit
+
+Figure 4-30. The microprogram for the Mic-2 (part 1 of 2).
+
+SEC. 4.4
+Label
+ifeq1
+ifeq2
+ifeq3
+ifeq4
+if icmpeq1
+if icmpeq2
+if icmpeq3
+if icmpeq4
+if icmpeq5
+if icmpeq6
+T
+F
+F2
+invokevirtual1
+invokevirtual2
+invokevirtual3
+invokevirtual4
+invokevirtual5
+invokevirtual6
+invokevirtual7
+invokevirtual8
+invokevirtual9
+invokevirtual10
+invokevirtual11
+ireturn1
+ireturn2
+ireturn3
+ireturn4
+ireturn5
+ireturn6
+ireturn7
+ireturn8
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+Operations
+MAR = SP = SP − 1; rd
+OPC = TOS
+TOS = MDR
+Z = OPC; if (Z) goto T; else goto F
+MAR = SP = SP − 1; rd
+MAR = SP = SP − 1
+H = MDR; rd
+OPC = TOS
+TOS = MDR
+Z = H − OPC; if (Z) goto T; else goto F
+H = PC − 1; goto goto2
+H = MBR2

@@ -1,0 +1,100 @@
+
+ICALL
+
+Indirect Call to (Z)
+
+STACK ← PC+2, PC ← Z (R30:R31)
+
+CALL
+
+Call
+
+STACK ← PC+2, PC ← IMM
+
+RET
+
+Return
+
+PC ← STACK
+
+CP DST,SRC
+
+Compare
+
+DST – SRC
+
+CPC DST,SRC
+
+Compare with Carry
+
+DST – SRC – C
+
+CPI DST,IMM
+
+Compare with Immediate
+
+DST – IMM
+
+BRcc IMM
+
+Branch on Condition
+
+if cc(true) PC ← PC + IMM + 1
+
+MOV DST,SRC
+
+Copy Register
+
+DST ← SRC
+
+MOVW DST,SRC
+
+Copy Register Pair
+
+DST+1:DST ← SRC+1:SRC
+
+LDI DST,IMM
+
+Load Immediate
+
+DST ← IMM
+
+LDS DST,IMM
+
+Load Direct
+
+DST ← MEM[IMM]
+
+LD DST,XYZ
+
+Load Indirect
+
+DST ← MEM[XYZ]
+
+LDD DST,XYZ+IMM
+
+Load Indirect with Displacement DST ← MEM[XYZ+IMM]
+
+STS IMM,SRC
+
+Store Direct
+
+MEM[IMM] ← SRC
+
+ST XYZ,SRC
+
+Store Indirect
+
+MEM[XYZ] ← SRC
+
+STD XYZ+IMM,SRC
+
+Store Indirect with Displacement MEM[XYZ+IMM] ← SRC
+
+PUSH REGLIST
+
+Push Register on Stack
+
+STACK ← REGLIST
+
+POP REGLIST

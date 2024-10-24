@@ -1,0 +1,100 @@
+Within each channel the line quality is constantly monitored and the data rate
+adjusted continuously as needed, so different channels may have different data
+rates. The actual data are sent using a combination of amplitude and phase modulation with up to 15 bits per baud. With, for example, 224 downstream channels
+and 15 bits/baud at 4000 baud, the downstream bandwidth is 13.44 Mbps. In practice, the signal-to-noise ratio is never good enough to achieve this rate, but 4–8
+Mbps is possible on short runs over high-quality loops.
+A typical ADSL arrangement is shown in Fig. 2-40. In this scheme, the user
+or a telephone company technician must install a NID (Network Interface Device) on the customer’s premises. This small plastic box marks the end of the telephone company’s property and the start of the customer’s property. Close to the
+NID (or sometimes combined with it) is a splitter, an analog filter that separates
+the 0–4000 Hz band used by POTS from the data. The POTS signal is routed to
+the existing telephone or fax machine, and the data signal is routed to an ADSL
+modem. The ADSL modem is actually a digital signal processor that has been set
+up to act as 250 modems operating in parallel at different frequencies. Since most
+current ADSL modems are external, the computer must be connected to it at high
+speed. Usually, this is done by putting an Ethernet card in the computer and operating a very short two-node Ethernet containing only the computer and ADSL
+modem. (Ethernet is a popular and inexpensive local area network standard.)
+Occasionally the USB port is used instead of Ethernet. In the future, internal
+ADSL modem cards will no doubt become available.
+
+Voice
+switch
+
+Telephone
+Codec
+Splitter
+
+Telephone
+line
+
+Splitter
+NID
+Computer
+
+DSLAM
+
+To ISP
+Telephone company end office
+
+ADSL
+modem
+
+Ethernet
+Customer premises
+
+Figure 2-40. A typical ADSL equipment configuration.
+
+At the other end of the wire, on the telco side, a corresponding splitter is installed. Here the voice portion of the signal is filtered out and sent to the normal
+
+132
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+voice switch. The signal above 26 kHz is routed to a new kind of device called a
+DSLAM (Digital Subscriber Line Access Multiplexer), which contains the same
+kind of digital signal processor as the ADSL modem. Once the digital signal has
+been recovered into a bit stream, packets are formed and sent off to the ISP.
+Internet over Cable
+Many cable TV companies are now offering Internet access over their cables.
+Since the technology is quite different from ADSL, it is worth looking at briefly.
+The cable operator in each city has a main office and a large number of boxes full
+of electronics, called headends, spread all over its territory. The headends are connected to the main office by high-bandwidth cables or fiber optics.
+Each headend has one or more cables that run from it past hundreds of homes
+and offices. Each cable customer taps onto the cable as it passes the customer’s
+premises. Thus hundreds of users share the same cable to the headend. Usually,
+the cable has a bandwidth of about 750 MHz. This system is radically different
+from ADSL because each telephone user has a private (i.e., not shared) wire to the
+telco office. However, in practice, having your own 1.1-MHz channel to a telco
+office is not that different than sharing a 200-MHz piece of cable spectrum to the
+headend with 400 users, half of whom are not using it at any one instant. It does
+mean, however, that a cable Internet user will get much better service at 4 A.M.
+than at 4 P.M, whereas ADSL service is constant all day long. People intent on getting optimal Internet over cable service might wish to consider moving to a rich
+neighborhood (houses far apart so fewer customers per cable) or a poor neighborhood (nobody can afford Internet service).
+Since the cable is a shared medium, determining who may send when and at
+which frequency is a big issue. To see how that works, we have to briefly describe
+how cable TV operates. Cable television channels in North America normally
+occupy the 54–550 MHz region (except for FM radio from 88 to 108 MHz). These
+channels are 6 MHz wide, including guard bands to prevent signal leakage between
+channels. In Europe the low end is usually 65 MHz and the channels are 6–8 MHz
+wide for the higher resolution required by PAL and SECAM, but otherwise the allocation scheme is similar. The low part of the band is not used for television
+transmission.
+When introducing Internet over cable, the cable companies had two problems
+to solve:
+1. How to add Internet access without interfering with TV programs.
+2. How to have two-way traffic when amplifiers are inherently one way.
+The solutions chosen are as follows. Modern cables have a bandwidth of at least
+550 MHz, often as much as 750 MHz or more. The upstream (i.e., user to headend) channels go in the 5–42 MHz band (but slightly higher in Europe) and the
+
+SEC. 2.4
+
+133
+
+INPUT/OUTPUT
+
+downstream (i.e., headend to user) traffic uses the frequencies at the high end, as illustrated in Fig. 2-41.
+5 42 54 88
+108
+
+Upstream
+frequencies

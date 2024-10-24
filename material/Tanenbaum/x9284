@@ -1,0 +1,100 @@
+(e)
+
+CPU 2 writes block A
+
+A
+Modified
+Bus
+
+CPU 1
+
+CPU 2
+
+CPU 3
+Memory
+
+(f)
+
+CPU 1 writes block A
+
+A
+Modified
+Bus
+
+Figure 8-28. The MESI cache coherence protocol.
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+603
+
+bus telling CPU 3 to please wait while it writes its line back to memory. When it is
+finished, CPU 3 fetches a copy, and the line is marked as shared in both caches, as
+shown in Fig. 8-28(d). After that, CPU 2 writes the line again, which invalidates
+the copy in CPU 3’s cache, as shown in Fig. 8-28(e).
+Finally, CPU 1 writes to a word in the line. CPU 2 sees that a write is being attempted and asserts a bus signal telling CPU 1 to please wait while it writes its line
+back to memory. When it is finished, it marks its own copy as invalid, since it
+knows another CPU is about to modify it. At this point we have the situation in
+which a CPU is writing to an uncached line. If the write-allocate policy is in use,
+the line will be loaded into the cache and marked as being in the M state, as shown
+in Fig. 8-28(f). If the write-allocate policy is not in use, the write will go directly
+to memory and the line will not be cached anywhere.
+UMA Multiprocessors Using Crossbar Switches
+Even with all possible optimizations, the use of a single bus limits the size of a
+UMA multiprocessor to about 16 or 32 CPUs. To go beyond that, a different kind
+of interconnection network is needed. The simplest circuit for connecting n CPUs
+to k memories is the crossbar switch, shown in Fig. 8-28. Crossbar switches have
+been used for decades within telephone switching exchanges to connect a group of
+incoming lines to a set of outgoing lines in an arbitrary way.
+At each intersection of a horizontal (incoming) and vertical (outgoing) line is a
+crosspoint. A crosspoint is a small switch that can be electrically opened or
+closed, depending on whether the horizontal and vertical lines are to be connected
+or not. In Fig. 8-29(a) we see three crosspoints closed simultaneously, allowing
+connections between the (CPU, memory) pairs (001, 000), (101, 101), and (110,
+010) at the same time. Many other combinations are also possible. In fact, the
+number of combinations is equal to the number of different ways eight rooks can
+be safely placed on a chess board.
+One of the nicest properties of the crossbar switch is that it is a nonblocking
+network, meaning that no CPU is ever denied the connection it needs because
+some crosspoint or line is already occupied (assuming the memory module itself is
+available). Furthermore, no advance planning is needed. Even if seven arbitrary
+connections are already set up, it is always possible to connect the remaining CPU
+to the remaining memory. We will later see interconnection schemes that do not
+have these properties.
+One of the worst properties of the crossbar switch is that the number of crosspoints grows as n2 . For medium-sized systems, a crossbar design is workable. We
+will discuss one such design, the Sun Fire E25K, later in this chapter. However,
+with 1000 CPUs and 1000 memory modules, we need a million crosspoints. Such
+a large crossbar switch is not feasible. We need something quite different.
+
+604
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+111
+
+110
+
+101
+
+100
+
+011
+
+010
+
+001
+
+000
+
+Memories
+Crosspoint
+switch is open
+
+000
+001
+
+CPUs
+

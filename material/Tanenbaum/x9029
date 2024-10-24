@@ -1,0 +1,100 @@
+CPUs have the arbiter built into the CPU chip, but sometimes a separate chip is
+needed. The bus contains a single wired-OR request line that can be asserted by
+one or more devices at any time. There is no way for the arbiter to tell how many
+devices have requested the bus. The only categories it can distinguish are some requests and no requests.
+When the arbiter sees a bus request, it issues a grant by asserting the bus grant
+line. This line is wired through all the I/O devices in series, like a cheap string of
+Christmas tree lamps. When the device physically closest to the arbiter sees the
+grant, it checks to see if it has made a request. If so, it takes over the bus but does
+not propagate the grant further down the line. If it has not made a request, it propagates the grant to the next device in line, which behaves the same way, and so on
+until some device accepts the grant and takes the bus. This scheme is called daisy
+chaining. It has the property that devices are effectively assigned priorities depending on how close to the arbiter they are. The closest device wins.
+To get around the implicit priorities based on distance from the arbiter, many
+buses have multiple priority levels. For each priority level there is a bus request
+line and a bus grant line. The one of Fig. 3-40(b) has two levels, 1 and 2 (real
+buses often have 4, 8, or 16 levels). Each device attaches to one of the bus request
+levels, with more time-critical devices attaching to the higher-priority ones. In
+Fig. 3-40(b) devices, 1, 2, and 4 use priority 1 while devices 3 and 5 use priority 2.
+If multiple priority levels are requested at the same time, the arbiter issues a
+grant only on the highest-priority one. Among devices of the same priority, daisy
+chaining is used. In Fig. 3-40(b), in the event of conflicts, device 2 beats device 4,
+which beats 3. Device 5 has the lowest-priority because it is at the end of the lowest priority daisy chain.
+
+SEC. 3.4
+
+197
+
+CPU CHIPS AND BUSES
+
+Bus request
+Bus grant
+Arbiter
+Bus grant
+may or may not
+be propagated along
+the chain
+
+1
+
+2
+
+3
+
+4
+
+5
+
+3
+
+4
+
+5
+
+I/O devices
+(a)
+
+Arbiter
+
+Bus request level 1
+Bus request level 2
+Bus grant level 2
+Bus grant level 1
+
+1
+
+2
+(b)
+
+Figure 3-40. (a) A centralized one-level bus arbiter using daisy chaining.
+(b) The same arbiter, but with two levels.
+
+As an aside, it is not technically necessary to wire the level 2 bus grant line
+serially through devices 1 and 2, since they cannot make requests on it. However,
+as an implementation convenience, it is easier to wire all the grant lines through all
+the devices, rather than making special wiring that depends on which device has
+which priority.
+Some arbiters have a third line that a device asserts when it has accepted a
+grant and seized the bus. As soon as it has asserted this acknowledgement line, the
+request and grant lines can be negated. As a result, other devices can request the
+bus while the first device is using the bus. By the time the current transfer is finished, the next bus master will have already been selected. It can start as soon as
+the acknowledgement line has been negated, at which time the following round of
+arbitration can begin. This scheme requires an extra bus line and more logic in
+each device, but it makes better use of bus cycles.
+In systems in which memory is on the main bus, the CPU must compete with
+all the I/O devices for the bus on nearly every cycle. One common solution for this
+situation is to give the CPU the lowest priority, so it gets the bus only when nobody
+else wants it. The idea here is that the CPU can always wait, but I/O devices frequently must acquire the bus quickly or lose incoming data. Disks rotating at high
+speed cannot wait. This problem is avoided in many modern computer systems by
+
+198
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+putting the memory on a separate bus from the I/O devices so they do not have to
+compete for access to the bus.
+Decentralized bus arbitration is also possible. For example, a computer could
+have 16 prioritized bus request lines. When a device wants to use the bus, it asserts
+its request line. All devices monitor all the request lines, so at the end of each bus
+cycle, each device knows whether it was the highest-priority requester, and thus

@@ -1,0 +1,100 @@
+Also, and perhaps most important, these platforms are carefully optimized for a
+few application domains: highly interactive applications with 3D graphics and multimedia output. Everything else is secondary. These hardware and software restrictions, lack of extensibility, small memories, absence of a high-resolution monitor,
+and small (or sometime absent) hard disk make it possible to build and sell these
+machines more cheaply than personal computers. Despite these restrictions, millions of these devices have been sold and their numbers are growing all the time.
+
+36
+
+INTRODUCTION
+
+CHAP. 1
+
+Mobile computers have the added requirement that they use as little energy as
+possible to perform their tasks. The less energy they use the longer their battery
+will last. This is a challenging design task because mobile platforms such as tablets
+and smartphones must be frugal in their energy use, but at the same time, users of
+these devices expect high-performance capabilities, such as 3D graphics, high-definition multimedia processing, and gaming.
+
+1.3.6 Personal Computers
+Next, we come to the personal computers that most people think of when they
+hear the term ‘‘computer.’’ These include desktop and notebook models. They
+usually come with a few gigabytes of memory, a hard disk holding up to terabytes
+of data, a CD-ROM/DVD/Blu-ray drive, sound card, network interface,
+high-resolution monitor, and other peripherals. They have elaborate operating systems, many expansion options, and a huge range of available software.
+The heart of every personal computer is a printed circuit board at the bottom or
+side of the case. It usually contains the CPU, memory, various I/O devices (such as
+a sound chip and possibly a modem), as well as interfaces to the keyboard, mouse,
+disk, network, etc., and some expansion slots. A photo of one of these circuit
+boards is given in Fig. 1-10.
+Notebook computers are basically PCs in a smaller package. They use the
+same hardware components, but manufactured in smaller sizes. They also run the
+same software as desktop PCs. Since most readers are probably quite familiar with
+notebook and personal computers, additional introductory material is hardly needed.
+Yet another variant on this theme is the tablet computer, such as the popular
+iPad. These devices are just normal PCs in a smaller package, with a solid-state
+disk instead of a rotating hard disk, a touch screen, and a different CPU than the
+x86. But from an architectural perspective, tablets are just notebooks with a different form factor.
+
+1.3.7 Servers
+Beefed-up personal computers or workstations are often used as network servers, both for local area networks (typically within a single company), and for the
+Internet. These come in single-processor and multiple-processor configurations,
+and have gigabytes of memory, terabytes of hard disk space, and high-speed networking capability. Some of them can handle thousands of transactions per second.
+Architecturally, however, a single-processor server is not really very different
+from a single-processor personal computer. It is just faster, bigger, and has more
+disk space and possibly a faster network connection. Servers run the same operating systems as personal computers, typically some flavor of UNIX or Windows.
+
+SEC. 1.3
+
+THE COMPUTER ZOO
+
+37
+
+Figure 1-10. A printed circuit board is at the heart of every personal computer.
+This one is the Intel DQ67SW board. © 2011 Intel Corporation. Used by permission.
+
+Clusters
+Owing to almost continuous improvements in the price/performance ratio of
+servers, in recent years system designers have begun connecting large numbers of
+them together to form clusters. They consist of standard server-class systems connected by gigabit/sec networks and running special software that allow all the machines to work together on a single problem, often in business, science or engineering. Normally, they are what are called COTS (Commodity Off The Shelf) computers that anyone can buy from a PC vendor. The main addition is high-speed networking, but sometimes that is also a standard commercial network card, too.
+Large clusters are typically housed in special-purpose rooms or buildings called data centers. Data centers can scale quite large, from a handful of machines to
+100,000 or more of them. Usually, the amount of money available is the limiting
+factor. Owing to their low component price, individual companies can now own
+such machines for internal use. Many people use the terms ‘‘cluster’’ and ‘‘data
+center’’ interchangeably although technically the former is the collection of servers
+and the latter is the room or building.
+A common use for a cluster is as an Internet Web server. When a Website expects thousands of requests per second for its pages, the most economical solution
+
+38
+
+INTRODUCTION
+
+CHAP. 1
+
+is often to build a data center with hundreds, or even thousands, of servers. The incoming requests are then sprayed among the servers to allow them to be processed
+in parallel. For example, Google has data centers all over the world to service
+search requests, the largest one, in The Dalles, Oregon, is a facility that is as large
+as two (U.S.) football fields. The location was chosen because data centers require
+vast amounts of electric power and The Dalles is the site of a 2 GW hydroelectric
+dam on the Columbia River that can provide it. Altogether, Google is thought to
+have more than 1,000,000 servers in its data centers.
+The computer business is a dynamic one, with things changing all the time. In
+the 1960s, computing was dominated by giant mainframe computers (see below)
+costing tens of millions of dollars to which users connected using small remote terminals. This was a very centralized model. Then in the 1980s personal computers
+arrived on the scene, millions of people bought one, and computing was decentralized.
+With the advent of data centers, we are starting to relive the past in the form of
+cloud computing, which is mainframe computing V2.0. The idea here is that
+everyone will have one or more simple devices, including PCs, notebooks, tablets,
+and smartphones that are essentially user interfaces to the cloud (i.e, the data center) where all the user’s photos, videos, music, and other data are stored. In this
+model, the data are accessible from different devices anywhere and at any time
+without the user having to keep track of where they are. Here, the data center full
+of servers has replaced the single large centralized computer, but the paradigm has
+reverted back to the old one: the users have simple terminals and data and computing power is centralized somewhere else.
+Who knows how long this model will be popular? It could easily happen in 10
+years that so many people have stored so many songs, photos, and videos in the
+cloud that the (wireless) infrastructure for communicating with it has become completely bogged down. This could lead to a new revolution: personal computers,
+where people store their own data on their own machines locally, thus bypassing
+the traffic jam over the air.
+The take-home message here is that the model of computing popular in a given
+era depends a lot on the technology, economics, and applications available at the
+time and can change when these factors change.
+

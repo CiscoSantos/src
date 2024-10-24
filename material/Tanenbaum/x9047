@@ -1,0 +1,100 @@
+The REQ# and GNT# signals are for doing bus arbitration. These are not
+asserted by the current bus master, but rather by a device that wants to become bus
+master. The last mandatory signal is RST#, used for resetting the system, either due
+to the user pushing the RESET button or some system device noticing a fatal error.
+Asserting this signal resets all devices and reboots the computer.
+Now we come to the optional signals, most of which relate to the expansion
+from 32 bits to 64 bits. The REQ64# and ACK64# signals allow the master to ask
+permission to conduct a 64-bit transaction and allow the slave to accept, respectively. The AD, PAR64, and C/BE# signals are just extensions of the corresponding 32-bit signals.
+The next three signals are not related to 32 bits vs. 64 bits, but to multiprocessor systems, something that PCI boards are not required to support. The LOCK signal allows the bus to be locked for multiple transactions. The next two relate to
+bus snooping to maintain cache coherence.
+The INTx signals are for requesting interrupts. A PCI card can have up to four
+separate logical devices on it, and each one can have its own interrupt request line.
+The JTAG signals are for the IEEE 1149.1 JTAG testing procedure. Finally, the
+M66EN signal is either wired high or wired low, to set the clock speed. It must not
+change during system operation.
+PCI Bus Transactions
+The PCI bus is really very simple (as buses go). To get a better feel for it, consider the timing diagram of Fig. 3-55. Here we see a read transaction, followed by
+an idle cycle, followed by a write transaction by the same bus master.
+When the falling edge of the clock happens during T 1 , the master puts the
+memory address on AD and the bus command on C/BE#. It then asserts FRAME# to
+start the bus transaction.
+During T 2 , the master floats the address bus to let it turn around in preparation
+for the slave to drive it during T 3 . The master also changes C/BE# to indicate which
+bytes in the word addressed it wants to enable (i.e., read in).
+In T 3 , the slave asserts DEVSEL# so the master knows it got the address and is
+planning to respond. It also puts the data on the AD lines and asserts TRDY# to tell
+the master that it has done so. If the slave were not able to respond so quickly, it
+would still assert DEVSEL# to announce its presence but keep TRDY# negated until it
+could get the data out there. This procedure would introduce one or more wait
+states.
+In this example (and often in reality), the next cycle is idle. Starting in T 5 we
+see the same master initiating a write. It starts out by putting the address and command onto the bus, as usual. Only now, in the second cycle it asserts the data.
+Since the same device is driving the AD lines, there is no need for a turnaround
+cycle. In T 7 , the memory accepts the data.
+
+SEC. 3.6
+
+223
+
+EXAMPLE BUSES
+
+Bus cycle
+Read
+
+T1
+
+Idle
+
+T2
+
+T3
+
+T4
+
+Write
+
+T5
+
+T6
+
+T7
+
+Φ
+Turnaround
+AD
+C/BE#
+
+Address
+Read cmd
+
+Data
+Enable
+
+Address
+
+Data
+
+Write cmd
+
+Enable
+
+FRAME#
+IRDY#
+DEVSEL#
+TRDY#
+
+Figure 3-55. Examples of 32-bit PCI bus transactions. The first three cycles are
+used for a read operation, then an idle cycle, and then three cycles for a write operation.
+
+3.6.2 PCI Express
+Although the PCI bus works adequately for most current applications, the need
+for greater I/O bandwidth is making a mess of the once-clean internal PC architecture. In Fig. 3-52, it is clear that the PCI bus is no longer the central element that
+holds the parts of the PC together. The bridge chip has taken over part of that role.
+The essence of the problem is that increasingly many I/O devices are too fast
+for the PCI bus. Cranking up the clock frequency on the bus is not a good solution
+because then problems with bus skew, crosstalk between the wires, and capacitance
+effects just get worse. Every time an I/O device gets too fast for the PCI bus (like
+the graphics card, hard disk, network, etc.), Intel adds a new special port to the
+bridge chip to allow that device to bypass the PCI bus. Clearly, this is not a longterm solution either.
+Another problem with the PCI bus is that the cards are quite large. Standard

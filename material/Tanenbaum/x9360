@@ -1,0 +1,100 @@
+with the ANSI standard commands for terminals. On UNIX or Linux machines, the
+terminal emulator in the X-window system usually meets the requirements. On
+Windows machines, the ansi.sys driver usually has to be loaded in the system initialization files as described below. In the tracer examples, we have already seen
+the layout of the tracer window. As can be seen in Fig. C-10, the tracer screen is
+subdivided into seven windows.
+
+722
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+Program t e x t
+
+Processor
+with
+
+APP. C
+
+Stack
+
+registers
+
+Source file
+
+Subroutine
+c a l l stack
+
+E r r o r output field
+
+Interpreter
+commands
+
+Output field
+
+I n p u t field
+
+V a l u e s of g l o b a l v a r i a b l e s
+D a t a segment
+Figure C-10. The tracer’s windows.
+
+The upper left window is the processor window, which displays the general
+registers in decimal notation and the other registers in hexadecimal. Since the
+numerical value of the program counter is not very instructive, the position in the
+program source code with respect to the previous global label is supplied on the
+line below it. Above the program counter field, five condition codes are shown.
+Overflow is indicated by a ‘‘v’’, the direction flag by ‘‘>’’ for increasing and by
+‘‘<’’ for decreasing. The sign flag is either ‘‘n’’, for negative or ‘‘p’’ for zero and
+positive. The zero flag is ‘‘z’’ if set, and the carry flag set is ‘‘c’’. A ‘‘−’’ indicates
+a cleared flag.
+The upper middle window is used for the stack, displayed in hexadecimal. The
+stack pointer position is indicated with an arrow =>’’. Return addresses of subroutines are indicated by a digit in front of the hexadecimal value. The upper right
+window displays a part of the source file in the neighborhood of the next instruction to be executed. The position of the program counter is also indicated by an
+arrow ‘‘=>’’.
+In the window under the processor, the most recent source code subroutine call
+positions are displayed. Directly under it is the tracer command window, which
+has the previously-issued command on top and the command cursor on the bottom.
+Note that every command needs to be followed by a carriage return (labeled Enter
+on PC keyboards).
+The bottom window can contain six items of global data memory. Every item
+starts with a position relative to some label, followed by the absolute position in
+the data segment. Next comes a colon, then eight bytes in hexadecimal. The next
+11 positions are reserved for characters, followed by four decimal word representations. The bytes, the characters, and the words each represent the same memory
+
+SEC. C.6
+
+THE TRACER
+
+723
+
+contents, although for the character representation we have three extra bytes. This
+is convenient, because it is not clear from the start whether the data will be used as
+signed or unsigned integers, or as a string.
+The middle right window is used for input and output. The first line is for
+error output of the tracer, the second line for input, and then there are some lines
+left for output. Error output is preceded by the letter ‘‘E’’, input by an ‘‘I’’, and
+standard output by a ‘‘>’’. In the input line there is an arrow ‘‘->’’ to indicate the
+pointer which is to be read next. If the program calls read or getchar, the next input
+in the tracer command line is going into the input field. Also, in this case, it is necessary to close the input line with a return. The part of the line which has not yet
+processed can be found after the ‘‘->’’ arrow.
+Usually, the tracer reads both its commands and its input from standard input.
+However, it is also possible to prepare a file of tracer commands and a file of input
+lines to be read before the control is passed to the standard input. Tracer command
+files have extensions .t and input files .i. In the assembly language, both uppercase
+and lowercase characters can be used for keywords, system subroutines and pseudoinstructions. During the assembly process, a file with extension .$ is made in
+which those lowercase keywords are translated into uppercase and carriage return
+characters are discarded. In this way, for each project, say, pr we can have up to
+six different files:
+1. pr.s for the assembly source code.
+2. pr.$ for the composite source file.
+3. pr.88 for the load file.
+4. pr.i for preset standard input.
+5. pr.t for preset tracer commands.
+6. pr.# for linking the assembly code to the load file.
+The last file is used by the tracer to fill the upper right window and the program
+counter field in the display. Also, the tracer checks whether the load file has been
+created after the last modification of the program source; if not it issues a warning.
+
+C.6.1 Tracer Commands
+Figure C-11 lists the tracer commands. The most important ones are the single
+return command, which is at the first line of the table and which executes exactly
+one processor instruction, and the quit command q, at the bottom line of the table.

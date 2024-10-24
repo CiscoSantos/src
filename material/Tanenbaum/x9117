@@ -1,0 +1,100 @@
+and logical operations and multiplies and divides. ALU 2 can perform only arithmetic and logical operations. ALU 3 can perform arithmetic and logical operations
+and resolve branches. Similarly, the two floating-point units are not identical either. The first one can perform floating-point arithmetic including multiplies,
+while the second one can perform only floating-point adds, subtracts, and moves.
+The ALU and floating-point units are fed by a pair of 128-entry register files,
+one for integers and one for floating-point numbers. These provide all the operands for the instructions to be executed and provide a repository for results. Due to
+the register renaming, eight of them contain the registers visible at the ISA level
+(EAX, EBX, ECX, EDX, etc.), but which eight hold the ‘‘real’’ values varies over time
+as the mapping changes during execution.
+The Sandy Bridge architecture introduced the Advanced Vector Extensions
+(AVX), which supports 128-bit data-parallel vector operations. The vector operations include both floating-point and integer vectors, and this new ISA extension
+represents a two-times increase in the size of vectors now supported compared to
+the previous SSE and SSE2 ISA extensions. How does the architecture implement
+256-bit operations with only 128-bit data paths and functional units? It cleverly
+coordinates two 128-bit scheduler ports to produce a single 256-bit functional unit.
+The L1 data cache is tightly coupled into the back end of the Sandy Bridge
+pipeline. It is a 32-KB cache and holds integers, floating-point numbers, and other
+kinds of data. Unlike the micro-op cache, it is not decoded in any way. It just
+holds a copy of the bytes in memory. The L1 data cache is an 8-way associative
+cache with 64 bytes per cache line. It is a write-back cache, meaning that when a
+cache line is modified, that line’s dirty bit is set and the data are copied back to the
+L2 cache when evicted from the L1 data cache. The cache can handle two read
+and one write operation per clock cycle. These multiple accesses are implemented
+using banking, which splits the cache into separate subcaches (8 in the Sandy
+Bridge case). As long as as all three accesses are to separate banks, they can proceed in tandem; otherwise, all but one of the conflicting bank accesses will have to
+stall. When a needed word is not present in the L1 cache, a request is sent to the
+L2 cache, which either responds immediately or fetches the cache line from the
+shared L3 cache and then responds. Up to ten requests from the L1 cache to the L2
+cache can be in progress at any instant.
+Because micro-ops are executed out of order, stores into the L1 cache are not
+permitted until all instructions preceding a particular store have have been retired.
+The retirement unit has the job of retiring instructions, in order, and keeping track
+
+SEC. 4.6
+
+EXAMPLES OF THE MICROARCHITECTURE LEVEL
+
+329
+
+of where it is. If an interrupt occurs, instructions not yet retired are aborted, so the
+Core i7 has ‘‘precise interrupts’’ so that upon an interrupt, all instructions up to a
+certain point have been completed and no instruction beyond that has any effect.
+If a store instruction has been retired, but earlier instructions are still in
+progress, the L1 cache cannot be updated, so the results are put into a special pending-store buffer. This buffer has 36 entries, corresponding to the 36 stores that
+might be in execution at once. If a subsequent load tries to read the stored data, it
+can be passed from the pending-store buffer to the instruction, even though it is not
+yet in the L1 data cache. This process is called store-to-load forwarding. While
+this forwarding mechanism may seem straightforward, in practice it is quite complicated to implement because intervening stores may not have yet computed their
+addresses. In this case, the microarchitecture cannot definitely know which store in
+the store buffer will produce the needed value. The process of determining which
+store provides the value for a load is called disambiguation.
+It should be clear by now that the Core i7 has a highly complex microarchitecture whose design was driven by the need to execute the old Pentium instruction
+set on a modern, highly pipelined RISC core. It accomplishes this goal by breaking Pentium instructions into micro-ops, caching them, and feeding them into the
+pipeline four at time for execution on a set of ALUs capable of executing up to six
+micro-ops per cycle under optimal conditions. Micro-ops are executed out of order
+but retired in order, and results are stored into the L1 and L2 caches in order.
+
+4.6.2 The Microarchitecture of the OMAP4430 CPU
+At the heart of the OMAP4430 system-on-a-chip are two ARM Cortex A9
+processors. The Cortex A9 is a high-performance microarchitecture that implements the ARM instruction set (version 7). The processor was designed by ARM
+Ltd. and it is included with slight variations in a wide variety of embedded devices.
+ARM does not manufacture the processor, it only supplies the design to silicon
+manufacturers that want to incorporate it into their system-on-a-chip design (Texas
+Instruments, in this case).
+The Cortex A9 processor is a 32-bit machine, with 32-bit registers and a 32-bit
+data path. Like the internal architecture, the memory bus is 32 bits wide. Unlike the
+Core i7, the Cortex A9 is a true RISC architecture, which means that it does not
+need a complex mechanism to convert old CISC instructions into micro-ops for execution. The core instructions are in fact already micro-op like ARM instructions.
+However, in recent years, more complex graphics and multimedia instructions have
+been added, requiring special hardware facilities for their execution.
+Overview of the OMAP4430’s Cortex A9 Microarchitecture
+The block diagram of the Cortex A9 microarchitecture is given in Fig. 4-48.
+On the whole, it is much simpler than the Core i7’s Sandy Bridge microarchitecture because it has a simpler ISA architecture to implement. Nevertheless, some of
+
+330
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+the key components are similar to those used in the Core i7. The similarities are
+driven mostly by technology, power constraints, and economics. For example,
+both designs employ a multilevel cache hierarchy to meet the tight cost constraints
+of typical embedded applications; however, the last level of the Cortex A9’s cache
+memory system (L2) is only 1 MB in size, significantly smaller than the Core i7
+which supports last level caches (L3) of up to 20 MB. The differences, in contrast,
+are due mostly to the difference between having to bridge the gap between an old
+CISC instruction set and a modern RISC core and not having to do so.
+To LPDDR2
+memory
+Branch predictor
+/
+Branch target
+address
+cache
+
+Level 1
+inst cache
+
+Fast loop
+look-aside

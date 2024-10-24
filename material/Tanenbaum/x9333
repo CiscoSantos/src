@@ -1,0 +1,100 @@
+0
+
+6
+Expressible
+positive numbers
+
+10–100
+
+7
+Positive
+overflow
+
+1099
+
+Figure B-1. The real number line can be divided into seven regions.
+
+underflow error. Underflow error is less serious than overflow error, because 0 is
+often a satisfactory approximation to numbers in regions 3 and 5. A bank balance
+of 10−102 dollars is hardly better than a bank balance of 0.
+Another important difference between floating-point numbers and real numbers is their density. Between any two real numbers, x and y, is another real number, no matter how close x is to y. This property comes from the fact that for any
+distinct real numbers, x and y, z = (x + y)/2 is a real number between them. The
+real numbers form a continuum.
+Floating-point numbers, in contrast, do not form a continuum. Exactly
+179,100 positive numbers can be expressed in the five-digit, two-sign system used
+above, 179,100 negative numbers, and 0 (which can be expressed in many ways),
+for a total of 358,201 numbers. Of the infinite number of real numbers between
+−10+100 and +0. 999 × 1099 , only 358,201 of them can be specified by this notation.
+They are symbolized by the dots in Fig. B-1. It is quite possible for the result of a
+calculation to be one of the other numbers, even though it is in region 2 or 6. For
+example, +0. 100 × 103 divided by 3 cannot be expressed exactly in our system of
+representation. If the result of a calculation cannot be expressed in the number
+representation being used, the obvious thing to do is to use the nearest number that
+can be expressed. This process is called rounding.
+The spacing between adjacent expressible numbers is not constant throughout
+region 2 or 6. The separation between +0. 998 × 1099 and +0. 999 × 1099 is vastly
+more than the separation between +0. 998 × 100 and +0. 999 × 100 . However, when
+the separation between a number and its successor is expressed as a percentage of
+that number, there is no systematic variation throughout region 2 or 6. In other
+words, the relative error introduced by rounding is approximately the same for
+small numbers as large numbers.
+Although the preceding discussion was in terms of a representation system
+with a three-digit fraction and a two-digit exponent, the conclusions drawn are
+valid for other representation systems as well. Changing the number of digits in
+the fraction or exponent merely shifts the boundaries of regions 2 and 6 and
+changes the number of expressible points in them. Increasing the number of digits
+in the fraction increases the density of points and therefore improves the accuracy
+
+684
+
+FLOATING-POINT NUMBERS
+
+APP. B
+
+of approximations. Increasing the number of digits in the exponent increases the
+size of regions 2 and 6 by shrinking regions 1, 3, 5, and 7. Figure B-2 shows the
+approximate boundaries of region 6 for floating-point decimal numbers for various
+sizes of fraction and exponent.
+Digits in fraction
+
+Digits in exponent
+
+Lower bound
+
+Upper bound
+
+3
+
+1
+
+10−12
+
+109
+
+3
+
+2
+
+10−102
+
+1099
+
+3
+
+3
+
+−1002
+
+10
+
+−10002
+
+10999
+9999
+
+3
+
+4
+
+10
+

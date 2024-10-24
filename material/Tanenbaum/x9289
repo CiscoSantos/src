@@ -1,0 +1,100 @@
+Of course, keeping track of whether each cache line is clean or dirty implies
+that when a cache line is modified, the home node has to be informed, even if only
+one cache copy exists. If multiple copies exist, modifying one of them requires the
+rest to be invalidated, so some protocol is needed to avoid race conditions. For example, to modify a shared cache line, one of the holders might have to request
+exclusive access before modifying it. Such a request would cause all other copies
+to be invalidated before permission was granted. Other performance optimizations
+for CC-NUMA machines are discussed in Cheng and Carter (2008).
+The Sun Fire E25K NUMA Multiprocessor
+As an example of a shared-memory NUMA multiprocessor, let us study the
+Sun Microsystems Sun Fire family. Although it contains various models, we will
+focus on the E25K, which has 72 UltraSPARC IV CPU chips. An UltraSPARC IV
+is essentially a pair of UltraSPARC III processors that share a common cache and
+memory. The E15K is essentially the same system except with uniprocessor instead of dual-processor CPU chips. Smaller members exist as well, but from our
+point of view, what is interesting is how the one with the most CPUs works.
+The E25K system consists of up to 18 boardsets, each boardset consisting of a
+CPU-memory board, an I/O board with four PCI slots, and an expander board that
+couples the CPU-memory board with the I/O board and joins the pair to the centerplane, which holds the boards and contains the switching logic. Each CPU-memory board contains four CPU chips and four 8-GB RAM modules. Consequently,
+each CPU-memory board on the E25K holds eight CPUs and 32 GB of RAM (four
+CPUs and four 32 GB of RAM on the E15K). A full E25K thus contains 144
+CPUs, 576 GB of RAM, and 72 PCI slots. It is illustrated in Fig. 8-34. Interestingly enough, the number 18 was chosen due to packaging constraints: a system
+with 18 boardsets was the largest one that could fit through a doorway in one piece.
+
+SEC. 8.3
+
+611
+
+SHARED-MEMORY MULTIPROCESSORS
+
+While programmers just think about 0s and 1s, engineers have to worry about
+things like how the customer will get the product through the door and into the
+building.
+System control board
+
+ne
+pla
+er
+nt
+Ce
+
+9
+CPU-memory
+boards
+
+PCI cont.
+
+18 x 18 data
+crossbar
+
+PCI cont.
+
+Snooping bus
+
+CPU
+
+Expander board
+
+Memory
+
+Directory Control
+
+CPU
+
+18 x 18 resp
+crossbar
+
+Memory
+
+18 x 18 addr
+crossbar
+
+CPU
+
+Expander board
+
+Memory
+
+Directory Control
+
+CPU
+Snooping bus
+
+Memory
+
+CPU
+
+Memory
+
+CPU
+
+Memory
+
+CPU
+
+Memory
+
+CPU
+
+Memory
+
+PCI cont.

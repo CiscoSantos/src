@@ -1,0 +1,100 @@
+
+MBR1
+
+2
+
+MBR1
+
+3
+
+MBR1
+
+4
+
+MBR1
+
+5
+
+MBR1
+
+6
+
+MBR2
+MBR2
+
+MBR2
+MBR2
+
+MBR2
+
+Transitions
+MBR1: Occurs when MBR1 is read
+MBR2: Occurs when MBR2 is read
+Word fetched: Occurs when a memory word is read and 4 bytes are put into the shift register
+
+Figure 4-28. A finite-state machine for implementing the IFU.
+
+Each arc represents an event that can occur. Three different events can occur
+here. The first event is 1 byte being read from MBR1. This event causes the shift
+register to be activated and 1 byte shifted off the right-hand end, reducing the state
+by 1. The second event is 2 bytes being read from MBR2, which reduces the state
+by two. Both of these transitions cause MBR1 and MBR2 to be reloaded. When the
+FSM moves into states 0, 1, or 2, a memory reference is started to fetch a new
+word (assuming that the memory is not already busy reading a word). The arrival
+of the word advances the state by 4.
+To work correctly, the IFU must block when it is asked to do something it cannot do, such as supply the value of MBR2 when there is only 1 byte in the shift register and the memory is still busy fetching a new word. Also, it can do only one
+thing at a time, so incoming events must be serialized. Finally, whenever PC is
+changed, the IFU must be updated. Such details make it more complicated than we
+have shown. Still, many hardware devices are constructed as FSMs.
+The IFU has its own memory address register, called IMAR, which is used to
+address memory when a new word has to be fetched. This register has its own
+
+SEC. 4.4
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+291
+
+dedicated incrementer so that the main ALU is not needed to increment it to get the
+next word. The IFU must monitor the C bus so that whenever PC is loaded, the
+new PC value is also copied into IMAR. Since the new value in PC may not be on a
+word boundary, the IFU has to fetch the necessary word and adjust the shift register appropriately.
+With the IFU, the main execution unit writes to PC only when the sequential
+nature of the instruction byte stream must be changed. It writes on a successful
+branch instruction and on INVOKEVIRTUAL and IRETURN.
+Since the microprogram no longer explicitly increments PC as opcodes are
+fetched, the IFU must keep PC current. It does this by sensing when a byte from
+the instruction stream has been consumed, that is, when MBR1 or MBR2 (or the unsigned versions) have been read. Associated with PC is a separate incrementer, capable of incrementing by 1 or 2, depending on how many bytes have been consumed. Thus the PC always contains the address of the first byte that has not been
+consumed. At the beginning of each instruction, MBR contains the address of the
+opcode for that instruction.
+Note that there are two separate incrementers and they perform different functions. PC counts bytes and increments by 1 or 2. IMAR counts words and increments only by 1 (for 4 new bytes). Like MAR, IMAR is wired to the address bus
+‘‘diagonally’’ with IMAR bit 0 connected to address line 2, and so on, to perform an
+implicit conversion of word addresses to byte addresses.
+As we will see shortly in detail, not having to increment PC in the main loop is
+a big win, because the microinstruction in which PC is incremented often does little else except increment PC. If this microinstruction can be eliminated, the execution path can be reduced. The trade-off here is more hardware for a faster machine, so our third technique for reducing path length is
+Have instructions fetched from memory by a specialized functional unit.
+
+4.4.3 A Design with Prefetching: The Mic-2
+The IFU can greatly reduce the path length of the average instruction. First, it
+eliminates the main loop entirely, since the end of each instruction simply branches
+directly to the next instruction. Second, it avoids tying up the ALU incrementing
+PC. Third, it reduces the path length whenever a 16-bit index or offset is calculated, because it assembles the 16-bit value and supplies it directly to the ALU as a
+32-bit value, avoiding the need for assembly in H. Figure 4-29 shows the Mic-2,
+an enhanced version of the Mic-1 where the IFU of Fig. 4-27 has been added. The
+microcode for the enhanced machine is shown in Fig. 4-30.
+As an example of how the Mic-2 works, look at IADD. It fetches the second
+word on the stack and does the addition as before, only now it does not have to go
+to Main1 when it is done to increment PC and dispatch to the next microinstruction.
+When the IFU sees that MBR1 has been referenced in iadd3, its internal shift register pushes everything to the right and reloads MBR1 and MBR2. It also makes a
+
+292
+
+THE MICROARCHITECTURE LEVEL
+Memory
+control
+registers
+
+MAR
+To
+and
+from

@@ -1,0 +1,100 @@
+m.buffer[m.in] = prime;
+m.in = m.next(m.in);
+if (m.next(m.out) == m.in) m.c.resume( );
+}
+
+// producer class
+// producer code
+// scratch variable
+
+// statement P1
+// statement P2
+// statement P3
+// statement P4
+// statement P5
+
+}
+private long next prime(long prime){ ... }
+
+// function that computes next prime
+
+}
+class consumer extends Thread {
+public void run( ) {
+long emirp = 2;
+while (emirp < m.MAX PRIME) {
+if (m.in == m.out) suspend( );
+emirp = m.buffer[m.out];
+m.out = m.next(m.out);
+if (m.out == m.next(m.next(m.in))) m.p.resume( );
+System.out.println(emirp);
+}
+
+// consumer class
+// consumer code
+// scratch variable
+// statement C1
+// statement C2
+// statement C3
+// statement C4
+// statement C5
+
+}
+}
+Figure 6-26. Parallel processing with a fatal race condition.
+
+476
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+This solution uses Java threads to simulate parallel processes. With this solution we have a class producer and a class consumer, which are instantiated in the
+variables p and c, respectively. Each of these classes is derived from a base class
+Thread, which has a method run. The run method contains the code for the thread.
+When the start method of an object derived from Thread is invoked, a new thread
+is started.
+Each thread is like a process, except that all threads within a single Java program run in the same address space. This feature is convenient for having them
+share a common buffer. If the computer has two or more CPUs, each thread can be
+scheduled on a different CPU, allowing parallelism. If there is only one CPU, the
+threads are timeshared on the same CPU. We will continue to refer to the producer
+and consumer as processes (since we are really interested in parallel processes),
+even though Java supports only parallel threads and not true parallel processes.
+The utility function next allows in and out to be incremented easily, without
+having to write code to check for the wraparound condition every time. If the parameter to next is 98 or lower, the next-higher integer is returned. If, however, the
+parameter is 99, we have hit the end of the buffer, so 0 is returned.
+We need a way for either process to put itself to sleep when it cannot continue.
+The Java designers understood the need for this ability and included the methods
+suspend (sleep) and resume (wakeup) in the Thread class right from the first version of Java. They are used in Fig. 6-26.
+Now we come to the actual code for the producer and consumer. First, the producer generates a new prime in P1. Notice the use of m.MAX PRIME here. The
+prefix m. is needed to indicate that we mean the MAX PRIME defined in class m.
+For the same reason, this prefix is needed for in, out, buffer, and next, as well.
+Then the producer checks (in P2) to see if in is one behind out. If it is (e.g.,
+in = 62 and out = 63), the buffer is full and the producer goes to sleep by calling
+suspend in P2. If the buffer is not full, the new prime is inserted into the buffer
+(P3) and in is incremented (P4). If the new value of in is 1 ahead of out (P5) (e.g.,
+in = 17 and out = 16), in and out must have been equal before in was incremented.
+The producer concludes that the buffer was empty and that the consumer was, and
+still is, sleeping. Therefore, the producer calls resume to wake the consumer up
+(P5). Finally, the producer begins looking for the next prime.
+The consumer’s program is structurally similar. First, a test is made (C1) to
+see if the buffer is empty. If it is, there is no work for the consumer to do, so it
+goes to sleep. If the buffer is not empty, it removes the next number to be printed
+(C2) and increments out (C3). If out is two positions ahead of in at this point (C4),
+it must have been one position ahead of in before it was just incremented. Because
+in = out − 1 is the ‘‘buffer full’’ condition, the producer must have been sleeping,
+and thus the consumer wakes it up with resume. Finally, the number is printed
+(C5) and the cycle repeats.
+Unfortunately, this design contains a fatal flaw, as illustrated in Fig. 6-27.
+Remember that the two processes run asynchronously and at different, possibly
+
+SEC. 6.4
+
+477
+
+OSM-LEVEL INSTRUCTIONS FOR PARALLEL PROCESSING
+
+varying, speeds. Consider the case where only one number is left in the buffer, in
+entry 21, and in = 22 and out = 21, as shown in Fig. 6-27(a). The producer is at
+statement P1 looking for a prime and the consumer is busy at C5 printing out the
+number in position 20. The consumer finishes printing the number, makes the test

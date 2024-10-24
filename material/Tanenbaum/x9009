@@ -1,0 +1,100 @@
+addition cannot complete until the carry has rippled all the way from the rightmost
+bit to the leftmost bit. Adders that do not have this delay, and hence are faster, also
+exist and are usually preferred.
+As a simple example of a faster adder, consider breaking up a 32-bit adder into
+a 16-bit lower half and a 16-bit upper half. When the addition starts, the upper
+adder cannot yet get to work because it will not know the carry into it for 16 addition times.
+However, consider this modification to the circuit. Instead of having a single
+upper half, give the adder two upper halves in parallel by duplicating the upper
+
+166
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+half’s hardware. Thus, the circuit now consists of three 16-bit adders: a lower half
+and two upper halves, U0 and U1 that run in parallel. A 0 is fed into U0 as a carry;
+a 1 is fed into U1 as a carry. Now both of these can start at the same time the lower
+half starts, but only one will be correct. After 16 bit-addition times, it will be
+known what the carry into the upper half is, so the correct upper half can now be
+selected from the two available answers. This trick reduces the addition time by a
+factor of two. Such an adder is called a carry select adder. This trick can then be
+repeated to build each 16-bit adder out of replicated 8-bit adders, and so on.
+Arithmetic Logic Units
+Most computers contain a single circuit for performing the AND, OR, and sum
+of two machine words. Typically, such a circuit for n-bit words is built up of n
+identical circuits for the individual bit positions. Figure 3-18 is a simple example
+of such a circuit, called an Arithmetic Logic Unit or ALU. It can compute any
+one of four functions—namely, A AND B, A OR B, B, or A + B, depending on
+whether the function-select input lines F 0 and F 1 contain 00, 01, 10, or 11 (binary). Note that here A + B means the arithmetic sum of A and B, not the Boolean
+OR.
+The lower left-hand corner of our ALU contains a 2-bit decoder to generate
+enable signals for the four operations, based on the control signals F 0 and F 1 . Depending on the values of F 0 and F 1 , exactly one of the four enable lines is selected.
+Setting this line allows the output for the selected function to pass through to the
+final OR gate for output.
+The upper left-hand corner has the logic to compute A AND B, A OR B, and B,
+but at most one of these results is passed onto the final OR gate, depending on the
+enable lines coming out of the decoder. Because exactly one of the decoder outputs will be 1, exactly one of the four AND gates driving the OR gate will be
+enabled; the other three will output 0, independent of A and B.
+In addition to being able to use A and B as inputs for logical or arithmetic operations, it is also possible to force either one to 0 by negating ENA or ENB, respectively. It is also possible to get A, by setting INVA. We will see uses for INVA,
+ENA, and ENB in Chap. 4. Under normal conditions, ENA and ENB are both 1 to
+enable both inputs and INVA is 0. In this case, A and B are just fed into the logic
+unit unmodified.
+The lower right-hand corner of the ALU contains a full adder for computing
+the sum of A and B, including handling the carries, because it is likely that several
+of these circuits will eventually be wired together to perform full-word operations.
+Circuits like Fig. 3-18 are actually available and are known as bit slices. They
+allow the computer designer to build an ALU of any desired width. Figure 3-19
+shows an 8-bit ALU built up of eight 1-bit ALU slices. The INC signal is useful
+only for addition operations. When present, it increments (i.e., adds 1 to) the result, making it possible to compute sums like A + 1 and A + B + 1.
+
+SEC. 3.2
+
+167
+
+BASIC DIGITAL LOGIC CIRCUITS
+Logical unit
+
+Carry in
+
+AB
+INVA
+A
+ENA
+B
+ENB
+
+A+B
+
+Output
+
+B
+Sum
+
+Enable
+lines
+
+F0
+
+Full
+adder
+
+F1
+
+Decoder
+
+Carry out
+
+Figure 3-18. A 1-bit ALU.
+
+F1 F0
+
+A7 B7
+
+A6 B6
+
+A5 B5
+
+A4 B4
+

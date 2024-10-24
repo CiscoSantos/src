@@ -1,0 +1,100 @@
+with n inverted inputs).
+Using the identities of Fig. 3-7 and the analogous ones for multi-input gates, it
+is easy to convert the sum-of-products representation of a truth table to pure NAND
+or pure NOR form. As an example, consider the EXCLUSIVE OR function of
+Fig. 3-8(a). The standard sum-of-products circuit is shown in Fig. 3-8(b). To
+
+156
+
+THE DIGITAL LOGIC LEVEL
+
+Name
+
+AND form
+
+CHAP. 3
+
+OR form
+
+Identity law
+
+1A = A
+
+0+A=A
+
+Null law
+
+0A = 0
+
+1+A=1
+
+Idempotent law
+
+AA = A
+
+A+A=A
+
+Inverse law
+
+AA = 0
+
+A+A=1
+
+Commutative law
+
+AB = BA
+
+A+B=B+A
+
+Associative law
+
+(AB)C = A(BC)
+
+(A + B) + C = A + (B + C)
+
+Distributive law
+
+A + BC = (A + B)(A + C)
+
+A(B + C) = AB + AC
+
+Absorption law
+
+A(A + B) = A
+
+A + AB = A
+
+De Morgan's law
+
+AB = A + B
+
+A + B = AB
+
+Figure 3-6. Some identities of Boolean algebra.
+
+AB
+
+=
+
+A+B
+
+A+B
+
+=
+
+(c)
+
+AB
+
+(b)
+
+(a)
+
+AB
+
+=
+
+A+B
+
+A+B
+

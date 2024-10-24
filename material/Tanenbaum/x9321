@@ -1,0 +1,100 @@
+
+pp. 19–25, Jan.–March 2002; originally published in Scientific American, Sept. 1991.
+WILKES, M.V.: ‘‘Computers Then and Now,’’ J. ACM, vol. 15, pp. 1–7, Jan. 1968.
+WILKES, M.V.: ‘‘The Best Way to Design an Automatic Calculating Machine,’’ Proc.
+
+Manchester Univ. Computer Inaugural Conf., 1951.
+WING-KEI, Y., HUANG, R., XU, S., WANG, S.-E., KAN, E., and SUH, G.E.: ‘‘SRAM-DRAM
+
+Hybrid Memory with Applications to Efficient Register Files in Fine-Grained MultiThreading Architectures,’’ Proc. 38th Int’l Symp. on Computer Arch. ACM, 2011.
+YAMAMOTO, S., and NAKAO, A.: ‘‘Fast Path Performance of Packet Cache Router Using
+
+Multi-core Network Processor,’’ Proc. Seventh Symp. on Arch. for Network and Comm.
+Sys., ACM/IEEE, 2011.
+ZHANG, L., and JESSHOPE, C.: ‘‘On-Chip COMA Cache-Coherence Protocol for Micro-
+
+grids of Microthreaded Cores,’’ Proc. of 2007 European Conf. on Parallel Processing,
+Springer-Verlag, pp. 38–48, 2008.
+
+A
+BINARY NUMBERS
+
+The arithmetic used by computers differs in some ways from the arithmetic
+used by people. The most important difference is that computers perform operations on numbers whose precision is finite and fixed. Another difference is that
+most computers use the binary rather than the decimal system for representing
+numbers. These topics are the subject of this appendix.
+
+A.1 FINITE-PRECISION NUMBERS
+While doing arithmetic, one usually gives little thought to the question of how
+many decimal digits it takes to represent a number. Physicists can calculate that
+there are 1078 electrons in the universe without being bothered by the fact that it requires 79 decimal digits to write that number out in full. Someone calculating the
+value of a function with pencil and paper who needs the answer to six significant
+digits simply keeps intermediate results to seven, or eight, or however many are
+needed. The problem of the paper not being wide enough for seven-digit numbers
+never arises.
+With computers, matters are quite different. On most computers, the amount
+of memory available for storing a number is fixed at the time that the computer is
+designed. With a certain amount of effort, the programmer can represent numbers
+two, or three, or even many times larger than this fixed amount, but doing so does
+not change the nature of this difficulty. The finite nature of the computer forces us
+669
+
+670
+
+BINARY NUMBERS
+
+APP. A
+
+to deal only with numbers that can be represented in a fixed number of digits. We
+call such numbers finite-precision numbers.
+In order to study properties of finite-precision numbers, let us examine the set
+of positive integers representable by three decimal digits, with no decimal point
+and no sign. This set has exactly 1000 members: 000, 001, 002, 003, ..., 999. With
+this restriction, it is impossible to express certain kinds of numbers, such as
+1. Numbers larger than 999.
+2. Negative numbers.
+3. Fractions.
+4. Irrational numbers.
+5. Complex numbers.
+One important property of arithmetic on the set of all integers is closure with
+respect to the operations of addition, subtraction, and multiplication. In other
+words, for every pair of integers i and j, i + j, i − j, and i × j are also integers. The
+set of integers is not closed with respect to division, because there exist values of i
+and j for which i/ j is not expressible as an integer (e.g., 7/2 and 1/0).
+Finite-precision numbers are not closed with respect to any of these four basic
+operations, as shown below, using three-digit decimal numbers as an example:
+600 + 600 = 1200
+003 − 005 = −2
+050 × 050 = 2500
+007 / 002 = 3.5
+
+(too large)
+(negative)
+(too large)
+(not an integer)
+
+The violations can be divided into two mutually exclusive classes: operations
+whose result is larger than the largest number in the set (overflow error) or smaller
+than the smallest number in the set (underflow error), and operations whose result
+is neither too large nor too small but is simply not a member of the set. Of the four
+violations above, the first three are examples of the former, and the fourth is an example of the latter.
+Because computers have finite memories and therefore must of necessity perform arithmetic on finite-precision numbers, the results of certain calculations will
+be, from the point of view of classical mathematics, just plain wrong. A calculating device that gives the wrong answer even though it is in perfect working condition may appear strange at first, but the error is a logical consequence of its finite
+nature. Some computers have special hardware that detects overflow errors.
+The algebra of finite-precision numbers is different from normal algebra. As
+an example, consider the associative law:
+a + (b − c) = (a + b ) − c
+Let us evaluate both sides for a = 700, b = 400, c = 300. To compute the left-hand
+
+SEC. A.1
+
+671
+
+FINITE-PRECISION NUMBERS
+
+side, first calculate (b − c), which is 100, and then add this amount to a, yielding
+800. To compute the right-hand side, first calculate (a + b), which gives an overflow in the finite arithmetic of three-digit integers. The result may depend on the
+machine being used but it will not be 1100. Subtracting 300 from some number
+other than 1100 will not yield 800. The associative law does not hold. The order
+of operations is important.
+As another example, consider the distributive law:

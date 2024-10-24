@@ -1,0 +1,100 @@
+time increases. Make a reasonable guess about the ratio of the access time of optical
+disk to that of register memory. Assume that the disk is already online.
+7. Sociologists can get three possible answers to a typical survey question such as ‘‘Do
+you believe in the tooth fairy?’’—namely, yes, no, and no opinion. With this in mind,
+the Sociomagnetic Computer Company has decided to build a computer to process survey data. This computer has a trinary memory—that is, each byte (tryte?) consists of 8
+trits, with a trit holding a 0, 1, or 2. How many trits are needed to hold a 6-bit number?
+Give an expression for the number of trits needed to hold n bits.
+8. Compute the data rate of the human eye using the following information. The visual
+field consists of about 106 elements (pixels). Each pixel can be reduced to a superposition of the three primary colors, each of which has 64 intensities. The time resolution
+is 100 msec.
+9. Compute the data rate of the human ear from the following information. People can
+hear frequencies up to 22 kHz. To capture all the information in a sound signal at 22
+kHz, it is necessary to sample the sound at twice that frequency, that is, at 44 kHz. A
+16-bit sample is probably enough to capture most of the auditory information (i.e., the
+ear cannot distinguish more than 65,535 intensity levels).
+10. Genetic information in all living things is coded as DNA molecules. A DNA molecule
+is a linear sequence of the four basic nucleotides: A, C, G, and T. The human genome
+contains approximately 3 × 109 nucleotides in the form of about 30,000 genes. What
+
+144
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+is the total information capacity (in bits) of the human genome? What is the maximum
+information capacity (in bits) of the average gene?
+11. A certain computer can be equipped with 1,073,741,824 bytes of memory. Why would
+a manufacturer choose such a peculiar number, instead of an easy-to-remember number like 1,000,000,000?
+12. Devise a 7-bit even-parity Hamming code for the digits 0 to 9.
+13. Devise a code for the digits 0 to 9 whose Hamming distance is 2.
+14. In a Hamming code, some bits are ‘‘wasted’’ in the sense that they are used for checking and not information. What is the percentage of wasted bits for messages whose
+total length (data + check bits) is 2n − 1? Evaluate this expression numerically for values of n from 3 to 10.
+15. An extended ASCII character is represented by an 8-bit quantity. The associated Hamming encoding of each character can then be represented by a string of three hex digits.
+Encode the following extended five-character ASCII text using an even-parity Hamming code: Earth. Show your answer as a string of hex digits.
+16. The following string of hex digits encodes extended ASCII characters in an even-parity
+Hamming code: 0D3 DD3 0F2 5C1 1C5 CE3. Decode this string and write down the
+characters that are encoded.
+17. The disk illustrated in Fig. 2-19 has 1024 sectors/track and a rotation rate of 7200
+RPM. What is the sustained transfer rate of the disk over one track?
+18. A computer has a bus with a 5-nsec cycle time, during which it can read or write a
+32-bit word from memory. The computer has an Ultra4-SCSI disk that uses the bus
+and runs at 160 Mbytes/sec. The CPU normally fetches and executes one 32-bit instruction every 1 nsec. How much does the disk slow down the CPU?
+19. Imagine you are writing the disk-management part of an operating system. Logically,
+you represent the disk as a sequence of blocks, from 0 on the inside to some maximum
+on the outside. As files are created, you have to allocate free sectors. You could do it
+from the outside in or the inside out. Does it matter which strategy you choose on a
+modern disk? Explain your answer.
+20. How long does it take to read a disk with 10,000 cylinders, each containing four tracks
+of 2048 sectors? First, all the sectors of track 0 are to be read starting at sector 0, then
+all the sectors of track 1 starting at sector 0, and so on. The rotation time is 10 msec,
+and a seek takes 1 msec between adjacent cylinders and 20 msec for the worst case.
+Switching between tracks of a cylinder can be done instantaneously.
+21. RAID level 3 is able to correct single-bit errors using only one parity drive. What is
+the point of RAID level 2? After all, it also can correct only one error and takes more
+drives to do so.
+22. What is the exact data capacity (in bytes) of a mode-2 CD-ROM containing the
+now-standard 80-min media? What is the capacity for user data in mode 1?
+23. To burn a CD-R, the laser must pulse on and off at a high speed. When running at 10x
+speed in mode 1, what is the pulse length, in nanoseconds?
+
+CHAP. 2
+
+PROBLEMS
+
+145
+
+24. To be able to fit 133 minutes worth of video on a single-sided single-layer DVD, a fair
+amount of compression is required. Calculate the compression factor required. Assume that 3.5 GB of space is available for the video track, that the image resolution is
+720 × 480 pixels with 24-bit color (RGB at 8 bits each), and images are displayed at
+30 frames/sec.
+25. Blu-ray runs at 4.5 MB/sec and has a capacity of 25 GB. How long does it take to read
+the entire disk?
+26. A manufacturer advertises that its color bit-map terminal can display 224 different colors. Yet the hardware only has 1 byte for each pixel. How can this be done?
+27. You are part of a top-secret international scientific team which has just been assigned
+the task of studying a being named Herb, an extra-terrestrial from Planet 10 who has
+recently arrived here on Earth. Herb has given you the following information about
+how his eyes work. His visual field consists of about 108 pixels. Each pixel is basically a superposition of five ‘‘colors’’ (i.e., infrared, red, green, blue, and ultraviolet), each
+of which has 32 intensities. The time resolution of Herb’s visual field is 10 msec. Calculate the data rate, in GB/sec, of Herb’s eyes.
+28. A bit-map terminal has a 1920 × 1080 display. The display is redrawn 75 times a second. How long is the pulse corresponding to one pixel?
+29. In a certain font, a monochrome laser printer can print 50 lines of 80 characters per
+page. The average character occupies a box 2 mm × 2 mm, about 25% of which is
+toner. The rest is blank (i.e., no toner) The toner layer is 25 microns thick. The printer’s toner cartridge measures 25 × 8 × 2 cm. How many pages is one toner cartridge
+good for?
+30. The Hi-Fi Modem Company has just designed a new frequency-modulation modem
+that uses 64 frequencies instead of just 2. Each second is divided into n equal time intervals, each of which contains one of the 64 possible tones. How many bits per second can this modem transmit, using synchronous transmission?
+31. An Internet user has subscribed to a 2-Mbps ADSL service. Her neighbor has subscribed to a cable Internet service that has a shared bandwidth of 12 MHz. The modulation scheme in use is QAM-64. There are n houses on the cable, each with one computer. A fraction f of these computers are online at any one time. Under what conditions will the cable user get better service than the ADSL user?
+32. A digital camera has a resolution of 3000 × 2000 pixels, with 3 bytes/pixel for RGB
+color. The manufacturer of the camera wants to be able to write a JPEG image at a 5x
+compression factor to the flash memory in 2 sec. What data rate is required?
+33. A high-end digital camera has a sensor with 24 million pixels, each with 6 bytes/pixel.
+How many pictures can be stored on an 8-GB flash memory card if the compression
+factor is 5x? Assume that 1 GB means 230 bytes.
+34. Estimate how many characters, including spaces, a typical computer-science textbook
+contains. How many bits are needed to encode a book in ASCII with parity? How
+many CD-ROMs are needed to store a computer-science library of 10,000 books?
+How many single-sided, dual-layer DVDs are needed for the same library?
+
+146
+

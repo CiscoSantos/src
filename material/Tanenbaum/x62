@@ -1,0 +1,100 @@
+Semireflective
+layer
+Aluminum
+reflector
+
+Adhesive layer
+Aluminum
+reflector
+
+0.6 mm
+Single-sided
+disk
+Polycarbonate substrate 2
+
+Semireflective
+layer
+
+Figure 2-28. A double-sided, dual layer DVD disk.
+
+DVD was devised by a consortium of 10 consumer electronics companies,
+seven of them Japanese, in close cooperation with the major Hollywood studios
+(some of which are owned by the Japanese electronics companies in the consortium). The computer and telecommunications industries were not invited to the
+
+108
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+picnic, and the resulting focus was on using DVD for movie rentals. For example,
+standard features include real-time skipping of dirty scenes (to allow parents to
+turn a film rated NC17 into one safe for toddlers), six-channel sound, and support
+for Pan-and-Scan. The latter feature allows the DVD player to dynamically decide
+how to crop the left and right edges off movies (whose width:height ratio is 3:2) to
+fit on then-current television sets (whose aspect ratio was 4:3).
+Another item the computer industry probably would not have thought of is an
+intentional incompatibility between disks intended for the United States and disks
+intended for Europe and yet other standards for other continents. Hollywood demanded this ‘‘feature’’ because new films are often released first in the United
+States and then physically shipped to Europe when the videos come out in the
+United States. The idea was to make sure European video stores could not buy
+videos in the U.S. too early, thereby reducing new movies’ European theater sales.
+If Hollywood had been running the computer industry, we would have had 3.5-inch
+floppy disks in the United States and 9-cm floppy disks in Europe.
+
+2.3.11 Blu-ray
+Nothing stands still in the computer business, certainly not storage technology.
+DVD was barely introduced before its successor threatened to make it obsolete.
+The successor to DVD is Blu-ray, so called because it uses a blue laser instead of
+the red one used by DVDs. A blue laser has a shorter wavelength than a red one,
+which allows it to focus more accurately and thus support smaller pits and lands.
+Single-sided Blu-ray disks hold about 25 GB of data; double-sided ones hold about
+50 GB. The data rate is about 4.5 MB/sec, which is good for an optical disk, but
+still insignificant compared to magnetic disks (cf. ATAPI-6 at 100 MB/sec and
+wide Ultra5 SCSI at 640 MB/sec). It is expected that Blu-ray will eventually replace CD-ROMs and DVDs, but this transition will take some years.
+
+2.4 INPUT/OUTPUT
+As we mentioned at the start of this chapter, a computer system has three
+major components: the CPU, the memories (primary and secondary), and the I/O
+(Input/Output) equipment such as printers, scanners, and modems. So far we
+have looked at the CPU and the memories. Now it is time to examine the I/O
+equipment and how it is connected to the rest of the system.
+
+2.4.1 Buses
+Physically, most personal computers and workstations have a structure similar
+to the one shown in Fig. 2-29. The usual arrangement is a metal box with a large
+printed circuit board at the bottom or side, called the motherboard (parentboard,
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+109
+
+for the politically correct). The motherboard contains the CPU chip, some slots
+into which DIMM modules can be clicked, and various support chips. It also contains a bus etched along its length, and sockets into which the edge connectors of
+I/O boards can be inserted.
+SCSI controller
+Sound card
+
+Modem
+
+Card cage
+Edge connector
+
+Figure 2-29. Physical structure of a personal computer.
+
+The logical structure of a simple personal computer is shown in Fig. 2-30.
+This one has a single bus used to connect the CPU, memory, and I/O devices; most
+systems have two or more buses. Each I/O device consists of two parts: one containing most of the electronics, called the controller, and one containing the I/O
+device itself, such as a disk drive. The controller is usually integrated directly onto
+the motherboard or sometimes contained on a board plugged into a free bus slot.
+Even though the display (monitor) is not an option, the video controller is sometimes located on a plug-in board to allow the user to choose between boards with
+or without graphics accelerators, extra memory, and so on. The controller connects
+to its device by a cable attached to a connector on the back of the box.
+The job of a controller is to control its I/O device and handle bus access for it.
+When a program wants data from the disk, for example, it gives a command to the
+disk controller, which then issues seeks and other commands to the drive. When
+the proper track and sector have been located, the drive begins outputting the data
+as a serial bit stream to the controller. It is the controller’s job to break the bit
+stream up into units and write each unit into memory, as it is assembled. A unit is

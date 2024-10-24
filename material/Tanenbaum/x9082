@@ -1,0 +1,100 @@
+(0xC4)
+
+INDEX
+BYTE 1
+
+ILOAD
+(0x15)
+
+INDEX
+BYTE 2
+
+(b)
+
+Figure 4-19. (a) ILOAD with a 1-byte index. (b) WIDE ILOAD with a 2-byte index.
+
+278
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+However, the use of MBR for an index is slightly different than in BIPUSH,
+where it was sign-extended. In the case of an index, the offset is always positive,
+so the byte offset must be interpreted as an unsigned integer, unlike in BIPUSH,
+where it was interpreted as a signed 8-bit integer. The interface from MBR to the B
+bus is carefully designed to make both operations possible. In the case of BIPUSH
+(signed 8-bit integer), the proper operation is sign-extension, that is, the leftmost
+bit in the 1-byte MBR is copied into the upper 24 bits on the B bus. In the case of
+ILOAD (unsigned 8-bit integer), the proper operation is zero-fill. Here the upper 24
+bits of the B bus are simply supplied with zeros. These two operations are distinguished by separate signals indicating which operation should be performed (see
+Fig. 4-6). In the microcode, this is indicated by MBR (sign-extended, as in
+BIPUSH 3) or MBRU (unsigned, as in iload2).
+While waiting for memory to supply the operand (in iload3), SP is incremented
+to contain the value for storing the result, the new top of stack. This value is also
+copied to MAR in preparation for writing the operand out to the top of stack. PC
+again must be incremented to fetch the next opcode (in iload4). Finally, MDR is
+copied to TOS to reflect the new top of stack (in iload5).
+ISTORE is the inverse operation of ILOAD, that is, a word is removed from the
+top of the stack and stored at the location specified by the sum of LV and the index
+contained in the instruction. It uses the same format as ILOAD, shown in
+Fig. 4-19(a), except with opcode 0x36 instead of 0x15. This instruction is somewhat different than might be expected because the top word on the stack is already
+known (in TOS), so it can be stored away immediately. However, the new top-ofstack word must be read from memory. So both a read and a write are required,
+but they can be performed in any order (or even in parallel, if that were possible).
+Both ILOAD and ISTORE are restricted in that they can access only the first 256
+local variables. While for most programs this may be all the local variable space
+needed, it is, of course, necessary to be able to access a variable wherever it is located in the local variable space. To achieve this, IJVM uses the same mechanism
+employed in JVM to achieve this: a special opcode WIDE, known as a prefix byte,
+followed by the ILOAD or ISTORE opcode. When this sequence occurs, the definitions of ILOAD and ISTORE are modified, with a 16-bit index following the opcode
+rather than an 8-bit index, as shown in Fig. 4-19(b).
+WIDE is decoded in the usual way, leading to a branch to wide1 which handles
+the WIDE opcode. Although the opcode to widen is already available in MBR,
+wide1 fetches the first byte after the opcode, because the microprogram logic always expects that to be there. Then a second multiway branch is done in wide2,
+this time using the byte following WIDE for dispatching. However, since WIDE
+ILOAD requires different microcode than ILOAD, and WIDE ISTORE requires different microcode than ISTORE, etc., the second multiway branch cannot just use the
+opcode as the target address, the way Main1 does.
+Instead, wide2 ORs 0x100 with the opcode while putting it into MPC. As a result, the interpretation of WIDE ILOAD starts at 0x115 (instead of 0x15), the
+
+SEC. 4.3
+
+279
+
+AN EXAMPLE IMPLEMENTATION
+Address
+0×1FF
+
+Control store
+Microinstruction
+execution order
+
+0×115
+
+wide_iload1
+
+0×100
+
+Main1
+
+0×C4
+
+wide1
+
+0×15
+
+iload1
+
+WIDE
+ILOAD ILOAD
+3
+
+1
+
+1
+
+2
+
+2
+
+0×00
+
+Figure 4-20. The initial microinstruction sequence for

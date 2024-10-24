@@ -1,0 +1,100 @@
+Ln must be either interpreted by an interpreter running on a lower level or translated to another language corresponding to a lower level.
+A person who writes programs for the level n virtual machine need not be
+aware of the underlying interpreters and translators. The machine structure ensures
+that these programs will somehow be executed. It is of no real interest whether
+they are carried out step by step by an interpreter which, in turn, is also carried out
+by another interpreter, or whether they are carried out by the electronic circuits directly. The same result appears in both cases: the programs are executed.
+Most programmers using an n-level machine are interested only in the top
+level, the one least resembling the machine language at the very bottom. However,
+people interested in understanding how a computer really works must study all the
+levels. People who design new computers or new levels must also be familiar with
+levels other than the top one. The concepts and techniques of constructing machines as a series of levels and the details of the levels themselves form the main
+subject of this book.
+
+SEC. 1.1
+
+STRUCTURED COMPUTER ORGANIZATION
+
+5
+
+1.1.2 Contemporary Multilevel Machines
+Most modern computers consist of two or more levels. Machines with as
+many as six levels exist, as shown in Fig. 1-2. Level 0, at the bottom, is the machine’s true hardware. Its circuits carry out the machine-language programs of
+level 1. For the sake of completeness, we should mention the existence of yet another level below our level 0. This level, not shown in Fig. 1-2 because it falls
+within the realm of electrical engineering (and is thus outside the scope of this
+book), is called the device level. At this level, the designer sees individual transistors, which are the lowest-level primitives for computer designers. If one asks how
+transistors work inside, that gets us into solid-state physics.
+Level 5
+
+Problem-oriented language level
+Translation (compiler)
+
+Level 4
+
+Assembly language level
+Translation (assembler)
+
+Level 3
+
+Operating system machine level
+Partial interpretation (operating system)
+
+Level 2
+
+Instruction set architecture level
+Interpretation (microprogram) or direct execution
+
+Level 1
+
+Microarchitecture level
+Hardware
+
+Level 0
+
+Digital logic level
+
+Figure 1-2. A six-level computer. The support method for each level is indicated
+below it (along with the name of the supporting program).
+
+At the lowest level that we will study, the digital logic level, the interesting objects are called gates. Although built from analog components, such as transistors,
+gates can be accurately modeled as digital devices. Each gate has one or more digital inputs (signals representing 0 or 1) and computes as output some simple function of these inputs, such as AND or OR. Each gate is built up of at most a handful
+of transistors. A small number of gates can be combined to form a 1-bit memory,
+which can store a 0 or a 1. The 1-bit memories can be combined in groups of (for
+example) 16, 32, or 64 to form registers. Each register can hold a single binary
+
+6
+
+INTRODUCTION
+
+CHAP. 1
+
+number up to some maximum. Gates can also be combined to form the main computing engine itself. We will examine gates and the digital logic level in detail in
+Chap. 3.
+The next level up is the microarchitecture level. At this level we see a collection of (typically) 8 to 32 registers that form a local memory and a circuit called an
+ALU (Arithmetic Logic Unit), which is capable of performing simple arithmetic
+operations. The registers are connected to the ALU to form a data path, over
+which the data flow. The basic operation of the data path consists of selecting one
+or two registers, having the ALU operate on them (for example, adding them together), and storing the result back in some register.
+On some machines the operation of the data path is controlled by a program
+called a microprogram. On other machines the data path is controlled directly by
+hardware. In early editions of this book, we called this level the ‘‘microprogramming level,’’ because in the past it was nearly always a software interpreter. Since
+the data path is now often (partially) controlled directly by hardware, we changed
+the name to ‘‘ microarchitecture level’’ to reflect this.
+On machines with software control of the data path, the microprogram is an
+interpreter for the instructions at level 2. It fetches, examines, and executes instructions one by one, using the data path to do so. For example, for an ADD instruction, the instruction would be fetched, its operands located and brought into
+registers, the sum computed by the ALU, and finally the result routed back to the
+place it belongs. On a machine with hardwired control of the data path, similar
+steps would take place, but without an explicit stored program to control the interpretation of the level 2 instructions.
+We will call level 2 the Instruction Set Architecture level (ISA level). Every
+computer manufacturer publishes a manual for each of the computers it sells, entitled ‘‘Machine Language Reference Manual,’’ or ‘‘Principles of Operation of the
+Western Wombat Model 100X Computer,’’ or something similar. These manuals
+are really about the ISA level, not the underlying levels. When they describe the
+machine’s instruction set, they are in fact describing the instructions carried out
+interpretively by the microprogram or hardware execution circuits. If a computer
+manufacturer provides two interpreters for one of its machines, interpreting two
+different ISA levels, it will need to provide two ‘‘machine language’’ reference
+manuals, one for each interpreter.
+The next level is usually a hybrid level. Most of the instructions in its language are also in the ISA level. (There is no reason why an instruction appearing
+at one level cannot be present at other levels as well.) In addition, there is a set of
+new instructions, a different memory organization, the ability to run two or more
+programs concurrently, and various other features. More variation exists between

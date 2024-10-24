@@ -1,0 +1,100 @@
+Most message-passing systems provide two primitives (usually library calls),
+send and receive, but several different kinds of semantics are possible. The three
+main variants are
+1. Synchronous message passing.
+2. Buffered message passing.
+3. Nonblocking message passing.
+In synchronous message passing, if the sender executes a send and the receiver has not yet executed a receive, the sender is blocked (suspended) until the
+receiver executes a receive, at which time the message is copied. When the sender
+gets control back after the call, it knows that the message has been sent and correctly received. This method has the simplest semantics and does not require any
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+637
+
+buffering. It has the severe disadvantage that the sender remains blocked until the
+receiver has gotten and acknowledged receipt of the message.
+In buffered message passing, when a message is sent before the receiver is
+ready, the message is buffered somewhere, for example, in a mailbox, until the receiver takes it out. Thus in buffered message passing, a sender can continue after a
+send, even if the receiver is busy with something else. Since the message has actually been sent, the sender is free to reuse the message buffer immediately. This
+scheme reduces the time the sender has to wait. Basically, as soon as the system
+has sent the message the sender can continue. However, the sender now has no
+guarantee that the message was correctly received. Even if communication is reliable, the receiver may have crashed before getting the message.
+In nonblocking message passing, the sender is allowed to continue immediately after making the call. All the library does is tell the operating system to
+do the call later, when it has time. As a consequence, the sender is hardly blocked
+at all. The disadvantage of this method is that when the sender continues after the
+send, it may not reuse the message buffer as the message may not yet have been
+sent. Somehow it has to find out when it can reuse the buffer. One idea is to have
+it poll the system to ask. The other is to get an interrupt when the buffer is available. Neither of these makes the software any simpler.
+Below we will briefly discuss a popular message-passing system available on
+many multicomputers: MPI.
+MPI—Message-Passing Interface
+For quite a few years, the most popular communication package for multicomputers was PVM (Parallel Virtual Machine) (Geist et al., 1994, and Sunderram,
+1990). In recent years it has been largely replaced by MPI (Message-Passing
+Interface). MPI is much richer and more complex than PVM, with many more library calls, many more options, and many more parameters per call. The original
+version of MPI, now called MPI-1, was augmented by MPI-2 in 1997. Below we
+will give a very cursory introduction to MPI-1 (which contains all the basics), then
+say a little about what was added in MPI-2. For more information about MPI, see
+Gropp et al. (1994) and Snir et al. (1996).
+MPI-1 does not deal with process creation or management, as PVM does. It is
+up to the user to create processes using local system calls. Once they have been
+created, they are arranged into static, unchanging process groups. It is with these
+groups that MPI works.
+MPI is based on four major concepts: communicators, message data types,
+communication operations, and virtual topologies. A communicator is a process
+group plus a context. A context is a label that identifies something, such as a phase
+of execution. When messages are sent and received, the context can be used to
+keep unrelated messages from interfering with one another.
+
+638
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Messages are typed and many data types are supported, including characters,
+short, regular, and long integers, single- and double-precision floating-point numbers, and so on. It is also possible to construct other types derived from these.
+MPI supports an extensive set of communication operations. The most basic
+one is used to send messages as follows:
+MPI Send(buffer, count, data type, destination, tag, communicator)
+
+This call sends a buffer with count number of items of the specified data type to the
+destination. The tag field labels the message so the receiver can say it only wants
+to receive a message with that tag. The last field tells which process group the
+destination is in (the destination field is just an index into the list of processes for
+the specified group). The corresponding call for receiving a message is
+MPI Recv(&buffer, count, data type, source, tag, communicator, &status)
+
+which announces that the receiver is looking for a message of a certain type from a
+certain source with a certain tag.
+MPI supports four basic communication modes. Mode 1 is synchronous, in
+which the sender may not begin sending until the receiver has called MPI Recv.
+Mode 2 is buffered, in which this restriction does not hold. Mode 3 is standard,
+which is implementation dependent and can be either synchronous or buffered.
+Mode 4 is ready, in which the sender claims the receiver is available (as in synchronous), but no check is made. Each of these primitives comes in a blocking and
+a nonblocking version, leading to eight primitives in all. Receiving has only two
+variants: blocking and nonblocking.
+MPI supports collective communication, including broadcast, scatter/gather,
+total exchange, aggregation, and barrier. For all forms of collective communication, all the processes in a group must make the call and with compatible arguments. Failure to do this is an error. A typical form of collective communication
+is for processes organized in a tree, in which values propagate up from the leaves
+to the root, undergoing some processing at each step, for example, adding up the
+values or taking the maximum.
+A basic concept in MPI is the virtual topology, in which the processes can be
+arranged in a tree, ring, grid, torus, or other topology by the user per application.
+Such an arrangement provides a way to name communication paths and facilitates
+communication.
+MPI-2 adds dynamic processes, remote memory access, nonblocking collective
+communication, scalable I/O support, real-time processing, and many other new
+features that are beyond the scope of this book. In the scientific community, a battle raged for years between the MPI and PVM camps. The PVM side said that
+PVM was easier to learn and simpler to use. The MPI side said the MPI does more
+and also points out that MPI is a formal standard with a standardization committee
+and an official defining document. The PVM side agreed but claimed that the lack
+
+SEC. 8.4
+
+639
+
+MESSAGE-PASSING MULTICOMPUTERS
+

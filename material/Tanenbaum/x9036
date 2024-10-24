@@ -1,0 +1,100 @@
+the ARM instruction set, and it is targeted at mobile and embedded applications
+such as smartphones, tablets, and Internet appliances. Aptly named, a system-on-a-chip incorporates a wide range of devices such that the SoC combined
+with physical peripherals (touchscreen, flash memory, etc.) implements a complete
+computing device.
+The OMAP4430 SoC includes two ARM A9 cores, additional accelerators,
+and a wide range of peripheral interfaces. The internal organization of the
+OMAP4430 is shown in Fig. 3-47. The ARM A9 cores are 2-wide superscalar
+microarchitectures. In addition, there are three more accelerator processors on the
+OMAP4430 die: a POWERVR SGX540 graphics processor, an image signal processor (ISP), and an IVA3 video processor. The SGX540 provides efficient programmable 3D rendering, similar to the GPUs found in desktop PCs, albeit smaller
+and slower. The ISP is a programmable processor designed for efficient image
+manipulation, for the type of operations that would be required in a high-end digital camera. The IVA3 implements efficient video encoding and decoding, with
+enough performance to support 3D applications like those found in handheld game
+consoles. Also included in the OMAP4430 SoC is a wide range of peripheral interfaces, including a touchscreen and keypad controllers, DRAM and flash interfaces,
+USB, and HDMI. Texas Instruments has detailed the roadmap for the OMAP series
+of CPUs. Future designs will have more of everything—more ARM cores, more
+GPUs, and more diverse peripherals.
+The OMAP4430 SoC was introduced in early 2011 with two ARM A9 cores
+running at 1 GHz using a 45-nanometer silicon implementation. A key aspect of
+the OMAP4430 design is that it performs significant amounts of computation with
+very little power, since it is targeted to mobile applications that are powered by a
+battery. In battery-powered mobile applications, the more efficiently the design operates, the longer the user can go between battery charges.
+
+209
+
+SDMA
+
+ISP5
+
+HSI
+
+Camera I/O
+
+USB2.0 OTG
+
+USB2.0
+
+DMA Reqs
+
+LP Audio back-end
+ARMv7
+MPU
+32KB/32KB L1
+1MB L2
+64KB.RAM
+128KB ROM
+
+Multiple Display I/O
+TV PAL/NTSC
+HDMI
+
+External
+modem or
+accelerator
+C2C
+
+Mic A and D I/O
+
+EXAMPLE CPU CHIPS
+
+Speaker I/O
+
+PMIC I/O
+
+IRQs
+
+SEC. 3.5
+
+L3
+USB-HS
+Extensions
+
+Imaging
+
+mini64
+466MHz
+32KB L1
+128KB L2
+
+IVA-HD
+1080P
+256KB SL2
+
+SGX540
+2D/3D
+
+IVA3
+
+C2C
+200MHz
+(DDR)
+
+DSS
+Display
+(DSI/HDMI)
+
+3-port
+USB-HS
+Host
+
+SIMCOP

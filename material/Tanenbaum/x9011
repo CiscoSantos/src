@@ -1,0 +1,100 @@
+original signal, as shown in Fig. 3-20(c) as C.
+
+SEC. 3.3
+
+169
+
+MEMORY
+
+C1
+
+Delay
+
+C2
+
+(a)
+
+(b)
+
+A
+B
+C
+(c)
+
+Figure 3-20. (a) A clock. (b) The timing diagram for the clock. (c) Generation
+of an asymmetric clock.
+
+3.3 MEMORY
+An essential component of every computer is its memory. Without memory
+there could be no computers as we now know them. Memory is used for storing
+both instructions to be executed and data. In the following sections we will examine the basic components of a memory system starting at the gate level to see how
+they work and how they are combined to produce large memories.
+
+3.3.1 Latches
+To create a 1-bit memory, we need a circuit that somehow ‘‘remembers’’ previous input values. Such a circuit can be constructed from two NOR gates, as illustrated in Fig. 3-21(a). Analogous circuits can be built from NAND gates. We will
+not mention these further, however, because they are conceptually identical to the
+NOR versions.
+The circuit of Fig. 3-21(a) is called an SR latch. It has two inputs, S, for Setting the latch, and R, for Resetting (i.e., clearing) it. It also has two outputs, Q and
+Q, which are complementary, as we will see shortly. Unlike a combinational circuit, the outputs of the latch are not uniquely determined by the current inputs.
+To see how this comes about, let us assume that both S and R are 0, which they
+are most of the time. For argument’s sake, let us further assume that Q = 0. Because Q is fed back into the upper NOR gate, both of its inputs are 0, so its output,
+
+170
+S
+
+THE DIGITAL LOGIC LEVEL
+0
+
+1
+
+Q
+
+S
+
+0
+
+0
+
+Q
+
+1
+
+1
+R
+
+0
+
+CHAP. 3
+
+0
+0
+
+0
+
+Q
+
+R
+
+0
+
+(a)
+
+Figure 3-21. (a)
+NOR.
+
+1
+(b)
+
+NOR
+
+latch in state 0. (b)
+
+NOR
+
+Q
+
+A
+
+B
+
+NOR

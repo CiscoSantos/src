@@ -1,0 +1,100 @@
+the server room each time a new customer enrolls. Instead, hosting services typically use virtualization to support the execution of multiple complete systems, including the operating system, on one server. Only when the existing servers become too overloaded does the hosting service have to install a new physical server
+in the server pool.
+While software-only approaches to virtualization do exist, they typically slow
+down the virtual system, and they require specific operating system modifications
+or utilize complex code analyzers to rewrite programs on the fly. These drawbacks
+have led architects to enhance the OSM level of the architecture to support efficient
+virtualization directly in hardware.
+Hardware virtualization, as illustrated in Fig. 6-19, is a combination of hardware and software support that enables the simultaneous execution of multiple operating systems on a single physical computer. To the user, each virtual machine
+running on the host computer appears to be a complete standalone computing system. The hypervisor is a software component, much like an operating system kernel, that creates and manages instances of virtual machines. The hardware provides
+the software-visible events that are necessary for the hypervisor to implement sharing policies for the CPU, storage, and I/O devices.
+App
+X
+
+App
+Y
+
+App
+Y
+
+App
+Z
+
+App
+W
+
+App
+V
+
+App
+V
+
+App
+Q
+
+OS A
+
+OS A
+
+OS B
+
+OS C
+
+H/W VM
+
+H/W VM
+
+H/W VM
+
+H/W VM
+
+Hypervisor Software
+Host H/W Architecture and Peripherals
+
+Figure 6-19. Hardware virtualization allows multiple operating systems to run
+simultaneously on the same host hardware. The hypervisor implements sharing of
+host memory and I/O devices.
+
+The existence of multiple virtual machines on one host computer, each possibly running a different operating system, provides many benefits. In server systems,
+
+464
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+virtualization gives system administrators the ability to place multiple virtual
+machines on the same physical server and to move running virtual machines between servers to better distribute the total load. Virtual machines also give server
+administrators fine-grained control over I/O device access. For example, the bandwidth of a virtualized network port could be partitioned based on users’ service
+levels. For individual users, virtualization offers the ability to run multiple operating systems simultaneously.
+To implement virtualization in hardware, all instructions in the architecture
+must only access the resources of the current virtual machine. For most instructions, this is a trivial requirement. For example, arithmetic instruction need only
+access the register file, which can be virtualized by copying a virtual machine’s
+registers into the host processor register file at virtual machine context switches.
+Virtualizing memory access instructions (e.g., loads and stores) is slightly
+more challenging, as these instructions must only access physical memory allocated to the currently executing virtual machine. Typically, a processor supporting
+hardware virtualization will provide an additional page-mapping facility that maps
+virtual machine physical memory pages to host machine physical memory pages.
+Finally, I/O instructions (including memory-mapped I/O) must not directly access
+physical I/O devices, since many virtualization policies partition access to I/O devices. This fine-grained I/O control is typically implemented with interrupts to the
+hypervisor any time a virtual machine attempts to access an I/O device. The hypervisor can then implement the I/O resource access policy of its own choosing. Typically, some set of I/O devices is supported and the operating systems running in the
+virtual machines, called guest operating systems are expected to use these supported devices.
+
+6.2.1 Hardware Virtualization on the Core I7
+Hardware virtualization on the Core i7 is supported by the virtual machine extensions (VMX), a combination of instruction, memory, and interrupt extensions
+that allow the efficient management of virtual machines. With VMX, memory virtualization is implemented with the EPT (Extended Page Table) system that is
+enabled with hardware virtualization. The EPT translates virtual machine physical
+page addresses to host physical addresses. The EPT implements this mapping with
+an additional multilevel page table structure that is traversed during a virtual machine TLB miss. The hypervisor maintains this table, and in doing so it can implement any physical memory sharing policy desired.
+Virtualization of I/O operations, for both memory-mapped I/O and I/O instructions, is implemented through extended interrupt support defined in the VMCS
+(Virtual-Machine Control Structure) A hypervisor interrupt is invoked anytime a
+virtual machine accesses an I/O device. Once the interrupt is received by the hypervisor, it can implement the I/O operation in software using the policies necessary
+to allow sharing of the I/O device among virtual machines.
+
+SEC. 6.3
+
+OSM-LEVEL I/O INSTRUCTIONS
+
+465
+
+6.3 OSM-LEVEL I/O INSTRUCTIONS

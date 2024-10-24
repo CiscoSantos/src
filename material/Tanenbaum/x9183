@@ -1,0 +1,100 @@
+27. On a certain computer it is possible to move a number from one register to another,
+shift each of them left by different amounts, and add the results in less time than a multiplication takes. Under what condition is this instruction sequence useful for computing ‘‘constant × variable’’?
+28. Different machines have different instruction densities (number of bytes required to
+perform a certain computation). For the following Java code fragments, translate each
+
+434
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+one into Core i7 assembly language and IJVM. Then compute how many bytes each
+expression requires for each machine. Assume that i and j are local variables in memory, but otherwise make the most optimistic assumptions in all cases
+a. i = 3;
+b. i = j;
+c. i = j − 1;
+29. The loop instructions discussed in the text were for handling for loops. Design an instruction that might be useful for handling common while loops instead.
+30. Assume that the monks in Hanoi can move 1 disk per minute (they are in no hurry to
+finish the job because employment opportunities for people with this particular skill
+are limited in Hanoi). How long will it take them to solve the entire 64-disk problem?
+Express your result in years.
+31. Why do I/O devices place the interrupt vector on the bus? Would it be possible to store
+that information in a table in memory instead?
+32. A computer uses DMA to read from its disk. The disk has 64 512-byte sectors per
+track. The disk rotation time is 16 msec. The bus is 16 bits wide, and bus transfers
+take 500 nsec each. The average CPU instruction requires two bus cycles. How much
+is the CPU slowed down by DMA?
+33. The DMA transfer described in Fig. 5-32 requires 2 bus transfers to move data between
+an I/O device and memory. Describe how the performance of DMA can be improved
+by using the bus architecture in Fig. 3-35. 3.
+34. Why do interrupt service routines have priorities associated with them whereas normal
+procedures do not have priorities?
+35. The IA-64 architecture contains an unusually large number of registers (64). Was the
+choice to have so many of them related to the use of predication? If so, in what way?
+If not, why are there so many?
+36. In the text, the concept of speculative LOAD instructions is discussed. However, there is
+no mention of speculative STORE instructions. Why not? Are they essentially the
+same as speculative LOAD instructions or is there another reason not to discuss them?
+37. When two local area networks are to be connected, a computer called a bridge is inserted between them, connected to both. Each packet transmitted on either network causes
+an interrupt on the bridge, to let the bridge see if the packet has to be forwarded. Suppose that it takes 250 μ sec per packet to handle the interrupt and inspect the packet, but
+forwarding it, if need be, is done by the DMA hardware without burdening the CPU.
+If all packets are 1 KB, what is the maximum data rate on each of the networks that
+can be tolerated without having the bridge lose packets?
+38. In Fig. 5-40, the frame pointer points to the first local variable. What information does
+the program need in order to return from a procedure?
+39. Write an assembly language subroutine to convert a signed binary integer to ASCII.
+40. Write an assembly language subroutine to convert an infix formula to reverse Polish.
+
+CHAP. 5
+
+PROBLEMS
+
+435
+
+41. The towers of Hanoi is not the only little recursive procedure much loved by computer
+scientists. Another all-time favorite is n!, where n! = n(n − 1)! subject to the limiting
+condition that 0! = 1. Write a procedure in your favorite assembly language to compute n!.
+42. If you are not convinced that recursion is at times indispensable, try programming the
+Towers of Hanoi without using recursion and without simulating the recursive solution
+by maintaining a stack in an array. Be warned, however, that you will probably not be
+able to find the solution.
+
+This page intentionally left blank
+
+6
+THE OPERATING SYSTEM
+MACHINE LEVEL
+
+The theme of this book is that a modern computer is built as a series of levels,
+each one adding functionality to the one below it. So far, we have seen the digital
+logic level, microarchitecture level, and instruction-set architecture level. Now it is
+time to move up another level, into the realm of the operating system.
+An operating system is a program that, from the programmer’s point of view,
+adds a variety of new instructions and features, above and beyond what the ISA
+level provides. Normally, the operating system is implemented largely in software,
+but there is no theoretical reason why it could not be put into hardware, just as
+microprograms normally are (when they are present). For short, we will call the
+level that it implements the OSM (Operating System Machine) level. It is shown
+in Fig. 6-1.
+Although the OSM level and the ISA level are both abstract (in the sense that
+they are not the true hardware level), there is an important difference between
+them. The OSM-level instruction set is the complete set of instructions available to
+application programmers. It contains nearly all of the ISA level instructions, as
+well as the set of new instructions that the operating system adds. These new instructions are called system calls. A system call invokes a predefined operating
+system service, effectively, one of its instructions. A typical system call is reading
+some data from a file. We will typeset system calls in lowercase Helvetica.
+The OSM level is always interpreted. When a user program executes an OSM
+instruction, such as reading some data from a file, the operating system carries out
+this instruction step by step, just as a microprogram would carry out an ADD
+437
+
+438
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+Level 3
+
+CHAP. 6
+
+Operating system machine level

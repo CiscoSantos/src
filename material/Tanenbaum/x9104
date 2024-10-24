@@ -1,0 +1,100 @@
+Entry A
+
+Entry B
+
+Entry C
+
+Entry D
+
+Figure 4-39. A four-way set-associative cache.
+
+The use of a set-associative cache presents the designer with a choice. When a
+new entry is to be brought into the cache, which of the present items should be discarded? The optimal decision, of course, requires a peek into the future, but a
+pretty good algorithm for most purposes is LRU (Least Recently Used). This algorithm keeps an ordering of each set of locations that could be accessed from a
+given memory location. Whenever any of the present lines are accessed, it updates
+the list, marking that entry the most recently accessed. When it comes time to replace an entry, the one at the end of the list—the least recently accessed—is the
+one discarded.
+Carried to the extreme, a 2048-way cache containing a single set of 2048 line
+entries is also possible. Here all memory addresses map onto the single set, so the
+lookup requires comparing the address against all 2048 tags in the cache. Note
+that each entry must now have tag-matching logic. Since the LINE field is of 0
+length, the TAG field is the entire address except for the WORD and BYTE fields.
+Furthermore, when a cache line is replaced, all 2048 locations are possible candidates for replacement. Maintaining an ordered list of 2048 entries requires a great
+deal of bookkeeping, making LRU replacement infeasible. (Remember that this
+list has to be updated on every memory operation, not just on a miss.) Surprisingly, high-associativity caches do not improve performance much over low-associativity caches under most circumstances, and in some cases actually perform
+worse. For these reasons, set associativity beyond four-way is relatively unusual.
+Finally, writes pose a special problem for caches. When a processor writes a
+word, and the word is in the cache, it obviously must either update the word or discard the cache entry. Nearly all designs update the cache. But what about updating the copy in main memory? This operation can be deferred until later, when the
+cache line is ready to be replaced by the LRU algorithm. This choice is difficult,
+
+310
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+and neither option is clearly preferable. Immediately updating the entry in main
+memory is referred to as write through. This approach is generally simpler to implement and more reliable, since the memory is always up to date—helpful, for example, if an error occurs and it is necessary to recover the state of the memory.
+Unfortunately, it also usually requires more write traffic to memory, so more
+sophisticated implementations tend to employ the alternative, known as write
+deferred, or write back.
+A related problem must be addressed for writes: what if a write occurs to a location that is not currently cached? Should the data be brought into the cache, or
+just written out to memory? Again, neither answer is always best. Most designs
+that defer writes to memory tend to bring data into the cache on a write miss, a
+technique known as write allocation. Most designs employing write through, on
+the other hand, tend not to allocate an entry on a write because this option complicates an otherwise simple design. Write allocation wins only if there are repeated
+writes to the same or different words within a cache line.
+Cache performance is critical to system performance because the gap between
+CPU speed and memory speed is very large. Consequently, research on better
+caching strategies is still a hot topic (Sanchez and Kozyrakis, 2011, and Gaur et. al,
+2011).
+
+4.5.2 Branch Prediction
+Modern computers are highly pipelined. The pipeline of Fig. 4-36 has seven
+stages; high-end computers sometimes have 10-stage pipelines or even more.
+Pipelining works best on linear code, so the fetch unit can just read in consecutive
+words from memory and send them off to the decode unit in advance of their being
+needed.
+The only minor problem with this wonderful model is that it is not the slightest
+bit realistic. Programs are not linear code sequences. They are full of branch instructions. Consider the simple statements of Fig. 4-40(a). A variable, i, is compared to 0 (probably the most common test in practice). Depending on the result,
+another variable, k, gets assigned one of two possible values.
+if (i == 0)
+k = 1;
+else
+k = 2;
+
+Then:
+Else:
+Next:
+
+(a)
+
+CMP i,0
+BNE Else
+MOV k,1
+BR Next
+MOV k,2
+
+; compare i to 0
+; branch to Else if not equal
+; move 1 to k
+; unconditional branch to Next
+; move 2 to k
+
+(b)
+Figure 4-40. (a) A program fragment. (b) Its translation to a generic assembly
+language.
+
+SEC. 4.5
+
+IMPROVING PERFORMANCE
+
+311
+
+A possible translation to assembly language is shown in Fig. 4-40(b). We will
+study assembly language later in this book, and the details are not important now,
+but depending on the machine and the compiler, code more or less like that of
+Fig. 4-40(b) is likely. The first instruction compares i to 0. The second one
+branches to the label Else (the start of the else clause) if i is not 0. The third instruction assigns 1 to k. The fourth instruction branches to the code for the next
+statement. The compiler has conveniently planted a label, Next, there, so there is a
+place to branch to. The fifth instruction assigns 2 to k.

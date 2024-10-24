@@ -1,0 +1,100 @@
+Before the code starts executing, the stack is empty, indicated by the horizontal line
+above the 0. After the first ILOAD, j is on the stack, as indicated by the boxed j
+above the 1 (meaning instruction 1 has executed). After the second ILOAD, two
+words are on the stack, as shown above the 2. After the IADD, only one word is on
+the stack, and it contains the sum j + k. When the top word is popped from the
+stack and stored in i, the stack is empty, as shown above the 4.
+Instruction 5 (ILOAD) starts the if statement by pushing i onto the stack (in 5)
+Next comes the constant 3 (in 6). After the comparison, the stack is empty again
+(7). Instruction 8 is the start of the else part of the Java program fragment. The
+else part continues until instruction 12, at which time it branches over the then part
+and goes to label L2.
+
+SEC. 4.3
+
+267
+
+AN EXAMPLE IMPLEMENTATION
+
+0
+
+j
+1
+
+k
+j
+2
+
+j+k
+3
+
+j
+8
+
+1
+j
+9
+
+j–1
+10
+
+11
+
+4
+
+i
+5
+
+3
+i
+6
+
+7
+
+12
+
+0
+13
+
+14
+
+15
+
+Figure 4-15. The stack after each instruction of Fig. 4-14(b).
+
+4.3 AN EXAMPLE IMPLEMENTATION
+Having specified both the microarchitecture and the macroarchitecture in detail, the remaining issue is the implementation. In other words, what does a program running on the former and interpreting the latter look like, and how does it
+work? Before we can answer these questions, we must carefully consider the notation we will use to describe the implementation.
+
+4.3.1 Microinstructions and Notation
+In principle, we could describe the control store in binary, 36 bits per word.
+But as in conventional programming languages, there is great benefit in introducing notation that conveys the essence of the issues we need to deal with while
+obscuring the details that can be ignored or better handled automatically. It is important to realize here that the language we have chosen is intended to illustrate the
+concepts rather than to facilitate efficient designs. If the latter were our goal, we
+would use a different notation to maximize the flexibility available to the designer.
+One aspect where this issue is important is the choice of addresses. Since the
+memory is not logically ordered, there is no natural ‘‘next instruction’’ to be implied as we specify a sequence of operations. Much of the power of this control organization derives from the ability of the designer (or the assembler) to select addresses efficiently. We therefore begin by introducing a simple symbolic language
+that fully describes each operation without explaining fully how all addresses may
+have been determined.
+Our notation specifies all the activities that occur in a single clock cycle in a
+single line. We could, in theory, use a high-level language to describe the operations. However, cycle-by-cycle control is very important because it gives the
+opportunity to perform multiple operations concurrently, and we need to be able to
+analyze each cycle to understand and verify the operations. If the goal is a fast, efficient implementation (other things being equal, fast and efficient is always better
+than slow and inefficient), then every cycle counts. In a real implementation, many
+subtle tricks are hidden in the program, using obscure sequences or operations in
+order to save a single cycle. There is a high payoff for saving cycles: a four-cycle
+
+268
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+instruction that can be reduced by two cycles now runs twice as fast. And this
+speedup is obtained every time we execute the instruction.
+One possible approach is simply to list the signals that should be activated
+each clock cycle. Suppose that in one cycle we want to increment the value of SP.
+We also want to initiate a read operation, and we want the next instruction to be the
+one residing at location 122 in the control store. We might write
+ReadRegister = SP, ALU = INC, WSP, Read, NEXT ADDRESS = 122
+

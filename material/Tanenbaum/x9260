@@ -1,0 +1,100 @@
+
+A
+E
+I
+M
+
+B
+F
+J
+N
+
+C
+G
+K
+O
+
+(a)
+
+D
+H
+L
+P
+
+A
+B
+C
+D
+
+E
+F
+G
+H
+
+I
+J
+K
+L
+
+(b)
+
+M
+N
+O
+P
+
+R2 A B C D
+
+R2 A E I M
+
+R3 E F G H
+
+R3 B F J N
+
+J K L
+
+R4 C G K O
+
+R5 M N O P
+
+R5 D H L P
+
+R4
+
+I
+
+(c)
+
+(d)
+
+Figure 8-6. (a) An array of 8-bit elements. (b) The transposed array. (c) The
+original array fetched into four registers. (d) The transposed array in four registers.
+
+One way to do the transposition is to use 12 operations that each load a byte
+into a different register, followed by 12 more operations that each store a byte in its
+correct location. (Note: the four bytes on the diagonal do not move in the transposition.) The problem with this approach is that it requires 24 (long and slow) operations that reference memory.
+An alternative approach is to start with four operations that each load a word
+into four different registers, R2 through R5, as shown in Fig. 8-6(c). Then the four
+output words are assembled by masking and shifting operations to achieve the desired output, as shown in Fig. 8-6(d). Finally, these words are stored in memory.
+Although this way of doing it reduces the number of memory references from 24 to
+8, the masking and shifting is expensive due to the many operations required to
+extract and insert each byte in the correct position.
+The TriMedia provides a better solution than either of these. It begins by
+fetching the four words into registers. However, instead of building the output
+using masking and shifting, special operations that extract and insert bytes within
+registers are used to build the output. The result is that with eight memory references and eight of these special multimedia operations, the transposition can be
+accomplished. The code first contains an operation with two load operations in
+slots 4 and 5, respectively, to load words into R2 and R3, followed by another such
+operation to load R4 and R5.
+The instructions holding these operations can use slots 1, 2, and 3 for other
+purposes. When all the words have been loaded, the eight special multimedia operations can be packed into two instructions to build the output, followed by two
+operations to store them. Only six instructions are needed, and 14 of the 30 slots
+in these instructions are available for other operations. In effect, the entire job can
+be done with the effective equivalent of about three or so instructions. Other multimedia operations are also efficient. Between these powerful operations and the
+five issue slots per instruction, the TriMedia is highly efficient at doing the kinds of
+calculations needed in multimedia processing.
+
+562
+
+PARALLEL COMPUTER ARCHITECTURES
+

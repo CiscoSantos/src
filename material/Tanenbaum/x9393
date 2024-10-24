@@ -1,0 +1,100 @@
+Multistage switching network, 604–606
+Multitouch screen, 114
+Mutex, 505
+Mutual capacitance, 114
+Myhrvold, Nathan, 29
+
+N
+N-way set associative cache, 308–310
+NaN (see Not a Number)
+Nathan’s law, 29
+NC-NUMA (see No Cache NUMA)
+Near call, 710
+Near jump, 8088, 709
+Negated signal, 178
+Negative binary numbers, 675–677
+Negative logic, 157
+
+762
+NEON, 331
+Network,
+Ethernet, 575
+local-area, 575
+ring, 569
+store-and-forward, 575
+wide-area, 575
+Network interface device, 131
+Network of workstations, 593
+Network processor, 574–582, 577–579, 578
+Networking, introduction, 575–577
+Newton, 14, 45
+Nibble, 399
+NID (see Network Interface Device)
+No cache NUMA, 606
+No remote memory access computer, 593
+Nonblocking message passing, 637
+Nonblocking network, 604–606
+Noninverting buffer, 177
+Nonnumeric data type, 359–360
+Nonuniform memory access, 606–610
+Nonuniform memory access computer, 592
+Nonvolatile memory, 182–183
+NORMA (see NO Remote Memory Access
+computer)
+Normalized floating-point number, 684
+Normative section, in standard, 346
+Not a number, 688
+Notation, Mic-1, 267–271
+NOW (see Network Of Workstations)
+Noyce, Robert, 21
+NT File System, 498
+NTFS (see NT File System)
+NTOS executive, 487
+NUMA (see NonUniform Memory Access
+computer)
+NUMA multiprocessor, 606–610
+Numeric data type, 358–359
+Nvidia Fermi GPU, 582–585
+Nvidia Tegra, 46
+
+O
+Object file, 716
+Object module, 541–542
+Object program, 518
+
+INDEX
+OCP-IP (see Open Core Protocol-International
+Partnership)
+Octal, 671
+Octal number, 718
+Octet, 75, 347
+OGSA (see Open Grid Services Architecture)
+OHCI (see Open Host Controller Interface)
+OLED (see Organic Light Emitting Diode)
+Olsen, Kenneth, 19
+OMAP4430,
+addressing, 384
+bi-endianness, 354
+data cache, 331
+data types, 361
+instruction formats, 368–370
+instruction issue unit, 330
+instructions, 400–402
+internal organization, 209
+introduction, 45–47
+ISA level, 354–356
+microarchitecture, 329–334
+pinout, 211
+pipeline, 331–334
+store buffer, 331
+virtual memory, 460–462
+Omega network, 604–606
+Omnibus, PDP-8, 20
+On-chip multithreading, 562–568
+On-chip paralellism, 554–574
+One’s complement number, 675
+Opcode, 244
+Open collector, 189
+Open core protocol-international partnership, 574
+Open grid services architecture, 654
+Open host controller interface, 231

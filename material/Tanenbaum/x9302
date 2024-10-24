@@ -1,0 +1,100 @@
+the index, with each one followed by the IDs of the n highest-ranked documents
+containing that word. Shard 2 contains all the words and the IDs of the n next-
+
+SEC. 8.4
+
+633
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+highest-ranked documents, and so on. As the Web grows, each of these shards
+may later be split with the first k words in one set of shards, the next k words in a
+second set of shards and so forth, in order to achieve even more search parallelism.
+1
+11
+Load balancer
+2
+3
+
+4
+
+Spell checker
+
+Query handler
+
+Ad server
+
+9
+
+10
+5
+
+aardvark
+abacus
+abalone
+abandon
+
+7
+
+6
+
+154, 3016, ...
+973, 67231, ...
+73403,89021, ...
+14783, 63495, ...
+.
+.
+.
+
+8
+
+5
+
+8
+
+Index
+servers
+
+Document
+servers
+
+6
+aardvark
+abacus
+abalone
+abandon
+
+1242, 5643 ...
+8393, 65837, ...
+59343, 93082, ...
+40323, 94834, ...
+.
+.
+.
+
+7
+
+Figure 8-43. Processing of a Google query.
+
+The index servers return a set of document identifiers (6) that are then combined according to the Boolean properties of the query. For example, if the search
+was for +digital +capybara +dance, then only document identifiers appearing in all
+three sets are used in the next step. In this step (7), the documents themselves are
+referenced to extract their titles, URLs, and snippets of text surrounding the search
+terms. The document servers contain many copies of the entire Web at each data
+center, hundreds of terabytes at present. The documents are also divided into
+shards to enhance parallel search. While processing a query does not require reading the whole Web (or even reading the tens of terabytes on the index servers), having to process 100 MB per query is normal.
+When the results are returned to the query handler (8), the pages found are collated into page-rank order. If potential spelling errors are detected (9), they are
+announced and relevant ads are added (10). Displaying ads for advertisers interested in buying specific search terms (e.g., ‘‘hotel’’ or ‘‘camcorder’’) is how
+Google makes its money. Finally, the results are formatted in HTML (HyperText
+Markup Language) and sent to the user as a Web page.
+
+634
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+With this background, we can now examine the Google architecture. Most
+companies, when faced with a huge data base, massive transaction rate, and the
+need for high reliability, would buy the biggest, fastest, and most reliable equipment on the market. Google did just the opposite. It bought cheap, modest-performance PCs. Lots of them. And with them, it built the world’s largest off-theshelf cluster. The driving principle behind this decision was simple: optimize
+price/performance.

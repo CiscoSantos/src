@@ -1,0 +1,100 @@
+above should give enough background to understand the essentials of how a bus
+works, and how CPUs and buses interact. Let us now move from the general to the
+specific and look at some examples of actual CPUs and their buses.
+
+3.5 EXAMPLE CPU CHIPS
+In this section we will examine the Intel Core i7, TI OMAP4430, and Atmel
+ATmega168 chips in some detail at the hardware level.
+
+3.5.1 The Intel Core i7
+The Core i7 is a direct descendant of the 8088 CPU used in the original IBM
+PC. The first Core i7 was introduced in November 2008 as a four-processor
+731-million transistor CPU running up to 3.2 GHz with a line width of 45 nanometers. The line width is how wide the wires between transistors are (as well as being
+a measure of the size of the transistors themselves). The narrower the line width,
+the more transistors can fit on the chip. Moore’s law is fundamentally about the
+ability of process engineers to keep reducing the line widths. For comparison purposes, human hairs range from 20,000 to 100,000 nanometers in diameter, with
+blonde hair being finer than black hair.
+The initial release of the Core i7 architecture was based on the ‘‘Nahalem’’ architecture; however, the newest versions of the Core i7 are built on the newer
+‘‘Sandy Bridge’’ architecture. The architecture in this context represents the internal organization of the CPU, which is often given a code name. Despite being generally serious people, computer architects will sometimes come up with very clever
+code names for their projects. One of particular note was the AMD K-series architectures, which were designed to break Intel’s seeming invulnerable hold on the
+desktop CPU market. The K-series processors’ code name was ‘‘Kryptonite,’’ a
+reference to the only substance that could hurt Superman, and a clever jab at the
+dominant Intel.
+The new Sandy-Bridge-based Core i7 has evolved to having 1.16 billion transistors and running at speeds up to 3.5 GHz with line widths of 32 nanometers. Although the Core i7 is a far cry from the 29,000-transistor 8088, it is fully backward
+
+202
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+compatible with the 8088 and can run unmodified 8088 binary programs (not to
+mention programs for all the intermediate processors as well).
+From a software point of view, the Core i7 is a full 64-bit machine. It has all
+the same user-level ISA features as the 80386, 80486, Pentium, Pentium II, Pentium Pro, Pentium III, and Pentium 4 including the same registers, same instructions, and a full on-chip implementation of the IEEE 754 floating-point standard.
+In addition, it has some new instructions intended primarily for cryptographic operations.
+The Core i7 processor is a multicore CPU, thus the silicon die contains multiple processors. The CPU is sold with a varying number of processors, ranging
+from 2 to 6 with more planned for the near future. If programmers write a parallel
+program, using threads and locks, it is possible to gain significant program
+speedups by exploiting parallelism on multiple processors. In addition, the individual CPUs are ‘‘hyperthreaded’’ such that multiple hardware threads can be active
+simultaneously. Hyperthreading (more typically called ‘‘simultaneous multithreading’’ by computer architects) allows very short latencies, such as cache misses, to
+be tolerated with hardware thread switches. Software-based threading can tolerate
+only very long latencies, such as page faults, due to the hundreds of cycles needed
+to implement software-based thread switches.
+Internally, at the microarchitecture level, the Core i7 is a very capable design.
+It is based on the architecture of its predecessors, the Core 2 and Core 2 Duo. The
+Core i7 processor can carry out up to four instructions at once, making it a 4-wide
+superscalar machine. We will examine the microarchitecture in Chap. 4.
+The Core i7 processors all have three levels of cache. Each processor in a Core
+i7 processor has a 32-KB level 1 (L1) data cache and a 32-KB level 1 instruction
+cache. Each core also has its own 256-KB level 2 (L2) cache. The second-level
+cache is unified, which means that it can hold a mixture of instructions and data.
+All cores share a single level 3 (L3) unified cache, the size of which varies from 4
+to 15 MB depending on the processor model. Having three levels of cache significantly improves processor performance but at a great cost in silicon area, as Core
+i7 CPUs can have as much as 17 MB total cache on a single silicon die.
+Since all Core i7 chips have multiple processors with private data caches, a
+problem arises when a processor modifies a word in this private cache that is contained in another processor’s cache. If the other processor tries to read that word
+from memory, it will get a stale value, since modified cache words are not written
+back to memory immediately. To maintain memory consistency, each CPU in a
+multiprocessor system snoops on the memory bus looking for references to words
+it has cached. When it sees such a reference, it jumps in and supplies the required
+data before the memory gets a chance to do so. We will study snooping in Chap. 8.
+Two primary external buses are used in Core i7 systems, both of them synchronous. A DDR3 memory bus is used to access the main memory DRAM, and a
+PCI Express bus connects the processor to I/O devices. High-end versions of the
+Core i7 include multiple memory and PCI Express buses, and they also include a
+
+SEC. 3.5
+
+EXAMPLE CPU CHIPS
+
+203
+
+Quick Path Interconnect (QPI) port. The QPI port connects the processor to an external multiprocessor interconnect, allowing systems with more than six processors
+to be built. The QPI port sends and receives cache coherency requests, plus a variety of other multiprocessor management messages such as interprocessor interrupts.
+A problem with the Core i7 as well as with most other modern desktop-class
+CPUs, is the power it consumes and the heat it generates. To prevent damaging the
+silicon, the heat must be moved away from the processor die soon after it is produced. The Core i7 consumes between 17 and 150 watts, depending on the frequency and model. Consequently, Intel is constantly searching for ways to manage
+the heat produced by its CPU chips. Cooling technologies and heat-conductive
+packaging are vital to protecting the silicon from burning up.
+The Core i7 comes in a square LGA package 37.5 mm on edge. It contains
+1155 pads on the bottom, of which 286 are for power and 360 are grounded to reduce noise. The pads are arranged roughly as a 40 × 40 square, with the middle 17
+× 25 missing. In addition, 20 more pads are missing at the perimeter in an asymmetric pattern, to prevent the chip from being inserted incorrectly in its socket.
+The physical pinout is shown in Fig. 3-44.
+
+Figure 3-44. The Core i7 physical pinout.
+
+The chip is outfitted with a mounting plate for a heat sink to distribute the heat
+and a fan to cool it. To get some idea of how large the power problem is, turn on a
+
+204
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+150-watt incandescent light bulb, let it warm up, and then put your hands around it
+(but do not touch it). This amount of heat must be dissipated continuously by a
+high-end Core i7 processor. Consequently, when a Core i7 has outlived its usefulness as a CPU, it can always be used as a camp stove.
+According to the laws of physics, anything that puts out a lot of heat must suck
+in a lot of energy. In a portable computer with a limited battery charge, using a lot
+of energy is not desirable because it drains the battery quickly. To address this

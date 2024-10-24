@@ -1,0 +1,100 @@
+FP sqrt/div
+
+FP division and square root
+
+1
+
+17
+
+x
+
+Branch
+
+Control flow
+
+3
+
+3
+
+x
+
+DSP ALU
+
+Dual 16-bit, quad 8-bit multimedia arithmetic 2
+
+3
+
+DSP MUL
+
+Dual 16-bit, quad 8-bit multimedia multiplies
+
+3
+
+2
+
+x
+
+x
+
+x
+
+x
+x
+
+x
+
+x
+
+x
+
+x
+x
+
+x
+
+x
+
+Figure 8-4. The TM3260 functional units, their quantity, latency, and which instruction
+slots they can use.
+
+The constant unit is used for immediate operations, such as loading a number
+stored in the operation itself into a register. The integer ALU does addition,
+subtraction, the usual Boolean operations, and pack/unpack operations. The shifter
+can shift a register in either direction a specified number of bits.
+The load/store unit fetches memory words into registers and writes them back.
+The TriMedia is basically an augmented RISC CPU, so normal operations operate
+on registers and the load/store unit is used to access memory. Transfers can be 8,
+16, or 32 bits. Arithmetic and logical instructions do not access memory.
+
+SEC. 8.1
+
+ON-CHIP PARALELLISM
+
+559
+
+The multiply unit handles both integer and floating-point multiplications. The
+next three units handle floating-point additions/subtractions, compares, and square
+roots and divisions, respectively.
+Branch operations are executed by the branch unit. There is a fixed 3-cycle
+delay after a branch, so the three instructions (up to 15 operations) following a
+branch are always executed, even for unconditional branches.
+Finally, we come to the two multimedia units, which handle the special multimedia operations. The DSP in the name of the functional unit refers to Digital
+Signal Processor. which the multimedia operations effectively replace. We will
+describe the multimedia operations briefly below. One noteworthy feature is that
+they all use saturated arithmetic instead of two’s complement arithmetic used by
+the integer operations. When an operation produces a result that cannot be
+expressed due to overflow, instead of generating an exception or giving a garbage
+result, the closest valid number is used. For example, with 8-bit unsigned numbers, adding 130 and 130 gives 255.
+Because not every operation can appear in every slot, often an instruction does
+not contain all five potential operations. When a slot is not used, it is compacted to
+minimize the amount of space wasted. Operations that are present occupy 26, 34,
+or 42 bits. Depending on the number of operations actually present, TriMedia instructions vary from 2 to 28 bytes, including some fixed overhead.
+The TriMedia does not make run-time checks to see whether the operations in
+an instruction are compatible. If they are not, it just executes them anyway and
+gets the wrong answer. Leaving the check out was a deliberate decision to save
+time and transistors. The Core i7 does do run-time checking to make sure all the
+superscalar operations are compatible, but at a huge cost in complexity, time, and
+transistors. The TriMedia avoids this expense by putting the burden of scheduling
+on the compiler, which has all the time in the world to carefully optimize the placement of operations in instruction words. On the other hand, if an operation needs a
+functional unit that is not available, the instruction will stall until it becomes available.
+As in the Itanium-2, TriMedia operations are predicated. Each operation (with

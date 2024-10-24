@@ -1,0 +1,100 @@
+!
+!
+!
+!
+
+22
+23
+24
+25
+26
+27
+28
+29
+30
+
+I
+
+>
+=0018: 3 0 4 0 7 0 b 0 . . . . . . . . . . .
+3
+=0022: 2 0 6 0 3 0 1 0 . . . . . . . . . . .
+2
+= 0 0 0 0 :54 68 65 20 69 6e 20 70 The in p r o d 26708
+= 0 0 1 2 :25 64 21 a 0 0 3 0 % d ! . . . . . . . . 25637
+
+Figure C-15. Execution of vecprod.s when it reaches line 28 for the first time.
+
+C.8.4 Debugging an Array Print Program
+In the previous examples, the programs examined were simple but correct.
+Now we will show how the tracer can help debug incorrect programs. The next
+program is supposed to print the integer array, which is supplied after the label
+vec1. However, the initial version contains three errors. The assembler and tracer
+will be used to correct those errors, but first we will discuss the code.
+Because every program needs system calls, and thus must define constants by
+which to identify the call numbers, we have put the constant definitions for those
+numbers in a separate header file ../syscalnr.h, which is included on line 1 of the
+code. This file also defines the constants for the file descriptors
+STDIN = 0
+STDOUT = 1
+STDERR = 2
+
+which are opened at the start of the process, and header labels for the text and the
+data segments. It is sensible to include it at the head of all assembly source files,
+as these are much used definitions. If a source is distributed over more than one
+file, the assembler includes only the first copy of this header file, to avoid defining
+the constants more than once.
+The program arrayprt is shown in Fig. C-16. Comments have been omitted
+here, as the instructions should be well known by now. This layout allows a twocolumn format. Line 4 puts the address of the empty stack in the base pointer register to allow the stack cleanup can be made on line 10 by copying the base pointer
+to the stack pointer, as described in the previous example. We also have seen the
+computation and pushing of the stack arguments before the call on lines 5 through
+9 in the previous example. Lines 22 to 25 load the registers in the subroutine.
+
+SEC. C.8
+
+735
+
+EXAMPLES
+
+#include "../syscalnr.h"
+
+! 1
+
+.SECT .TEXT
+vecpstrt:
+MOV BP,SP
+PUSH vec1
+MOV CX,frmatstr-vec1
+SHR CX
+PUSH CX
+CALL vecprint
+MOV SP,BP
+PUSH 0
+PUSH EXIT
+SYS
+
+! 2
+! 3
+! 4
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 12
+! 13
+
+.SECT .DATA
+vec1: .WORD 3,4,7,11,3
+frmatstr: .ASCIZ "%s"
+
+! 14
+! 15
+! 16
+
+frmatkop:
+! 17
+.ASCIZ "The array contains " ! 18
+frmatint: .ASCIZ " %d"

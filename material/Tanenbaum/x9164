@@ -1,0 +1,100 @@
+
+Exclusive OR
+
+DST ← DST XOR SRC
+
+COM DST
+
+One’s Complement
+
+DST ← 0xFF - DST
+
+NEG DST
+
+Two’s Complement
+
+DST ← 0x00 - DST
+
+SBR DST,IMM
+
+Set Bit(s) in Register
+
+DST ← DST OR IMM
+
+CBR DST,IMM
+
+Clear Bit(s) in Register
+
+DST ← DST AND (0xFF - IMM)
+
+ING DST
+
+Increment
+
+DST ← DST + 1
+
+DEC DST
+
+Decrement
+
+DST ← DST - 1
+
+TST DST
+
+Test for Zero or Minus
+
+DST ← DST AND DST
+
+CLR DST
+
+Clear Register
+
+DST ← DST XOR DST
+
+SER DST
+
+Set Register
+
+DST ← 0xFF
+
+MUL DST,SRC
+
+Multiply Unsigned
+
+R1:R0 ← DST * SRC
+
+MULS DST,SRC
+
+Multiply Signed
+
+R1:R0 ← DST * SRC
+
+MULSU DST,SRC
+
+Multiply Signed with Unsigned
+
+R1:R0 ← DST * SRC
+
+RJMP IMM
+
+PC-relative Jump
+
+PC ← PC + IMM + 1
+
+IJMP
+
+Indirect Jump to Z
+
+PC ← Z (R30:R31)
+
+JMP IMM
+
+Jump
+
+PC ← IMM
+
+RCALL IMM
+
+Relative Call
+
+STACK ← PC+2, PC ← PC + IMM + 1

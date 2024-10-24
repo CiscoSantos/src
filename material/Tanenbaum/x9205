@@ -1,0 +1,100 @@
+
+3
+
+4
+
+Sector
+5 6 7
+
+8
+
+9 10 11
+
+0
+0
+0
+0
+1
+
+0
+0
+1
+0
+1
+
+0
+0
+0
+1
+0
+
+0
+0
+0
+1
+0
+
+1
+0
+0
+1
+0
+
+0
+0
+0
+1
+0
+
+0
+0
+0
+1
+0
+
+0
+0
+0
+0
+0
+
+0
+0
+1
+1
+0
+
+0
+1
+0
+0
+0
+
+0
+0
+0
+0
+1
+
+(b)
+
+(a)
+
+Figure 6-22. Two ways of keeping track of available sectors. (a) A free list.
+(b) A bit map.
+
+to get to the start of an allocation unit, it is far better to read 8 KB (about 80 μ sec)
+than 1 KB (about 10 μ sec), since reading 8 KB as eight 1-KB units may require
+eight seeks. Transfer efficiency argues for large units. Of course, as solid-state
+disks become cheaper and more common, this argument ceases to hold, since these
+devices have no seek time at all.
+Also arguing for large allocation units is the fact that having small allocation
+units means having many of them. Having, many allocation units, in turn, means
+large file indices or large linked-list tables in memory. As a historical note, MSDOS started out with the allocation unit being one sector (512 bytes) and 16-bit
+numbers being used to identify sectors. When disks grew beyond 65,336 sectors,
+the only way to use all the space on the disk and still use 16-bit numbers to identify
+the allocation units was to use bigger and bigger allocation units. The first release
+of Windows 95 had the same problem, but a subsequent release used 32-bit numbers. Windows 98 supported both sizes.
+However, arguing in favor of small allocation units is the fact that few files
+occupy exactly an integral number of allocation units. Therefore, some space will
+be wasted in the last allocation unit of nearly every file. If the file is much larger

@@ -1,0 +1,100 @@
+IBM
+
+Started the modern personal computer era
+
+1981 Osborne-1
+
+Osborne
+
+First portable computer
+
+1983 Lisa
+
+Apple
+
+First personal computer with a GUI
+
+1985 386
+
+Intel
+
+First 32-bit ancestor of the Pentium line
+
+1985 MIPS
+
+MIPS
+
+First commercial RISC machine
+
+1985 XC2064
+
+Xilinx
+
+First field-programmable gate array (FPGA)
+
+1987 SPARC
+
+Sun
+
+First SPARC-based RISC workstation
+
+1989 GridPad
+
+Grid Systems
+
+First commercial tablet computer
+
+1990 RS6000
+
+IBM
+
+First superscalar machine
+
+1992 Alpha
+
+DEC
+
+First 64-bit personal computer
+
+1992 Simon
+
+IBM
+
+First smartphone
+
+1993 Newton
+
+Apple
+
+First palmtop computer (PDA)
+
+2001 POWER4
+
+IBM
+
+First dual-core chip multiprocessor
+
+Figure 1-4. Some milestones in the development of the modern digital computer.
+
+well. In effect, Leibniz had built the equivalent of a four-function pocket calculator three centuries ago.
+Nothing much happened for the next 150 years until a professor of mathematics at the University of Cambridge, Charles Babbage (1792–1871), the inventor of
+
+SEC. 1.2
+
+MILESTONES IN COMPUTER ARCHITECTURE
+
+15
+
+the speedometer, designed and built his difference engine. This mechanical device, which like Pascal’s could only add and subtract, was designed to compute
+tables of numbers useful for naval navigation. The entire construction of the machine was designed to run a single algorithm, the method of finite differences using
+polynomials. The most interesting feature of the difference engine was its output
+method: it punched its results into a copper engraver’s plate with a steel die, thus
+foreshadowing later write-once media such as punched cards and CD-ROMs.
+Although the difference engine worked reasonably well, Babbage quickly got
+bored with a machine that could run only one algorithm. He began to spend increasingly large amounts of his time and family fortune (not to mention 17,000
+pounds of the government’s money) on the design and construction of a successor
+called the analytical engine. The analytical engine had four components: the store
+(memory), the mill (computation unit), the input section (punched-card reader),
+and the output section (punched and printed output). The store consisted of 1000
+words of 50 decimal digits, each used to hold variables and results. The mill could
+accept operands from the store, then add, subtract, multiply, or divide them, and finally return the result to the store. Like the difference engine, it was entirely mechanical.

@@ -1,0 +1,100 @@
+U
+V
+W
+X
+Y
+Z
+[
+\
+]
+ˆ
+
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+6A
+6B
+6C
+6D
+6E
+6F
+
+Char Hex
+‘
+a
+b
+c
+d
+e
+f
+g
+h
+i
+j
+k
+l
+m
+n
+o
+
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+7A
+7B
+7C
+7D
+7E
+7F
+
+Char
+p
+q
+r
+s
+t
+u
+v
+w
+x
+y
+z
+{
+|
+}
+~
+DEL
+
+Figure 2-44. The ASCII character set.
+
+The idea behind Unicode is to assign every character and symbol a unique
+16-bit value, called a code point. No multibyte characters or escape sequences are
+used. Having every symbol be 16 bits makes writing software simpler.
+With 16-bit symbols, Unicode has 65,536 code points. Since the world’s languages collectively use about 200,000 symbols, code points are a scarce resource
+that must be allocated with great care. To speed the acceptance of Unicode, the
+consortium cleverly used Latin-1 as code points 0 to 255, making conversion
+
+140
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+between ASCII and Unicode easy. To avoid wasting code points, each diacritical
+mark has its own code point. It is up to software to combine diacritical marks with
+their neighbors to form new characters. While this puts more work on the software, it saves precious code points.
+The code point space is divided up into blocks, each one a multiple of 16 code

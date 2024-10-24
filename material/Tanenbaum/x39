@@ -1,0 +1,100 @@
+CHAP. 2
+
+which consists of a set of conventional registers that can be loaded from memory in
+a single instruction, which actually loads them from memory serially. Then a vector addition instruction performs the pairwise addition of the elements of two such
+vectors by feeding them to a pipelined adder from the two vector registers. The result from the adder is another vector, which can either be stored into a vector register or used directly as an operand for another vector operation. The SSE (Streaming SIMD Extension) instructions available on the Intel Core architecture use this
+execution model to speed up highly regular computation, such as multimedia and
+scientific software. In this respect, the Intel Core architecture has the ILLIAC IV
+as one of its ancestors.
+Multiprocessors
+The processing elements in a data parallel processor are not independent
+CPUs, since there is only one control unit shared among all of them. Our first parallel system with multiple full-blown CPUs is the multiprocessor, a system with
+more than one CPU sharing a common memory, like a group of people in a room
+sharing a common blackboard. Since each CPU can read or write any part of
+memory, they must coordinate (in software) to avoid getting in each other’s way.
+When two or more CPUs have the ability to interact closely, as is the case with
+multiprocessors, they are said to be tightly coupled.
+Various implementation schemes are possible. The simplest one is to have a
+single bus with multiple CPUs and one memory all plugged into it. A diagram of
+such a bus-based multiprocessor is shown in Fig. 2-8(a).
+Local memories
+
+Shared
+memory
+
+Shared
+memory
+CPU
+
+CPU
+
+CPU
+
+CPU
+
+CPU
+
+CPU
+
+CPU
+
+CPU
+
+Bus
+
+Bus
+(a)
+
+(b)
+
+Figure 2-8. (a) A single-bus multiprocessor. (b) A multicomputer with local
+memories.
+
+It does not take much imagination to realize that with a large number of fast
+processors constantly trying to access memory over the same bus, conflicts will result. Multiprocessor designers have come up with various schemes to reduce this
+
+SEC. 2.1
+
+PROCESSORS
+
+73
+
+contention and improve performance. One design, shown in Fig. 2-8(b), gives
+each processor some local memory of its own, not accessible to the others. This
+memory can be used for program code and those data items that need not be shared. Access to this private memory does not use the main bus, greatly reducing bus
+traffic. Other schemes (e.g., caching—see below) are also possible.
+Multiprocessors have the advantage over other kinds of parallel computers that
+the programming model of a single shared memory is easy to work with. For example, imagine a program looking for cancer cells in a photograph of some tissue
+taken through a microscope. The digitized photograph could be kept in the common memory, with each processor assigned some region of the photograph to hunt
+in. Since each processor has access to the entire memory, studying a cell that starts
+in its assigned region but straddles the boundary into the next region is no problem.
+Multicomputers
+Although multiprocessors with a modest number of processors (≤ 256) are relatively easy to build, large ones are surprisingly difficult to construct. The difficulty is in connecting so many the processors to the memory. To get around these
+problems, many designers have simply abandoned the idea of having a shared
+memory and just build systems consisting of large numbers of interconnected computers, each having its own private memory, but no common memory. These systems are called multicomputers. The CPUs in a multicomputer are said to be
+loosely coupled, to contrast them with the tightly coupled multiprocessor CPUs.
+The CPUs in a multicomputer communicate by sending each other messages,
+something like email, but much faster. For large systems, having every computer
+connected to every other computer is impractical, so topologies such as 2D and 3D
+grids, trees, and rings are used. As a result, messages from one computer to another often must pass through one or more intermediate computers or switches to get
+from the source to the destination. Nevertheless, message-passing times on the
+order of a few microseconds can be achieved without much difficulty. Multicomputers with over 250,000 CPUs, such as IBM’s Blue Gene/P, have been built.
+Since multiprocessors are easier to program and multicomputers are easier to
+build, there is much research on designing hybrid systems that combine the good
+properties of each. Such computers try to present the illusion of shared memory
+without going to the expense of actually constructing it. We will go into multiprocessors and multicomputers in detail in Chap. 8.
+
+2.2 PRIMARY MEMORY
+The memory is that part of the computer where programs and data are stored.
+Some computer scientists (especially British ones) use the term store or storage
+rather than memory, although more and more, the term ‘‘storage’’ is used to refer
+
+74
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+to disk storage. Without a memory from which the processors can read and write
+information, there would be no stored-program digital computers.
+

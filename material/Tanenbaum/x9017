@@ -1,0 +1,100 @@
+(c) Effect of (a) when control is low. (d) An inverting buffer.
+
+Figure 3-29(d) shows an inverting buffer, which acts like a normal inverter
+when control is high and disconnects the output from the circuit when control is
+low. Both kinds of buffers are tri-state devices, because they can output 0, 1, or
+none of the above (open circuit). Buffers also amplify signals, so they can drive
+many inputs simultaneously. They are sometimes used in circuits for this reason,
+even when their switching properties are not needed.
+
+178
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+Getting back to the memory circuit, it should now be clear what the three noninverting buffers on the data output lines are for. When CS, RD, and OE are all high,
+the output enable signal is also high, enabling the buffers and putting a word onto
+the output lines. When any one of CS, RD, or OE is low, the data outputs are
+disconnected from the rest of the circuit.
+
+3.3.5 Memory Chips
+The nice thing about the memory of Fig. 3-28 is that it extends easily to larger
+sizes. As we drew it, the memory is 4 × 3, that is, four words of 3 bits each. To
+extend it to 4 × 8 we need only add five more columns of four flip-flops each, as
+well as five more input lines and five more output lines. To go from 4 × 3 to 8 × 3
+we must add four more rows of three flip-flops each, as well as an address line A2 .
+With this kind of structure, the number of words in the memory should be a power
+of 2 for maximum efficiency, but the number of bits in a word can be anything.
+Because integrated-circuit technology is well suited to making chips whose internal structure is a repetitive two-dimensional pattern, memory chips are an ideal
+application for it. As the technology improves, the number of bits that can be put
+on a chip keeps increasing, typically by a factor of two every 18 months (Moore’s
+law). The larger chips do not always render the smaller ones obsolete due to different trade-offs in capacity, speed, power, price, and interfacing convenience.
+Commonly, the largest chips currently available sell at a premium and thus are
+more expensive per bit than older, smaller ones.
+For any given memory size, there are various ways of organizing the chip.
+Figure 3-30 shows two possible organizations for an older memory chip of size 4
+Mbit: 512K × 8 and 4096K × 1. (As an aside, memory-chip sizes are usually
+quoted in bits, rather than in bytes, so we will stick to that convention here.) In
+Fig. 3-30(a), 19 address lines are needed to address one of the 219 bytes, and eight
+data lines are needed for loading or storing the byte selected.
+A note on terminology is in order here. On some pins, the high voltage causes
+an action to happen. On others, the low voltage causes the action. To avoid confusion, we will consistently say that a signal is asserted (rather than saying it goes
+high or goes low) to mean that it is set to cause some action. Thus, for some pins,
+asserting it means setting it high. For others, it means setting the pin low. Pins
+that are asserted low are given signal names containing an overbar. Thus, a signal
+named CS is asserted high, but one named CS is asserted low. The opposite of
+asserted is negated. When nothing special is happening, pins are negated.
+Now let us get back to our memory chip. Since a computer normally has many
+memory chips, a signal is needed to select the chip that is currently needed so that
+it responds and all the others do not. The CS (Chip Select) signal is provided for
+this purpose. It is asserted to enable the chip. Also, a way is needed to distinguish
+reads from writes. The WE signal (Write Enable) is used to indicate that data are
+
+SEC. 3.3
+A0
+A1
+A2
+A3
+A4
+A5
+A6
+A7
+A8
+A9
+A10
+A11
+A12
+A13
+A14
+A15
+A16
+A17
+A18
+
+179
+
+MEMORY
+
+512K × 8
+Memory
+chip
+(4 Mbit)
+
+D0
+D1
+D2
+D3
+D4
+D5
+D6
+D7
+
+A0
+A1
+A2
+A3
+A4
+A5
+A6
+A7

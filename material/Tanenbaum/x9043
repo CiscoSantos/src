@@ -1,0 +1,100 @@
+Chipset
+
+Intel Integrated
+100/1G/10G MAC
+PCIe ×1
+SM Bus
+Intel Gigabit LAN
+Connect
+
+12 Hi-Speed USB 2.0 Ports;
+Dual EHCI; USB Port Disable
+6 PCI Express ×1
+Intel Integrated
+10/100/1000 MAC
+GLCI
+LCI
+Intel Gigabit LAN
+Connect
+
+5 Gb/s
+each ×1
+
+Up to
+6 Gb/s2
+
+480
+Mb/s
+each
+500
+
+8 PCI Express 2.0
+6 Serial ATA Ports; eSATA;
+Port Disable
+Intel Rapid Storage
+Technology (optional)
+
+2 GB/s DMI
+Intel High
+Definition Audio
+ICH10
+ICH10R
+
+Mb/s
+each ×1
+
+3
+Gb/s
+each
+
+6 Serial ATA Ports; eSATA;
+Port Disable
+PCI
+
+LPC or SPI
+BIOS Support
+
+Figure 3-52. The bus structure of a modern Core i7 system.
+
+1G Ethernet, USB ports, and old-style PCI Express and SATA interfaces. Newer
+systems may not incorporate the ICH10; it is required only if the system needs to
+support legacy interfaces.
+PCI Bus Operation
+Like all PC buses going back to the original IBM PC, the PCI bus is synchronous. All transactions on the PCI bus are between a master, officially called
+the initiator, and a slave, officially called the target. To keep the PCI pin count
+
+SEC. 3.6
+
+219
+
+EXAMPLE BUSES
+
+down, the address and data lines are multiplexed. In this way, only 64 pins are
+needed on PCI cards for address plus data signals, even though PCI supports 64-bit
+addresses and 64-bit data.
+The multiplexed address and data pins work as follows. On a read operation,
+during cycle 1, the master puts the address onto the bus. On cycle 2, the master removes the address and the bus is turned around so the slave can use it. On cycle 3,
+the slave outputs the data requested. On write operations, the bus does not have to
+be turned around because the master puts on both the address and the data. Nevertheless, the minimum transaction is still three cycles. If the slave is not able to respond in three cycles, it can insert wait states. Block transfers of unlimited size are
+also allowed, as well as several other kinds of bus cycles.
+PCI Bus Arbitration
+
+PCI
+device
+
+PCI
+device
+
+PCI
+device
+
+GNT#
+
+REQ#
+
+GNT#
+
+REQ#
+
+GNT#
+

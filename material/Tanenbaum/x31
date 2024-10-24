@@ -1,0 +1,100 @@
+This sequence of steps is frequently referred to as the fetch-decode-execute cycle.
+It is central to the operation of all computers.
+This description of how a CPU works closely resembles a program written in
+English. Figure 2-3 shows this informal program rewritten as a Java method (i.e.,
+procedure) called interpret. The machine being interpreted has two registers visible to user programs: the program counter (PC), for keeping track of the address of
+the next instruction to be fetched, and the accumulator (AC), for accumulating
+arithmetic results. It also has internal registers for holding the current instruction
+during its execution (instr), the type of the current instruction (instr type), the address of the instruction’s operand (data loc), and the current operand itself (data).
+Instructions are assumed to contain a single memory address. The memory location addressed contains the operand, for example, the data item to add to the accumulator.
+The very fact that it is possible to write a program that can imitate the function
+of a CPU shows that a program need not be executed by a ‘‘hardware’’ CPU consisting of a box full of electronics. Instead, a program can be carried out by having
+another program fetch, examine, and execute its instructions. A program (such as
+the one in Fig. 2-3) that fetches, examines, and executes the instructions of another
+program is called an interpreter, as mentioned in Chap. 1.
+
+SEC. 2.1
+
+PROCESSORS
+
+public class Interp {
+static int PC;
+static int AC;
+static int instr;
+static int instr type;
+static int data loc;
+static int data;
+static boolean run bit = true;
+
+59
+
+// program counter holds address of next instr
+// the accumulator, a register for doing arithmetic
+// a holding register for the current instruction
+// the instruction type (opcode)
+// the address of the data, or −1 if none
+// holds the current operand
+// a bit that can be turned off to halt the machine
+
+public static void interpret(int memory[ ], int starting address) {
+// This procedure interprets programs for a simple machine with instructions having
+// one memory operand. The machine has a register AC (accumulator), used for
+// arithmetic. The ADD instruction adds an integer in memory to the AC, for example.
+// The interpreter keeps running until the run bit is turned off by the HALT instruction.
+// The state of a process running on this machine consists of the memory, the
+// program counter, the run bit, and the AC. The input parameters consist of
+// the memory image and the starting address.
+PC = starting address;
+while (run bit) {
+instr = memory[PC];
+PC = PC + 1;
+instr type = get instr type(instr);
+data loc = find data(instr, instr type);
+if (data loc >= 0)
+data = memory[data loc];
+execute(instr type, data);
+}
+
+// fetch next instruction into instr
+// increment program counter
+// determine instruction type
+// locate data (−1 if none)
+// if data loc is −1, there is no operand
+// fetch the data
+// execute instruction
+
+}
+private static int get instr type(int addr) { ... }
+private static int find data(int instr, int type) { ... }
+private static void execute(int type, int data) { ... }
+}
+Figure 2-3. An interpreter for a simple computer (written in Java).
+
+This equivalence between hardware processors and interpreters has important
+implications for computer organization and the design of computer systems. After
+having specified the machine language, L, for a new computer, the design team can
+decide whether they want to build a hardware processor to execute programs in L
+directly or whether they want to write an interpreter to interpret programs in L instead. If they choose to write an interpreter, they must also provide some hardware
+machine to run the interpreter. Certain hybrid constructions are also possible, with
+some hardware execution as well as some software interpretation.
+An interpreter breaks the instructions of its target machine into small steps. As
+a consequence, the machine on which the interpreter runs can be much simpler and
+less expensive than a hardware processor for the target machine would be. This
+
+60
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+saving is especially significant if the target machine has a large number of instructions and they are fairly complicated, with many options. The saving comes essentially from the fact that hardware is being replaced by software (the interpreter) and
+it costs more to replicate hardware than software.
+Early computers had small, simple sets of instructions. But the quest for more
+powerful computers led, among other things, to more powerful individual instructions. Very early on, it was discovered that more complex instructions often led to
+faster program execution even though individual instructions might take longer to
+execute. A floating-point instruction is an example of a more complex instruction.
+Direct support for accessing array elements is another. Sometimes it was as simple
+as observing that the same two instructions often occurred consecutively, so a single instruction could accomplish the work of both.
+The more complex instructions were better because the execution of individual
+operations could sometimes be overlapped or otherwise executed in parallel using
+different hardware. For expensive, high-performance computers, the cost of this

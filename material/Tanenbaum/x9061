@@ -1,0 +1,100 @@
+
+Δx
+
+Set up
+signals
+to drive
+data path
+Drive H
+and
+B bus
+
+Δy
+
+Clock cycle 2
+
+New MPC used to
+load MIR with next
+microinstruction here
+
+Δz
+
+ALU
+and
+shifter
+
+MPC
+available
+here
+
+Propagation
+from shifter
+to registers
+
+Figure 4-3. Timing diagram of one data path cycle.
+
+B bus does not cause the C bus to change until a finite time later (due to the finite
+delays of each step). Consequently, even if a store changes one of the input registers, the value will be safely tucked away in the register long before the
+(now-incorrect) value being put on the B bus (or H) can reach the ALU.
+Making this design work requires rigid timing, a long clock cycle, a known
+minimum propagation time through the ALU, and a fast load of the registers from
+the C bus. However, with careful engineering, the data path can be designed so
+that it functions correctly all the time. Actual machines work this way.
+A somewhat different way to look at the data path cycle is to think of it as broken up into implicit subcycles. The start of subcycle 1 is triggered by the falling
+edge of the clock. The activities that go on during the subcycles are shown below
+along with the subcycle lengths (in parentheses).
+1. The control signals are set up (Δw).
+2. The registers are loaded onto the B bus (Δx).
+3. The ALU and shifter operate (Δy).
+4. The results propagate along the C bus back to the registers (Δz).
+The time interval after Δz provides some tolerance since the times are not exact.
+At the rising edge of the next clock cycle, the results are stored in the registers.
+
+SEC. 4.1
+
+AN EXAMPLE MICROARCHITECTURE
+
+249
+
+We said that the subcycles can be best thought of as being implicit. By this we
+mean there are no clock pulses or other explicit signals to tell the ALU when to operate or tell the results to enter the C bus. In reality, the ALU and shifter run all the
+time. However, their inputs are garbage until a time Δw + Δx after the falling edge
+of the clock. Likewise, their outputs are garbage until Δw + Δx + Δy has elapsed
+after the falling edge of the clock. The only explicit signals that drive the data path
+are the falling edge of the clock, which starts the data path cycle, and the rising
+edge of the clock, which loads the registers from the C bus. The other subcycle
+boundaries are implicitly determined by the inherent propagation times of the circuits involved. It is the design engineers’ responsibility to make sure that the time
+Δw + Δx + Δy + Δz comes sufficiently in advance of the rising edge of the clock
+to have the register loads work reliably all the time.
+Memory Operation
+Our machine has two different ways to communicate with memory: a 32-bit,
+word-addressable memory port and an 8-bit, byte-addressable memory port. The
+32-bit port is controlled by two registers, MAR (Memory Address Register) and
+MDR (Memory Data Register), as shown in Fig. 4-1. The 8-bit port is controlled
+by one register, PC, which reads 1 byte into the low-order 8 bits of MBR. This port
+can only read data from memory; it cannot write data to memory.
+Each of these registers (and every other register in Fig. 4-1) is driven by one or
+two control signals. An open arrow under a register indicates a control signal that
+enables the register’s output onto the B bus. Since MAR does not have a connection
+to the B bus, it does not have an enable signal. H does not have one either because,
+being the only possible left ALU input, it is always enabled.
+A solid black arrow under a register indicates a control signal that writes (i.e.,
+loads) the register from the C bus. Since MBR cannot be loaded from the C bus, it
+does not have a write signal (although it does have two other enable signals, described below). To initiate a memory read or write, the appropriate memory registers must be loaded, then a read or write signal issued to the memory (not shown in
+Fig. 4-1).
+MAR contains word addresses, so that the values 0, 1, 2, etc. refer to consecutive words. PC contains byte addresses, so that the values 0, 1, 2, etc. refer to consecutive bytes. Thus putting a 2 in PC and starting a memory read will read out
+byte 2 from memory and put it in the low-order 8 bits of MBR. Putting a 2 in MAR
+and starting a memory read will read out bytes 8–11 (i.e., word 2) from memory
+and put them in MDR.
+This difference in functionality is needed because MAR and PC will be used to
+reference two different parts of memory. The need for this distinction will become
+clearer later. For the moment, suffice it to say that the MAR/MDR combination is
+used to read and write ISA-level data words and the PC/MBR combination is used
+
+250
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+to read the executable ISA-level program, which consists of a byte stream. All

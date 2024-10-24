@@ -1,0 +1,100 @@
+instruction stream with bundles marked.
+
+However, this design proved too rigid because not every instruction was able to
+utilize every functional unit, leading to many useless NO-OPs used as filler, as illustrated in Fig. 8-2(b). Consequently, modern VLIW machines have a way of marking a bundle of instructions as belonging together, for example with an ‘‘end-ofbundle’’ bit, as shown in Fig. 8-2(c). The processor can then fetch the entire bundle and issue it all at once. It is up to the compiler to prepare bundles of compatible instructions.
+In effect, VLIW shifts the burden of determining which instructions can be
+issued together from run time to compile time. Not only does this choice make the
+hardware simpler and faster, but since an optimizing compiler can run for a long
+time if need be, better bundles can be assembled than what the hardware could do
+at run time. Of course, such a radical change in CPU architecture will be difficult
+to introduce, as demonstrated by the slow acceptance of the Itanium except for
+niche applications.
+It is worth noting in passing that instruction-level parallelism is not the only
+form of low-level parallelism. Another is memory-level parallelism, in which multiple memory operations are in flight at the same time (Chou et al., 2004).
+
+SEC. 8.1
+
+557
+
+ON-CHIP PARALELLISM
+
+The TriMedia VLIW CPU
+We studied one example of a VLIW CPU, the Itanium-2, in Chap. 5. Let us
+now look at a very different VLIW processor, the TriMedia, designed by Philips,
+the Dutch electronics company that also invented the audio CD and CD-ROM.
+The TriMedia is intended for use as an embedded processor in image-, audio-, and
+video-intensive applications such as CD, DVD, and MP3 players, CD and DVD
+recorders, interactive TV sets, digital cameras, camcorders, and so on. Given these
+application areas, it is not surprising that it differs considerably from the Itanium-2,
+which is a general-purpose CPU intended for high-end servers.
+The TriMedia is a true VLIW processor with every instruction holding as many
+as five operations. Under completely optimal conditions, every clock cycle one
+instruction is started and the five operations are issued. The clock runs at 266 MHz
+or 300 MHz, but since five operations per cycle can be issued, the effective clock
+speed is as much as five times higher. In the discussion below, we will focus on
+the TM3260 implementation of the TriMedia; other versions differ in minor ways
+from it.
+A typical instruction is illustrated in Fig. 8-3. The instructions vary from standard 8-, 16-, and 32-bit integer instructions through IEEE 754 floating-point instructions to parallel multimedia instructions. As a consequence of the five issues
+per cycle and the parallel multimedia instructions, the TriMedia is fast enough to
+decode streaming DV from a camcorder at full size and full frame rate in software.
+Slot 1
+Addition
+
+Slot 2
+Shift
+
+Slot 3
+Multimedia
+
+Slot 4
+Load
+
+Operation in slot 5
+Store
+
+Instruction
+Figure 8-3. A typical TriMedia instruction, showing five possible operations.
+
+The TriMedia has a byte-oriented memory, with the I/O registers mapped into
+the memory space. Half words (16 bits) and full words (32 bits) must be aligned
+on their natural boundaries. It can run either as little endian or big endian, depending on a PSW bit that the operating system can set. This bit affects only the way
+load operations and store operations transfer between memory and registers. The
+CPU contains a split 8-way set-associative cache, with a 64-byte line size for both
+the instruction cache and the data cache. The instruction cache is 64 KB; the data
+cache is 16 KB.
+There are 128 general-purpose 32-bit registers. Register R0 is hardwired to 0.
+Register R1 is hardwired to 1. Attempting to change either one gives the CPU a
+heart attack. The remaining 126 registers are all functionally equivalent and can be
+used for any purpose. In addition, four special-purpose, 32-bit registers also exist.
+
+558
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+These are the program counter, program status word, and two registers that relate
+to interrupts. Finally, a 64-bit register counts the number of CPU cycles since the
+CPU was last reset. At 300 MHz, it takes nearly 2000 years for the counter to
+wrap around.
+The Trimedia TM3260 has 11 different functional units for doing arithmetic,
+logical, and control flow operations (as well as one for cache control that we will
+not discuss here). They are listed in Fig. 8-4. The first two columns name the unit
+and give a brief description of what it does. The third column tells how many
+hardware copies of the unit exist. The fourth column gives the latency, that is, how
+many clock cycles it takes to complete. In this context, it is worth nothing that all
+the functional units except the FP square-root/divide unit are pipelined. The
+latency given in the table tells how long before the result of an operation is available, but a new operation can be initiated every cycle. Thus, for example, each of
+three consecutive instructions can hold two load operations, resulting in six loads
+in various stages of execution at the same time.
+Finally, the last five columns show which instruction slots can be used for
+which functional unit. For example, floating-point compare operations must
+appear only in the third slot of an instruction
+Unit
+
+Description
+
+#
+
+Lat.
+

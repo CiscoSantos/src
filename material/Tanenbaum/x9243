@@ -1,0 +1,100 @@
+pairs. Given the symbol, the associative memory must produce the value.
+The simplest implementation technique is indeed to implement the symbol table as an array of pairs, the first element of which is (or points to) the symbol and
+the second of which is (or points to) the value. Given a symbol to look up, the
+
+536
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+symbol table routine just searches the table linearly until it finds a match. This
+method is easy to program but is slow, because, on the average, half the table will
+have to be searched on each lookup.
+Another way to organize the symbol table is to sort it on the symbols and use
+the binary search algorithm to look up a symbol. This algorithm works by comparing the middle entry in the table to the symbol. If the symbol comes before the
+middle entry alphabetically, the symbol must be located in the first half of the table. If the symbol comes after the middle entry, it must be in the second half of the
+table. If the symbol is equal to the middle entry, the search terminates.
+Assuming that the middle entry is not equal to the symbol sought, we at least
+know which half of the table to look for it in. Binary search can now be applied to
+the correct half, which yields either a match, or the correct quarter of the table.
+Applying the algorithm recursively, a table of size n entries can be searched in
+about log2 n attempts. Obviously, this way is much faster than searching linearly,
+but it requires maintaining the table in sorted order.
+A completely different way of simulating an associative memory is a technique
+known as hash coding or hashing. This approach requires having a ‘‘hash’’ function that maps symbols onto integers in the range 0 to k − 1. One possible function
+is to multiply the ASCII codes of the characters in the symbols together, ignoring
+overflow, and taking the result modulo k or dividing it by a prime number. In fact,
+almost any function of the input that gives a uniform distribution of the hash values
+will do. Symbols can be stored by having a table consisting of k buckets numbered 0 to k − 1. All the (symbol, value) pairs whose symbol hashes to i are stored
+on a linked list pointed to by slot i in the hash table. With n symbols and k slots in
+the hash table, the average list will have length n/k. By choosing k approximately
+equal to n, symbols can be located with only about one lookup on the average. By
+adjusting k we can reduce table size at the expense of slower lookups. Hash coding is illustrated in Fig. 7-11.
+
+7.4 LINKING AND LOADING
+Most programs consist of more than one procedure. Compilers and assemblers
+generally translate one procedure at a time and put the translated output on disk.
+Before the program can be run, all the translated procedures must be found and
+linked together properly. If virtual memory is not available, the linked program
+must be explicitly loaded into main memory as well. Programs that perform these
+functions are called by various names, including linker, linking loader, and linkage editor. The complete translation of a source program requires two steps, as
+shown in Fig. 7-12:
+1. Compilation or assembly of the source files.
+2. Linking of the object modules.
+
+SEC. 7.4
+
+537
+
+LINKING AND LOADING
+Andy
+Anton
+Cathy
+Dick
+Erik
+Frances
+Frank
+Gerrit
+Hans
+Henri
+Jan
+Jaco
+Maarten
+Reind
+Roel
+Willem
+Wiebren
+
+14025
+31253
+65254
+54185
+47357
+56445
+14332
+32334
+44546
+75544
+17097
+64533
+23267
+63453
+76764
+34544
+34344
+
+0
+4
+5
+0
+6
+3
+3
+4
+4
+2
+5
+6
+0
+1

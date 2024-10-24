@@ -1,0 +1,100 @@
+A
+A
+
+AB
+
+A+B
+
+B
+B
+(b)
+
+Figure 3-4. Construction of (a)
+gates or only NOR gates.
+
+(c)
+NOT,
+
+(b)
+
+AND,
+
+and (c)
+
+OR
+
+gates using only
+
+NAND
+
+gates (or perhaps with simpler gates, for example, two-input gates instead of fourinput gates). In the search for equivalent circuits, Boolean algebra can be a valuable tool.
+As an example of how Boolean algebra can be used, consider the circuit and
+truth table for AB + AC shown in Fig. 3-5(a). Although we have not discussed
+them yet, many of the rules of ordinary algebra also hold for Boolean algebra. In
+particular, AB + AC can be factored into A(B + C) using the distributive law. Figure 3-5(b) shows the circuit and truth table for A(B + C). Because two functions
+are equivalent if and only if they have the same output for all possible inputs, it is
+easy to see from the truth tables of Fig. 3-5 that A(B + C) is equivalent to
+AB + AC. Despite this equivalence, the circuit of Fig. 3-5(b) is clearly better than
+that of Fig. 3-5(a) because it contains fewer gates.
+In general, a circuit designer starts with a Boolean function and then applies
+the laws of Boolean algebra to it in an attempt to find a simpler but equivalent one.
+From the final function, a circuit can be constructed.
+To use this approach, we need some identities from Boolean algebra. Figure
+3-6 shows some of the major ones. It is interesting to note that each law has two
+
+SEC. 3.1
+
+155
+
+GATES AND BOOLEAN ALGEBRA
+AB
+
+A
+B
+
+AB + AC
+
+A
+
+A(B + C)
+
+B
+AC
+
+C
+
+B+C
+
+C
+
+A
+
+B
+
+C
+
+AB
+
+AC
+
+AB + AC
+
+A
+
+B
+
+C
+
+A
+
+B+C
+
+A(B + C)
+
+0
+
+0
+
+0
+
+0

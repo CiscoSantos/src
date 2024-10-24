@@ -1,0 +1,100 @@
+these instructions selects one of the I/O devices. A single character is transferred
+between a fixed register in the processor and the selected I/O device. The processor must execute an explicit sequence of instructions for each and every character read or written.
+As a simple example of this method, consider a terminal with four 1-byte registers, as shown in Fig. 5-30. Two registers are used for input, status and data, and
+two are used for output, also status and data. Each one has a unique address. If
+memory-mapped I/O is being used, all four registers are part of the computer’s
+memory address space and can be read and written using ordinary instructions.
+Otherwise, special I/O instructions, say, IN and OUT, are provided to read and write
+them. In both cases, I/O is performed by transferring data and status information
+between the CPU and these registers.
+The keyboard status register has 2 bits that are used and 6 that are not. The
+leftmost bit (7) is set to 1 by the hardware whenever a new character arrives. If the
+software has previously set bit 6, an interrupt is generated, otherwise it is not
+
+SEC. 5.5
+
+INSTRUCTION TYPES
+Character available
+Keyboard status
+
+Interrupt enabled
+
+395
+
+Ready for next character
+Display status
+
+Interrupt enabled
+
+Keyboard buffer
+
+Display buffer
+
+Character received
+
+Character to display
+
+Figure 5-30. Device registers for a simple terminal.
+
+(interrupts will be discussed shortly). When using programmed I/O, to get input,
+the CPU normally sits in a tight loop, repeatedly reading the keyboard status register, waiting for bit 7 to go on. When this happens, the software reads in the
+keyboard buffer register to get the character. Reading the keyboard data register
+causes the CHARACTER AVAILABLE bit to be reset to 0.
+Output works in a similar way. To write a character to the screen, the software
+first reads the display status register to see if the READY bit is 1. If not, it loops
+until the bit goes to 1, indicating that the device is ready to accept a character. As
+soon as the terminal is ready, the software writes a character to the display buffer
+register, which causes it to be transmitted to the screen, and also causes the device
+to clear the READY bit in the display status register. When the character has been
+displayed and the terminal is prepared to handle the next character, the READY bit
+is automatically set to 1 again by the controller.
+As an example of programmed I/O, consider the Java procedure of Fig. 5-31.
+It is called with two parameters: a character array to be output, and the count of
+characters present in the array, up to 1K. The body of the procedure is a loop that
+outputs characters one at a time. For each character, first the CPU must wait until
+the device is ready, then the character is output. The procedures in and out would
+typically be assembly-language routines to read and write the device registers specified by the first parameter from or to the variable specified as the second parameter. The implicit division by 128 by shifting gets rid of the low-order 7 bits, leaving the READY bit in bit 0.
+The primary disadvantage of programmed I/O is that the CPU spends most of
+its time in a tight loop waiting for the device to become ready. This approach is
+called busy waiting. If the CPU has nothing else to do (e.g., the CPU in a washing
+machine), busy waiting may be OK (though even a simple controller often needs to
+monitor multiple, concurrent events). However, if there is other work to do, such
+as running other programs, busy waiting is wasteful, so a different I/O method is
+needed.
+The way to get rid of busy waiting is to have the CPU start the I/O device and
+tell it to generate an interrupt when it is done. Looking at Fig. 5-30, we show how
+
+396
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+public static void output buffer(char buf[ ], int count) {
+// Output a block of data to the device
+int status, i, ready;
+for (i = 0; i < count; i++) {
+do {
+status = in(display status reg);
+ready = (status >> 7) & 0x01;
+} while (ready != 1);
+out(display buffer reg, buf[i]);
+}
+
+// get status
+// isolate ready bit
+
+}
+Figure 5-31. An example of programmed I/O.
+
+this is done. By setting the INTERRUPT ENABLE bit in a device register, the software can request that the hardware give it a signal when the I/O is completed. We
+will study interrupts in detail later in this chapter when we come to flow of control.
+It is worth mentioning that in many computers, the interrupt signal is generated
+by ANDing the INTERRUPT ENABLE bit with the READY bit. If the software first
+enables interrupts (before starting I/O), an interrupt will happen immediately, because the READY bit will be 1. Thus it may be necessary to first start the device,
+then immediately afterward enable interrupts. Writing a byte to the status register
+does not change the READY bit, which is read only.
+Although interrupt-driven I/O is a big step forward compared to programmed
+I/O, it is far from perfect. The problem is that an interrupt is required for every
+character transmitted. Processing an interrupt is expensive. A way is needed to get
+rid of most of the interrupts.

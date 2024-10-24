@@ -1,0 +1,100 @@
+15
+16
+
+7
+8
+
+17
+18
+
+2
+
+1
+
+2
+
+1
+
+8
+Figure 4-43. A superscalar CPU with in-order issue and in-order completion.
+
+In real machines, the scoreboard also keeps track of functional unit usage, to
+avoid issuing an instruction for which no functional unit is available. For simplicity, we will assume there is always a suitable functional unit available, so we will
+not show the functional units on the scoreboard.
+The first line of Fig. 4-43 shows I1 (instruction 1), which multiplies R0 by R1
+and puts the result in R3. Since none of these registers are in use yet, the instruction is issued and the scoreboard is updated to reflect that R0 and R1 are being read
+and R3 is being written. No subsequent instruction can write into any of these or
+can read R3 until I1 has been retired. Since this instruction is a multiplication, it
+will be finished at the end of cycle 4. The scoreboard values shown on each line
+reflect their state after the instruction on that line has been issued. Blanks are 0s.
+
+318
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+Since our example is a superscalar machine that can issue two instructions per
+cycle, a second instruction (I2) is issued during cycle 1. It adds R0 and R2, storing
+the result in R4. To see if this instruction can be issued, these rules are applied:
+1. If any operand is being written, do not issue (RAW dependence).
+2. If the result register is being read, do not issue (WAR dependence).
+3. If the result register is being written, do not issue (WAW dependence).
+We have already seen RAW dependences, which occur when an instruction needs
+to use as a source a result that a previous instruction has not yet produced. The
+other two dependences are less serious. They are essentially resource conflicts. In
+a WAR dependence (Write After Read), one instruction is trying to overwrite a
+register that a previous instruction may not yet have finished reading. A WAW
+dependence (Write After Write) is similar. These can often be avoided by having
+the second instruction put its results somewhere else (perhaps temporarily). If
+none of the above three dependences exist, and the functional unit it needs is available, the instruction is issued. In this case, I2 uses a register (R0) that is being read
+by a pending instruction, but this overlap is permitted so I2 is issued. Similarly, I3
+is issued during cycle 2.
+Now we come to I4, which needs to use R4. Unfortunately, we see from line 3
+that R4 is being written. Here we have a RAW dependence, so the decode unit
+stalls until R4 becomes available. While stalled, it stops pulling instructions from
+the fetch unit. When the fetch unit’s internal buffers fill up, it stops prefetching.
+It is worth noting that the next instruction in program order, I5, does not have
+conflicts with any of the pending instructions. It could have been decoded and
+issued were it not for the fact that this design requires issuing instructions in order.
+Now let us look at what happens during cycle 3. I2, being an addition (two
+cycles), finishes at the end of cycle 3. Unfortunately, it cannot be retired (thus
+freeing up R4 for I4). Why not? The reason is that this design also requires inorder retirement. Why? What harm could possibly come from doing the store into
+R4 now and marking it as available?
+The answer is subtle, but important. Suppose that instructions could complete
+out of order. Then if an interrupt occurred, it would be difficult to save the state of
+the machine so it could be restored later. In particular, it would not be possible to
+say that all instructions up to some address had been executed and all instructions
+beyond it had not. This is called a precise interrupt and is a desirable characteristic in a CPU (Moudgill and Vassiliadis, 1996). Out-of-order retirement makes interrupts imprecise, which is why some machines complete instructions in order.
+Getting back to our example, at the end of cycle 4, all three pending instructions can be retired, so in cycle 5 I4 can finally be issued, along with the newly
+decoded I5. Whenever an instruction is retired, the decode unit has to check to see
+if there is a stalled instruction that can now be issued.
+
+SEC. 4.5
+
+319
+
+IMPROVING PERFORMANCE
+
+In cycle 6, I6 stalls because it needs to write into R1 and R1 is busy. It is finally started in cycle 9. The entire sequence of eight instructions takes 18 cycles to
+complete due to many dependences, even though the hardware is capable of issuing two instructions on every cycle. Notice, however, when reading down the Iss
+column of Fig. 4-43, that all the instructions have been issued in order. Likewise,
+the Ret column shows that they have been retired in order as well.
+Now let us consider an alternative design: out-of-order execution. In this design, instructions may be issued out of order and may be retired out of order as
+well. The same sequence of eight instructions is shown in Fig. 4-44, only now
+with out-of-order issue and out-of-order retirement permitted.
+Registers being read
+#
+
+Decoded
+
+1
+
+1
+2
+
+R3=R0 R1
+*
+R4=R0+R2
+
+1

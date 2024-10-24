@@ -1,0 +1,100 @@
+Most instructions do not alter the flow of control. After an instruction is executed, the one following it in memory is fetched and executed. After each instruction, the program counter is increased by the instruction length. If observed
+over an interval of time that is long compared to the average instruction time, the
+program counter is approximately a linear function of time, increasing by the average instruction length per average instruction time. Stated another way, the dynamic order in which the processor actually executes the instructions is the same as
+the order in which they appear on the program listing, as shown in Fig. 5-36(a). If
+a program contains branches, this simple relation between the order in which instructions appear in memory and the order in which they are executed is no longer
+true. When branches are present, the program counter is no longer a monotonically increasing function of time, as shown in Fig. 5-36(b). As a result, it becomes
+difficult to visualize the instruction execution sequence from the program listing.
+
+Jumps
+
+Time
+
+Time
+
+(a)
+
+(b)
+
+Figure 5-36. Program counter as a function of time (smoothed). (a) Without
+branches. (b) With branches.
+
+When programmers have trouble keeping track of the sequence in which the
+processor will execute the instructions, they are prone to make errors. This observation led Dijkstra (1968a) to write a then-controversial letter entitled ‘‘GO TO
+Statement Considered Harmful,’’ in which he suggested avoiding goto statements.
+That letter gave birth to the structured programming revolution, one of whose
+tenets is the replacement of goto statements with more structured forms of flow
+
+406
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+control, such as while loops. Of course, these programs compile down to level 2
+programs that may contain many branches, because the implementation of if, while,
+and other high-level control structures requires branching around.
+
+5.6.2 Procedures
+The most important technique for structuring programs is the procedure. From
+one point of view, a procedure call alters the flow of control just as a branch does,
+but unlike the branch, when finished performing its task, it returns control to the
+statement or instruction following the call.
+However, from another point of view, a procedure body can be regarded as
+defining a new instruction on a higher level. From this standpoint, a procedure call
+can be thought of as a single instruction, even though the procedure may be quite
+complicated. To understand a piece of code containing a procedure call, it is only
+necessary to know what it does, not how it does it.
+One particularly interesting kind of procedure is the recursive procedure, that
+is, a procedure that calls itself, either directly or indirectly via a chain of other procedures. Studying recursive procedures gives considerable insight into how procedure calls are implemented, and what local variables really are. Now we will give
+an example of a recursive procedure.
+The ‘‘Towers of Hanoi’’ is an ancient problem that has a simple solution involving recursion. In a certain monastery in Hanoi, there are three gold pegs.
+Around the first one were a series of 64 concentric gold disks, each with a hole in
+the middle for the peg. Each disk is slightly smaller in diameter than the disk directly below it. The second and third pegs were initially empty. The monks there
+are busily transferring all the disks to peg 3, one disk at a time, but at no time may
+a larger disk rest on a smaller one. When they finish, it is said the world will come
+to an end. If you wish to get hands-on experience, it is all right to use plastic disks
+and fewer of them, but when you solve the problem, nothing will happen. To get
+the end-of-world effect, you need 64 of them and in gold. Figure 5-37 shows the
+initial configuration for n = 5 disks.
+The solution of moving n disks from peg 1 to peg 3 consists first of moving
+n − 1 disks from peg 1 to peg 2, then moving 1 disk from peg 1 to peg 3, then
+moving n − 1 disks from peg 2 to peg 3. This solution is illustrated in Fig. 5-38.
+To solve the problem we need a procedure to move n disks from peg i to peg j.
+When this procedure is called, by
+towers(n, i, j)
+
+the solution is printed out. The procedure first makes a test to see if n = 1. If so,
+the solution is trivial, just move the one disk from i to j. If n ≠ 1, the solution consists of three parts as discussed above, each being a recursive procedure call.
+The complete solution is shown in Fig. 5-39. The call
+towers(3, 1, 3)
+
+SEC. 5.6
+
+407
+
+FLOW OF CONTROL
+
+Peg 1
+
+Peg 2
+
+Peg 3
+
+Figure 5-37. Initial configuration for the Towers of Hanoi problem for five disks.
+
+to solve the problem of Fig. 5-38 generates three more calls. Specifically, it makes
+the calls
+towers(2, 1, 2)
+towers(1, 1, 3)
+towers(2, 2, 3)
+
+The first and third will generate three calls each, for a total of seven.
+In order to have recursive procedures, we need a stack to store the parameters
+and local variables for each invocation, the same as we had in IJVM. Each time a
+procedure is called, a new stack frame is allocated for the procedure on top of the
+stack. The frame most recently created is the current frame. In our examples, the
+stack grows upward, from low memory addresses to high ones, just like in IJVM.
+So the most recent frame has higher addresses than all the others.
+In addition to the stack pointer, which points to the top of the stack, it is often
+convenient to have a frame pointer, FP, which points to a fixed location within the

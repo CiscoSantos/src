@@ -1,0 +1,100 @@
+DPI (see Dots Per Inch)
+DRAM (see Dynamic RAM)
+DSL (see Digital Subscriber Line)
+DSLAM (see Digital Subscriber Line Access Multiplexer)
+DSM (see Distributed Shared Memory)
+Dual, 155
+Dual inline memory module, 85
+Dual inline package, 158
+DVD (see Digital Video Disk)
+Dyadic operations, 387–388
+Dye sublimation printer, 127
+Dye-based ink, 126
+Dynamic branch prediction, 312–315
+Dynamic link library, 547
+Dynamic linking, 545–549
+MULTICS, 545–547
+UNIX, 549
+Windows, 547–549
+Dynamic RAM, 181
+Dynamic voltage scaling, 209
+
+755
+
+INDEX
+
+E
+Eckert, J. Presper, 17
+ECL (see Emitter-Coupled Logic)
+Edge-triggered flip-flop, 172
+EDO (see Extended Data Output)
+EDSAC, 14
+EDVAC, 17
+EEPROM (see Electrically Erasable PROM)
+Effective address, 704
+Egress processing, 580
+EHCI (see Enhanced Host Controller Interface)
+EIDE (see Extended IDE)
+EISA bus (see Extended ISA bus)
+Electrically erasable PROM, 182–184
+Electronic discrete variable automatic computer, 17
+Electronic numerical integrator and computer, 17
+Emitter, 148
+Emitter-coupled logic, 150
+Emulation, 22
+Encoding, 8b/10b, 226
+Endian memory,
+big, 76–78
+little, 76–78
+Enhanced host controller interface, 231
+ENIAC, 14, 17
+ENIGMA, 16
+Entry point, 542
+EPIC (see Explicitly Parallel Instruction Computing)
+EPROM (see Erasable PROM)
+EPT (see Extended Page Table)
+Erasable PROM, 182
+Error-correcting code, 78–82
+Escape code, 367
+Estridge, Philip, 24
+Ethernet, 575
+Event, 509
+Evolution of multilevel machines, 8–13
+Example computer families, 39
+Example programs, 8088, 726–745
+Excess notation, 676
+Executable binary file, 716
+Executable binary program, 518, 537
+Executive, NTOS, 487
+Expanding opcode, 365–367
+Explicit linking, 548
+Explicitly parallel instruction computing, 423
+Exponent, 682
+Extended data output, 181
+Extended IDE disk, 91
+
+Extended ISA bus, 111
+Extended page table, 464
+External fragmentation, 453
+External reference, 539
+External symbol, 542
+Extra segment, 709
+
+F
+Fabric layer, 653
+False sharing, 641
+Fanout, 618
+Far call, 710
+Far jump, 8088, 709
+Fast page mode memory, 181
+FAT (see File Allocation Table)
+Fat tree, 620
+Fermi GPU, 70–71, 582–585
+Fetch-decode-execute cycle, 58, 244
+Field extraction, 580
+Field-programmable gate array, 25, 183–185, 578
+FIFO algorithm (see First-In First-Out algorithm)
+Fifth-generation computers, 26–28
+Fifth-generation project, Japanese, 26
+File, 465–467
+File allocation table, 498

@@ -1,0 +1,100 @@
+mean access time = c + (1 − h)m
+
+As h → 1, all references can be satisfied out of the cache, and the access time approaches c. On the other hand, as h → 0, a memory reference is needed every
+time, so the access time approaches c + m, first a time c to check the cache (unsuccessfully), and then a time m to do the memory reference. On some systems, the
+memory reference can be started in parallel with the cache search, so that if a cache
+miss occurs, the memory cycle has already been started. However, this strategy requires that the memory can be stopped in its tracks on a cache hit, making the implementation more complicated.
+Using the locality principle as a guide, main memories and caches are divided
+up into fixed-size blocks. When talking about these blocks inside the cache, we
+will often refer to them as cache lines. When a cache miss occurs, the entire cache
+line is loaded from the main memory into the cache, not just the word needed. For
+example, with a 64-byte line size, a reference to memory address 260 will pull the
+line consisting of bytes 256 to 319 into one cache line. With a little bit of luck,
+some of the other words in the cache line will be needed shortly. Operating this
+way is more efficient than fetching individual words because it is faster to fetch k
+words all at once than one word k times. Also, having cache entries be more than
+one word means there are fewer of them, hence a smaller overhead is required.
+Finally, many computers can transfer 64 or 128 bits in parallel on a single bus
+cycle, even on 32-bit machines.
+Cache design is an increasingly important subject for high-performance CPUs.
+One issue is cache size. The bigger the cache, the better it performs, but also the
+slower it is to access and the more it costs. A second issue is the size of the cache
+line. A 16-KB cache can be divided up into 1024 lines of 16 bytes, 2048 lines of 8
+bytes, and other combinations. A third issue is how the cache is organized, that is,
+how does the cache keep track of which memory words are currently being held?
+We will examine caches in detail in Chap. 4.
+A fourth design issue is whether instructions and data are kept in the same
+cache or different ones. Having a unified cache (instructions and data use the
+same cache) is a simpler design and automatically balances instruction fetches
+against data fetches. Nevertheless, the trend these days is toward a split cache,
+with instructions in one cache and data in the other. This design is also called a
+Harvard architecture, the reference going all the way back to Howard Aiken’s
+Mark III computer, which had different memories for instructions and data. The
+force driving designers in this direction is the widespread use of pipelined CPUs.
+The instruction fetch unit needs to access instructions at the same time the operand
+
+SEC. 2.2
+
+85
+
+PRIMARY MEMORY
+
+fetch unit needs access to data. A split cache allows parallel accesses; a unified
+one does not. Also, since instructions are not modified during execution, the contents of the instruction cache never has to be written back into memory.
+Finally, a fifth issue is the number of caches. It is common these days to have
+chips with a primary cache on chip, a secondary cache off chip but in the same
+package as the CPU chip, and a third cache still further away.
+
+2.2.6 Memory Packaging and Types
+From the early days of semiconductor memory until the early 1990s, memory
+was manufactured, bought, and installed as single chips. Chip densities went from
+1K bits to 1M bits and beyond, but each chip was sold as a separate unit. Early
+PCs often had empty sockets into which additional memory chips could be
+plugged, if and when the purchaser needed them.
+Since the early 1990s, a different arrangement has been used. A group of
+chips, typically 8 or 16, is mounted on a printed circuit board and sold as a unit.
+This unit is called a SIMM (Single Inline Memory Module) or a DIMM (Dual
+Inline Memory Module), depending on whether it has a row of connectors on one
+side or both sides of the board. SIMMs have one edge connector with 72 contacts
+and transfer 32 bits per clock cycle. They are rarely used these days. DIMMs
+usually have edge connectors with 120 contacts on each side of the board, for a
+total of 240 contacts, and transfer 64 bits per clock cycle. The most common ones
+at present are DDR3 DIMMS, which is the third version of the double data-rate
+memories. A typical DIMM is illustrated in Fig. 2-17.
+133 mm
+256-MB
+memory
+chip
+Connector
+
+Figure 2-17. Top view of a DIMM holding 4 GB with eight chips of 256 MB on
+each side. The other side looks the same.
+
+A typical DIMM configuration might have eight data chips with 256 MB each.
+The entire module would then hold 2 GB. Many computers have room for four
+modules, giving a total capacity of 8 GB when using 2-GB modules and more
+when using larger ones.
+A physically smaller DIMM, called an SO-DIMM (Small Outline DIMM), is
+used in notebook computers. DIMMS can have a parity bit or error correction
+added, but since the average error rate of a module is one error every 10 years, for
+most garden-variety computers, error detection and correction are omitted.
+
+86
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+2.3 SECONDARY MEMORY
+No matter how big the main memory is, it is always way too small. People always want to store more information than it can hold, primarily because as technology improves, people begin thinking about storing things that were previously
+entirely in the realm of science fiction. For example, as the U.S. government’s
+budget discipline forces government agencies to generate their own revenue, one
+can imagine the Library of Congress deciding to digitize and sell its full contents
+as a consumer article (‘‘All of human knowledge for only $299.95’’). Roughly 50
+million books, each with 1 MB of text and 1 MB of compressed pictures, requires
+storing 1014 bytes or 100 terabytes. Storing all 50,000 movies ever made is also in
+this general ballpark. This amount of information is not going to fit in main memory, at least not for a few decades.
+
+2.3.1 Memory Hierarchies
+The traditional solution to storing a great deal of data is a memory hierarchy,
+as illustrated in Fig. 2-18. At the top are the CPU registers, which can be accessed

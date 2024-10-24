@@ -1,0 +1,100 @@
+32–512 B
+
+RAM
+
+6–32
+
+Tiny, digital I/O, analog input
+
+megaAVR
+
+8–256 KB
+
+0.5–4 KB
+
+0.25–8 KB
+
+28-100
+
+Many peripherals, analog out
+
+AVR XMEGA
+
+16–256 KB
+
+1–4 KB
+
+2–16 KB
+
+44–100
+
+Crypto acceleration, USB I/O
+
+Figure 1-15. Microcontroller classes in the AVR family.
+
+Along with various additional peripherals, each AVR processor class includes
+some additional memory resources. Microcontrollers typically have three types of
+memory on board: flash, EEPROM, and RAM. Flash memory is programmable
+using an external interface and high voltages, and this is where program code and
+data are stored. Flash RAM is nonvolatile, so even if the system is powered down,
+the flash memory will remember what was written to it. Like flash, EEPROM is
+also nonvolatile, but unlike flash RAM, it can be changed by the program while it
+is running. This is the storage in which an embedded system would keep user configuration information, such as whether your alarm clock displays time in 12- or
+24-hour format. Finally, the RAM is where program variables will be stored as the
+program runs. This memory is volatile, so any value stored here will be lost once
+the system loses power. We study volatile and nonvolatile RAM types in detail in
+Chap. 2.
+The recipe for success in the microcontroller business is to cram into the chip
+everything it may possibly need (and the kitchen sink, too, if it can be reduced to a
+square millimeter) and then put it into an inexpensive and small package with very
+few pins. By integrating lots of features into the microcontroller, it can work for
+many applications, and by making it cheap and small, it can serve many form factors. To get a sense of how many things get packed onto a modern microcontroller,
+let’s take a look at the peripherals included in the Atmel megaAVR-168:
+
+SEC. 1.4
+
+EXAMPLE COMPUTER FAMILIES
+
+49
+
+1. Three timers (two 8-bit timers and one 16-bit timer).
+2. Real-time clock with oscillator.
+3. Six pulse-width modulation channels used, for example, to control
+light intensity or motor speed.
+4. Eight analog-to-digital conversion channels used to read voltage levels.
+5. Universal serial receiver/transmitter.
+6. I2C serial interface, a common standard for interfacing to sensors.
+7. Programmable watchdog timer that detects when the system has
+locked up.
+8. On-chip analog comparator that compares two input voltages.
+9. Power brown-out detector that interrupts the system when power is
+failing.
+10. Internal programmable clock oscillator to drive the CPU clock.
+
+1.5 METRIC UNITS
+To avoid any confusion, it is worth stating explicitly that in this book, as in
+computer science in general, metric units are used instead of traditional English
+units (the furlong-stone-fortnight system). The principal metric prefixes are listed
+in Fig. 1-16. The prefixes are typically abbreviated by their first letters, with the
+units greater than 1 capitalized (KB, MB, etc.). One exception (for historical reasons) is kbps for kilobits/sec. Thus, a 1-Mbps communication line transmits 106
+bits/sec and a 100-psec (or 100-ps) clock ticks every 10−10 seconds. Since milli
+and micro both begin with the letter ‘‘m,’’ a choice had to be made. Normally,
+‘‘m’’ is for milli and ‘‘μ’’ (the Greek letter mu) is for micro.
+It is also worth pointing out that in common industry practice for measuring
+memory, disk, file, and database sizes, the units have slightly different meanings.
+There, kilo means 210 (1024) rather than 103 (1000) because memories are always
+a power of two. Thus, a 1-KB memory contains 1024 bytes, not 1000 bytes. Similarly, a 1-MB memory contains 220 (1,048,576) bytes, a 1-GB memory contains 230
+(1,073,741,824) bytes, and a 1-TB database contains 240 (1,099,511,627,776)
+bytes.
+However, a 1-kbps communication line can transmit 1000 bits per second and
+a 10-Mbps LAN runs at 10,000,000 bits/sec because these speeds are not powers
+of two. Unfortunately, many people tend to mix up these two systems, especially
+for disk sizes.
+
+50
+
+INTRODUCTION
+
+Exp.
+10−3
+−6

@@ -1,0 +1,100 @@
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+machine. Over this connection it can then exchange data in both directions, typically using the TCP/IP protocol. Since networking technology has been in UNIX
+for decades and is very stable and mature, a substantial fraction of the servers on
+the Internet run UNIX.
+Since there are many implementations of UNIX, it is difficult to say much
+about the structure of the operating system since each one is somewhat different
+from all the others. However, in general, Fig. 6-31 applies to most of them. At the
+bottom, there is a layer of device drivers that shield the file system from the bare
+hardware. Originally, each device driver was written as an independent entity, separate from all the others. This arrangement led to a lot of duplicated effort, since
+many drivers must deal with flow control, error handling, priorities, separating data
+from control, and so on. This observation led Dennis Ritchie to develop a framework called streams for writing drivers in a modular way. With a stream, it is possible to establish a two-way connection from a user process to a hardware device
+and to insert one or more modules along the path. The user process pushes data
+into the stream, which then is processed or transformed by each module until it
+gets to the hardware. The inverse processing occurs for incoming data.
+
+Shell
+
+User program
+
+User
+mode
+
+System call interface
+File system
+
+Process management
+
+Block cache
+
+IPC
+
+Scheduling
+
+Device drivers
+
+Signals
+
+Memory mgmt.
+
+Kernel
+mode
+
+Hardware
+
+Figure 6-31. The structure of a typical UNIX system.
+
+On top of the device drivers comes the file system. It manages file names, directories, disk block allocation, protection, and much more. Part of the file system
+is a block cache, for holding the blocks most recently read in from disk, in case
+they are needed again soon. A variety of file systems have been used over the
+years, including the Berkeley fast file system (McKusick et al., 1984), and
+log-structured file systems (Rosenblum and Ousterhout, 1991, and Seltzer et al.,
+1993).
+The other part of the UNIX kernel is the process-management portion. Among
+its various other functions, it handles IPC (InterProcess Communication), which allows processes to communicate with one another and synchronize to avoid race
+conditions. A variety of mechanisms are provided. The process-management code
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+485
+
+also handles process scheduling, which is based on priorities. Signals, which are a
+form of (asynchronous) software interrupt, are also managed here. Finally, memory management is done here as well. Most UNIX systems support demand-paged
+virtual memory, sometimes with a few extra features, such as the ability of multiple
+processes to share common regions of address space.
+From its inception, UNIX has tried to be a small system, in order to enhance
+reliability and performance. The first versions of UNIX were entirely text based,
+using terminals that could display 24 or 25 lines of 80 ASCII characters. The user
+interface was handled by a user-level program called the shell, which offered a
+command-line interface. Since the shell was not part of the kernel, adding new
+shells to UNIX was easy, and over time a number of increasingly sophisticated ones
+were invented.
+Later on, when graphics terminals came into existence, a windowing system
+for UNIX, called X Windows, was developed at M.I.T. Still later, a full-fledged
+GUI (Graphical User Interface), called Motif, was put on top of X Windows.
+These GUIs eventually developed into full-blown desktop environments with beautifully rendered window management, productivity tools, and utilities. Examples of
+these desktop environments include GNOME and KDE. In keeping with the UNIX
+philosophy of having a small kernel, nearly all the code of X Windows and its
+accompanying GUIs run in user mode, outside the kernel.
+Windows 7
+When the original IBM PC was launched in 1981, it came equipped with a
+16-bit real-mode, single-user, command-line-oriented operating system called MSDOS 1.0 This operating system consisted of 8 KB of memory-resident code. Two
+years later, a much more powerful 24-KB system, MS-DOS 2.0, appeared. It contained a command-line processor (shell), with a number of features borrowed from
+UNIX. When IBM released the 286-based PC/AT in 1984, it came equipped with
+MS-DOS 3.0, by now 36 KB. Over the years, MS-DOS continued to acquire new
+features, but it was still a command-line-oriented system.
+Inspired by the success of the Apple Macintosh, Microsoft decided to give MSDOS a graphical user interface that it called Windows. The first three versions of
+Windows, culminating in Windows 3.x, were not true operating systems but graphical user interfaces on top of MS-DOS, which was still in control of the machine.
+All programs ran in the same address space and a bug in any one of them could
+bring the whole system to a grinding halt.
+The release of Windows 95 in 1995 still did not eliminate MS-DOS, although it
+introduced a new version, 7.0. Together, Windows 95 and MS-DOS 7.0 contained
+most of the features of a full-blown operating system, including virtual memory,
+process management, and multiprogramming. However, Windows 95 was not a
+full 32-bit program. It contained large chunks of old 16-bit code (as well as some

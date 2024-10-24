@@ -1,0 +1,100 @@
+when an operand is moved from memory into a register (LDR instruction) or from a
+register to memory (STR instruction). Even for those instructions, one of the operands is a register—where the memory word is to come from or go to.
+
+SEC. 5.4
+
+ADDRESSING
+
+373
+
+5.4.5 Register Indirect Addressing
+In this mode, the operand being specified comes from memory or goes to
+memory, but its address is not hardwired into the instruction, as in direct addressing. Instead, the address is contained in a register. An address used in this
+manner is called a pointer. A big advantage of register indirect addressing is that
+it can reference memory without paying the price of having a full memory address
+in the instruction. It can also use different memory words on different executions
+of the instruction.
+To see why using a different word on each execution might be useful, imagine
+a loop that steps through the elements of a 1024-element one-dimensional integer
+array to compute the sum of the elements in register R1. Outside the loop, some
+other register, say, R2, can be set to point to the first element of the array, and another register, say, R3, can be set to point to the first address beyond the array.
+With 1024 integers of 4 bytes each, if the array begins at A, the first address
+beyond the array will be A + 4096. Typical assembly code for doing this calculation is shown in Fig. 5-17 for a two-address machine.
+MOV R1,#0
+MOV R2,#A
+MOV R3,#A+4096
+LOOP: ADD R1,(R2)
+ADD R2,#4
+CMP R2,R3
+BLT LOOP
+
+; accumulate the sum in R1, initially 0
+; R2 = address of the array A
+; R3 = address of the first word beyond A
+; register indirect through R2 to get operand
+; increment R2 by one word (4 bytes)
+; are we done yet?
+; if R2 < R3, we are not done, so continue
+
+Figure 5-17. A generic assembly program for computing the sum of the elements of an array.
+
+In this little program, we use several addressing modes. The first three instructions use register mode for the first operand (the destination) and immediate mode
+for the second operand (a constant indicated by the # sign). The second instruction
+puts the address of A in R2, not the contents. That is what the # sign tells the
+assembler. Similarly, the third instruction puts the address of the first word beyond
+the array in R3.
+What is interesting to note is that the body of the loop itself does not contain
+any memory addresses. It uses register and register indirect mode in the fourth instruction. It uses register and immediate mode in the fifth instruction and register
+mode twice in the sixth instruction. The BLT might use a memory address, but
+more likely it specifies the address to branch to with an 8-bit offset relative to the
+BLT instruction itself. By avoiding the use of memory addresses completely, we
+have produced a short, fast loop. As an aside, this program is really for the Core
+i7, except that we have renamed the instructions and registers and changed the
+
+374
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+notation to make it easy to read because the Core i7’s standard assembly-language
+syntax (MASM) verges on the bizarre, a remnant of the machine’s former life as an
+8088.
+It is worth noting that, in theory, there is another way to do this computation
+without using register indirect addressing. The loop could have contained an instruction to add A to R1, such as
+ADD R1,A
+
+Then on each iteration of the loop, the instruction itself could be incremented by 4,
+so that after one iteration it read
+ADD R1,A+4
+
+and so on until it was done.
+A program that modifies itself like this is called a self-modifying program.
+The idea was thought of by none other than John von Neumann and made sense on
+early computers, which did not have register indirect addressing. Nowadays,
+self-modifying programs are considered horrible style and hard to understand.
+They also cannot be shared among multiple processes at the same time. Furthermore, they will not even work correctly on machines with a split level 1 cache
+if the I-cache has no circuitry for doing writebacks (because the designers assumed
+that programs do not modify themselves). Lastly, self-modifying programs will
+also fail on machines with separate instruction and data spaces. All in all, this is an
+idea that has come and (fortunately) gone.
+
+5.4.6 Indexed Addressing
+It is frequently useful to be able to reference memory words at a known offset
+from a register. We saw some examples with IJVM where local variables are referenced by giving their offset from LV. Addressing memory by giving a register (explicit or implicit) plus a constant offset is called indexed addressing.
+Local variable access in IJVM uses a pointer into memory (LV) in a register
+plus a small offset in the instruction itself, as shown in Fig. 4-19(a). However, it is
+also possible to do it the other way: the memory pointer in the instruction and the
+small offset in the register. To see how that works, consider the following calculation. We have two one-dimensional arrays of 1024 words each, A and B, and we
+wish to compute Ai AND Bi for all the pairs and then OR these 1024 Boolean
+products together to see if there is at least one nonzero pair in the set. One approach would be to put the address of A in one register, the address of B in a second register, and then step through them together in lockstep, analogous to what
+we did in Fig. 5-17. This way of doing it would certainly work, but it can be done
+in a better, more general way, as illustrated in Fig. 5-18.
+
+SEC. 5.4
+
+375
+
+ADDRESSING
+
+MOV R1,#0

@@ -1,0 +1,100 @@
+Even at camp-stove temperatures, you need not worry about the safety of the
+Core i7. If the internal sensors detect that the processor is about to overheat, it will
+
+206
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+initiate thermal throttling, which is a technique that quickly reduces heat generation by running the processor only every N th clock cycle. The larger the value of
+N , the more the processor is throttled down, and the more quickly it will cool. Of
+course, the cost of this throttling is a decrease in system performance. Prior to the
+invention of thermal throttling, CPUs would burn up if their cooling system failed.
+Evidence of these dark times of CPU thermal management can be found by searching for ‘‘exploding CPU’’ on YouTube. The video is fake but the problem is not.
+The Clock signal provides the system clock to the processor, which internally
+is used to generate variety of clocks based on a multiple or fraction of the system
+clock. Yes, it is possible to generate a multiple of the system clock frequency,
+using a very clever device called a delay-locked loop, or DLL.
+The Diagnostics group contains signals for testing and debugging systems in
+conformance with the IEEE 1149.1 JTAG (Joint Test Action Group) test standard.
+Finally, the miscellaneous group is a hodge-podge of other signals that have various special purposes.
+Pipelining on the Core i7’s DDR3 Memory Bus
+Modern CPUs like the Core i7 place heavy demands on DRAM memories. Individual processors can produce access requests much faster than a slow DRAM
+can produce values, and this problem is compounded when multiple processors are
+making simultaneous requests. To keep the CPUs from starving for lack of data, it
+is essential to get the maximum possible throughput from the memory. For this
+reason, the Core i7 DDR3 memory bus can be operated in a pipelined manner, with
+as many as four simultaneous memory transactions going on at the same time. We
+saw the concept of pipelining in Chap. 2 in the context of a pipelined CPU (see
+Fig. 2-4), but memories can also be pipelined.
+To allow pipelining, Core i7 memory requests have three steps:
+1. The memory ACTIVATE phase, which ‘‘opens’’ a DRAM memory
+row, making it ready for subsequent memory accesses.
+2. The memory READ or WRITE phase, where multiple accesses can
+be made to individual words within the currently open DRAM row or
+to multiple sequential words within the current DRAM row using a
+burst mode.
+3. The PRECHARGE phase, which ‘‘closes’’ the current DRAM memory row, and prepares the DRAM memory for the next ACTIVATE
+command.
+The secret to the Core i7’s pipelined memory accesses is that DDR3 DRAMs
+are organized with multiple banks within the DRAM chip. A bank is a block of
+DRAM memory, which may be accessed in parallel with other DRAM memory
+
+SEC. 3.5
+
+207
+
+EXAMPLE CPU CHIPS
+
+banks, even if they are contained in the same chip. A typical DDR3 DRAM chip
+will have as many as 8 banks of DRAM. However, the DDR3 interface specification allows only up to four concurrent accesses on a single DDR3 channel. The
+timing diagram in Fig. 3-46 illustrates the Core i7 making 4 memory accesses to
+three distinct DRAM banks. The accesses are fully overlapped, such that the
+DRAM reads occur in parallel within the DRAM chip. The figure shows which
+commands lead to later operations through the use of arrows in the timing diagram.
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+CMD
+
+ACT
+bank 0
+
+ACT
+bank 1
+
+READ
+bank 0
+
+READ
+bank 1
+
+ACT
+bank 2
+
+PCHRG
+bank 0
+
+ADDR
+
+row
+bank 0
+
+row
+bank 1
+
+col
+bank 0
+
+col
+bank 1

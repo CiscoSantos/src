@@ -1,0 +1,100 @@
+Since a handle for a thread can be passed to another process, it is possible to have
+
+508
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+one process control (or even create) threads in a different process. This feature is
+useful for debuggers, for example.
+Processes can communicate in a wide variety of ways, including pipes, named
+pipes, sockets, remote procedure calls, and shared files. Pipes have two modes:
+byte and message, selected at creation time. Byte-mode pipes work the same way
+as in UNIX. Message-mode pipes are somewhat similar but preserve message
+boundaries, so that four writes of 128 bytes will be read as four 128-byte messages, and not as one 512-byte message, as would happen with byte-mode pipes.
+Named pipes also exist and have the same two modes as regular pipes. Named
+pipes can also be used over a network; regular pipes cannot.
+Sockets are like pipes, except that they normally connect processes on different
+machines. However, they can also be used to connect processes on the same machine. In general, there is usually little advantage to using a socket connection
+over a pipe or named pipe for intramachine communication.
+Remote procedure calls are a way for process A to have process B call a procedure in B’s address space on A’s behalf and return the result to A. Various restrictions on the parameters exist. For example, it makes no sense to pass a pointer to a
+different process. Instead, the object(s) pointed to have to be bundled up and sent
+to the destination process.
+Finally, processes can share memory by mapping onto the same file at the
+same time. All writes done by one process then appear in the address spaces of the
+other processes. Using this mechanism, the shared buffer used in our producer-consumer example can be easily implemented.
+Just as Windows 7 provides numerous interprocess communication mechanisms, it also provides numerous synchronization mechanisms, including semaphores, mutexes, critical sections, and events. All of these mechanisms work on
+threads, not processes, so that when a thread blocks on a semaphore, other threads
+in that process (if any) are not affected and can continue to run.
+A semaphore is created using the CreateSemaphore API function, which can
+initialize it to a given value and define a maximum value as well. Semaphores are
+kernel objects and thus have security descriptors and handles. The handle for a
+semaphore can be duplicated using DuplicateHandle and passed to another process
+so that multiple processes can synchronize on the same semaphore. Semaphores
+can also be given names when they are created so that other processes can open
+them by name. Calls for up and down are present, although they have the speculiar
+names of ReleaseSemaphore (up) and WaitForSingleObject (down). It is also possible to give WaitForSingleObject a timeout, so the calling thread can be released
+eventually, even if the semaphore remains at 0 (although timers reintroduce races).
+Mutexes are also kernel objects used for synchronization, but simpler than
+semaphores because they do not have counters. They are essentially locks, with
+API functions for locking (WaitForSingleObject) and unlocking (ReleaseMutex).
+Like semaphore handles, mutex handles can be duplicated and passed between
+processes so that threads in different processes can access the same mutex.
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+509
+
+The third synchronization mechanism is based on critical sections, which are
+similar to mutexes, except local to the address space of the creating thread. Because critical sections are not kernel objects, they do not have handles or security
+descriptors and cannot be passed between processes. Locking and unlocking is
+done with EnterCriticalSection and LeaveCriticalSection, respectively. Because
+these API functions are performed entirely in user space, they are much faster than
+mutexes. Windows 7 also provides condition variables, lightweight reader/writer
+locks, lock-free operations, and other synchronization mechanisms that work only
+between the threads of a single process.
+The last synchronization mechanism uses kernel objects called events. A
+thread can wait for an event to occur with WaitForSingleObject. A thread can release a single thread waiting on an event with SetEvent or it can release all threads
+waiting on an event with PulseEvent. Events come in several flavors and have a
+variety of options, too. Windows uses events to synchronize on the completion of
+asynchronous I/O and for other purposes.
+Events, mutexes, and semaphores can all be named and stored in the file system, like named pipes. Two or more processes can synchronize by opening the
+same event, mutex, or semaphore, rather than having one of them create the object
+and then make duplicate handles for the others, although the latter approach is certainly an option as well.
+
+6.6 SUMMARY
+The operating system can be regarded as an interpreter for certain architectural
+features not found at the ISA level. Chief among these are virtual memory, virtual
+I/O instructions, and facilities for parallel processing.
+Virtual memory is an architectural feature whose purpose is to allow programs
+to use more address space than the machine has physical memory, or to provide a
+consistent and flexible mechanism for memory protection and sharing. It can be
+implemented as pure paging, pure segmentation, or a combination of the two. In
+pure paging, the address space is broken up into equal-sized virtual pages. Some
+of these are mapped onto physical page frames. Others are not mapped. A reference to a mapped page is translated by the MMU into the correct physical address.
+A reference to an unmapped page causes a page fault. Both the Core i7 and the
+OMAP4430 ARM CPU have MMUs that support virtual memory and paging.
+The most important I/O abstraction present at this level is the file. A file consists of a sequence of bytes or logical records that can be read and written without
+knowledge of how disks, tapes, and other I/O devices work. Files can be accessed
+sequentially, randomly by record number, or randomly by key. Directories can be
+used to group files together. Files can be stored in consecutive sectors or scattered
+around the disk. In the latter case, normal on hard disks, data structures are needed
+
+510
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+to locate all the blocks of a file. Free disk storage can be kept track of using a list
+or a bit map.
+Parallel processing is often supported and is implemented by simulating multiple processors by timesharing a single CPU. Uncontrolled interaction between
+processes can lead to race conditions. To solve this problem, synchronization
+primitives are introduced, of which semaphores are a simple example. Using semaphores, producer-consumer problems can be solved simply and elegantly.
+Two examples of sophisticated operating systems are UNIX and Windows 7.
+Both support paging and memory-mapped files. They also both support hierarchical file systems, with files consisting of byte sequences. Finally, both support
+processes and threads and provide ways to synchronize them.
+

@@ -1,0 +1,100 @@
+_EXI T = 1
+_WRITE = 4
+_STDOUT = 1
+.SECT .TEXT
+start:
+MOV
+CX,de-hw
+PUSH CX
+PUSH hw
+PUSH _STDOUT
+PUSH _WRITE
+SYS
+ADD
+SP, 8
+SUB
+CX,AX
+PUSH CX
+PUSH _EXIT
+SYS
+.SECT .DATA
+hw:
+. ASCII "Hello World\n "
+de: .BYTE 0
+
+(a)
+
+! 1
+! 2
+! 3
+! 4
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 12
+! 13
+! 14
+! 15
+! 16
+! 17
+! 18
+! 19
+! 20
+
+C S : 00
+D S = S S = E S : 002
+AH:00 A L : 0 c
+AX:
+12
+BH:00 BL:00 B X :
+0
+CH:00 C L : 0 c C X :
+12
+DH:00 D L : 0 0
+DX:
+0
+S P : 7 f d 8 SF O D S Z C => 0004
+B P : 0000 CC - > p - 0001
+S I : 0000
+IP:000c:PC
+0000
+D I : 0000
+start + 7
+000c
+E
+I
+
+=>
+
+MOV
+PUSH
+PUSH
+PUSH
+PUSH
+SYS
+ADD
+SUB
+PUSH
+
+CX,de-hw
+CX
+HW
+_STDOUT
+_WRITE
+SP , 8
+CX,AX
+CX
+
+!
+!
+!
+!
+!
+!
+!
+!
+!

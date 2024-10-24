@@ -1,0 +1,100 @@
+
+PROCESSORS
+
+63
+
+Computer Science Departments at the time). Nowadays, few people think that the
+size of the instruction set is a major issue, but the name stuck.
+To make a long story short, a great religious war ensued, with the RISC supporters attacking the established order (VAX, Intel, large IBM mainframes). They
+claimed that the best way to design a computer was to have a small number of simple instructions that execute in one cycle of the data path of Fig. 2-2 by fetching
+two registers, combining them somehow (e.g., adding or ANDing them), and storing the result back in a register. Their argument was that even if a RISC machine
+takes four or five instructions to do what a CISC machine does in one instruction,
+if the RISC instructions are 10 times as fast (because they are not interpreted),
+RISC wins. It is also worth pointing out that by this time the speed of main memories had caught up to the speed of read-only control stores, so the interpretation
+penalty had greatly increased, strongly favoring RISC machines.
+One might think that given the performance advantages of RISC technology,
+RISC machines (such as the Sun UltraSPARC) would have mowed down CISC
+machines (such as the Intel Pentium) in the marketplace. Nothing like this has
+happened. Why not?
+First of all, there is the issue of backward compatibility and the billions of dollars companies have invested in software for the Intel line. Second, surprisingly,
+Intel has been able to employ the same ideas even in a CISC architecture. Starting
+with the 486, the Intel CPUs contain a RISC core that executes the simplest (and
+typically most common) instructions in a single data path cycle, while interpreting
+the more complicated instructions in the usual CISC way. The net result is that
+common instructions are fast and less common instructions are slow. While this
+hybrid approach is not as fast as a pure RISC design, it gives competitive overall
+performance while still allowing old software to run unmodified.
+
+2.1.4 Design Principles for Modern Computers
+Now that more than two decades have passed since the first RISC machines
+were introduced, certain design principles have come to be accepted as a good way
+to design computers given the current state of the hardware technology. If a major
+change in technology occurs (e.g., a new manufacturing process suddenly makes
+memory cycle time 10 times faster than CPU cycle time), all bets are off. Thus
+machine designers should always keep an eye out for technological changes that
+may affect the balance among the components.
+That said, there is a set of design principles, sometimes called the RISC
+design principles, that architects of new general-purpose CPUs do their best to
+follow. External constraints, such as the requirement of being backward compatible with some existing architecture, often require compromises from time to time,
+but these principles are goals that most designers strive to meet. Next we will discuss the major ones.
+
+64
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+All Instructions Are Directly Executed by Hardware
+All common instructions are directly executed by the hardware. They are not
+interpreted by microinstructions. Eliminating a level of interpretation provides
+high speed for most instructions. For computers that implement CISC instruction
+sets, the more complex instructions may be broken into separate parts, which can
+then be executed as a sequence of microinstructions. This extra step slows the machine down, but for less frequently occurring instructions it may be acceptable.
+Maximize the Rate at Which Instructions Are Issued
+Modern computers resort to many tricks to maximize their performance, chief
+among which is trying to start as many instructions per second as possible. After
+all, if you can issue 500 million instructions/sec, you have built a 500-MIPS processor, no matter how long the instructions actually take to complete. (MIPS stands
+for Millions of Instructions Per Second. The MIPS processor was so named as to
+be a pun on this acronym. Officially it stands for Microprocessor without Interlocked Pipeline Stages.) This principle suggests that parallelism can play a major
+role in improving performance, since issuing large numbers of slow instructions in
+a short time interval is possible only if multiple instructions can execute at once.
+Although instructions are always encountered in program order, they are not
+always issued in program order (because some needed resource might be busy) and
+they need not finish in program order. Of course, if instruction 1 sets a register and
+instruction 2 uses that register, great care must be taken to make sure that instruction 2 does not read the register until it contains the correct value. Getting this
+right requires a lot of bookkeeping but has the potential for performance gains by
+executing multiple instructions at once.
+Instructions Should Be Easy to Decode
+A critical limit on the rate of issue of instructions is decoding individual instructions to determine what resources they need. Anything that can aid this process is useful. That includes making instructions regular, of fixed length, and with a
+small number of fields. The fewer different formats for instructions, the better.
+Only Loads and Stores Should Reference Memory
+One of the simplest ways to break operations into separate steps is to require
+that operands for most instructions come from—and return to—CPU registers.
+The operation of moving operands from memory into registers can be performed in
+separate instructions. Since access to memory can take a long time, and the delay
+is unpredictable, these instructions can best be overlapped with other instructions
+assuming they do nothing except move operands between registers and memory.
+
+SEC. 2.1
+
+PROCESSORS
+
+65
+
+This observation means that only LOAD and STORE instructions should reference
+memory. All other instructions should operate only on registers.
+Provide Plenty of Registers
+Since accessing memory is relatively slow, many registers (at least 32) need to
+be provided, so that once a word is fetched, it can be kept in a register until it is no
+longer needed. Running out of registers and having to flush them back to memory
+only to later reload them is undesirable and should be avoided as much as possible.
+The best way to accomplish this is to have enough registers.
+
+2.1.5 Instruction-Level Parallelism
+Computer architects are constantly striving to improve performance of the machines they design. Making the chips run faster by increasing their clock speed is
+one way, but for every new design, there is a limit to what is possible by brute
+force at that moment in history. Consequently, most computer architects look to
+parallelism (doing two or more things at once) as a way to get even more performance for a given clock speed.
+Parallelism comes in two general forms, namely, instruction-level parallelism
+and processor-level parallelism. In the former, parallelism is exploited within individual instructions to get more instructions/sec out of the machine. In the latter,
+multiple CPUs work together on the same problem. Each approach has its own

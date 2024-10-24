@@ -1,0 +1,100 @@
+
+2
+
+8192 – 12287
+
+1
+
+4096 – 8191
+
+1
+
+4096 – 8191
+
+0
+
+0 – 4095
+
+0
+
+0 – 4095
+
+(a)
+
+(b)
+
+Figure 6-3. (a) The first 64 KB of virtual address space divided into 16 pages,
+with each page being 4K. (b) A 32-KB main memory divided up into eight page
+frames of 4 KB each.
+
+copied into the low-order 12 bits of the output register, as shown. This 15-bit address is now sent to the cache or memory for lookup.
+Figure 6-5 shows a possible mapping between virtual pages and physical page
+frames. Virtual page 0 is in page frame 1. Virtual page 1 is in page frame 0. Virtual page 2 is not in main memory. Virtual page 3 is in page frame 2. Virtual page
+4 is not in main memory. Virtual page 5 is in page frame 6, and so on.
+
+6.1.3 Demand Paging and the Working-Set Model
+In the preceding discussion it was assumed that the virtual page referenced was
+in main memory. However, that assumption will not always be true because there
+is not enough room in main memory for all the virtual pages. When a reference is
+made to an address on a page not present in main memory, it is called a page fault.
+
+444
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+15-bit Memory address
+1 1 0 0 0 0 0 0 0 0 1 0 1 1 0
+
+Output
+register
+
+0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 0 0 0 1 0 1 1 0
+
+Input
+register
+
+Virtual
+page
+Page
+table
+Present/absent
+bit
+15
+14
+13
+12
+11
+10
+9
+8
+7
+6
+5
+4
+3
+
+1
+
+110
+
+2
+1
+0
+
+20-bit virtual page
+
+12-bit offset
+
+32-bit virtual address
+
+Figure 6-4. Formation of a main memory address from a virtual address.
+
+After a page fault has occurred, the operating system must read in the required
+page from the disk, enter its new physical memory location in the page table, and
+then repeat the instruction that caused the fault.
+It is possible to start a program running on a machine with virtual memory
+even when none of the program is in main memory. The page table merely has to
+be set to indicate that each and every virtual page is in the secondary memory and
+

@@ -1,0 +1,100 @@
+Part of the reason that perfect speed-up is nearly impossible to achieve is that
+almost all programs have some sequential component, often the initialization
+phase, reading in the data, or collecting the results. Having many CPUs does not
+help here. Suppose that a program runs for T sec on a uniprocessor, with a fraction
+f of this time being sequential code and a fraction (1 − f ) being potentially parallelizable, as shown in Fig. 8-50(a). If the latter code can be run on n CPUs with no
+overhead, its execution time can be reduced from (1 − f )T to (1 − f )T /n at best,
+as shown in Fig. 8-50(b). This gives a total execution time for the sequential and
+parallel parts of fT + (1 − f )T /n. The speed-up is just the execution time of the
+original program, T , divided by this new execution time:
+
+SEC. 8.4
+
+649
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+60
+N-body problem
+50
+
+Linear speed-up
+
+Speed-up
+
+40
+
+Awari
+
+30
+
+20
+
+10
+Skyline matrix inversion
+0
+
+0
+
+10
+
+20
+
+30
+40
+Number of CPUs
+
+50
+
+60
+
+Figure 8-49. Real programs achieve less than linear speed-up.
+
+Speed − up =
+
+n
+1 + (n − 1) f
+
+For f = 0 we can get linear speed-up, but for f > 0, perfect speed-up is not possible due to the sequential component. This result is known as Amdahl’s law.
+n CPUs active
+
+…
+
+Inherently
+sequential
+part
+
+Potentially
+parallelizable
+part
+
+1 CPU
+active
+
+f
+
+1–f
+
+f
+
+1–f
+
+fT
+
+(1 – f)T/n
+
+T
+(a)
+
+(b)
+
+Figure 8-50. (a) A program has a sequential part and a parallelizable part.
+(b) Effect of running part of the program in parallel.
+
+650
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Amdahl’s law is not the only reason perfect speed-up is nearly impossible to

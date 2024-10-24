@@ -1,0 +1,100 @@
+
+…
+
+…
+
+Main
+memory
+
+Disk
+
+Printer
+
+Bus
+
+Figure 2-1. The organization of a simple computer with one CPU and two I/O
+devices.
+
+The CPU also contains a small, high-speed memory used to store temporary
+results and certain control information. This memory is made up of a number of
+registers, each having has a certain size and function. Usually, all the registers
+have the same size. Each register can hold one number, up to some maximum determined by its size. Registers can be read and written at high speed since they are
+internal to the CPU.
+The most important register is the Program Counter (PC), which points to
+the next instruction to be fetched for execution. ( The name ‘‘program counter’’ is
+somewhat misleading because it has nothing to do with counting anything, but the
+term is universally used.) Also important is the Instruction Register (IR), which
+holds the instruction currently being executed. Most computers have numerous
+other registers as well, some of them general purpose as well as some for specific
+purposes. Yet other registers are used by the operating system to control the computer.
+
+2.1.1 CPU Organization
+The internal organization of part of a simple von Neumann CPU is shown in
+Fig. 2-2 in more detail. This part is called the data path and consists of the registers (typically 1 to 32), the ALU (Arithmetic Logic Unit), and several buses connecting the pieces. The registers feed into two ALU input registers, labeled A and
+B in the figure. These registers hold the ALU input while the ALU is performing
+
+SEC. 2.1
+
+57
+
+PROCESSORS
+
+some computation. The data path is important in all machines and we will discuss
+it at great length throughout this book.
+A+B
+
+A
+
+Registers
+
+B
+
+A
+
+B
+
+ALU input register
+ALU input bus
+
+ALU
+
+A+B
+
+ALU output register
+
+Figure 2-2. The data path of a typical von Neumann machine.
+
+The ALU itself performs addition, subtraction, and other simple operations on
+its inputs, thus yielding a result in the output register. This output register can be
+stored back into a register. Later on, the register can be written (i.e., stored) into
+memory, if desired. Not all designs have the A, B, and output registers. In the example, addition is illustrated, but ALUs can also perform other operations.
+Most instructions can be divided into one of two categories: register-memory
+or register-register. Register-memory instructions allow memory words to be
+fetched into registers, where, for example, they can be used as ALU inputs in subsequent instructions. (‘‘Words’’ are the units of data moved between memory and
+registers. A word might be an integer. We will discuss memory organization later
+in this chapter.) Other register-memory instructions allow registers to be stored
+back into memory.
+The other kind of instruction is register-register. A typical register-register instruction fetches two operands from the registers, brings them to the ALU input
+registers, performs some operation on them (such as addition or Boolean AND),
+
+58
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+and stores the result back in one of the registers. The process of running two operands through the ALU and storing the result is called the data path cycle and is
+the heart of most CPUs. To a considerable extent, it defines what the machine can
+do. Modern computers have multiple ALUs operating in parallel and specialized
+for different functions. The faster the data path cycle is, the faster the machine
+runs.
+
+2.1.2 Instruction Execution
+The CPU executes each instruction in a series of small steps. Roughly speaking, the steps are as follows:
+1. Fetch the next instruction from memory into the instruction register.
+2. Change the program counter to point to the following instruction.
+3. Determine the type of instruction just fetched.
+4. If the instruction uses a word in memory, determine where it is.
+5. Fetch the word, if needed, into a CPU register.
+6. Execute the instruction.
+7. Go to step 1 to begin executing the following instruction.

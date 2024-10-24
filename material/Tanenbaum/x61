@@ -1,0 +1,100 @@
+PhotoCD as a separate CD-ROM track. Incremental writing is needed because the
+CD-R blanks are too expensive to provide a new one for every film roll.
+However, incremental writing creates a new problem. Prior to the Orange
+Book, all CD-ROMs had a single VTOC (Volume Table of Contents) at the start.
+That scheme does not work with incremental (i.e., multitrack) writes. The Orange
+Book’s solution is to give each CD-ROM track its own VTOC. The files listed in
+the VTOC can include some or all of the files from previous tracks. After the CDR is inserted into the drive, the operating system searches through all the CD-ROM
+tracks to locate the most recent VTOC, which gives the current status of the disk.
+By including some, but not all, of the files from previous tracks in the current
+VTOC, it is possible to give the illusion that files have been deleted. Tracks can be
+grouped into sessions, leading to multisession CD-ROMs. Standard audio CD
+players cannot handle multisession CDs since they expect a single VTOC at the
+start.
+CD-R makes it possible for individuals and companies to easily copy CDROMs (and audio CDs), possibly in violation of the publisher’s copyright. Several
+schemes have been devised to make such piracy harder and to make it difficult to
+read a CD-ROM using anything other than the publisher’s software. One of them
+involves recording all the file lengths on the CD-ROM as multigigabyte, thwarting
+any attempts to copy the files to hard disk using standard copying software. The
+true lengths are embedded in the publisher’s software or hidden (possibly encrypted) on the CD-ROM in an unexpected place. Another scheme uses intentionally incorrect ECCs in selected sectors, in the expectation that CD copying software will ‘‘fix’’ the errors. The application software checks the ECCs itself, refusing to work if they are ‘‘correct.’’ Nonstandard gaps between the tracks and other
+physical ‘‘defects’’ are also possibilities.
+
+2.3.9 CD-Rewritables
+Although people are used to other write-once media such as paper and photographic film, there is a demand for a rewritable CD-ROM. One technology now
+available is CD-RW (CD-ReWritable), which uses the same size media as CD-R.
+
+106
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+However, instead of cyanine or pthalocyanine dye, CD-RW uses an alloy of silver,
+indium, antimony, and tellurium for the recording layer. This alloy has two stable
+states: crystalline and amorphous, with different reflectivities.
+CD-RW drives use lasers with three different powers. At high power, the laser
+melts the alloy, converting it from the high-reflectivity crystalline state to the lowreflectivity amorphous state to represent a pit. At medium power, the alloy melts
+and reforms in its natural crystalline state to become a land again. At low power,
+the state of the material is sensed (for reading), but no phase transition occurs.
+The reason CD-RW has not replaced CD-R is that the CD-RW blanks are more
+expensive than the CD-R blanks. Also, for applications consisting of backing up
+hard disks, the fact that once written, a CD-R cannot be accidentally erased is a
+feature, not a bug.
+
+2.3.10 DVD
+The basic CD/CD-ROM format has been around since 1980. By the
+mid-1990s optical media technology had improved dramatically, so higher-capacity video disks were becoming economically feasible. At the same time Hollywood
+was looking for a way to replace analog video tapes with an optical disk technology that had higher quality, was cheaper to manufacture, lasted longer, took up less
+shelf space in video stores, and did not have to be rewound. It was looking as if
+the wheel of progress for optical disks was about to turn once again.
+This combination of technology and demand by three immensely rich and
+powerful industries has led to DVD, originally an acronym for Digital Video Disk,
+but now officially Digital Versatile Disk. DVDs use the same general design as
+CDs, with 120-mm injection-molded polycarbonate disks containing pits and lands
+that are illuminated by a laser diode and read by a photodetector. What is new is
+the use of
+1. Smaller pits (0.4 microns versus 0.8 microns for CDs).
+2. A tighter spiral (0.74 microns between tracks versus 1.6 microns for
+CDs).
+3. A red laser (at 0.65 microns versus 0.78 microns for CDs).
+Together, these improvements raise the capacity sevenfold, to 4.7 GB. A 1x DVD
+drive operates at 1.4 MB/sec (versus 150 KB/sec for CDs). Unfortunately, the
+switch to the red lasers used in supermarkets means that DVD players require a
+second laser to read existing CDs and CD-ROMs, which adds a little to the complexity and cost.
+Is 4.7 GB enough? Maybe. Using MPEG-2 compression (standardized in IS
+13346), a 4.7-GB DVD disk can hold 133 minutes of full-screen, full-motion video
+at high resolution (720 × 480), as well as soundtracks in up to eight languages and
+subtitles in 32 more. About 92 percent of all the movies Hollywood has ever made
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+107
+
+are under 133 minutes. Nevertheless, some applications such as multimedia games
+or reference works may need more, and Hollywood would like to put multiple
+movies on the same disk, so four formats have been defined:
+1. Single-sided, single-layer (4.7 GB).
+2. Single-sided, dual-layer (8.5 GB).
+3. Double-sided, single-layer (9.4 GB).
+4. Double-sided, dual-layer (17 GB).
+Why so many formats? In a word: politics. Philips and Sony wanted single-sided,
+dual-layer disks for the high-capacity version, but Toshiba and Time Warner
+wanted double-sided, single-layer disks. Philips and Sony did not think people
+would be willing to turn the disks over, and Time Warner did not believe putting
+two layers on one side could be made to work. The compromise: all combinations,
+with the market deciding which ones will survive. Well, the market has spoken.
+Philips and Sony were right. Never bet against technology.
+The dual-layering technology has a reflective layer at the bottom, topped with
+a semireflective layer. Depending on where the laser is focused, it bounces off one
+layer or the other. The lower layer needs slightly larger pits and lands to be read
+reliably, so its capacity is slightly smaller than the upper layer’s.
+Double-sided disks are made by taking two 0.6-mm single-sided disks and gluing them together back to back. To make the thicknesses of all versions the same,
+a single-sided disk consists of a 0.6-mm disk bonded to a blank substrate (or perhaps in the future, one consisting of 133 minutes of advertising, in the hope that
+people will be curious as to what is down there). The structure of the doublesided, dual-layer disk is illustrated in Fig. 2-28.
+Polycarbonate substrate 1
+0.6 mm
+Single-sided
+disk
+

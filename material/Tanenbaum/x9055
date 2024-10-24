@@ -1,0 +1,100 @@
+11. Draw the logic diagram of a 2-bit demultiplexer, a circuit whose single input line is
+steered to one of the four output lines depending on the state of the two control lines.
+12. What does this circuit do?
+
+A
+B
+
+C
+D
+
+13. A common chip is a 4-bit adder. Four of these chips can be hooked up to form a 16-bit
+adder. How many pins would you expect the 4-bit adder chip to have? Why?
+14. An n-bit adder can be constructed by cascading n full adders in series, with the carry
+into stage i, C i , coming from the output of stage i − 1. The carry into stage 0, C 0 , is 0.
+If each stage takes T nsec to produce its sum and carry, the carry into stage i will not be
+valid until iT nsec after the start of the addition. For large n the time required for the
+
+CHAP. 3
+
+PROBLEMS
+
+239
+
+carry to ripple through to the high-order stage may be unacceptably long. Design an
+adder that works faster. Hint: Each C i can be expressed in terms of the operand bits
+Ai − 1 and Bi − 1 as well as the carry C i − 1 . Using this relation it is possible to express C i
+as a function of the inputs to stages 0 to i − 1, so all the carries can be generated simultaneously.
+15. If all the gates in Fig. 3-18 have a propagation delay of 1 nsec, and all other delays can
+be ignored, what is the earliest time a circuit using this design can be sure of having a
+valid output bit?
+16. The ALU of Fig. 3-19 is capable of doing 8-bit 2’s complement additions. Is it also capable of doing 2’s complement subtractions? If so, explain how. If not, modify it to be
+able to do subtractions.
+17. A 16-bit ALU is built up of 16 1-bit ALUs, each one having an add time of 10 nsec. If
+there is an additional 1-nsec delay for propagation from one ALU to the next, how long
+does it take for the result of a 16-bit add to appear?
+18. Sometimes it is useful for an 8-bit ALU such as Fig. 3-19 to generate the constant −1
+as output. Give two different ways this can be done. For each way, specify the values
+of the six control signals.
+19. What is the quiescent state of the S and R inputs to an SR latch built of two
+gates?
+
+NAND
+
+20. The circuit of Fig. 3-25 is a flip-flop that is triggered on the rising edge of the clock.
+Modify this circuit to produce a flip-flop that is triggered on the falling edge of the
+clock.
+21. The 4 × 3 memory of Fig. 3-28 uses 22 AND gates and three OR gates. If the circuit
+were to be expanded to 256 × 8, how many of each would be needed?
+22. To help meet the payments on your new personal computer, you have taken up consulting for fledgling SSI chip manufacturers. One of your clients is thinking about putting
+out a chip containing four D flip-flops, each containing both Q and Q, on request of a
+potentially important customer. The proposed design has all four clock signals ganged
+together, also on request. Neither preset nor clear is present. Your assignment is to
+give a professional evaluation of the design.
+23. As more and more memory is squeezed onto a single chip, the number of pins needed
+to address it also increases. It is often inconvenient to have large numbers of address
+pins on a chip. Devise a way to address 2n words of memory using fewer than n pins.
+24. A computer with a 32-bit wide data bus uses 1M × 1 dynamic RAM memory chips.
+What is the smallest memory (in bytes) that this computer can have?
+25. Referring to the timing diagram of Fig. 3-38, suppose that you slowed the clock down
+to a period of 20 nsec instead of 10 nsec as shown but the timing constraints remained
+unchanged. How much time would the memory have to get the data onto the bus during T 3 after MREQ was asserted, in the worst case?
+26. Again referring to Fig. 3-38, suppose that the clock remained at 100 MHz, but T DS was
+increased to 4 nsec. Could 10-nsec memory chips be used?
+
+240
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+27. In Fig. 3-38(b), T ML is specified to be at least 2 nsec. Can you envision a chip in
+which it is negative? Specifically, could the CPU assert MREQ before the address was
+stable? Why or why not?
+28. Assume that the block transfer of Fig. 3-42 were done on the bus of Fig. 3-38. How
+much more bandwidth is obtained by using a block transfer over individual transfers
+for long blocks? Now assume that the bus is 32 bits wide instead of 8 bits wide.
+Answer the question again.
+29. Denote the transition times of the address lines of Fig. 3-39 as T A1 and T A2 , and the
+transition times of MREQ as T MREQ1 and T MREQ2 , and so on. Write down all the
+inequalities implied by the full handshake.
+30. Multicore chips, with multiple CPUs on the same die, are becoming popular. What advantages do they have over a system consisting of multiple PCs connected by Ethernet?
+31. Why have multicore chips suddenly appeared? Are there technological factors that
+have paved the way? Does Moore’s law play a role here?
+32. What is the difference between the memory bus and the PCI bus?
+33. Most 32-bit buses permit 16-bit reads and writes. Is there any ambiguity about where
+to place the data? Discuss.
+34. Many CPUs have a special bus cycle type for interrupt acknowledge. Why?
+35. A 64-bit computer with a 400-MHz bus requires four cycles to read a 64-bit word.
+How much bus bandwidth does the CPU consume in the worst case, that is, assuming
+back-to-back reads or writes all the time?
+36. A 64-bit computer with a 400-MHz bus requires four cycles to read a 64-bit word.
+How much bus bandwidth does the CPU consume in the worst case, that is, assuming
+back-to-back reads or writes all the time?
+37. A 32-bit CPU with address lines A2–A31 requires all memory references to be
+aligned. That is, words have to be addressed at multiples of 4 bytes, and half-words
+have to be addressed at even bytes. Bytes can be anywhere. How many legal combinations are there for memory reads, and how many pins are needed to express them?
+Give two answers and make a case for each one.
+38. Modern CPU chips have one, two, or even three levels of cache on chip. Why are multiple levels of cache needed?
+39. Suppose that a CPU has a level 1 cache and a level 2 cache, with access times of 1 nsec
+and 2 nsec, respectively. The main memory access time is 10 nsec. If 20% of the accesses are level 1 cache hits and 60% are level 2 cache hits, what is the average access

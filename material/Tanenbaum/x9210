@@ -1,0 +1,100 @@
+at C1, and takes the last number out of the buffer at C2. It then increments out. At
+this instant, both in and out have the value 22. The consumer prints the number
+and then goes to C1, where it fetches in and out from memory in order to compare
+them, as shown in Fig. 6-27(b).
+Producer at P5
+sends wakeup
+Consumer at C1
+
+Producer at P1
+Consumer at C1
+
+Producer at P1
+Consumer at C5
+99
+
+99
+
+In = 22
+
+99
+
+Buffer
+empty
+
+In = Out = 22
+
+In = 23
+Prime
+
+Out = 22
+
+Prime
+
+Out = 21
+
+0
+
+1 number
+in buffer
+(a)
+
+1 number
+in buffer
+0
+
+0
+(b)
+
+(c)
+
+Figure 6-27. Failure of the producer-consumer communication mechanism.
+
+At this very moment, after the consumer has fetched in and out but before it
+has compared them, the producer finds the next prime. It puts the prime into the
+buffer at P3 and increments in at P4. Now in = 23 and out = 22. At P5 the producer discovers that in = next(out). In other words, in is one higher than out, signifying that there is now one item in the buffer. The producer therefore (incorrectly) concludes that the consumer must be sleeping, so it sends a wakeup signal (i.e.,
+calls resume), as shown in Fig. 6-27(c). Of course, the consumer is still awake, so
+the wakeup signal is lost. The producer begins looking for the next prime.
+At this point in time the consumer continues. It has already fetched in and out
+from memory before the producer put the last number in the buffer. Because they
+both have the value 22, the consumer goes to sleep. Now the producer finds another prime. It checks the pointers and finds in = 24 and out = 22, therefore it assumes that there are two numbers in the buffer (true) and that the consumer is
+awake (false). The producer continues looping. Eventually, it fills the buffer and
+goes to sleep. Now both processes are sleeping and will remain so forever.
+The big difficulty here is that between the moment when the consumer fetched
+in and out and the time it went to sleep, the producer snuck in, discovered that
+
+478
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+in = out + 1, assumed that the consumer was sleeping (which it was not yet), and
+sent a wakeup signal that was lost because the consumer was still awake. This difficulty is known as a race condition, because the method’s success depends on
+who wins the race to test in and out after out is incremented.
+The problem of race conditions is well known. In fact it is so serious that several years after Java was introduced, Sun changed the Thread class and deprecated
+the suspend and resume calls because they led to race conditions so often. The
+solution offered was a language-based solution, but since we are studying operating systems here, we will discuss a different solution, one supported by many operating systems, including UNIX and Windows 7.
+
+6.4.3 Process Synchronization Using Semaphores
+The race condition can be solved in at least two ways. One solution consists of
+equipping each process with a ‘‘wakeup waiting bit.’’ Whenever a wakeup is sent
+to a process that is still running, its wakeup waiting bit is set. Whenever the process goes to sleep when the wakeup waiting bit is set, it is immediately restarted and
+the wakeup waiting bit is cleared. The wakeup waiting bit stores the superfluous
+wakeup signal for future use.
+Although this method solves the race condition when there are only two processes, it fails in the general case of n communicating processes because as many as
+n − 1 wakeups may have to be saved. Of course, each process could be equipped
+with n − 1 wakeup waiting bits to allow it to count to n − 1 in the unary system,
+but this solution is rather clumsy.
+Dijkstra (1968b) proposed a more general solution to the problem of synchronizing parallel processes. Somewhere in the memory are some nonnegative integer
+variables called semaphores. Two system calls that operate on semaphores, up
+and down, are provided by the operating system. Up adds 1 to a semaphore and
+down subtracts 1 from a semaphore.
+If a down operation is performed on a semaphore that is currently greater than
+0, the semaphore is decremented by 1 and the process doing the down continues.
+If, however, the semaphore is 0, the down cannot complete; the process doing the
+down is put to sleep and remains asleep until the other process performs an up on
+that semaphore. Usually sleeping processes are strung together in a queue to keep
+track of them.
+The up instruction checks to see if the semaphore is 0. If it is and the other
+process is sleeping on it, the semaphore is increased by 1. The sleeping process

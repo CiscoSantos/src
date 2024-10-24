@@ -1,0 +1,100 @@
+=
+
+AB
+
+(d)
+
+Figure 3-7. Alternative symbols for some gates: (a) NAND (b) NOR (c) AND (d) OR.
+
+convert to NAND form, the lines connecting the output of the AND gates to the input
+of the OR gate should be redrawn with two inversion bubbles, as shown in
+Fig. 3-8(c). Finally, using Fig. 3-7(a), we arrive at Fig. 3-8(d). The variables A
+and B can be generated from A and B using NAND or NOR gates with their inputs
+tied together. Note that inversion bubbles can be moved along a line at will, for example, from the outputs of the input gates in Fig. 3-8(d) to the inputs of the output
+gate.
+As a final note on circuit equivalence, we will now demonstrate the surprising
+result that the same physical gate can compute different functions, depending on
+the conventions used. In Fig. 3-9(a) we show the output of a certain gate, F, for
+different input combinations. Both inputs and outputs are shown in volts. If we
+
+SEC. 3.1
+
+157
+
+GATES AND BOOLEAN ALGEBRA
+A
+
+A
+
+B
+
+XOR
+
+0
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+0
+
+1
+
+A
+
+1
+
+1
+
+0
+
+B
+
+B
+
+(a)
+
+(b)
+
+A
+
+A
+
+B
+
+B
+
+A
+
+A
+
+B
+
+B
+(c)
+
+(d)
+
+Figure 3-8. (a) The truth table for the
+computing it.
+
+XOR
+
+function. (b)–(d) Three circuits for
+
+adopt the convention that 0 volts is logical 0 and 1.5 volts is logical 1, called positive logic, we get the truth table of Fig. 3-9(b), the AND function. If, however, we
+adopt negative logic, which has 0 volts as logical 1 and 1.5 volts as logical 0, we
+get the truth table of Fig. 3-9(c), the OR function.
+A
+
+B
+
+F

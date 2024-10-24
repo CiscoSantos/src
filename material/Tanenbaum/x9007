@@ -1,0 +1,100 @@
+
+D6
+
+D7
+
+S0
+
+S1
+
+S2
+
+S3
+
+S4
+
+S5
+
+S6
+
+S7
+
+C
+
+Figure 3-15. A 1-bit left/right shifter.
+
+Adders
+A computer that cannot add integers is almost unthinkable. Consequently, a
+hardware circuit for performing addition is an essential part of every CPU. The
+truth table for addition of 1-bit integers is shown in Fig. 3-16(a). Two outputs are
+present: the sum of the inputs, A and B, and the carry to the next (leftward) position. A circuit for computing both the sum bit and the carry bit is illustrated in
+Fig. 3-16(b). This simple circuit is generally known as a half adder.
+
+Exclusive OR gate
+A
+
+B
+
+Sum Carry
+
+0
+
+0
+
+0
+
+0
+
+0
+
+1
+
+1
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+1
+
+0
+
+1
+
+A
+
+Sum
+
+B
+
+Carry
+
+Figure 3-16. (a) Truth table for 1-bit addition. (b) A circuit for a half adder.
+
+SEC. 3.2
+
+165
+
+BASIC DIGITAL LOGIC CIRCUITS
+
+Although a half adder is adequate for summing the low-order bits of two multibit input words, it will not do for a bit position in the middle of the word because it
+does not handle the carry into the position from the right. Instead, the full adder
+of Fig. 3-17 is needed. From inspection of the circuit it should be clear that a full
+adder is built up from two half adders. The Sum output line is 1 if an odd number
+of A, B, and the Carry in are 1. The Carry out is 1 if either A and B are both 1 (left
+input to the OR gate) or exactly one of them is 1 and the Carry in bit is also 1. Together the two half adders generate both the sum and the carry bits.
+Carry in
+Carry
+Carry
+Sum
+in
+out
+

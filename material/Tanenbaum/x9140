@@ -1,0 +1,100 @@
+Software interrupt
+
+Figure 5-14. The 32-bit ARM instruction formats.
+
+Bits 26 and 27 of every instruction are the first stop in determining the instruction format and tell hardware where to find the rest of the opcode, if there is more.
+For example, if bits 26 and 27 are both zero, and bit 25 is zero (operand is not an
+immediate), and the input operand shift is not illegal (which indicates the instruction is a multiply or branch exchange), then both sources are registers. If bit 25 is
+one, then one source is a register and the other is a constant in the range 0 to 4095.
+
+370
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+In both cases, the destination is always a register. Sufficient encoding space is provided for up to 16 instructions, all of which are currently used.
+With 32-bit instructions, it is not possible to include a 32-bit constant in the instruction. The MOVT instruction sets the 16 upper bits of a 32-bit register, leaving
+room for another instruction to set the remaining lower 16 bits. It is the only instruction to use this format.
+Every 32-bit instruction has the same 4-bit field in the most significant bits
+(bits 28 to 31). This is the condition field, which makes any instruction a predicated instruction. A predicated instruction executes as normal in the processor,
+but before writing its result to a register (or memory), it first checks the condition
+of the instruction. For ARM instructions, the condition is based on the state of the
+processor status register (PSR). This register holds the arithmetic properties of the
+last arithmetic operation, (e.g., zero, negative, overflowed, etc). If the condition is
+not met, the result of the conditional instruction is dropped.
+The branch instruction format encodes the largest immediate value, used to
+compute a target address for branches and function procedure calls. This instruction is special, because it is the only one where 24 bits of data are needed to specify an address. For this instruction, there is a single, 3-bit opcode. The address is
+the target address divided by four, making the range approximately ±225 bytes relative to the current instruction.
+Clearly, the ARM ISA designers wanted to fully utilize every bit combination,
+including otherwise illegal operand combinations, for specifying instructions. The
+approach makes for extremely complicated decoding logic, but at the same time, it
+allows the maximum number of operations to be encoded into a fixed-length 16- or
+32-bit instruction.
+
+5.3.5 The ATmega168 AVR Instruction Formats
+The ATmega168 has six simple instruction formats, as illustrated in Fig. 5-15.
+Instructions are 2 or 4 bytes in length. Format one consists of an opcode and two
+register operands, both of which are inputs and one is also the output of the instruction. The ADD instruction for registers uses this format, for example.
+Format 2 is also 16 bits, consisting of an additional 16 opcodes and a 5-bit register number. This format increases the number of operations encoded in the ISA
+at the cost of reducing the number of instruction operands to one. Instructions that
+use this format perform a unary operation, taking a single register input and writing
+the output of the operation to the same register. Examples of this type of instruction include ‘‘negate’’ and ‘‘increment.’’
+Format 3 has an 8-bit unsigned immediate operand. To accommodate such a
+large immediate value in a 16-bit instruction, instructions which use this encoding
+can have only one register operand (used as an input and output) and the register
+can only be R16–R31 (which limits the operand encoding to 4 bits). Also, the
+
+SEC. 5.3
+
+371
+
+INSTRUCTION FORMATS
+
+Format
+15
+
+0
+
+1
+
+00cc
+
+ccrd
+
+dddd
+
+rrrr
+
+ALU: Opcode(c) Rd, Rr
+
+2
+
+1001
+
+010d
+
+dddd
+
+cccc
+
+Extended ALU: Opcode(c) Rd
+
+3
+
+01cc
+
+KKKK
+
+dddd
+
+KKKK
+
+ALU + Imm: Opcode(c) Rd, #K
+
+4
+
+10Q0
+
+QQcd
+

@@ -1,0 +1,100 @@
+CHAP. 4
+
+19. Reconsider the previous problem. Are there any states that could be collapsed without
+changing the result of any game? If so, which ones are equivalent?
+20. Draw a finite-state machine for branch prediction that is more tenacious than Fig. 4-42.
+It should change only predictions after three consecutive mispredictions.
+21. The shift register of Fig. 4-27 has a maximum capacity of 6 bytes. Could a cheaper
+version of the IFU be built with a 5-byte shift register? How about a 4-byte one?
+22. Having examined cheaper IFUs in the previous question, now let us examine more expensive ones. Would there ever be any point to have a much larger shift register in the
+IU, say, 12 bytes? Why or why not?
+23. In the microprogram for the Mic-2, the code for if icmpeq6 goes to T when Z is set to
+1. However, the code at T is the same as goto1. Would it have been possible to go to
+goto1 directly? Would doing so have made the machine faster?
+24. In the Mic-4, the decoding unit maps the IJVM opcode onto the ROM index where the
+corresponding micro-operations are stored. It would seem to be simpler to just omit
+the decoding stage and feed the IJVM opcode into the queueing directly. It could use
+the IJVM opcode as an index into the ROM, the same way as the Mic-1 works. What
+is wrong with this plan?
+25. Why are computers equipped with multiple layers of cache? Would it not be better to
+simply have one big one?
+26. A computer has a two-level cache. Suppose that 60% of the memory references hit on
+the first level cache, 35% hit on the second level, and 5% miss. The access times are 5
+nsec, 15 nsec, and 60 nsec, respectively, where the times for the level 2 cache and
+memory start counting at the moment it is known that they are needed (e.g., a level 2
+cache access does not even start until the level 1 cache miss occurs). What is the average access time?
+27. At the end of Sec. 4.5.1, we said that write allocation wins only if there are likely to be
+multiple writes to the same cache line in a row. What about the case of a write followed by multiple reads? Would that not also be a big win?
+28. In the first draft of this book, Fig. 4-39 showed a three-way associative cache instead
+of a four-way associative cache. One of the reviewers threw a temper tantrum, claiming that students would be horribly confused by this because 3 is not a power of 2 and
+computers do everything in binary. Since the customer is always right, the figure was
+changed to a four-way associative cache. Was the reviewer right? Discuss your
+answer.
+29. Many computer architects spend a lot of time making their pipelines deeper. Why?
+30. A computer with a five-stage pipeline deals with conditional branches by stalling for
+the next three cycles after hitting one. How much does stalling hurt the performance if
+20% of all instructions are conditional branches? Ignore all sources of stalling except
+conditional branches.
+31. A computer prefetches up to 20 instructions in advance. However, on the average, four
+of these are conditional branches, each with a probability of 90% of being predicted
+correctly. What is the probability that the prefetching is on the right track?
+
+CHAP. 4
+
+PROBLEMS
+
+341
+
+32. Suppose that we were to change the design of the machine used in Fig. 4-43 to have 16
+registers instead of 8. Then we change I6 to use R8 as its destination. What happens in
+the cycles starting at cycle 6?
+33. Normally, dependences cause trouble with pipelined CPUs. Are there any optimizations that can be done with WAW dependences that might actually improve matters?
+What?
+34. Rewrite the Mic-1 interpreter but having LV now point to the first local variable instead
+of to the link pointer.
+35. Write a simulator for a 1-way direct mapped cache. Make the number of entries and
+the line size parameters of the simulation. Experiment with it and report on your findings.
+
+This page intentionally left blank
+
+5
+THE INSTRUCTION SET
+ARCHITECTURE LEVEL
+
+This chapter discusses the Instruction Set Architecture (ISA) level in detail.
+This level, as we saw in Fig. 1-2, is positioned between the microarchitecture level
+and the operating system level. Historically, this level was developed before any of
+the other levels, and, in fact, was originally the only level. To this day this level is
+sometimes referred to simply as ‘‘the architecture’’ of a machine or sometimes
+(incorrectly) as ‘‘assembly language.’’
+The ISA level has a special importance for system architects: it is the interface
+between the software and the hardware. While it might be possible to have the
+hardware directly execute programs written in C, C++, Java, or some other highlevel language, this would not be a good idea. The performance advantage of compiling over interpreting would then be lost. Furthermore, to be of much practical
+use, most computers have to be able to execute programs written in multiple languages, not just one.
+The approach that essentially all system designers take is to have programs in
+various high-level languages be translated to a common intermediate form—the
+ISA level—and build hardware that can execute ISA-level programs directly. The
+ISA level defines the interface between the compilers and the hardware. It is the
+language that both of them have to understand. The relationship among the compilers, the ISA level, and the hardware is shown in Fig. 5-1.
+Ideally, when designing a new machine, the architects will spend time talking
+to both the compiler writers and the hardware engineers to find out what features
+they want in the ISA level. If the compiler writers want some feature that the en343
+
+344
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+FORTRAN
+program
+
+CHAP. 5
+
+C program
+
+FORTRAN
+program compiled
+to ISA program
+
+C program
+compiled
+to ISA program

@@ -1,0 +1,100 @@
+On earlier Intel architectures, all opcodes were 1 byte, though the concept of a
+prefix byte was used extensively for modifying some instructions. A prefix byte is
+an extra opcode stuck onto the front of an instruction to change its action. The
+WIDE instruction in IJVM is an example of a prefix byte. Unfortunately, at some
+point during the evolution, Intel ran out of opcodes, so one opcode, 0xFF, was designated as an escape code to permit a second instruction byte.
+
+368
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+Bytes
+
+Bits
+
+0-5
+
+1-2
+
+0-1
+
+0-1
+
+PREFIX
+
+OPCODE
+
+MODE
+
+SIB
+
+6
+
+1 1
+
+Bits
+
+INSTRUCTION
+
+0-4
+
+0-4
+
+DISPLACEMENT
+
+2
+
+3
+
+SCALE
+
+INDEX
+
+CHAP. 5
+
+IMMEDIATE
+
+3
+BASE
+
+Which operand is source?
+Byte/word
+Bits
+
+2
+
+3
+
+3
+
+MOD
+
+REG
+
+R/M
+
+Figure 5-13. The Core i7 instruction formats.
+
+The individual bits in the Core i7 opcodes do not give much information about
+the instruction. The only structure in the opcode field is the use of the low-order
+bit in some instructions to indicate byte/word, and the use of the adjoining bit to indicate whether the memory address (if it is present) is the source or the destination.
+Thus in general, the opcode must be fully decoded to determine what class of operation is to be performed—and thus how long the instruction is. This makes
+high-performance implementations difficult, since extensive decoding is necessary
+before it can even be determined where the next instruction starts.
+Following the opcode byte in most instructions that reference an operand in
+memory is a second byte that tells all about the operand. These 8 bits are split up
+into a 2-bit MOD field and two 3-bit register fields, REG and R/M. Sometimes the
+first 3 bits of this byte are used as an extension for the opcode, giving a total 11
+bits for the opcode. However, the 2-bit mode field means that there are only four
+ways to address operands and one of the operands must always be a register. Logically, any of EAX, EBX, ECX, EDX, ESI, EDI, EBP, ESP should be specifiable as either register, but the encoding rules prohibit some combinations and use them for
+special cases. Some modes require an additional byte, called SIB (Scale, Index,
+Base), giving a further specification. This scheme is not ideal, but a compromise
+given the competing demands of backward compatibility and the desire to add new
+features not originally envisioned.
+In addition to all this, some instructions have 1, 2, or 4 more bytes specifying a
+memory address (displacement) and possibly another 1, 2, or 4 bytes containing a
+constant (immediate operand).
+
+5.3.4 The OMAP4430 ARM CPU Instruction Formats
+The OMAP4430 ARM ISA consists of both 16- and 32-bit instructions,
+aligned in memory. Instructions are generally simple, specifying only a single action. A typical arithmetic instruction specifies two registers to supply the source
+

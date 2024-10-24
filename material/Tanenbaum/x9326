@@ -1,0 +1,100 @@
+For example,
+10110 = 24 + 22 + 21 = 16 + 4 + 2 = 22
+In the other method, the binary number is written vertically, one bit per line, with
+the leftmost bit on the bottom. The bottom line is called line 1, the one above it
+line 2, and so on. The decimal number will be built up in a parallel column next to
+the binary number. Begin by writing a 1 on line 1. The entry on line n consists of
+two times the entry on line n − 1 plus the bit on line n (either 0 or 1). The entry on
+the top line is the answer. Figure A-6 gives an example of this method of binary to
+decimal conversion.
+
+SEC. A.3
+
+CONVERSION FROM ONE RADIX TO ANOTHER
+Quotients
+
+675
+
+Remainders
+
+1492
+746
+
+0
+
+373
+
+0
+
+186
+
+1
+
+93
+
+0
+
+46
+
+1
+
+23
+
+0
+
+11
+
+1
+
+5
+
+1
+
+2
+
+1
+
+1
+
+0
+
+0
+
+1
+
+1 0 1 1 1 0 1 0 1 0 0 = 149210
+
+Figure A-5. Conversion of the decimal number 1492 to binary by successive
+halving, starting at the top and working downward. For example, 93 divided by 2
+yields a quotient of 46 and a remainder of 1, written on the line below it.
+
+Decimal-to-octal and decimal-to-hexadecimal conversion can be accomplished
+either by first converting to binary and then to the desired system or by subtracting
+powers of 8 or 16.
+
+A.4 NEGATIVE BINARY NUMBERS
+Four different systems for representing negative numbers have been used in
+digital computers at one time or another in history. The first one is called signed
+magnitude. In this system the leftmost bit is the sign bit (0 is + and 1 is −) and the
+remaining bits hold the absolute magnitude of the number.
+The second system, called one’s complement, also has a sign bit with 0 used
+for plus and 1 for minus. To negate a number, replace each 1 by a 0 and each 0 by
+a 1. This holds for the sign bit as well. One’s complement is obsolete.
+The third system, called two’s complement, also has a sign bit that is 0 for
+plus and 1 for minus. Negating a number is a two-step process. First, each 1 is replaced by a 0 and each 0 by a 1, just as in one’s complement. Second, 1 is added
+
+676
+1
+
+BINARY NUMBERS
+0
+
+1
+
+1
+
+1
+
+0
+
+1

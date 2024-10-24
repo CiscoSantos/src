@@ -1,0 +1,100 @@
+Byte ordering, 76–78
+Byte register, 701
+
+C
+Cache, 304–310
+direct-mapped, 306–308
+level 2, 305
+MESI protocol, 601–603
+set-associative, 308–310
+snooping, 599–606
+split, 84, 305
+unified, 84
+update strategy, 600
+write back, 310
+
+752
+
+INDEX
+
+Cache ( continued)
+write-deferred, 310
+write-through, 310, 599
+write-allocate, 310
+Cache coherence, 599
+Cache coherence protocol, 599
+Cache coherent NUMA, 607–608
+Cache consistency, 599
+Cache hit, 307
+Cache invalidate strategy, 600
+Cache line, 84, 306, 599
+Cache memory, 41, 82–85
+Cache miss, 307
+Cache only memory access, 592, 614–616
+Call gate, 460
+Camera, digital, 135–137
+Capacitor, 114
+Carrier, 128
+Carry select adder, 165–166
+Catamount, 629
+Cathode-ray tube, 115
+CC-NUMA (see Cache Coherent NUMA)
+CCD (see Charge-Coupled Device)
+CD-R (see CD Recordable)
+CD-Recordable, 103–105
+CD-Rewritable, 105
+CD-ROM (see Compact Disc-Read Only Memory)
+CD-ROM track, 105
+CD-ROM XA, 105
+CDC (see Control Data Corporation)
+CDC 6600, 14, 21
+Celeron, 42
+Cell, memory, 74
+Central processing unit, 19, 55–73
+Character code, 137–142
+Charge-coupled device, 135
+Checkerboarding, 453
+Checksum generation, 581
+Checksum verification, 580
+Child process, 503
+Chip, 158
+Chipset, 205
+Circuit,
+arithmetic, 163–166
+combinational, 159–163
+Circuit equivalence, 153–158
+CISC (see Complex Instruction Set Computer)
+Clock, 168–169
+Clock cycle time, 168
+Clocked D latch, 171–172
+
+Clocked SR latch, 170–171
+Clone, 24
+Closure, 670
+Cloud computing, 38
+Cluster, 37, 502, 593
+Cluster computing, 631–636
+Cluster of workstations, 593
+CMYK printer, 125
+Coarse-grained multithreading, 563
+COBOL, 39, 359
+Code generation, 716
+Code page, 138
+Code point, 139
+Code segment, 694
+Codesign, 27
+Codeword, 78
+Collective layer, 653
+Collector, 148
+Color gamut, 125
+Color palette, 118
+Color printing, 124–127
+COLOSSUS, 14, 16–17
+COMA (see Cache Only Memory Access computer)
+COMA multiprocessor, 614
+Combinational circuit, 159–163
+Committed page, 490
+Commodity off-the-shelf cluster, 37
+Communicator, 637
+Compact disc-read only memory, 101–103
+Comparator, 162–163

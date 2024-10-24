@@ -1,0 +1,100 @@
+1111 0001 yyyy zzzz
+1111 0010 yyyy zzzz
+
+14 2-address
+instructions
+
+…
+1111 1011 yyyy zzzz
+1111 1100 yyyy zzzz
+1111 1101 yyyy zzzz
+12-bit
+opcode
+
+1111 1110 0000 zzzz
+1111 1110 0001 zzzz
+
+31 1-address
+instructions
+
+…
+1111
+1111
+1111
+1111
+
+1110
+1110
+1111
+1111
+
+1110
+1111
+0000
+0001
+
+zzzz
+zzzz
+zzzz
+zzzz
+
+…
+1111 1111 1101 zzzz
+1111 1111 1110 zzzz
+16-bit
+opcode
+
+1111 1111 1111 0000
+1111 1111 1111 0001
+1111 1111 1111 0010
+
+16 0-address
+instructions
+
+…
+1111 1111 1111 1101
+1111 1111 1111 1110
+1111 1111 1111 1111
+15 12 11 8 7 4 3 0
+Bit number
+
+Figure 5-12. An expanding opcode allowing 15 three-address instructions, 14
+two-address instructions, 31 one-address instructions, and 16 zero-address instructions. The fields marked xxxx, yyyy, and zzzz are 4-bit address fields.
+
+SEC. 5.3
+
+INSTRUCTION FORMATS
+
+367
+
+instructions all have 1111 in the leftmost 4 bits, and numbers from 0000 to 1101 in
+bits 8 to 11. Instructions with 1111 in the leftmost 4 bits and either 1110 or 1111
+in bits 8 to 11 will be treated specially. They will be treated as though their opcodes were in bits 4 to 15. The result is 32 new opcodes. Because only 31 are
+needed, opcode 111111111111 is interpreted to mean that the real opcode is in bits
+0 to 15, giving 16 instructions with no address.
+As we proceeded through this discussion, the opcode got longer and longer:
+the three-address instructions have a 4-bit opcode, the two-address instructions
+have an 8-bit opcode, the one-address instructions have a 12-bit opcode, and the
+zero-address instructions have a 16-bit opcode.
+The idea of expanding opcodes demonstrates a trade-off between the space for
+opcodes and space for other information. In practice, expanding opcodes are not
+quite as clean and regular as in our example. In fact, the ability to use variable
+sizes of opcodes can be exploited in either of two ways. First, the instructions can
+all be kept the same length, by assigning the shortest opcodes to the instructions
+that need the most bits to specify other things. Second, the size of the average instruction can be minimized by choosing opcodes that are shortest for common instructions and longest for rare instructions.
+Carrying the idea of variable-length opcodes to an extreme, it is possible to
+minimize the average instruction length by encoding every instruction to minimize
+the number of bits needed. Unfortunately, this would result in instructions of various sizes not even aligned on byte boundaries. While there have been ISAs that
+had this property (for example, the ill-fated Intel 432), the importance of alignment
+is so great for the rapid decoding of instructions that this degree of optimization is
+almost certainly counterproductive.
+
+5.3.3 The Core i7 Instruction Formats
+The Core i7 instruction formats are highly complex and irregular, having up to
+six variable-length fields, of which five are optional. The general pattern is shown
+in Fig. 5-13. This state of affairs occurred because the architecture evolved over
+many generations and included some poor choices early on. In the name of backward compatibility, these early decisions could not be reversed later. In general,
+for two-operand instructions, if one operand is in memory, the other may not be in
+memory. Thus instructions exist to add two registers, add a register to memory,
+and add memory to a register, but not to add a memory word to another memory
+word.

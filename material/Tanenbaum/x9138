@@ -1,0 +1,100 @@
+SEC. 5.3
+
+369
+
+INSTRUCTION FORMATS
+
+operands and a single destination register. The 16-bit instructions are pared-down
+versions of the 32-bit instruction. They perform the same operations, but allow
+only two register operands (i.e., the destination register must be the same as one of
+the inputs) and only the first eight registers can be specified as inputs. The ARM
+architects called this smaller version of the ARM ISA the Thumb ISA.
+Additional variants allows instructions to supply a 3, 8, 12, 16, or 24-bit unsigned constant instead of one of the registers. For a load instruction, two registers
+(or one register and an 8-bit signed constant) are added together to specify the
+memory address to read. The data are written into the other register specified.
+The format of the 32-bit ARM instructions is illustrated in Fig. 5-14. The
+careful reader will notice that some of the formats have the same fields (e.g.,
+LONG MULTIPLY and SWAP). In the case of the SWAP instruction, the decoder
+knows that the instruction is a SWAP only when it sees that the combination of field
+values for the MUL is illegal. Additional formats have been added for instruction
+extensions and the Thumb ISA. At the time of this writing, the number of instruction formats was 21 and rising. (Can it be long before we see some company
+advertising the ‘‘World’s most complex RISC machine’’?) The majority of instructions, however, still use the formats shown in the figure.
+31
+
+2827
+
+1615
+
+0 Instruction type
+
+87
+Operand2
+
+Cond
+
+0 0 I Opcode S
+
+Rn
+
+Rd
+
+Cond
+
+000000 A S
+
+Rd
+
+Rn
+
+RS
+
+1001
+
+Rm
+
+Multiply
+
+Cond
+
+00001 U A S
+
+RdHi
+
+RdLo
+
+RS
+
+1001
+
+Rm
+
+Long Multiply
+
+Cond
+
+00010 B 00
+
+Rn
+
+Rd
+
+0000 1001
+
+Rm
+
+Swap
+
+Cond
+
+01 I PU BWL
+
+Rn
+
+Rd
+
+Offset
+
+Cond
+
+100 PU SWL
+

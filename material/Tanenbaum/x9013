@@ -1,0 +1,100 @@
+D
+Q
+
+Q
+
+Figure 3-23. A clocked D latch.
+
+3.3.2 Flip-Flops
+In many circuits it is necessary to sample the value on a certain line at a particular instant in time and store it. In this variant, called a flip-flop, the state transition occurs not when the clock is 1 but during the clock transition from 0 to 1
+(rising edge) or from 1 to 0 (falling edge) instead. Thus, the length of the clock
+pulse is unimportant, as long as the transitions occur fast.
+For emphasis, we will repeat the difference between a flip-flop and a latch. A
+flip-flop is edge triggered, whereas a latch is level triggered. Be warned, however, that in the literature these terms are often confused. Many authors use ‘‘flipflop’’ when they are referring to a latch, and vice versa.
+There are various approaches to designing a flip-flop. For example, if there
+were some way to generate a very short pulse on the rising edge of the clock signal, that pulse could be fed into a D latch. There is, in fact, such a way, and the circuit for it is shown in Fig. 3-24(a).
+At first glance, it might appear that the output of the AND gate would always be
+zero, since the AND of any signal with its inverse is zero, but the situation is a bit
+more subtle than that. The inverter has a small, but nonzero, propagation delay
+through it, and that delay is what makes the circuit work. Suppose that we measure the voltage at the four measuring points a, b, c, and d. The input signal, measured at a, is a long clock pulse, as shown in Fig. 3-24(b) on the bottom. The signal
+at b is shown above it. Notice that it is both inverted and delayed slightly, typically
+hundreds of picoseconds, depending on the kind of inverter used.
+The signal at c is delayed, too, but only by the signal propagation time (at the
+speed of light). If the physical distance between a and c is, for example, 20
+microns, then the propagation delay is 0.0001 nsec, which is certainly negligible
+compared to the time for the signal to propagate through the inverter. Thus, for all
+intents and purposes, the signal at c is as good as identical to the signal at a.
+When the inputs to the AND gate, b and c, are ANDed together, the result is a
+short pulse, as shown in Fig. 3-24(b), where the width of the pulse, Δ, is equal to
+the gate delay of the inverter, typically 5 nsec or less. The output of the AND gate
+is just this pulse shifted by the delay of the AND gate, as shown at the top of
+
+SEC. 3.3
+
+173
+
+MEMORY
+
+d
+Δ
+a
+
+b
+
+b AND c
+d
+
+c
+
+(a)
+
+c
+
+b
+
+a
+Time
+(b)
+
+Figure 3-24. (a) A pulse generator. (b) Timing at four points in the circuit.
+
+Fig. 3-24(b). This time shifting just means that the D latch will be activated at a
+fixed delay after the rising edge of the clock, but it has no effect on the pulse
+width. In a memory with a 10-nsec cycle time, a 1-nsec pulse telling it when to
+sample the D line may be short enough, in which case the full circuit can be that of
+Fig. 3-25. It is worth noting that this flip-flop design is nice because it is easy to
+understand, but in practice more sophisticated flip-flops are normally used.
+D
+Q
+
+Q
+
+Figure 3-25. A D flip-flop.
+
+The standard symbols for latches and flip-flops are shown in Fig. 3-26. Figure
+3-26(a) is a latch whose state is loaded when the clock, CK, is 1. It is in contrast to
+Fig. 3-26(b) which is a latch whose clock is normally 1 but which drops to 0
+
+174
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+momentarily to load the state from D. Figure 3-26(c) and (d) are flip-flops rather
+than latches, which is indicated by the pointy symbol on the clock inputs. Figure
+3-26(c) changes state on the rising edge of the clock pulse (0-to-1 transition),
+whereas Fig. 3-26(d) changes state on the falling edge (1-to-0 transition). Many,
+but not all, latches and flip-flops also have Q as an output, and some have two additional inputs Set or Preset (force state to Q = 1) and Reset or Clear (force state to
+Q = 0).
+D
+
+Q
+
+CK
+
+(a)
+
+D
+
+Q

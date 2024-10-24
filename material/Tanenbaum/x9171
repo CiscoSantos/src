@@ -1,0 +1,100 @@
+
+B
+
+B
+
+RESUME
+
+RESUME
+
+A
+
+B
+
+RESUME
+RESU
+
+ME A
+
+EB
+
+RESUM
+
+RE
+
+SU
+
+ME
+
+A
+
+A returns
+to main
+program
+
+Figure 5-42. When a coroutine is resumed, execution begins at the statement
+where it left off the previous time, not at the beginning.
+
+Sometimes it is useful to have two procedures, A and B, each of which calls the
+other as a procedure, as shown in Fig. 5-42. When B returns to A, it branches to
+the statement following the call to B, as above. When A transfers control to B, it
+does not go to the beginning (except the first time) but to the statement following
+the most recent ‘‘return,’’ that is, the most recent call of A. Two procedures that
+work this way are called coroutines.
+A common use for coroutines is to simulate parallel processing on a single
+CPU. Each coroutine runs in pseudoparallel with the others, as though it had its
+
+SEC. 5.6
+
+FLOW OF CONTROL
+
+413
+
+own CPU. This style of programming makes programming some applications easier. It also is useful for testing software that will later actually run on a multiprocessor.
+Neither the usual CALL nor the usual RETURN instruction works for calling
+coroutines, because the address to branch to comes from the stack like a return,
+but, unlike a return, the coroutine call itself puts a return address somewhere for
+the subsequent return to it. It would be nice if there were an instruction to exchange the top of the stack with the program counter. In detail, this instruction
+would first pop the old return address off the stack into an internal register, then
+push the program counter onto the stack, and finally, copy the internal register into
+the program counter. Because one word is popped off the stack and one word is
+pushed onto the stack, the stack pointer does not change. This instruction rarely
+exists, so in most cases it has to be simulated as several instructions.
+
+5.6.4 Traps
+A trap is a kind of automatic procedure call initiated by some condition
+caused by the program, usually an important but rarely occurring condition. A
+good example is overflow. On many computers, if the result of an arithmetic operation exceeds the largest number that can be represented, a trap occurs, meaning
+that the flow of control is switched to some fixed memory location instead of continuing in sequence. At that fixed location is a branch to a procedure called the
+trap handler, which performs some appropriate action, such as printing an error
+message. If the result of an operation is within range, no trap occurs.
+The essential point about a trap is that it is initiated by some exceptional condition caused by the program itself and detected by the hardware or microprogram.
+An alternative method of handling overflow is to have a 1-bit register that is set to
+1 whenever an overflow occurs. A programmer who wants to check for overflow
+must include an explicit ‘‘branch if overflow bit is set’’ instruction after every
+arithmetic instruction. Doing so is both slow and wasteful of space. Traps save
+both time and memory compared with explicit programmer-controlled checking.
+The trap may be implemented by an explicit test performed by the microprogram (or hardware). If an overflow is detected, the trap address is loaded into the
+program counter. What is a trap at one level may be under program control at a
+lower level. Having the microprogram make the test still saves time compared to a
+programmer test, because it can be easily overlapped with something else. It also
+saves memory, because it need occur only in one place, for example, the main loop
+of the microprogram, independent of how many arithmetic instructions occur in the
+main program.
+A few of the common conditions that can cause traps are floating-point overflow, floating-point underflow, integer overflow, protection violation, undefined
+opcode, stack overflow, attempt to start a nonexistent I/O device, attempt to fetch a
+word from an odd-numbered address, and division by zero.
+
+414
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+5.6.5 Interrupts
+Interrupts are changes in the flow of control caused not by the running program, but by something else, usually related to I/O. For example, a program may
+instruct the disk to start transferring information, and set the disk up to provide an
+interrupt as soon as the transfer is finished. Like the trap, the interrupt stops the
+running program and transfers control to an interrupt handler, which performs
+some appropriate action. When finished, the interrupt handler returns control to
+the interrupted program. It must restart the interrupted process in exactly the same

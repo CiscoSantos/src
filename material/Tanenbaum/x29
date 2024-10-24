@@ -1,0 +1,100 @@
+2, 3, and 4?
+7. In what sense are hardware and software equivalent? In what sense are they not equivalent?
+8. Babbage’s difference engine had a fixed program that could not be changed. Is this essentially the same thing as a modern CD-ROM that cannot be changed? Explain your
+answer.
+9. One of the consequences of von Neumann’s idea to store the program in memory is
+that programs can be modified, just like data. Can you think of an example where this
+facility might have been useful? (Hint: Think about doing arithmetic on arrays.)
+10. The performance ratio of the 360 model 75 was 50 times that of the 360 model 30, yet
+the cycle time was only five times as fast. How do you account for this discrepancy?
+11. Two system designs are shown in Fig. 1-5 and Fig. 1-6. Describe how input/output
+might occur in each system. Which one has the potential for better overall system performance?
+12. Suppose that each of the 300 million people in the United States fully consumes two
+packages of goods a day bearing RFID tags. How many RFID tags have to be pro-
+
+CHAP. 1
+
+PROBLEMS
+
+53
+
+duced annually to meet that demand? At a penny a tag, what is the total cost of the
+tags? Given the size of GDP, is this amount of money going to be an obstacle to their
+use on every package offered for sale?
+13. Name three appliances that are candidates for being run by an embedded CPU.
+14. At a certain point in time, a transistor on a chip was 0.1 micron in diameter. According
+to Moore’s law, how big would a transistor be on next year’s model?
+15. It has been shown that Moore’s law not only applies to semiconductor density, but it
+also predicts the increase in (reasonable) simulation sizes, and the reduction in computational simulation run-times. First show for a fluid mechanics simulation that takes 4
+hours to run on a machine today, that it should only take 1 hour to run on machines
+built 3 years from now, and only 15 minutes on machines built 6 years from now.
+Then show that for a large simulation that has an estimated run-time of 5 years that it
+would complete sooner if we waited 3 years to start the simulation.
+16. In 1959, an IBM 7090 could execute about 500,000 instructions/sec, had a memory of
+32,768 36-bit words, and cost $3 million. Compare this to a current computer and determine how much better the current one is by multiplying the ratio of memory sizes
+and speeds and then dividing this by the ratio of the prices. Now see what the same
+gains would have done to aviation in the same time period. The Boeing 707 was delivered to the airlines in substantial quantities in 1959. Its speed was 950 km/hr and its
+capacity was initially 180 passengers. It cost $4 million. What would the speed, capacity, and cost of an aircraft now be if it had the same gains as a computer? Clearly,
+state your assumptions about speed, memory size, and price.
+17. Developments in the computer industry are often cyclic. Originally, instruction sets
+were hardwired, then they were microprogrammed, then RISC machines came along
+and they were hardwired again. Originally, computing was centralized on large mainframe computers. List two developments that demonstrate the cyclic behavior here as
+well.
+18. The legal issue of who invented the computer was settled in April 1973 by Judge Earl
+Larson, who handled a patent infringement lawsuit filed by the Sperry Rand Corporation, which had acquired the ENIAC patents. Sperry Rand’s position was that everybody making a computer owed them royalties because it owned the key patents. The
+case went to trial in June 1971 and over 30,000 exhibits were entered. The court transcript ran to over 20,000 pages. Study this case more carefully using the extensive
+information available on the Internet and write a report discussing the technical aspects
+of the case. What exactly did Eckert and Mauchley patent and why did the judge feel
+their system was based on Atanasoff’s earlier work?
+19. Pick the three people you think were most influential in creating modern computer
+hardware and write a short report describing their contributions and why you picked
+them.
+20. Pick the three people you think were most influential in creating modern computer systems software and write a short report describing their contributions and why you
+picked them.
+
+54
+
+INTRODUCTION
+
+CHAP. 1
+
+21. Pick the three people you think were most influential in creating modern Websites that
+draw a lot of traffic and write a short report describing their contributions and why you
+picked them.
+
+2
+COMPUTER SYSTEMS
+ORGANIZATION
+
+A digital computer consists of an interconnected system of processors, memories, and input/output devices. This chapter is an introduction to these three components and to their interconnection, as background for a more detailed examination of the specific levels in the five subsequent chapters. Processors, memories,
+and input/output are key concepts and will be present at every level, so we will
+start our study of computer architecture by looking at all three in turn.
+
+2.1 PROCESSORS
+The organization of a simple bus-oriented computer is shown in Fig. 2-1. The
+CPU (Central Processing Unit) is the ‘‘brain’’ of the computer. Its function is to
+execute programs stored in the main memory by fetching their instructions, examining them, and then executing them one after another. The components are connected by a bus, which is a collection of parallel wires for transmitting address,
+data, and control signals. Buses can be external to the CPU, connecting it to memory and I/O devices, but also internal to the CPU, as we will see shortly. Modern
+computers have multiple buses.
+The CPU is composed of several distinct parts. The control unit is responsible
+for fetching instructions from main memory and determining their type. The arithmetic logic unit performs operations such as addition and Boolean AND needed to
+carry out the instructions.
+55
+
+56
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Central processing unit (CPU)
+
+Control
+unit
+Arithmetic
+logical unit
+(ALU)
+
+I/O devices
+
+Registers

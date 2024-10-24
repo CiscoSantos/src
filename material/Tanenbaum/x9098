@@ -1,0 +1,100 @@
+Reg
+A
+
+C
+
+B
+
+4
+
+Cycle 1
+
+ALU
+
+ALU
+
+ALU
+
+ALU
+
+Shifter
+
+Shifter
+
+Shifter
+
+Shifter
+
+Cycle 2
+
+Cycle 3
+
+Cycle 4
+
+Time
+
+Figure 4-34. Graphical illustration of how a pipeline works.
+
+would be doing so. This design represents a four-stage pipeline, with stages for instruction fetching, operand access, ALU operations, and writeback to the registers.
+It is similar to the pipeline of Fig. 2-4(a), except without the decode stage. The important point to pick up here is that although a single instruction takes four clock
+cycles to carry out, on every clock cycle one new instruction is started and one old
+instruction completes.
+Another way to look at Fig. 4-34 is to follow each instruction horizontally across the page. For instruction 1, in cycle 1 the IFU is working on it. In cycle 2,
+its registers are being put onto the A and B buses. In cycle 3, the ALU and shifter
+are working for it. Finally, in cycle 4, its results are being stored back into the
+
+300
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+registers. The thing to note here is that four sections of the hardware are available,
+and during each cycle a given instruction uses only one of them, freeing up the
+other sections for different instructions.
+A useful analogy to our pipelined design is an assembly line in a factory that
+assembles cars. To abstract out the essentials of this model, imagine that a big
+gong is struck every minute, at which time all cars move one station further down
+the line. At each station, the workers there perform some operation on the car currently in front of them, like adding the steering wheel or installing the brakes. At
+each beat of the gong (1 cycle), one new car is injected into the start of the assembly line and one finished car drives off the end. Thus even though it may take hundreds of cycles to complete a car, on every cycle a whole car is completed. The
+factory can produce one car per minute, independent of how long it actually takes
+to assemble a car. This is the power of pipelining, and it applies equally well to
+CPUs as to car factories.
+
+4.4.5 A Seven-Stage Pipeline: The Mic-4
+One point we have glossed over is that every microinstruction selects its own
+successor. Most of them just select the next one in the current sequence, but the
+last one, such as swap6, often does a multiway branch, which gums up the pipeline
+since continuing to prefetch after it is impossible. We need a better way of dealing
+with this point.
+Our last microarchitecture is the Mic-4. Its main parts are shown in Fig. 4-35,
+but a substantial amount of detail has been suppressed for clarity. Like the Mic-3,
+it has an IFU that prefetches words from memory and maintains the various MBRs.
+The IFU also feeds the incoming byte stream to a new component, the decoding unit. This unit has an internal ROM indexed by IJVM opcode. Each entry
+(row) contains two parts: the length of that IJVM instruction and an index into another ROM, the micro-operation ROM. The IJVM instruction length is used to
+allow the decoding unit to parse the incoming byte stream into instructions, so it
+always knows which bytes are opcodes and which are operands. If the current instruction length is 1 byte (e.g., POP), then the decoding unit knows that the next
+byte is an opcode. If, however, the current instruction length is 2 bytes, the decoding unit knows that the next byte is an operand, followed immediately by another
+opcode. When the WIDE prefix is seen, the following byte is transformed into a
+special wide opcode, for example, WIDE + ILOAD becomes WIDE ILOAD.
+The decoding unit ships the index into the micro-operation ROM that it found
+in its table to the next component, the queueing unit. This unit contains some
+logic plus two internal tables, one in ROM and one in RAM. The ROM contains
+the microprogram, with each IJVM instruction having some number of consecutive
+entries, called micro-operations. The entries must be in order, so tricks like
+wide iload2 branching to iload2 in Mic-2 are not allowed. Each IJVM sequence
+must be spelled out in full, duplicating sequences in some cases.
+
+SEC. 4.4
+
+301
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+Micro-op
+ROM
+index
+
+IJVM
+length
+1

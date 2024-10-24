@@ -1,0 +1,100 @@
+collection of parallel wires called a bus. To fetch an instruction, the CPU first puts
+the memory address of that instruction on its address pins. Then it asserts one or
+
+186
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+more control lines to inform the memory that it wants to read (for example) a
+word. The memory replies by putting the requested word on the CPU’s data pins
+and asserting a signal saying that it is done. When the CPU sees this signal, it accepts the word and carries out the instruction.
+The instruction may require reading or writing data words, in which case the
+whole process is repeated for each additional word. We will go into the detail of
+how reading and writing works below. For the time being, the important thing to
+understand is that the CPU communicates with the memory and I/O devices by
+presenting signals on its pins and accepting signals on its pins. No other communication is possible.
+Two of the key parameters that determine the performance of a CPU are the
+number of address pins and the number of data pins. A chip with m address pins
+can address up to 2m memory locations. Common values of m are 16, 32, and 64.
+Similarly, a chip with n data pins can read or write an n-bit word in a single operation. Common values of n are 8, 32, and 64. A CPU with 8 data pins will take
+four operations to read a 32-bit word, whereas one with 32 data pins can do the
+same job in one operation. Thus, the chip with 32 data pins is much faster but is
+invariably more expensive as well.
+In addition to address and data pins, each CPU has some control pins. They
+regulate the flow and timing of data to and from the CPU and have other miscellaneous uses. All CPUs have pins for power (usually +1.2 to +1.5 volts), ground,
+and a clock signal (a square wave at some well-defined frequency), but the other
+pins vary greatly from chip to chip. Nevertheless, the control pins can be roughly
+grouped into the following major categories:
+1. Bus control.
+2. Interrupts.
+3. Bus arbitration.
+4. Coprocessor signaling.
+5. Status.
+6. Miscellaneous.
+We will briefly describe each of these categories below. When we look at the Intel
+Core i7, TI OMAP4430, and Atmel ATmega168 chips later, we will provide more
+detail. A generic CPU chip using these signal groups is shown in Fig. 3-34.
+The bus control pins are mostly outputs from the CPU to the bus (thus inputs
+to the memory and I/O chips) telling whether the CPU wants to read or write memory or do something else. The CPU uses these pins to control the rest of the system and tell it what it wants to do.
+The interrupt pins are inputs from I/O devices to the CPU. In most systems,
+the CPU can tell an I/O device to start an operation and then go off and do some
+
+SEC. 3.4
+
+CPU CHIPS AND BUSES
+Addressing
+Data
+Bus control
+
+Bus arbitration
+
+Typical
+MicroProcessor
+
+Interrupts
+
+Symbol
+for clock
+signal
+
+187
+
+Coprocessor
+Status
+Miscellaneous
+
+Φ Power
+
+Symbol for
+electrical ground
+
+Figure 3-34. The logical pinout of a generic CPU. The arrows indicate input
+signals and output signals. The short diagonal lines indicate that multiple pins
+are used. For a specific CPU, a number will be given to tell how many.
+
+other activity, while the I/O device is doing its work. When the I/O has been completed, the I/O controller chip asserts a signal on one of these pins to interrupt the
+CPU and have it service the I/O device, for example to check whether if I/O errors
+occurred. Some CPUs have an output pin to acknowledge the interrupt signal.
+The bus arbitration pins are needed to regulate traffic on the bus, in order to
+prevent two devices from trying to use it at the same time. For arbitration purposes, the CPU counts as a device and has to request the bus like any other device.
+Some CPU chips are designed to operate with coprocessors such as floating-point chips, but sometimes graphics or other chips as well. To facilitate communication between CPU and coprocessor, special pins are provided for making
+and granting various requests.
+In addition to these signals, there are various miscellaneous pins that some
+CPUs have. Some of these provide or accept status information, others are useful
+for debugging or resetting the computer, and still others are present to assure compatibility with older I/O chips.
+
+3.4.2 Computer Buses
+A bus is a common electrical pathway between multiple devices. Buses can be
+categorized by their function. They can be used internal to the CPU to transport
+data to and from the ALU, or external to the CPU to connect it to memory or to I/O
+devices. Each type of bus has its own requirements and properties. In this section
+and the following ones, we will focus on buses that connect the CPU to the memory and I/O devices. In the next chapter we will examine more closely the buses inside the CPU.
+
+188
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+

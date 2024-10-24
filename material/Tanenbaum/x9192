@@ -1,0 +1,100 @@
+contain a mixture of different types.
+
+SEC. 6.1
+
+451
+
+VIRTUAL MEMORY
+20K
+16K
+12K
+
+Symbol
+table
+
+8K
+Source
+text
+
+4K
+0
+Segment
+0
+
+Segment
+1
+
+Constant
+table
+Segment
+2
+
+Parse
+tree
+Segment
+3
+
+Call
+stack
+
+Segment
+4
+
+Figure 6-8. A segmented memory allows each table to grow or shrink independently of the other tables.
+
+A segmented memory has other advantages besides simplifying the handling of
+data structures that are growing or shrinking. If each procedure occupies a separate segment, with address 0 as its starting address, the linking up of procedures
+compiled separately is greatly simplified. After all the procedures that constitute a
+program have been compiled and linked up, a procedure call to the procedure in
+segment n will use the two-part address (n, 0) to address word 0 (the entry point).
+If the procedure in segment n is subsequently modified and recompiled, no
+other procedures need be changed (because no starting addresses have been modified), even if the new version is larger than the old one. With a one-dimensional
+memory, the procedures are normally packed tightly next to each other, with no address space between them. Consequently, changing one procedure’s size can affect
+the starting address of other, unrelated, procedures. This, in turn, requires modifying all procedures that call any of the moved procedures, in order to incorporate
+their new starting addresses. If a program contains hundreds of procedures, this
+process can be costly.
+Segmentation also facilitates sharing procedures or data among several programs. If a computer has several programs running in parallel (either true or simulated parallel processing), all of which use certain library procedures, it is wasteful
+of main memory to provide each one with its own private copy. If we make each
+procedure a separate segment, they can be shared easily, thus eliminating the need
+for more than one physical copy of any shared procedure to be in main memory.
+As a result, memory is saved.
+Because each segment forms a logical entity of which the programmer is
+aware, such as a procedure, or an array, or a stack, different segments can have different kinds of protection. A procedure segment could be specified as execute
+only, prohibiting attempts to read from it or store into it. A floating-point array
+could be specified as read/write but not execute, and attempts to branch to it would
+be caught. Such protection is frequently helpful in catching programming errors.
+
+452
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+Try to understand why protection makes sense in a segmented memory but not
+in a one-dimensional (i.e., linear) paged memory. In a segmented memory the user
+is aware of what is in each segment. Normally, a segment would not contain both a
+procedure and a stack, for example, but one or the other. Since each segment contains only one type of object, the segment can have the protection appropriate for
+that particular type. Paging and segmentation are compared in Fig. 6-9.
+Consideration
+
+Paging
+
+Need the programmer be aware of it?
+
+No
+
+How many linear addresses spaces are there?
+
+1
+
+Segmentation
+Yes
+Many
+
+Can virtual address space exceed memory size? Yes
+
+Yes
+
+Can variable-sized tables be handled easily?
+
+No

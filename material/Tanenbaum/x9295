@@ -1,0 +1,100 @@
+622
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+18-hour run aborted because one CPU crashed is unacceptable, especially when
+one such failure is to be expected every week. Thus large MPPs always have special hardware and software for monitoring the system, detecting failures, and
+recovering from them smoothly.
+While it would be nice to study the general principles of MPP design now, in
+truth, there are not many principles. When you come right down to it, an MPP is a
+collection of more-or-less standard computing nodes connected by a very fast
+interconnect of the types we have already examined. So instead, we will now look
+at two examples of MPPs: BlueGene/P and Red Storm.
+BlueGene
+As a first example of a massively parallel processor, we will now examine the
+IBM BlueGene system. IBM conceived this project in 1999 as a massively parallel
+supercomputer for solving computationally intensive problems in, among other
+fields, the life sciences. For example, biologists believe that the three-dimensional
+structure of a protein determines its functionality, yet computing the 3D structure
+of one small protein from the laws of physics took years on the supercomputers of
+that period. The number of proteins found in human beings is over half a million.
+Many of them are extremely large and their misfolding is known to be responsible
+for certain diseases (e.g., cystic fibrosis). Clearly, determining the 3D structure of
+all the human proteins would require increasing the world’s computing power by
+many orders of magnitude, and modeling protein folding is only one problem that
+BlueGene was designed to handle. Equally complex challenges in molecular dynamics, climate modeling, astronomy, and even financial modeling also require
+orders of magnitude improvement in supercomputing.
+IBM felt that there was enough of a market for massive supercomputing that it
+invested $100 million to design and build BlueGene. In November 2001, Livermore National Laboratory, run by the U.S. Department of Energy, signed up as a
+partner and first customer for the first version of the BlueGene family, called BlueGene/L. In 2007, IBM deployed the second generation of the BlueGene
+supercomputer, called the BlueGene/P, which we detail here.
+The goal of the BlueGene project was not just to produce the world’s fastest
+MPP, but to also to produce the most efficient one in terms of teraflops/dollar, teraflops/watt, and teraflops/m3 . For this reason, IBM rejected the philosophy behind
+previous MPPs, which was to use the fastest components money could buy. Instead, a decision was made to produce a custom system-on-a-chip component that
+was to run at a modest speed and low power in order to produce a very large machine with a high packing density. The first BlueGene/P was delivered to a German university in November 2007. The system contained 65,536 processors, and it
+was capable of 167 teraflops/sec. When deployed it was the fastest computer in
+Europe, and the sixth fastest computer in the world. The system was also regarded
+as one of the most computationally power-efficient supercomputers in the world,
+
+SEC. 8.4
+
+623
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+able to produce 371 megaflops/W, making it nearly twice as power efficient as its
+predecessor the BlueGene/L. This first BlueGene/P deployment was upgraded in
+2009 to include 294,912 processors, giving it a computational punch of 1
+petaflop/sec.
+The heart of the BlueGene/P system is the custom node chip illustrated in
+Fig. 8-38. It consists of four PowerPC 450 cores running at 850 MHz. The PowerPC 450 is a pipelined dual-issue superscalar processor popular in embedded systems. Each core has a pair of dual-issue floating-point units, which together can
+issue four floating-point instructions per clock cycle. The floating-point units have
+been augmented with a number of SIMD-type instructions sometimes useful in scientific computations on arrays. While no performance slouch, this chip is clearly
+not a top-of-the-line multiprocessor.
+L1 caches
+
+North
+
+Up
+Interface
+to 3D
+torus
+
+Custom
+chip
+FPU
+
+PowerPC
+450 core
+
+I
+
+L2
+cache
+
+D
+Snooping
+
+FPU
+FPU
+
+PowerPC
+450 core
+
+West
+
+I
+
+L2
+cache
+
+D
+
+Multiplexing Switch
+
+FPU
+
+4-MB
+L3

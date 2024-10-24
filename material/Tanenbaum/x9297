@@ -1,0 +1,100 @@
+32 Cards
+32 Chips
+128 CPUs
+64 GB
+
+Cabinet
+32 Boards
+1024 Cards
+1024 Chips
+4096 CPUs
+2 TB
+
+System
+72 Cabinets
+73728 Cards
+73728 Chips
+294912 CPUs
+144 TB
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+Figure 8-39. The BlueGene/P: (a) chip. (b) card. (c) board. (d) cabinet.
+(e) system.
+
+The cards are mounted on plug-in boards, with 32 cards per board for a total of
+32 chips (and thus 128 CPUs) per board. Since each card contains 2 GB of
+DRAM, the boards contain 64 GB apiece. One board is illustrated in Fig. 8-39(c).
+At the next level, 32 of these boards are plugged into a cabinet, packing 4096
+CPUs into a single cabinet. A cabinet is illustrated in Fig. 8-39(d).
+Finally, a full system, consisting of up to 72 cabinets with 294,912 CPUs, is
+depicted in Fig. 8-39(e). A PowerPC 450 can issue up to 6 instructions/cycle, thus
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+625
+
+a full BlueGene/P system could conceivably issue up to 1,769,472 instructions per
+cycle. At 850 MHz, this gives the system a possible performance of 1.504
+petaflops/sec. However, data hazards, memory latency, and lack of parallelism
+work together to ensure that the actual throughput of the system is much less. Real
+programs running on the BlueGene/P have demonstrated performance rates of up
+to 1 petaflop/sec.
+The system is a multicomputer in the sense that no CPU has direct access to
+any memory except the 2 GB on its own card. While CPUs within a processor
+chip have shared memory, processors at the board, rack, and system level do not
+share the same memory. In addition, there is no demand paging because there are
+no local disks to page off. Instead, the system has 1152 I/O nodes, which are connected to disks and the other peripheral devices.
+All in all, while the system is extremely large, it is also quite straightforward
+with little new technology except in the area of high-density packaging. The decision to keep it simple was no accident since a major goal was high reliability and
+availability. Consequently, a great deal of careful engineering went into the power
+supplies, fans, cooling, and cabling with the goal of a mean-time-to-failure of at
+least 10 days.
+To connect all the chips, a scalable, high-performance interconnect is needed.
+The design used is a three-dimensional torus measuring 72 × 32 × 32. As a consequence, each CPU needs only six connections to the torus network, two to other
+CPUs logically above and below it, north and south of it, and east and west of it.
+These six connections are labeled east, west, north, south, up, and down, respectively in Fig. 8-38. Physically, each 1024-node cabinet is an 8 × 8 × 16 torus.
+Pairs of neighboring cabinets form an 8 × 8 × 32 torus. Four pairs of cabinets in
+the same row form an 8 × 32 × 32 torus. Finally, all 9 rows form a 72 × 32 × 32
+torus.
+All links are thus point-to-point and operate at 3.4 Gbps. Since each of the
+73,728 nodes has three links to ‘‘higher’’ numbered nodes, one in each dimension,
+the total bandwidth of the system is 752 terabits/sec. The information content of
+this book is about 300 million bits, including all the art in encapsulated PostScript
+format, so BlueGene/P could move 2.5 million copies of this book per second.
+Where they would go and who would want them is left as an exercise for the
+reader.
+Communication on the 3D torus is done in the form of virtual cut through
+routing. This technique is somewhat akin to store-and-forward packet switching,
+except that entire packets are not stored before being forwarded. As soon as a byte
+has arrived at one node, it can be forwarded to the next one along the path, even
+before the entire packet has arrived. Both dynamic (adaptive) and deterministic
+(fixed) routing are possible. A small amount of special-purpose hardware on the
+chip is used to implement the virtual cut through.
+In addition to the main 3D torus used for data transport, four other communication networks are present. The second one is the collective network in the form
+
+626
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+of a tree. Many of the operations performed on highly parallel systems such as
+BlueGene/P require the participation of all the nodes. For example, consider finding the minimum value of a set of 65,536 values, one held in each node. The collective network joins all the nodes in a tree. Whenever two nodes send their respective values to a higher-level node, it selects out the smallest one and forwards
+it upward. In this way, far less traffic reaches the root than if all 65,636 nodes sent
+a message there.
+The third network is the barrier network, used to implement global barriers and
+interrupts. Some algorithms work in phases with each node required to wait until
+all the others have completed the phase before starting the next phase. The barrier
+network allows the software to define these phases and provide a way to suspend
+all compute CPUs that reach the end of a phase until all of them have reached the
+end, at which time they are all released. Interrupts also use this network.
+The fourth and fifth networks both use 10-gigabit Ethernet. One of them connects the I/O nodes to the file servers, which are external to BlueGene/P, and to the

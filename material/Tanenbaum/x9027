@@ -1,0 +1,100 @@
+TDH
+
+TRL
+WAIT
+
+Time
+(a)
+
+Symbol
+
+Parameter
+
+Min
+
+TAD
+
+Address output delay
+
+TML
+
+Address stable prior to MREQ
+
+Max
+
+Unit
+
+4
+
+nsec
+nsec
+
+2
+
+TM
+
+MREQ delay from falling edge of Φ in T1
+
+3
+
+nsec
+
+TRL
+
+RD delay from falling edge of Φ in T1
+
+3
+
+nsec
+
+TDS
+
+Data setup time prior to falling edge of Φ
+
+TMH
+
+MREQ delay from falling edge of Φ in T3
+
+3
+
+nsec
+
+TRH
+
+RD delay from falling edge of Φ in T3
+
+3
+
+nsec
+
+TDH
+
+Data hold time from negation of RD
+
+nsec
+
+2
+
+0
+
+nsec
+
+(b)
+
+Figure 3-38. (a) Read timing on a synchronous bus. (b) Specification of some
+critical times.
+
+down before the CPU strobes it in. The combination of constraints on T AD and T DS
+means that, in the worst case, the memory will have only 25 − 4 − 2 = 19 nsec
+from the time the address appears until it must produce the data. Because 10 nsec
+is enough, even in the worst case, a 10-nsec memory can always respond during
+T 3 . A 20-nsec memory, however, would just miss and have to insert a second wait
+state and respond during T 4 .
+
+194
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+The timing specification further guarantees that the address will be set up at

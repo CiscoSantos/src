@@ -1,0 +1,100 @@
+
+5.5.10 The ATmega168 AVR Instructions
+The ATmega168 has a simple instruction set, shown in Fig. 5-35. Each line
+gives the mnemonic, a brief description, and a snippet of pseudocode that details
+the operation of the instruction. As is to be expected, there are a variety of MOV instructions for moving data between the registers. There are instructions for pushing and popping from a stack, which is pointed to by the 16-bit stack pointer (SP)
+in memory. Memory can be accessed with either an immediate address, register
+indirect, or register indirect plus a displacement. To allow up to 64 KB of addressing, the load with an immediate address is a 32-bit instruction. The indirect
+addressing modes utilize the X, Y, and Z register pairs, which combine two 8-bit
+registers to form a single 16-bit pointer.
+The ATmega168 has simple arithmetic instructions for adding, subtracting, and
+multiplying, the latter of which use two registers. Incrementing and decrementing
+are also possible and commonly used. Boolean, shift, and rotate instructions are
+also present. The branch and call instruction can target an immediate address, a
+PC-relative address, or an address contained in the Z register pair.
+
+5.5.11 Comparison of Instruction Sets
+The three example instruction sets are very different. The Core i7 is a classic
+two-address 32-bit CISC machine, with a long history, peculiar and highly irregular addressing modes, and many instructions that reference memory.
+
+SEC. 5.5
+
+INSTRUCTION TYPES
+
+Instruction
+ADD DST,SRC
+
+Add
+
+Description
+
+Semantics
+DST ← DST + SRC
+
+ADC DST,SRC
+
+Add with Carry
+
+DST ← DST + SRC + C
+
+ADIW DST,IMM
+
+Add Immediate to Word
+
+DST+1:DST ← DST+1:DST + IMM
+
+SUB DST,SRC
+
+Subtract
+
+DST ← DST - SRC
+
+SUBI DST,IMM
+
+Subtract Immediate
+
+DST ← DST - IMM
+
+SBC DST,SRC
+
+Subtract with Carry
+
+DST ← DST - SRC - C
+
+SBCI DST,IMM
+
+Subtract Immediate with Carry
+
+DST ← DST - IMM – C
+
+SBIW DST,IMM
+
+Subtract Immediate from Word
+
+DST+1:DST ← DST+1:DST - IMM
+
+AND DST,SRC
+
+Logical AND
+
+DST ← DST AND SRC
+
+ANDI DST,IMM
+
+Logical AND with Immediate
+
+DST ← DST AND IMM
+
+OR DST,SRC
+
+Logical OR
+
+DST ← DST OR SRC
+
+ORI DST,IMM
+
+Logical OR with Immediate
+
+DST ← DST OR IMM
+
+EOR DST,SRC

@@ -1,0 +1,100 @@
+When the CPU is initially booted, all cache entries are marked invalid. The
+first time memory is read, the line referenced is fetched into the cache of the CPU
+reading memory and marked as being in the E (exclusive) state, since it is the only
+copy in a cache, as illustrated in Fig. 8-28(a) for the case of CPU 1 reading line A.
+Subsequent reads by that CPU use the cached entry and do not go over the bus.
+Another CPU may also fetch the same line and cache it, but by snooping, the original holder (CPU 1) sees that it is no longer alone and announces on the bus that it
+also has a copy. Both copies are marked as being in the S (shared) state, as shown
+in Fig. 8-28(b). In other words, the S state means that the line is in one or more
+caches for reading and memory is up to date. Subsequent reads by a CPU to a line
+it has cached in the S state do not use the bus and do not cause the state to change.
+Now consider what happens if CPU 2 writes to the cache line it is holding in S
+state. It puts out an invalidate signal on the bus, telling all other CPUs to discard
+their copies. The cached copy now goes to M (modified) state, as shown in
+Fig. 8-28(c). The line is not written to memory. It is worth noting that if a line is
+in E state when it is written, no bus signal is needed to invalidate other caches because it is known that no other copies exist.
+Next consider what happens if CPU 3 reads the line. CPU 2, which now owns
+the line, knows that the copy in memory is not valid, so it asserts a signal on the
+
+602
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CPU 1
+
+CPU 2
+
+CHAP. 8
+
+CPU 3
+Memory
+
+(a)
+
+CPU 1 reads block A
+
+A
+Exclusive
+Bus
+
+Cache
+
+CPU 1
+
+CPU 2
+
+CPU 3
+Memory
+
+(b)
+
+CPU 2 reads block A
+
+A
+Shared
+
+Shared
+Bus
+
+CPU 1
+
+CPU 2
+
+CPU 3
+Memory
+
+(c)
+
+CPU 2 writes block A
+
+A
+Modified
+Bus
+
+CPU 1
+
+CPU 2
+
+CPU 3
+
+A
+
+A
+
+Memory
+
+(d)
+Shared
+
+CPU 3 reads block A
+
+Shared
+Bus
+
+CPU 1
+
+CPU 2
+
+CPU 3
+Memory
+

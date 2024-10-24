@@ -1,0 +1,100 @@
+A3 B3
+
+A2 B2
+
+A1 B1
+
+A0 B0
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+1-bit
+ALU
+
+O7
+
+O6
+
+O5
+
+O4
+
+O3
+
+O2
+
+O1
+
+O0
+
+Carry
+in
+
+INC
+
+Carry
+out
+
+Figure 3-19. Eight 1-bit ALU slices connected to make an 8-bit ALU. The enables and invert signals are not shown for simplicity.
+
+Years ago, a bit slice was an actual chip you could buy. Nowadays, a bit slice is
+more likely to be a library a chip designer can replicate the desired number of
+times in a computer-aided-design program that produces an output file that drives
+the chip-production machines. But the idea is essentially the same.
+
+168
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+3.2.4 Clocks
+In many digital circuits the order in which events happen is critical. Sometimes one event must precede another, sometimes two events must occur simultaneously. To allow designers to achieve the required timing relations, many digital
+circuits use clocks to provide synchronization. A clock in this context is a circuit
+that emits a series of pulses with a precise pulse width and precise interval between
+consecutive pulses. The time interval between the corresponding edges of two
+consecutive pulses is known as the clock cycle time. Pulse frequencies are commonly between 100 MHz and 4 GHz, corresponding to clock cycles of 10 nsec to
+250 psec. To achieve high accuracy, the clock frequency is usually controlled by a
+crystal oscillator.
+In a computer, many events may happen during a single clock cycle. If these
+events must occur in a specific order, the clock cycle must be divided into subcycles. A common way of providing finer resolution than the basic clock is to tap
+the primary clock line and insert a circuit with a known delay in it, thus generating
+a secondary clock signal that is phase-shifted from the primary, as shown in
+Fig. 3-20(a). The timing diagram of Fig. 3-20(b) provides four time references for
+discrete events:
+1. Rising edge of C1.
+2. Falling edge of C1.
+3. Rising edge of C2.
+4. Falling edge of C2.
+By tying different events to the various edges, the required sequencing can be
+achieved. If more than four time references are needed within a clock cycle, more
+secondary lines can be tapped from the primary, with one with a different delay if
+necessary.
+In some circuits, one is interested in time intervals rather than discrete instants
+of time. For example, some event may be allowed to happen whenever C1 is high,
+rather than precisely at the rising edge. Another event may happen only when C2
+is high. If more than two different intervals are needed, more clock lines can be
+provided or the high states of the two clocks can be made to overlap partially in
+time. In the latter case four distinct intervals can be distinguished: C1 AND C2,
+C1 AND C2, C1 AND C2, and C1 AND C2.
+As an aside, clocks are symmetric, with time spent in the high state equal to
+the time spent in the low state, as shown in Fig. 3-20(b). To generate an asymmetric pulse train, the basic clock is shifted using a delay circuit and ANDed with the

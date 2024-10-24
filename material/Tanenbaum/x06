@@ -1,0 +1,100 @@
+
+12
+
+INTRODUCTION
+
+CHAP. 1
+
+This revelation led to a virtual explosion in machine instruction sets, as designers
+competed with one another to produce bigger and better instruction sets. Many of
+these instructions were not essential in the sense that their effect could be easily
+achieved by existing instructions, but often they were slightly faster than a sequence of existing instructions. For example, many machines had an instruction
+INC (INCrement) that added 1 to a number. Since these machines also had a general ADD instruction, having a special instruction to add 1 (or to add 720, for that
+matter) was not necessary. However, the INC was usually a little faster than the
+ADD, so it got thrown in.
+For the same reason, many other instructions were added to the microprogram.
+These often included
+1. Instructions for integer multiplication and division.
+2. Floating-point arithmetic instructions.
+3. Instructions for calling and returning from procedures.
+4. Instructions for speeding up looping.
+5. Instructions for handling character strings.
+Furthermore, once machine designers saw how easy it was to add new instructions,
+they began looking around for other features to add to their microprograms. A few
+examples of these additions include
+1. Features to speed up computations involving arrays (indexing and
+indirect addressing).
+2. Features to permit programs to be moved in memory after they have
+started running (relocation facilities).
+3. Interrupt systems that signal the computer as soon as an input or output operation is completed.
+4. The ability to suspend one program and start another in a small number of instructions (process switching).
+5. Special instructions for processing audio, image, and multimedia
+files.
+Numerous other features and facilities have been added over the years as well,
+usually for speeding up some particular activity.
+The Elimination of Microprogramming
+Microprograms grew fat during the golden years of microprogramming (1960s
+and 1970s). They also tended to get slower and slower as they acquired more bulk.
+Finally, some researchers realized that by eliminating the microprogram, vastly
+
+SEC. 1.1
+
+STRUCTURED COMPUTER ORGANIZATION
+
+13
+
+reducing the instruction set, and having the remaining instructions be directly executed (i.e., hardware control of the data path), machines could be speeded up. In
+a certain sense, computer design had come full circle, back to the way it was before Wilkes invented microprogramming in the first place.
+But the wheel is still turning. Modern processors still rely on microprogramming to translate complex instructions to internal microcode that can be executed directly on streamlined hardware.
+The point of this discussion is to show that the boundary between hardware
+and software is arbitrary and constantly changing. Today’s software may be
+tomorrow’s hardware, and vice versa. Furthermore, the boundaries between the
+various levels are also fluid. From the programmer’s point of view, how an instruction is actually implemented is unimportant (except perhaps for its speed). A person programming at the ISA level can use its multiply instruction as though it were
+a hardware instruction without having to worry about it, or even be aware of
+whether it really is a hardware instruction. One person’s hardware is another person’s software. We will come back to all these topics later in this book.
+
+1.2 MILESTONES IN COMPUTER ARCHITECTURE
+Hundreds of different kinds of computers have been designed and built during
+the evolution of the modern digital computer. Most have been long forgotten, but a
+few have had a significant impact on modern ideas. In this section we will give a
+brief sketch of some of the key historical developments in order to get a better understanding of how we got where we are now. Needless to say, this section only
+touches on the highlights and leaves many stones unturned. Figure 1-4 lists some
+of the milestone machines to be discussed in this section. Slater (1987) is a good
+place to look for additional historical material on the people who founded the computer age. For short biographies and beautiful color photographs by Louis Fabian
+Bachrach of some of the key people who founded the computer age, see Morgan’s
+coffee-table book (1997).
+
+1.2.1 The Zeroth Generation—Mechanical Computers (1642–1945)
+The first person to build a working calculating machine was the French scientist Blaise Pascal (1623–1662), in whose honor the programming language Pascal
+is named. This device, built in 1642, when Pascal was only 19, was designed to
+help his father, a tax collector for the French government. It was entirely mechanical, using gears, and powered by a hand-operated crank.
+Pascal’s machine could do only addition and subtraction operations, but thirty
+years later the great German mathematician Baron Gottfried Wilhelm von Leibniz
+(1646–1716) built another mechanical machine that could multiply and divide as
+
+14
+
+INTRODUCTION
+
+Year
+
+Name
+
+Made by
+
+CHAP. 1
+
+Comments
+
+1834 Analytical Engine Babbage
+
+First attempt to build a digital computer
+
+1936 Z1
+
+Zuse
+
+First working relay calculating machine
+
+1943 COLOSSUS
+

@@ -1,0 +1,100 @@
+Load/store architecture, 356
+Loading, 536–549
+Local descriptor table, 455
+Local label, 717
+Local loop, 130
+Local variable frame, 258–260
+Local-area network, 575
+Locality principle, 83, 446
+Location, 74
+Location counter, 716
+Logical block addressing, 91
+Logical record, 466
+Long integer, 697
+
+760
+
+INDEX
+
+Lookup table, 183–185
+Loop control instructions, 393–394
+Loosely coupled system, 73, 554
+Lovelace, Ada, 15
+LPI (see Lines Per Inch)
+LRU (see Least Recently Used algorithm)
+LRU algorithm, (see Least Recently Used algorithm)
+LRU algorithm (see Least Recently Used algorithm)
+LUT (see LookUp Table)
+
+M
+M.I.T.
+TX-0, 19
+TX-2, 19
+Machine language, 1, 691
+Macintosh, Apple, 24
+Macro, assembly language, 524–529
+Macro call, 525
+Macro definition, 524
+Macro expansion, 525
+Macro parameter, 526–527
+Macro processor, implementation, 528–529
+Macroarchitecture, 258
+Magnetic disk, 87–97
+Mainframe, 38–39
+MAL (see Micro Assembly Language)
+MANIAC, 17
+Mantissa, 682
+MAR (see Memory Address Register)
+Mark I, 14
+Mask, 387
+MASM (see Microsoft ASseMbler)
+Massively parallel processor, 593, 621–631
+BlueGene, 622–626
+Red Storm, 626–631
+Master, bus, 189
+Master file table, 502
+Masuoka, Fujio, 98
+Mauchley, John, 16
+MDR (see Memory Data Register)
+Memory, 73–85, 169–185
+associative, 454, 535
+attraction, 615
+big endian, 76–78
+cache, 41, 82–85
+cache only access, 614–616
+
+compact disc-read only, 101–103
+fast page mode, 181
+flash, 183
+interleaved, 606
+little endian, 76–78
+nonvolatile, 182–183
+random access, 73–85, 180–183
+read only, 182
+secondary, 86–108
+virtual, 438–462
+Memory address, 74–76
+Memory address register, 249–250
+Memory and addressing, 8088, 699–704
+Memory chip, 178–180
+Memory data register, 249–250
+Memory hierarchy, 86–87
+Memory management unit, 442
+Memory map, 440
+Memory model, 347–349, 720
+Core i7, 347–348
+Memory operation, 249–250
+Memory organization, 174–178
+8088, 699–701
+Memory packaging, 85
+Memory semantics, 593–598
+cache, 599
+processor, 595–596
+release, 597–598
+sequential, 594–595
+strict, 594
+weak, 596–597
+Memory-mapped I/O, 234
+Mesh, 620
+MESI protocol, 601–603
+Message queue, 504

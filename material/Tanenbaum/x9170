@@ -1,0 +1,100 @@
+towers(1, 1, 3)
+
+The stack then is as shown in Fig. 5-40(c) and the program counter points to the
+start of the procedure. This time the test succeeds and a line is printed. Next, the
+procedure returns by removing one stack frame, resetting FP and SP to
+Fig. 5-40(d). It then continues executing at the return address, which is the second
+call:
+towers(1, 1, 2)
+
+This adds a new frame to the stack as shown in Fig. 5-40(e). Another line is
+printed; after the return a frame is removed from the stack. The procedure calls
+continue in this way until the original call completes execution and the frame of
+Fig. 5-40(a) is removed from the stack. To best understand how recursion works, it
+is recommended that you simulate the complete execution of
+towers(3, 1, 3)
+
+using pencil and paper.
+
+5.6.3 Coroutines
+In the usual calling sequence, there is a clear distinction between the calling
+procedure and the called procedure. Consider a procedure A, on the left which
+calls a procedure B on the right in Fig. 5-41.
+Procedure B computes for a while and then afterwards returns to A. At first
+sight you might consider this situation symmetric, because neither A nor B is a
+main program, both being procedures. (Procedure A may have been called by the
+
+SEC. 5.6
+
+A called
+from main
+program
+
+411
+
+FLOW OF CONTROL
+
+A
+
+B
+
+Calling
+procedure
+
+Called
+procedure
+
+CALL
+LL
+
+CA
+RE
+
+TU
+
+RN
+
+RETU
+
+CA
+
+LL
+
+RN
+
+RN
+
+TU
+
+RE
+
+A returns
+to main
+program
+
+Figure 5-41. When a procedure is called, execution of the procedure always begins at the first statement of the procedure.
+
+main program but that is irrelevant.) Furthermore, first control is transferred from
+A to B—the call—and later control is transferred from B to A—the return.
+The asymmetry arises from the fact that when control passes from A to B, procedure B begins executing at the beginning; when B returns to A, execution starts
+not at the beginning of A but at the statement following the call. If A runs for a
+while and calls B again, execution starts at the beginning of B again, not at the
+statement following the previous return. If, in the course of running, A calls B
+many times, B starts at the beginning all over again each and every time, whereas A
+never starts over again. It just keeps going forward.
+
+412
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+This difference is reflected in the method by which control is passed between
+A and B. When A calls B, it uses the procedure call instruction, which puts the return address (i.e., the address of the statement following the call) somewhere useful, for example, on top of the stack. It then puts the address of B into the program
+counter to complete the call. When B returns, it does not use the call instruction
+but instead it uses the return instruction, which simply pops the return address from
+the stack and puts it into the program counter.
+A
+A called
+from main
+program

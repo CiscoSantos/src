@@ -1,0 +1,100 @@
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+public class m {
+final public static int BUF SIZE = 100;
+final public static long MAX PRIME = 100000000000L;
+public static int in = 0, out = 0;
+public static long buffer[ ] = new long[BUF SIZE];
+public static producer p;
+public static consumer c;
+public static int filled = 0, available = 100;
+public static void main(String args[ ]) {
+p = new producer( );
+c = new consumer( );
+p.start( );
+c.start( );
+}
+
+481
+
+// buffer runs from 0 to 99
+// stop here
+// pointers to the data
+// primes stored here
+// name of the producer
+// name of the consumer
+// semaphores
+// main class
+// create the producer
+// create the consumer
+// start the producer
+// start the consumer
+
+// This is a utility function for circularly incrementing in and out
+public static int next(int k) {if (k < BUF SIZE − 1) return(k+1); else return(0);}
+}
+class producer extends Thread {
+native void up(int s); native void down(int s);
+public void run( ) {
+long prime = 2;
+while (prime < m.MAX PRIME) {
+prime = next prime(prime);
+down(m.available);
+m.buffer[m.in] = prime;
+m.in = m.next(m.in);
+up(m.filled);
+}
+
+// producer class
+// methods on semaphores
+// producer code
+// scratch variable
+// statement P1
+// statement P2
+// statement P3
+// statement P4
+// statement P5
+
+}
+private long next prime(long prime){ ... }
+
+// function that computes next prime
+
+}
+class consumer extends Thread {
+native void up(int s); native void down(int s);
+public void run( ) {
+long emirp = 2;
+while (emirp < m.MAX PRIME) {
+down(m.filled);
+emirp = m.buffer[m.out];
+m.out = m.next(m.out);
+up(m.available);
+System.out.println(emirp);
+}
+
+// consumer class
+// methods on semaphores
+// consumer code
+// scratch variable
+// statement C1
+// statement C2
+// statement C3
+// statement C4
+// statement C5
+
+}
+}
+Figure 6-29. Parallel processing using semaphores.
+
+482
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+elegant, we will begin with it. Also, UNIX was designed and implemented first and
+had a major influence on Windows 7, so this order makes more sense than the reverse.
+

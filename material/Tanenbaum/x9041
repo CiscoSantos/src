@@ -1,0 +1,100 @@
+buses in turn to see how they work.
+
+3.6.1 The PCI Bus
+On the original IBM PC, most applications were text based. Gradually, with
+the introduction of Windows, graphical user interfaces came into use. None of
+these applications put much strain on early system buses such as the ISA bus.
+However, as time went on and many applications, especially multimedia games,
+began to use computers to display full-screen, full-motion video, the situation
+changed radically.
+Let us make a simple calculation. Consider a 1024 × 768 color video with 3
+bytes/pixel. One frame contains 2.25 MB of data. For smooth motion, at least 30
+screens/sec are needed, for a data rate of 67.5 MB/sec. In fact, it is worse than this,
+since to display a video from a hard disk, CD-ROM, or DVD, the data must pass
+from the disk drive over the bus to the memory. Then for the display, the data must
+travel over the bus again to the graphics adapter. Thus, we need a bus bandwidth
+of 135 MB/sec for the video alone, not counting the bandwidth that the CPU and
+other devices need.
+The PCI bus’ predecessor, the ISA bus, ran at a maximum rate of 8.33 MHz
+and could transfer 2 bytes per cycle, for a maximum bandwidth of 16.7 MB/sec.
+The enhanced ISA bus, called the EISA bus, could move 4 bytes per cycle, to
+achieve 33.3 MB/sec. Clearly, neither of these approached what is needed for fullscreen video.
+With modern full HD video the situation is even worse. It requires
+1920 × 1080 frames at 30 frames/sec for a data rate of 155 MB/sec (or 310 MB/sec
+if the data have to traverse the bus twice). Clearly, the EISA bus does not even
+come close to handling this.
+In 1990, Intel saw this coming and designed a new bus with a far higher bandwidth than the EISA bus. It was called the PCI bus (Peripheral Component
+Interconnect bus). To encourage its use, Intel patented the PCI bus and then put
+all the patents into the public domain, so any company could build peripherals for
+it without having to pay royalties. Intel also formed an industry consortium, the
+PCI Special Interest Group, to manage the future of the PCI bus. As a result, the
+PCI bus became extremely popular. Virtually every Intel-based computer since the
+Pentium has a PCI bus, and many other computers do, too. The PCI bus is covered
+in gory detail in Shanley and Anderson (1999) and Solari and Willse (2004).
+The original PCI bus transferred 32 bits per cycle and ran at 33 MHz (30-nsec
+cycle time) for a total bandwidth of 133 MB/sec. In 1993, PCI 2.0 was introduced,
+
+216
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+and in 1995, PCI 2.1 came out. PCI 2.2 has features for mobile computers (mostly
+for saving battery power). The PCI bus runs at up to 66 MHz and can handle
+64-bit transfers, for a total bandwidth of 528 MB/sec. With this kind of capacity,
+full-screen, full-motion video is doable (assuming the disk and the rest of the system are up to the job). In any event, the PCI bus will not be the bottleneck.
+Even though 528 MB/sec sounds pretty fast, the PCI bus still had two problems. First, it was not good enough for a memory bus. Second, it was not compatible with all those old ISA cards out there. The solution Intel thought of was to design computers with three or more buses, as shown in Fig. 3-51. Here we see that
+the CPU can talk to the main memory on a special memory bus, and that an ISA
+bus can be connected to the PCI bus. This arrangement met all requirements, and
+as a consequence it was widely used in the 1990s.
+Local bus
+
+Cache bus
+
+Level 2
+cache
+
+Memory bus
+
+PCI
+bridge
+
+CPU
+
+Main
+memory
+PCI bus
+
+SCSI
+
+USB
+
+ISA
+bridge
+
+IDE
+disk
+
+Graphics
+adaptor
+
+Available
+PCI slot
+
+Monitor
+Mouse
+
+Modem
+
+Keyboard
+
+ISA bus
+
+Sound
+card
+
+Printer
+
+Available
+ISA slot

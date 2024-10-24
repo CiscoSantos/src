@@ -1,0 +1,100 @@
+
+row
+bank 2
+
+data
+bank 0
+
+data
+bank 1
+
+Bus Cycle
+6
+7
+
+8
+
+9
+
+10
+
+PCHRG
+bank 1
+
+READ
+bank 0
+
+PCHRG
+bank 2
+
+11
+
+12
+
+13
+
+CK
+
+DATA
+
+READ
+bank 2
+
+ACT
+bank 0
+
+col
+bank 2
+
+row
+bank 0
+
+data
+bank 2
+
+PCHRG
+bank 0
+
+col
+bank 0
+
+data
+bank 0
+
+Figure 3-46. Pipelining memory requests on the Core i7’s DDR3 interface.
+
+As shown in Fig. 3-46, the DDR3 memory interface has four primary signal
+paths: bus clock (CK), bus command (CMD), address (ADDR), and data (DATA).
+The bus clock signal CK orchestrates all bus activity. The bus command CMD indicates what activity is requested of the connect DRAM. The ACTIVATE command specifies the address of the DRAM row to open via the ADDR signal. When
+a READ is executed, the DRAM column address is given via the ADDR signals,
+and the DRAM produces the read value a fixed time later on the DATA signals.
+Finally, the PRECHARGE command indicates the bank to precharge via the
+ADDR signals. For the purpose of the example, the ACTIVATE command must
+precede the first READ to the same bank by two DDR3 bus cycles, and data are
+produced one bus cycle after the READ command. Additionally, the
+PRECHARGE operation must occur at least two bus cycles after the last READ
+operation to the same DRAM bank.
+The parallelism in the memory requests can be seen in the overlapping of the
+READ requests to the different DRAM banks. The first two READ accesses to
+banks 0 and 1 are completely overlapped, producing results in bus cycles 3 and 4,
+respectively. The access to bank 2 partially overlaps with the first access of bank 1,
+and finally the second read of bank 0 partially overlaps with the access to bank 2.
+
+208
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+You might be wondering how the Core i7 knows when to expect its READ
+command data to return, and when it can make a new memory request. The answer
+is that it knows when to receive and initiate requests because it fully models the internal activities of each attached DDR3 DRAM. Thus, it will anticipate the return
+of data in the correct cycle, and it will know to avoid initiating a precharge operation until two cycles after its last read operation. The Core i7 can anticipate all of
+these activities because the DDR3 memory interface is a synchronous memory
+interface. Thus, all activities take a well-known number of DDR3 bus cycles.
+Even with all of this knowledge, building a high-performance fully pipelined
+DDR3 memory interface is a nontrivial task, requiring many internal timers and
+conflict detectors to implement efficient DRAM request handling.
+
+3.5.2 The Texas Instruments OMAP4430 System-on-a-Chip
+As our second example of a CPU chip, we will now examine the Texas Instruments (TI) OMAP4430 system-on-a-chip (SoC). The OMAP4430 implements

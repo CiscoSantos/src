@@ -1,0 +1,100 @@
+
+CK
+
+(b)
+
+D
+
+Q
+
+CK
+
+(c)
+
+D
+
+Q
+
+CK
+
+(d)
+
+Figure 3-26. D latches and flip-flops.
+
+3.3.3 Registers
+Flip-flops can be combined in groups to create registers, which hold data types
+larger than 1 bit in length. The register in Fig. 3-27 shows how eight flip-flops can
+be ganged together to form an 8-bit storage register. The register accepts an 8-bit
+input value (I 0 to I 7) when the clock CK transitions. To implement a register, all
+the clock lines are connected to the same input signal CK, such that when the clock
+transitions, each register will accept the new 8-bit data value on the input bus. The
+flip-flops themselves are of the Fig. 3-26(d) type, but the inversion bubbles on the
+flip-flops are canceled by the inverter tied to the clock signal CK, such that the
+flip-flops are loaded on the rising transition of the clock. All eight clear signals are
+also ganged, so when the clear signal CLR goes to 0, all the flip-flops are forced to
+their 0 state. In case you are wondering why the clock signal CK is inverted at the
+input and then inverted again at each flip-flop, an input signal may not have
+enough current to drive all eight flip-flops; the input inverter is really being used as
+an amplifier.
+Once we have designed an 8-bit register, we can use it as a building block to
+create larger registers. For example, a 32-bit register could be created by combining two 16-bit registers by tying their clock signals CK and clear signals CLR. We
+will look at registers and their uses more closely in Chap. 4.
+
+3.3.4 Memory Organization
+Although we have now progressed from the simple 1-bit memory of Fig. 3-23
+to the 8-bit memory of Fig. 3-27, to build large memories a fairly different organization is required, one in which individual words can be addressed. A widely used
+
+SEC. 3.3
+
+175
+
+MEMORY
+O0
+
+I0 O1
+Q
+
+Q
+
+D
+
+I2 O3
+Q
+
+D
+
+O3 CK
+Q
+
+D
+
+CK
+CLR
+
+CK
+CLR
+
+CK
+CLR
+
+CK
+CLR
+
+CLR
+CK
+
+CLR
+CK
+
+CLR
+CK
+
+CLR
+CK
+
+Q
+CLR O4
+
+D
+
+I1 O2

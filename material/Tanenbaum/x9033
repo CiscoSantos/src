@@ -1,0 +1,100 @@
+issue, Intel has provided a way to put the CPU to sleep when it is idle and to put it
+into a deep sleep when it is likely to be that way for a while. Five states are provided, ranging from fully active to deep sleep. In the intermediate states, some
+functionality (such as cache snooping and interrupt handling) is enabled, but other
+functions are disabled. When in deep sleep state, the register values are preserved,
+but the caches are flushed and turned off. When in deep sleep, a hardware signal is
+required to wake it up. It is not known whether a Core i7 can dream when it is in
+deep sleep.
+The Core i7’s Logical Pinout
+The 1155 pins on the Core i7 are used for 447 signals, 286 power connections
+(at several different voltages), 360 grounds, and 62 spares for future use. Some of
+the logical signals use two or more pins (such as the memory-address requested),
+so there are only 131 different signals. A somewhat simplified logical pinout is
+given in Fig. 3-45. On the left side of the figure are five major groups of bus signals; on the right side are various miscellaneous signals.
+DDR Memory
+Channel #1
+DDR Memory
+Channel #2
+
+PCIe Channel
+Direct Media
+Interface
+
+Flexible
+Display Interface
+
+124
+
+18
+
+124
+
+4
+
+80
+16
+
+10
+Core i7
+CPU
+
+7
+24
+
+21
+
+12
+
+Diagnostics
+Thermal
+Monitoring
+
+Power
+Management
+Power Sensing
+Configuration
+Miscellaneous
+
+286 360
+
+CK Power Ground
+
+Figure 3-45. Logical pinout of the Core i7.
+
+SEC. 3.5
+
+EXAMPLE CPU CHIPS
+
+205
+
+Let us examine the signals, starting with the bus signals. The first two bus signals are used to interface to DDR3 compatible DRAM. This group of signals provides address, data, control and clock to the DRAM bank. The Core i7 supports
+two independent DDR3 DRAM channels, running with a 666-MHz bus clock that
+transfers on both edges to allow 1333 million transactions per second. The DDR3
+interface is 64 bits wide, thus, the two DDR3 interfaces work in tandem to provide
+memory-hungry programs up to 20 gigabytes of data each second.
+The third bus group is the PCI Express interface, which is used to connect
+peripherals directly to the Core i7 CPU. The PCI Express interface is a high-speed
+serial interface, with each single serial link forming a ‘‘lane’’ of communication
+with peripherals. The Core i7 link is an x16 interface, which means that it can utilize 16 lanes simultaneously for an aggregate bandwidth of 16 GB/sec. Despite its
+being a serial channel, a rich set of commands travel over PCI Express links, including device reads, writes, interrupts, and configuration setup commands.
+The next bus group is the Direct Media Interface (DMI), which is used to connect the Core i7 CPU to its companion chipset. The DMI interface is similar to
+the PCI Express interface, although it runs at about half the speed since four lanes
+can provide only up to 2.5-GB-per-second data transfer rates. A CPU’s chipset
+contains a rich set of additional peripheral interface support, typically required for
+higher-end system with many I/O devices. The Core i7 chipset is composed of the
+P67 and ICH10 chips. The P67 chip is the Swiss Army knife of chips, providing
+SATA, USB, Audio, PCIe, and Flash memory interfaces. The ICH10 chip provides
+legacy interface support, including a PCI interface and the 8259A interrupt control
+functionality. Additionally, the ICH10 contains a handful of other circuits, such as
+real-time clocks, event timers, and direct memory access (DMA) controllers. Having chips like these greatly simplifies construction of a full PC.
+The Core i7 can be configured to use interrupts the same way as on the 8088
+(for purposes of backward compatibility), or it can also use a new interrupt system
+using a device called an APIC (Advanced Programmable Interrupt Controller).
+The Core i7 can run at any one of several predefined voltages, but it has to
+know which one. The power-management signals are used for automatic power-supply voltage selection, telling the CPU that power is stable, and other power-related matters. Managing the various sleep states is also done here since sleeping is done for reasons of power management.
+Despite sophisticated power management, the Core i7 can get very hot. To
+protect the silicon, each Core i7 processor contains multiple internal heat sensors
+that detect when the chip is about to overheat. The thermal monitoring group deals
+with thermal management, allowing the CPU to indicate to its environment that it
+is in danger of overheating. One of the pins is asserted by the CPU if its internal
+temperature reaches 130°C (266°F). If a CPU ever hits this temperature, it is probably dreaming about retirement and becoming a camp stove.

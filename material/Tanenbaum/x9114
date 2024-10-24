@@ -1,0 +1,100 @@
+memory. In more complicated code sequences, one common way of preventing
+speculative code from overwriting registers before it is known if this is desired, is
+to rename all the destination registers used by the speculative code. In this way,
+only scratch registers are modified, so there is no problem if the code ultimately is
+not needed. If the code is needed, the scratch registers are copied to the true destination registers. As you can imagine, the scoreboarding to keep track of all this is
+not simple, but given enough hardware, it can be done.
+However, there is another problem introduced by speculative code that cannot
+be solved by register renaming. What happens if a speculatively executed instruction causes an exception? A painful, but not fatal, example is a LOAD instruction
+that causes a cache miss on a machine with a large cache line size (say, 256 bytes)
+and a memory far slower than the CPU and cache. If a LOAD that is actually needed stops the machine dead in its tracks for many cycles while the cache line is
+being loaded, well, that’s life, since the word is needed. However, stalling the machine to fetch a word that turns out not to be needed is counterproductive. Too
+many of these ‘‘optimizations’’ may make the CPU slower than if it did not have
+them at all. (If the machine has virtual memory, which is discussed in Chap. 6, a
+speculative LOAD might even cause a page fault, which requires a disk operation to
+bring in the needed page. False page faults can have a terrible effect on performance, so it is important to avoid them.)
+One solution present in a number of modern machines is to have a special
+SPECULATIVE-LOAD instruction that tries to fetch the word from the cache, but if it
+is not there, just gives up. If the value is there when it is actually needed, it can be
+used, but if it is not, the hardware must go out and get it on the spot. If the value
+turns out not to be needed, no penalty has been paid for the cache miss.
+A far worse situation can be illustrated with the following statement:
+if (x > 0) z = y/x;
+
+where x, y, and z are floating-point variables. Suppose that the variables are all
+fetched into registers in advance and that the (slow) floating-point division is
+hoisted above the if test. Unfortunately, x is 0 and the resulting divide-by-zero trap
+terminates the program. The net result is that speculation has caused a correct program to fail. Worse yet, the programmer put in explicit code to prevent this situation and it happened anyway. This situation is not likely to lead to a happy programmer.
+One possible solution is to have special versions of instructions that might
+cause exceptions. In addition, a bit, called a poison bit, is added to each register.
+When a special speculative instruction fails, instead of causing a trap, it sets the
+
+SEC. 4.5
+
+IMPROVING PERFORMANCE
+
+323
+
+poison bit on the result register. If that register is later touched by a regular instruction, the trap occurs then (as it should). However, if the result is never used,
+the poison bit is eventually cleared and no harm is done.
+
+4.6 EXAMPLES OF THE MICROARCHITECTURE LEVEL
+In this section, we will show brief examples of three state-of-the-art processors, showing how they employ the concepts explored in this chapter. These will
+of necessity be brief because real machines are enormously complex, containing
+millions of gates. The examples are the same ones we have been using so far: Core
+i7, the OMAP4430, and the ATmega168.
+
+4.6.1 The Microarchitecture of the Core i7 CPU
+On the outside, the Core i7 appears to be a traditional CISC machine, with
+processors that support a huge and unwieldy instruction set supporting 8-, 16-, and
+32-bit integer operations as well as 32-bit and 64-bit floating-point operations. It
+has only eight visible registers per processor and no two of them are quite the
+same. Instruction lengths vary from 1 to 17 bytes. In short, it is a legacy architecture that seems to do everything wrong.
+However, on the inside, the Core i7 contains a modern, lean-and-mean, deeply
+pipelined RISC core that runs at an extremely fast clock rate that is likely to increase in the years ahead. It is quite amazing how the Intel engineers managed to
+build a state-of-the-art processor to implement an ancient architecture. In this section we will look at the Core i7 microarchitecture to see how it works.
+Overview of the Core i7’s Sandy Bridge Microarchitecture
+The Core i7 microarchitecture, called the Sandy Bridge microarchitecture, is a
+significant refinement of the previous-generation Intel microarchitectures, including the earlier P4 and P6. A rough overview of the Core i7 microarchitecture is
+given in Fig. 4-46.
+The Core i7 consists of four major subsections: the memory subsystem, the
+front end, the out-of-order control, and the execution units. Let us examine these
+one at a time starting at the upper left and going counterclockwise around the chip.
+Each processor in the Core i7 contains a memory subsystem with a unified L2
+(level 2) cache as well as the logic for accessing the L3 (level 3) cache. A single
+large L3 cache is shared by all processors, and it is the last stop before leaving the
+CPU chip and making the very long trip to external RAM over the memory bus.
+The Core i7’s L2 caches are 256 KB in size, and each is organized as an 8-way
+
+324
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+To shared L3 cache
+Memory subsystem
+
+Execution unit
+
+System interface
+
+Level 1
+data cache
+
+Level 2 cache
+(instructions and data)
+
+Integer ALUs, floating-point
+units, store buffer
+
+Fetch/decode
+unit
+
+Micro-op
+cache
+
+Level 1
+inst cache
+
+Branch

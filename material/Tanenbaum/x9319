@@ -1,0 +1,100 @@
+2011.
+
+BIBLIOGRAPHY
+
+665
+
+LI, K., and HUDAK, P.: ‘‘Memory Coherence in Shared Virtual Memory Systems,’’ ACM
+
+Trans. on Computer Systems, vol. 7, pp. 321–359, Nov. 1989.
+LIN, Y.-N., LIN, Y.-D., and LAI, Y.-C.: ‘‘Thread Allocation in CMP-based Multithreaded
+
+Network Processors,’’ Parallel Computing, vol. 36, pp. 104–116, Feb. 2010.
+LU, H., COX, A.L., DWARKADAS, S., RAJAMONY, R., and ZWAENEPOEL, W.: ‘‘Software
+
+Distributed Shared Memory Support for Irregular Applications,’’ Proc. Sixth Conf. on
+Prin. and Practice of Parallel Progr., pp. 48–56, June 1997.
+LUKASIEWICZ, J.: Aristotle’s Syllogistic, 2nd ed., Oxford: Oxford University Press, 1958.
+LYYTINEN, K., and YOO, Y.: ‘‘Issues and Challenges in Ubiquitous Computing,’’ Commun.
+
+of the ACM, vol. 45, pp. 63–65, Dec. 2002.
+MARTIN, R.P., VAHDAT, A.M., CULLER, D.E., and ANDERSON, T.E.: ‘‘Effects of Commu-
+
+nication Latency, Overhead, and Bandwidth in a Cluster Architecture,’’ Proc. 24th
+Ann. Int’l Symp. on Computer Arch., ACM, pp. 85–97, 1997.
+MAYHEW, D., and KRISHNAN, V.: ‘‘PCI Express and Advanced Switching: Evolutionary
+
+Path to Building Next Generation Interconnects,’’ Proc. 11th Symp. on High Perf.
+Interconnects, IEEE, pp. 21–29, Aug. 2003.
+MCKUSICK, M.K., JOY, W.N., LEFFLER, S.J., and FABRY, R.S.: ‘‘A Fast File System for
+
+UNIX,’’ ACM Trans. on Computer Systems, vol. 2, pp. 181–197, Aug. 1984.
+MCNAIRY, C., and SOLTIS, D.: ‘‘Itanium 2 Processor Microarchitecture,’’ IEEE Micro
+
+Magazine, vol. 23, pp. 44–55, March-April 2003.
+MISHRA, A.K., VIJAYKRISHNAN, N., and DAS, C.R.: ‘‘A Case for Heterogeneous On-Chip
+
+Interconnects for CMPs,’’ Proc. 38th Int’l Symp. on Computer Arch. ACM, 2011.
+MORGAN, C.: Portraits in Computing, New York: ACM Press, 1997.
+MOUDGILL, M., and VASSILIADIS, S.: ‘‘Precise Interrupts,’’ IEEE Micro Magazine, vol.
+
+16, pp. 58–67, Jan. 1996.
+MULLENDER, S.J., and TANENBAUM, A.S.: ‘‘Immediate Files,’’ Software—Practice and
+
+Experience, vol. 14, pp. 365–368, 1984.
+NAEEM, A., CHEN, X., LU, Z., and JANTSCH, A.: ‘‘Realization and Performance Compari-
+
+son of Sequential and Weak Memory Consistency Models in Network-On-Chip Based
+Multicore Systems,’’ Proc. 16th Design Automation Conf. Asia and South Pacific,
+IEEE, pp. 154–159, 2011.
+ORGANICK, E.: The MULTICS System, Cambridge, MA: MIT Press, 1972.
+OSKIN, M., CHONG, F.T., and CHUANG, I.L.: ‘‘A Practical Architecture for Reliable Quan-
+
+tum Computers,’’ IEEE Computer Magazine, vol. 35, pp. 79–87, Jan. 2002.
+PAPAMARCOS, M., and PATEL., J.: ‘‘A Low Overhead Coherence Solution for Multipro-
+
+cessors with Private Cache Memories,’’ Proc. 11th Ann. Int’l Symp. on Computer
+Arch., ACM, pp. 348–354, 1984.
+PARIKH, D., SKADRON, K., ZHANG, Y., and STAN, M.: ‘‘Power-Aware Branch Prediction:
+
+Characterization and Design,’’ IEEE Trans. on Computers, vol. 53, 168–186, Feb.
+2004.
+
+666
+
+BIBLIOGRAPHY
+
+CHAP. 9
+
+PATTERSON, D.A.: ‘‘Reduced Instruction Set Computers,’’ Commun. of the ACM, vol. 28,
+
+pp. 8–21, Jan. 1985.
+PATTERSON, D.A., GIBSON, G., and KATZ, R.: ‘‘A Case for Redundant Arrays of Inexpen-
+
+sive Disks (RAID),’’ Proc. ACM SIGMOD Int’l Conf. on Management of Data, ACM,
+pp. 109–166, 1988.
+PATTERSON, D.A., and SEQUIN, C.H.: ‘‘A VLSI RISC,’’ IEEE Computer Magazine, vol.
+
+15, pp. 8–22, Sept. 1982.
+POUNTAIN, D.: ‘‘Pentium: More RISC than CISC,’’ Byte, vol. 18, pp. 195–204, Sept. 1993.
+RADIN, G.: ‘‘The 801 Minicomputer,’’ Computer Arch. News, vol. 10, pp. 39–47, March
+
+1982.
+RAMAN, S.K., PENTKOVSKI, V., and KESHAVA, J.: ‘‘Implementing Streaming SIMD
+
+Extensions on the Pentium III Processor,’’ IEEE Micro Magazine, vol. 20, pp. 47–57,
+July-Aug. 2000.
+RITCHIE, D.M.: ‘‘Reflections on Software Research,’’ Commun. pf the ACM, vol. 27, pp.
+
+758–760, Aug. 1984.
+RITCHIE, D.M., and THOMPSON, K.: ‘‘The UNIX Time-Sharing System,’’ Commun. of
+
+the ACM, vol. 17, pp. 365–375, July 1974.
+ROBINSON, G.S.: ‘‘Toward the Age of Smarter Storage,’’ IEEE Computer Magazine, vol.
+
+35, pp. 35–41, Dec. 2002.
+ROSENBLUM, M., and OUSTERHOUT, J.K.: ‘‘The Design and Implementation of a Log-
+
+Structured File System,’’ Proc. Thirteenth Symp. on Operating System Principles,
+ACM, pp. 1–15, 1991.
+RUSSINOVICH, M.E., and SOLOMON, D.A.: Microsoft Windows Internals, 4th ed., Red-

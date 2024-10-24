@@ -1,0 +1,100 @@
+PROBLEMS
+1. Why does an operating system interpret only some of the level 3 instructions, whereas
+a microprogram interprets all the ISA-level instructions?
+2. A machine has a 32-bit byte-addressable virtual address space. The page size is 4 KB.
+How many pages of virtual address space exist?
+3. Is it necessary to have the page size be a power of 2? Could a page of size, say, 4000
+bytes be implemented in theory? If so, would it be practical?
+4. A virtual memory has a page size of 1024 words, eight virtual pages, and four physical
+page frames. The page table is as follows:
+Virtual page
+0
+1
+2
+3
+4
+5
+6
+7
+
+Page frame
+3
+1
+not in main memory
+not in main memory
+2
+not in main memory
+0
+not in main memory
+
+a. Make a list of all virtual addresses that will cause page faults.
+b. What are the physical addresses for 0, 3728, 1023, 1024, 1025, 7800, and 4096?
+5. A computer has 16 pages of virtual address space but only four page frames. Initially,
+the memory is empty. A program references the virtual pages in the order
+0, 7, 2, 7, 5, 8, 9, 2, 4
+
+CHAP. 6
+
+511
+
+PROBLEMS
+
+a. Which references cause a page fault with LRU?
+b. Which references cause a page fault with FIFO?
+6. In Sec. 6.1.4 an algorithm was presented for implementing a FIFO page replacement
+strategy. Devise a more efficient one. Hint: It is possible to update the counter in the
+newly loaded page, leaving all the others alone.
+7. In the paged systems discussed in the text, the page fault handler was part of the ISA
+level and thus was not present in any OSM-level program’s address space. In reality,
+the page fault handler also occupies pages, and might, under some circumstances (e.g.,
+FIFO page replacement policy), itself be removed. What would happen if the page
+fault handler were not present when a page fault occurred? How could this be fixed?
+8. Not all computers have a hardware bit that is automatically set when a page is written
+to. Nevertheless, it is useful to keep track of which pages have been modified, to avoid
+having to assume worst case and write all pages back to the disk after use. Assuming
+that each page has hardware bits to separately enable access for reading, writing, and
+execution, how can the operating system keep track of which pages are clean and
+which are dirty?
+9. A segmented memory has paged segments. Each virtual address has a 2-bit segment
+number, a 2-bit page number, and an 11-bit offset within the page. The main memory
+contains 32 KB, divided into 2-KB pages. Each segment is either read-only, read/execute, read/write, or read/write/execute. The page tables and protection are as follows:
+Segment 0
+Read only
+Virtual
+Page
+page
+frame
+0
+9
+1
+3
+2
+On disk
+3
+12
+
+Segment 1
+Read/execute
+Virtual
+Page
+page
+frame
+0
+On disk
+1
+0
+2
+15
+3
+8
+
+Segment 2
+Read/write/execute
+
+Page table
+not in
+main
+memory
+
+Segment 3
+Read/write

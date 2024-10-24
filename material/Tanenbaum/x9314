@@ -1,0 +1,100 @@
+Global Grid Forum, to manage the standardization process. It has come up with a
+framework called OGSA (Open Grid Services Architecture) for positioning the
+various standards it is developing. Wherever possible, the standards utilize existing standards, for example, using WSDL (Web Services Definition Language) for
+describing OGSA services. The services being standardized currently fall into
+eight broad categories as follows, but no doubt new ones will be created later.
+1. Infrastructure services (enable communication between resources).
+2. Resource management services (reserve and deploy resources).
+3. Data services (move and replicate data to where it is needed).
+4. Context services (describe required resources and usage policies).
+5. Information services (get information about resource availability).
+6. Self-management services (support a stated quality of service).
+7. Security services (enforce security policies).
+8. Execution management services (manage workflow).
+
+SEC. 8.5
+
+GRID COMPUTING
+
+655
+
+Much more could be said about the grid, but space limitations prevent us from
+pursuing this topic further. For more information about the grid, see Abramson
+(2011), Balasangameshwara and Raju (2012), Celaya and Arronategui (2011), Foster and Kesselman (2003), and Lee et al. (2011).
+
+8.6 SUMMARY
+It is getting increasingly difficult to make computers go faster by just revving
+up the clock due to increased heat dissipation problems and other factors. Instead,
+designers are looking to parallelism for speed-up. Parallelism can be introduced at
+many different levels, from very low, where the processing elements are very
+tightly coupled, to very high, where they are very loosely coupled.
+At the bottom level is on-chip parallelism, in which parallel activities occur on
+a single chip. One form of on-chip parallelism is instruction-level parallelism, in
+which one instruction or a sequence of instructions issues multiple operations that
+can be executed in parallel by different functional units. A second form of on-chip
+parallelism is multithreading, in which the CPU can switch back and forth among
+multiple threads on an instruction-by-instruction basis, creating a virtual multiprocessor. A third form of on-chip parallelism is the single-chip multiprocessor, in
+which two or more cores are placed on the same chip to allow them to run at the
+same time.
+One level up we find the coprocessors, typically plug-in boards that add extra
+processing power in some specialized area such as network protocol processing or
+multimedia. These extra processors relieve the main CPU of work, allowing it to
+do other things while they are performing their specialized tasks.
+At the next level, we find the shared-memory multiprocessors. These systems
+contain two or more full-blown CPUs that share a common memory. UMA multiprocessors communicate via a shared (snooping) bus, a crossbar switch, or a multistage switching network. They are characterized by having a uniform access time
+to all memory locations. In contrast, NUMA multiprocessors also present all processes with the same shared address space, but here remote accesses take appreciably longer than local ones. Finally, COMA multiprocessors are yet another variation, in which cache lines move around the machine on demand but have no real
+home as in the other designs.
+Multicomputers are systems with many CPUs that do not share a common
+memory. Each has its own private memory, with communication by message passing. MPPs are large multicomputers with specialized communication networks
+such as IBM’s BlueGene/L. Clusters are simpler systems using off-the-shelf components, such as the engine that powers Google.
+Multicomputers are often programmed using a message-passing package such
+as MPI. An alternative approach is to use application-level shared memory such as
+a page-based DSM system, the Linda tuple space, or Orca or Globe objects. DSM
+
+656
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+simulates shared memory at the page level, making it similar to a NUMA machine,
+except with a much greater penalty for remote references.
+Finally, at the highest level, and the most loosely coupled, are the grids. These
+are systems in which entire organizations are hooked together over the Internet to
+share compute power, data, and other resources.
+
+PROBLEMS
+1. Intel x86 instructions can be as long as 17 bytes. Is the x86 a VLIW CPU?
+2. As process-design technology allows engineers to put ever more transistors on a chip,
+Intel and AMD have chosen to increase the number of cores on each chip. Are there
+any other feasible choices they could have made instead?
+3. What are the clipped values of 96, −9, 300, and 256 when the clipping range is 0–255?
+4. Are the following TriMedia instructions allowed, and if not, why not?
+a. Integer add, integer subtract, load, floating add, load immediate
+b. Integer subtract, integer multiply, load immediate, shift, shift
+c. Load immediate, floating add, floating multiply, branch, load immediate
+5. Figure 8-7(d) and (e) show 12 cycles of instructions. For each one, tell what happens
+in the following three cycles.
+6. On a particular CPU, an instruction that misses the level 1 cache but hits the level 2
+cache takes k cycles in total. If multithreading is used to mask level 1 cache misses,
+how many threads must be run at once using fine-grained multithreading to avoid dead
+cycles?
+7. The NVIDIA Fermi GPU is similar in spirit to one of the architectures we studied in
+Chap. 2. Which one?
+8. One morning, the queen bee of a certain beehive calls in all her worker bees and tells
+them that today’s assignment is to collect marigold nectar. The workers then fly off in
+different directions looking for marigolds. Is this an SIMD or an MIMD system?
+9. During our discussion of memory consistency models, we said that a consistency
+model is a kind of contract between the software and the memory. Why is such a contract needed?
+10. Consider a multiprocessor using a shared bus. What happens if two processors try to
+access the global memory at exactly the same instant?
+11. Consider a multiprocessor using a shared bus. What happens if three processors try to
+access the global memory at exactly the same instant?
+12. Suppose that for technical reasons it is possible for a snooping cache to snoop only on
+address lines, not on data lines. Would this change affect the write through protocol?
+
+CHAP. 8
+
+PROBLEMS
+
+657

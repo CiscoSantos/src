@@ -1,0 +1,100 @@
+types of instructions it has.
+Structuring programs in this way has other advantages in addition to ease of
+programming. If the assembler is being written by a group of people, the various
+procedures can be parceled out among the programmers. All the (nasty) details of
+getting the input are hidden away in read next line. If they should change—for
+example, due to an operating system change—only one subsidiary procedure is
+affected, and no changes are needed to the pass one procedure itself.
+As it reads the program, pass one of the assembler has to parse each line to
+find the opcode (e.g., ADD), look up its type (basically, the pattern of operands),
+and compute the instruction’s length. This information is also needed on the second pass, so it is possible to write it out explicitly to eliminate the need to parse the
+line from scratch next time. However, rewriting the input file causes more I/O to
+
+SEC. 7.3
+
+THE ASSEMBLY PROCESS
+
+533
+
+public static void pass one( ) {
+// This procedure is an outline of pass one of a simple assembler.
+// flag that stops pass one
+boolean more input = true;
+String line, symbol, literal, opcode;
+// fields of the instruction
+int location counter, length, value, type; // misc. variables
+// signals end of input
+final int END STATEMENT = −2;
+location counter = 0;
+initialize tables( );
+
+// assemble first instruction at 0
+// general initialization
+
+while (more input) {
+line = read next line( );
+length = 0;
+type = 0;
+
+// more input set to false by END
+// get a line of input
+// # bytes in the instruction
+// which type (format) is the instruction
+
+if (line is not comment(line)) {
+// is this line labeled?
+symbol = check for symbol(line);
+if (symbol != null)
+// if it is, record symbol and value
+enter new symbol(symbol, location counter);
+// does line contain a literal?
+literal = check for literal(line);
+if (literal != null)
+// if it does, enter it in table
+enter new literal(literal);
+// Now determine the opcode type. −1 means illegal opcode.
+// locate opcode mnemonic
+opcode = extract opcode(line);
+type = search opcode table(opcode); // find format, e.g. OP REG1,REG2
+if (type < 0)
+// if not an opcode, is it a pseudoinstruction?
+type = search pseudo table(opcode);
+switch(type) {
+// determine the length of this instruction
+case 1: length = get length of type1(line); break;
+case 2: length = get length of type2(line); break;
+// other cases here
+}
+}
+write temp file(type, opcode, length, line); // useful info for pass two
+// update loc ctr
+location counter = location counter + length;
+// are we done with input?
+if (type == END STATEMENT) {
+// if so, perform housekeeping tasks
+more input = false;
+// like rewinding the temp file
+rewind temp for pass two( );
+// and sorting the literal table
+sort literal table( );
+// and removing duplicates from it
+remove redundant literals( );
+}
+}
+}
+Figure 7-9. Pass one of a simple assembler.
+
+occur. Whether it is better to do more I/O to eliminate parsing or less I/O and
+more parsing depends on the relative speed of the CPU and disk, the efficiency of
+the file system, and other factors. In this example we will write out a temporary
+file containing the type, opcode, length, and actual input line. It is this line that
+pass two reads instead of the raw input file.
+
+534
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+When the END pseudoinstruction is read, pass one is over. The symbol table
+and literal tables can be sorted at this point if needed. The sorted literal table can

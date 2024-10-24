@@ -1,0 +1,100 @@
+CHAP. 8
+
+8.1.2 On-Chip Multithreading
+All modern, pipelined CPUs have an inherent problem: when a memory reference misses the level 1 and level 2 caches, there is a long wait until the requested
+word (and its associated cache line) are loaded into the cache, so the pipeline stalls.
+One approach to dealing with this situation, called on-chip multithreading, allows
+the CPU to manage multiple threads of control at the same time in an attempt to
+mask these stalls. In short, if thread 1 is blocked, the CPU still has a chance of
+running thread 2 in order to keep the hardware fully occupied.
+Although the basic idea is fairly simple, multiple variants exist, which we will
+now examine. The first approach, called fine-grained multithreading, is illustrated in Fig. 8-7 for a CPU with the ability to issue one instruction per clock cycle. In
+Fig. 8-7(a)–(c), we see three threads, A, B, and C, for 12 machine cycles. During
+the first cycle, thread A executes instruction A1. This instruction completes in one
+cycle, so in the second cycle instruction A2 is started. Unfortunately, this instruction misses on the level 1 cache so two cycles are wasted while the word needed is
+fetched from the level 2 cache. The thread continues in cycle 5. Similarly, threads
+B and C also stall occasionally as well, as illustrated in the figure. In this model if
+an instruction stalls, subsequent instructions cannot be issued. Of course, with a
+more sophisticated scoreboard, sometimes new instructions can still be issued, but
+we will ignore that possibility in this discussion.
+(a) A1 A2
+(b) B1
+
+A3 A4 A5
+B2
+
+(c) C1 C2 C3 C4
+Cycle
+
+A6 A7 A8
+
+(d) A1 B1 C1 A2 B2 C2 A3 B3 C3 A4 B4 C4
+
+B3 B4 B5 B6 B7 B8
+C5 C6
+
+C7 C8
+
+(e) A1 A2
+
+B1
+
+C1 C2 C3 C4 A3 A4 A5
+
+Cycle
+
+Figure 8-7. (a)–(c) Three threads. The empty boxes indicate that the thread has
+stalled waiting for memory. (d) Fine-grained multithreading. (e) Coarse-grained
+multithreading.
+
+Fine-grained multithreading masks the stalls by running the threads round
+robin, with a different thread in consecutive cycles, as shown in Fig. 8-7(d). By the
+time the fourth cycle comes up, the memory operation initiated in A1 has completed, so instruction A2 can be run, even if it needs the result of A1. In this case
+the maximum stall is two cycles, so with three threads the stalled operation always
+completes in time. If a memory stall took four cycles, we would need four threads
+to insure continuous operation, and so on.
+Since different threads have nothing to do with one another, each one needs its
+own set of registers. When an instruction is issued, a pointer to its register set has
+to be included along with the instruction so that if a register is referenced, the
+
+SEC. 8.1
+
+ON-CHIP PARALELLISM
+
+563
+
+hardware will know which register set to use. Consequently, the maximum number
+of threads that can be run at once is fixed at the time the chip is designed.
+Memory operations are not the only reason for stalling. Sometimes an instruction needs a result computed by a previous instruction that is not yet complete.
+Sometimes an instruction cannot start because it follows a conditional branch
+whose direction is not yet known. In general, if the pipeline has k stages but there
+are at least k threads to run round robin, there will never be more than one instruction per thread in the pipeline at any moment, so no conflicts can occur. In this
+situation, the CPU can run at full speed, never stalling.
+Of course, there may not be as many threads available as there are pipeline
+stages, so some designers prefer a different approach, known as coarse-grained
+multithreading, illustrated in Fig. 8-7(e). Here thread A starts and continues to
+issue instructions until it stalls, wasting one cycle. At that point a switch occurs
+and B1 is executed. Since the first instruction of thread B stalls, another thread
+switch happens and C1 is executed in cycle 6. Since a cycle is lost whenever an instruction stalls, coarse-grained multithreading is potentially less efficient than finegrained multithreading, but it has the big advantage that many fewer threads are
+needed to keep the CPU busy. In situations with an insufficient number of active
+threads, to be sure of finding a runnable one, coarse-grained multithreading works
+better.
+Although we have depicted coarse-grained multithreading as doing thread
+switches on a stall, that is not the only option. Another possibility is to switch immediately on any instruction that might cause a stall, such as a load, store, or
+branch, before even finding out whether it does cause a stall. This allows a switch
+to occur earlier (as soon as the instruction is decoded), and may make it possible to
+avoid dead cycles. In effect, it is saying: ‘‘Run until there might be a problem, then
+switch just in case.’’ Doing so makes coarse-grained multithreading somewhat
+more like fine-grained multithreading with its frequent switches.
+No matter which kind of multithreading is used, some way is needed to keep
+track of which operation belongs to which thread. With fine-grained multithreading, the only serious possibility is to attach a thread identifier to each operation, so
+that as it moves through the pipeline, its identity is clear. With coarse-grained
+multithreading, another possibility exists: when switching threads, let the pipeline
+clear and only then start the next thread. In that way, only one thread at a time is in
+the pipeline and its identity is never in doubt. Of course, letting the pipeline run
+dry on a thread switch makes sense only if thread switches take place at intervals
+very much longer than the time it takes to empty the pipeline.
+So far we have assumed that the CPU can issue only one instruction per cycle.
+As we have seen, however, modern CPUs can issue multiple instructions per cycle.
+In Fig. 8-8 we assume the CPU can issue two instructions per clock cycle, but we
+maintain the rule that when an instruction stalls, subsequent instructions cannot be

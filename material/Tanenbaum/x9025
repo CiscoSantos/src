@@ -1,0 +1,100 @@
+CPU
+
+Coprocessor fetching operands from CPU
+
+Figure 3-36. Examples of bus masters and slaves.
+
+The binary signals that computer devices output are frequently too weak to
+power a bus, especially if it is relatively long or has many devices on it. For this
+reason, most bus masters are connected to the bus by circuitry called a bus driver,
+which is essentially a digital amplifier. Similarly, most slaves are connected to the
+bus by a bus receiver. For devices that can act as both master and slave, a combined circuit called a bus transceiver is used. These bus interfaces are often tri-state
+devices, to allow them to float (disconnect) when they are not needed, or are
+hooked up in a somewhat different way, called open collector, that achieves a similar effect. When two or more devices on an open-collector line assert the line at
+the same time, the result is the Boolean OR of all the signals. This arrangement is
+often called wired-OR. On most buses, some of the lines are tri-state and others,
+which need the wired-OR property, are open collector.
+Like a CPU, a bus also has address, data, and control lines. However, there is
+not necessarily a one-to-one mapping between the CPU pins and the bus signals.
+For example, some CPUs have three pins that encode whether the CPU is doing a
+memory read, memory write, I/O read, I/O write, or some other operation. A typical bus might have one line for memory read, a second for memory write, a third
+for I/O read, a fourth for I/O write, and so on. A decoder circuit would then be
+
+190
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+needed between the CPU and such a bus to match the two sides up, that is, to convert the 3-bit encoded signal into separate signals that can drive the bus lines.
+Bus design and operation are sufficiently complex subjects that a number of
+entire books have been written about them (Anderson et al., 2004, Solari and
+Willse, 2004). The principal bus design issues are bus width, bus clocking, bus
+arbitration, and bus operations. Each of these issues has a substantial impact on
+the speed and bandwidth of the bus. We will now examine each of these in the
+next four sections.
+
+3.4.3 Bus Width
+Bus width is the most obvious design parameter. The more address lines a bus
+has, the more memory the CPU can address directly. If a bus has n address lines,
+then a CPU can use it to address 2n different memory locations. To allow large
+memories, buses need many address lines. That sounds simple enough.
+The problem is that wide buses need more wires than narrow ones. They also
+take up more physical space (e.g., on the motherboard) and need bigger connectors. All of these factors make the bus more expensive. Thus, there is a tradeoff between maximum memory size and system cost. A system with a 64-line address bus and 232 bytes of memory will cost more than one with 32 address lines
+and the same 232 bytes of memory. The possibility of expansion later is not free.
+The result of this observation is that many system designers tend to be shortsighted, with unfortunate consequences later. The original IBM PC contained an
+8088 CPU and a 20-bit address bus, as shown in Fig. 3-37(a). Having 20 bits allowed the PC to address 1 MB of memory.
+20-Bit address
+20-Bit address
+Control
+
+20-Bit address
+8088
+
+Control
+80286
+
+Control
+
+4-Bit address
+80386
+Control
+8-Bit address
+
+4-Bit address
+
+Control
+Control
+(a)
+
+(b)
+
+(c)
+
+Figure 3-37. Growth of an address bus over time.
+
+When the next CPU chip (the 80286) came out, Intel flet it had to increase the
+address space to 16 MB, so four more bus lines were added (without disturbing the
+
+SEC. 3.4
+
+CPU CHIPS AND BUSES
+
+191
+
+original 20, for reasons of backward compatibility), as illustrated in Fig. 3-37(b).
+Unfortunately, more control lines had to be added to deal with the new address
+lines. When the 80386 came out, another eight address lines were added, along
+with still more control lines, as shown in Fig. 3-37(c). The resulting design (the
+EISA bus) is much messier than it would have been had the bus been given 32 lines
+at the start.
+Not only does the number of address lines tend to grow over time, but so does
+the number of data lines, albeit for a different reason. There are two ways to increase the bandwidth of a bus: decrease the bus cycle time (more transfers/sec) or
+increase the data bus width (more bits/transfer). Speeding the bus up is possible
+(but difficult) because the signals on different lines travel at slightly different
+speeds, a problem known as bus skew. The faster the bus, the more the skew.
+Another problem with speeding up the bus is it will not be backward compatible. Old boards designed for the slower bus will not work with the new one. Invalidating old boards makes both the owners and manufacturers of the old boards
+unhappy. Therefore the usual approach to improving performance is to add more
+data lines, analogous to Fig. 3-37. As you might expect, however, this incremental
+growth does not lead to a clean design in the end. The IBM PC and its successors,
+for example, went from 8 data lines to 16 and then 32 on essentially the same bus.

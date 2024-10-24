@@ -1,0 +1,100 @@
+Figure 4-24. Enhanced microprogram sequence for executing POP.
+
+The POP instruction is particularly well suited for this treatment, because it has
+a dead cycle in the middle that does not use the ALU. The main loop, however,
+does use the ALU. Thus to reduce the instruction length by one within an instruction requires finding a cycle in the instruction where the ALU is not in use. Such
+
+SEC. 4.4
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+287
+
+dead cycles are not common, but they do occur, so merging Main1 into the end of
+each microinstruction sequence is worth doing. All it costs is a little control store.
+Thus we have our first technique for reducing path length:
+Merge the interpreter loop into the end of each microcode sequence.
+A Three-Bus Architecture
+What else can we do to reduce execution path length? Another easy fix is to
+have two full input buses to the ALU, an A bus and a B bus, giving three buses in
+all. All (or at least most) of the registers should have access to both input buses.
+The advantage of having two input buses is that it then becomes possible to add
+any register to any other register in one cycle. To see the value of this feature, consider the Mic-1 implementation of ILOAD, shown again in Fig. 4-25.
+Label
+
+Operations
+
+Comments
+
+iload1
+iload2
+iload3
+iload4
+iload5
+Main1
+
+H = LV
+MAR = MBRU + H; rd
+MAR = SP = SP + 1
+PC = PC + 1; fetch; wr
+TOS = MDR; goto Main1
+PC = PC + 1; fetch; goto (MBR)
+
+MBR contains index; copy LV to H
+MAR = address of local variable to push
+SP points to new top of stack; prepare write
+Inc PC; get next opcode; write top of stack
+Update TOS
+MBR holds opcode; get next byte; dispatch
+
+Figure 4-25. Mic-1 code for executing ILOAD.
+
+We see here that in iload1 LV is copied into H. The reason is so it can be added
+to MBRU in iload2. In our original two-bus design, there is no way to add two arbitrary registers, so one of them first has to be copied to H. With our new three-bus
+design, we can save a cycle, as shown in Fig. 4-26. We have added the interpreter
+loop to ILOAD here, but doing so neither increases nor decreases the execution path
+length. Still, the additional bus has reduced the total execution time of ILOAD from
+six cycles to five cycles. Now we have our second technique for reducing path
+length:
+Go from a two-bus design to a three-bus design.
+Label
+
+Operations
+
+Comments
+
+iload1
+iload2
+iload3
+iload4
+iload5
+
+MAR = MBRU + LV; rd
+MAR = SP = SP + 1
+PC = PC + 1; fetch; wr
+TOS = MDR
+PC = PC + 1; fetch; goto (MBR)
+
+MAR = address of local variable to push
+SP points to new top of stack; prepare write
+Inc PC; get next opcode; write top of stack
+Update TOS
+MBR already holds opcode; fetch index byte
+
+Figure 4-26. Three-bus code for executing ILOAD.
+
+288
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+An Instruction Fetch Unit
+Both of the foregoing techniques are worth using, but to get a dramatic improvement we need something much more radical. Let us step back and look at the
+common parts of every instruction: the fetching and decoding of the fields of the
+instruction. Notice that for every instruction the following operations may occur:
+1. The PC is passed through the ALU and incremented.
+2. The PC is used to fetch the next byte in the instruction stream.
+3. Operands are read from memory.
+4. Operands are written to memory.
+5. The ALU does a computation and the results are stored back.

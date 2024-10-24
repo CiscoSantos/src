@@ -1,0 +1,100 @@
+state that it was in when the interrupt occurred, which means restoring all the internal registers to their preinterrupt state.
+The essential difference between traps and interrupts is this: traps are synchronous with the program and interrupts are asynchronous. If the program is
+rerun a million times with the same input, the traps will reoccur in the same place
+each time but the interrupts may vary, depending, for example, on precisely when a
+person at a terminal hits carriage return. The reason for the reproducibility of traps
+and irreproducibility of interrupts is that traps are caused directly by the program
+and interrupts are, at best, indirectly caused by the program.
+To see how interrupts really work, let us consider a common example: a computer wants to output a line of characters to a terminal. The system software first
+collects all the characters to be written to the terminal together in a buffer, initializes a global variable ptr, to point to the start of the buffer, and sets a second
+global variable count equal to the number of characters to be output. Then it
+checks to see if the terminal is ready and if so, outputs the first character (e.g.,
+using registers like those of Fig. 5-30). Having started the I/O, the CPU is then
+free to run another program or do something else.
+In due course of time, the character is displayed on the screen. The interrupt
+can now begin. In simplified form, the steps are as follows.
+HARDWARE ACTIONS
+1. The device controller asserts an interrupt line on the system bus to
+start the interrupt sequence.
+2. As soon as the CPU is prepared to handle the interrupt, it asserts an
+interrupt acknowledge signal on the bus.
+3. When the device controller sees that its interrupt signal has been
+acknowledged, it puts a small integer on the data lines to identify itself. This number is called the interrupt vector.
+4. The CPU removes the interrupt vector from the bus and saves it temporarily.
+5. Then the CPU pushes the program counter and PSW onto the stack.
+
+SEC. 5.6
+
+FLOW OF CONTROL
+
+415
+
+6. The CPU then locates a new program counter by using the interrupt
+vector as an index into a table in low memory. If the program counter
+is 4 bytes, for example, then interrupt vector n corresponds to address
+4n. This new program counter points to the start of the interrupt service routine for the device causing the interrupt. Often the PSW is
+loaded or modified as well (e.g., to disable further interrupts).
+SOFTWARE ACTIONS
+7. The first thing the interrupt service routine does is save all the registers it uses so they can be restored later. They can be saved on the
+stack or in a system table.
+8. Each interrupt vector is generally shared by all the devices of a given
+type, so it is not yet known which terminal caused the interrupt. The
+terminal number can be found by reading some device register.
+9. Any other information about the interrupt, such as status codes, can
+now be read in.
+10. If an I/O error occurred, it can be handled here.
+11. The global variables, ptr and count, are updated. The former is incremented, to point to the next byte, and the latter is decremented, to indicate that 1 byte fewer remains to be output. If count is still greater
+than 0, there are more characters to output. Copy the one now
+pointed to by ptr to the output buffer register.
+12. If required, a special code is output to tell the device or the interrupt
+controller that the interrupt has been processed.
+13. Restore all the saved registers.
+14. Execute the RETURN FROM INTERRUPT instruction, putting the CPU
+back into the mode and state it had just before the interrupt happened.
+The computer then continues from where it was.
+A key concept related to interrupts is transparency. When an interrupt happens, some actions are taken and some code runs, but when everything is finished,
+the computer should be returned to exactly the same state it had before the interrupt. An interrupt routine with this property is said to be transparent. Having all
+interrupts be transparent makes interrupts much easier to understand.
+If a computer has only one I/O device, then interrupts always work as we have
+just described, and there is nothing more to say about them. However, a large computer may have many I/O devices, and several may be running at the same time,
+possibly on behalf of different users. A nonzero probability exists that while an
+interrupt routine is running, a second I/O device wants to generate its interrupt.
+
+416
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Two approaches can be taken to this problem. The first one is for all interrupt
+routines to disable subsequent interrupts as the very first thing they do, even before
+saving the registers. This approach keeps things simple, as interrupts are then
+taken strictly sequentially, but it can lead to problems for devices that cannot tolerate much delay. If the first one has not yet been processed when the second one arrives, data may be lost.
+When a computer has time-critical I/O devices, a better design approach is to
+assign each I/O device a priority, high for very critical devices and low for less critical ones. Similarly, the CPU should also have priorities, typically determined by a
+field in the PSW. When a priority n device interrupts, the interrupt routine should
+also run at priority n.
+While a priority n interrupt routine is running, any attempt by a device with a
+lower priority to cause an interrupt is ignored until the interrupt routine is finished
+and the CPU goes back to running lower-priority code. On the other hand, interrupts from higher-priority devices should be allowed to happen with no delay.
+With interrupt routines themselves subject to interrupt, the best way to keep the
+administration straight is to make sure that all interrupts are transparent. Let us
+consider a simple example of multiple interrupts. A computer has three I/O devices, a printer, a disk, and an RS232 (serial) line, with priorities 2, 4, and 5, respectively. Initially (t = 0), a user program is running, when suddenly at t = 10 a
+printer interrupt occurs. The printer Interrupt Service Routine (ISR) is started up,
+as shown in Fig. 5-43.
+Disk interrupt
+priority 4 held pending
+RS232 ISR finishes
+disk interrupt occurs
+RS232 interrupt
+priority 5
+
+Disk ISR finishes
+
+Printer interrupt
+priority 2
+
+0
+
+Printer ISR finishes
+

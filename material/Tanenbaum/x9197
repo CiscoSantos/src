@@ -1,0 +1,100 @@
+
+Figure 6-15. Mapping of a linear address onto a physical address.
+
+In Fig. 6-15(a) we see a linear address broken up into three fields: DIR, PAGE,
+and OFF. The DIR field is first used as an index into the page directory to locate a
+pointer to the proper page table. Then the PAGE field is used as an index into the
+page table to find the physical address of the page frame. Finally, OFF is added to
+the address of the page frame to get the physical address of the byte or word addressed.
+The page table entries are 32 bits each, of which 20 contain a page-frame number. The remaining bits contain access and dirty bits, set by the hardware for the
+benefit of the operating system, protection bits, and other utility bits.
+Each page table has entries for 1024 4-KB page frames, so a single page table
+handles 4 megabytes of memory. A segment shorter than 4M will have a page directory with a single entry, a pointer to its one and only page table. In this way, the
+overhead for short segments is only two pages, instead of the million pages that
+would be needed in a one-level page table.
+To avoid making repeated references to memory, the Core i7 MMU has special
+hardware support to look up the most recently used DIR − PAGE combinations
+quickly and map them onto the physical address of the corresponding page frame.
+Only when the current combination has not been used recently are the steps shown
+in Fig. 6-15 actually carried out.
+A little thought will reveal the fact that when paging is used, there is really no
+point in having the BASE field in the descriptor be nonzero. All that BASE does is
+cause a small offset to use an entry in the middle of the page directory, instead of at
+the beginning. In truth, the real reason Intel included BASE at all is to allow pure
+
+SEC. 6.1
+
+VIRTUAL MEMORY
+
+459
+
+(nonpaged) segmentation, and for backward compatibility with the old 80286,
+which did not have paging.
+It is also worth mentioning that if a particular application does not need segmentation, but is content with a single, paged, 32-bit address space, that is easy to
+obtain. All the segment registers can then be set up with the same selector, whose
+descriptor has BASE = 0 and LIMIT set to the maximum. The instruction offset will
+then be the linear address, with only a single address space used—in effect, traditional paging.
+We are now finished with our treatment of virtual memory on the Core i7. We
+have looked only at a small (but commonly used) part of the Core i7 virtual memory system; the motivated reader can delve into the Core i7’s documentation to also
+learn about the 64-bit virtual address extensions and support for virtualized physical address spaces. However before leaving the topic, it is worth saying a few
+words about protection, since this subject is intimately related to the virtual memory. The Core i7 supports four protection levels, with level 0 being the most privileged and level 3 the least. These are shown in Fig. 6-16. At each instant, a running program is at a certain level, indicated by a 2-bit field in its PSW (Program
+Status Word), a hardware register that holds the condition codes and various other
+status bits. Furthermore, each segment in the system also belongs to a certain
+level.
+User programs
+
+Possible uses of
+the levels
+
+ared libraries
+Sh
+stem calls
+Sy
+
+Kernel
+0
+1
+2
+3
+Level
+
+Figure 6-16. Protection on the Core i7.
+
+As long as a program restricts itself to using segments at its own level, everything works fine. Attempts to access data at a higher level are permitted. Attempts
+to access data at a lower level are illegal and cause traps. Attempts to call procedures at a different level (higher or lower) are allowed, but in a carefully controlled
+way. In order to make an interlevel call, the CALL instruction must contain a
+
+460
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+selector instead of an address. This selector designates a descriptor called a call
+gate, which gives the address of the procedure to be called. Thus it is not possible
+to branch into the middle of an arbitrary code segment at a different level. Only
+official entry points may be used.
+A possible use for this mechanism is suggested in Fig. 6-16. At level 0, we
+find the kernel of the operating system, which handles I/O, memory management,
+and other critical matters. At level 1, the system call handler is present. User programs may call procedures here to have system calls carried out, but only a specific
+and protected list of procedures may be called. Level 2 contains library procedures, possibly shared among many running programs. User programs may call
+these procedures but may not modify them. Finally, user programs run at level 3,
+which has the least protection. Like the Core i7’s memory-management scheme,
+the protection system is closely based on MULTICS.
+Traps and interrupts use a mechanism similar to the call gates. They, too, reference descriptors, rather than absolute addresses, and these descriptors point to
+specific procedures to be executed. The TYPE field in Figure 6-13 distinguishes
+between code segments, data segments, and the various kinds of gates.
+
+6.1.9 Virtual Memory on the OMAP4430 ARM CPU
+The OMAP4430 ARM CPU is a 32-bit machine and supports a paged virtual
+memory based on 32-bit virtual addresses that are translated to a 32-bit physical
+address space. As such, an ARM CPU can support up to 232 bytes (4 GB) of physical memory. Four page sizes are supported: 4 KB, 64 KB, 1 MB, and 16 MB. The
+mappings implied by these four page sizes are illustrated in Fig. 6-17.
+Bits
+Virtual
+Address
+
+4K virtual
+Offset
+page no.
+

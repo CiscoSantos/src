@@ -1,0 +1,100 @@
+what is going on around the ALU.
+In Fig. 4-6, the logic that does this computation is labeled ‘‘High bit.’’ The
+Boolean function it computes is
+F = (JAMZ AND Z) OR (JAMN AND N) OR NEXT ADDRESS[8]
+Note that in all cases, MPC can take on only one of two possible values:
+1. The value of NEXT ADDRESS.
+2. The value of NEXT ADDRESS with the high-order bit ORed with 1.
+No other possibilities make sense. If the high-order bit of NEXT ADDRESS was already 1, using JAMN or JAMZ makes no sense.
+Note that when the JAM bits are all zeros, the address of the next microinstruction to be executed is simply the 9-bit number in the NEXT ADDRESS field. When
+either JAMN or JAMZ is 1, there are two potential successors: NEXT ADDRESS and
+NEXT ADDRESS ORed with 0x100 (assuming that NEXT ADDRESS ≤ 0xFF). (Note
+that 0x indicates that the number following it is in hexadecimal.) This point is illustrated in Fig. 4-7. The current microinstruction, at location 0x75, has NEXT ADDRESS = 0x92 and JAMZ set to 1. Consequently, the next address of the microinstruction depends on the Z bit stored on the previous ALU operation. If the Z bit is
+0, the next microinstruction comes from 0x92. If the Z bit is 1, the next microinstruction comes from 0x192.
+The third bit in the JAM field is JMPC. If it is set, the 8 MBR bits are bitwise
+ORed with the 8 low-order bits of the NEXT ADDRESS field coming from the current microinstruction. The result is sent to MPC. The box with the label ‘‘O’’ in
+Fig. 4-6 does an OR of MBR with NEXT ADDRESS if JMPC is 1 but just passes
+NEXT ADDRESS through to MPC if JMPC is 0. When JMPC is 1, the low-order 8
+bits of NEXT ADDRESS are normally zero. The high-order bit can be 0 or 1, so the
+NEXT ADDRESS value used with JMPC is normally 0x000 or 0x100. The reason
+for sometimes using 0x000 and sometimes using 0x100 will be discussed later.
+The ability to OR MBR together with NEXT ADDRESS and store the result in
+MPC allows an efficient implementation of a multiway branch (jump). Notice that
+
+SEC. 4.1
+
+257
+
+AN EXAMPLE MICROARCHITECTURE
+
+Address
+
+Addr
+
+JAM
+
+0x75
+
+0x92
+
+001
+
+Data path control bits
+JAMZ bit set
+
+…
+
+0x92
+
+…
+
+0x192
+
+One of
+these
+will follow
+0x75
+depending
+on Z
+
+Figure 4-7. A microinstruction with JAMZ set to 1 has two potential successors.
+
+any of 256 addresses can be specified, determined solely by the bits present in
+MBR. In a typical use, MBR contains an opcode, so the use of JMPC will result in a
+unique selection for the next microinstruction to be executed for every possible opcode. This method is useful for quickly branching directly to the function corresponding to the just-fetched opcode.
+Understanding the timing of the machine is critical to what will follow, so it is
+perhaps worth repeating. We will do it in terms of subcycles, since this is easy to
+visualize, but the only real clock events are the falling edge, which starts the cycle,
+and the rising edge, which loads the registers and the N and Z flip-flops. Please
+refer to Fig. 4-3 once more.
+During subcycle 1, initiated by the falling edge of the clock, MIR is loaded
+from the address currently held in MPC. During subcycle 2, the signals from MIR
+propagate out and the B bus is loaded from the selected register. During subcycle
+3, the ALU and shifter operate and produce a stable result. During subcycle 4, the
+C bus, memory buses, and ALU values become stable. At the rising edge of the
+clock, the registers are loaded from the C bus, N and Z flip-flops are loaded, and
+MBR and MDR get their results from the memory operation started at the end of the
+previous data path cycle (if any). As soon as MBR is available, MPC is loaded in
+preparation for the next microinstruction. Thus MPC gets its value sometime during the middle of the interval when the clock is high but after MBR/MDR are ready.
+It could be either level triggered (rather than edge triggered), or edge trigger a
+fixed delay after the rising edge of the clock. All that matters is that MPC is not
+loaded until the registers it depends on (MBR, N, and Z) are ready. As soon as the
+clock falls, MPC can address the control store and a new cycle can begin.
+Note that each cycle is self contained. It specifies what goes onto the B bus,
+what the ALU and shifter are to do, where the C bus is to be stored, and finally,
+what the next MPC value should be.
+One final note about Fig. 4-6 is worth making. We have been treating MPC as
+a proper register, with 9 bits of storage capacity that is loaded while the clock is
+high. In reality, there is no need to have a register there at all. All of its inputs can
+be fed directly through, right to the control store. As long as they are present at the
+
+258
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+control store at the falling edge of the clock when MIR is selected and read out, that
+is sufficient. There is no need to actually store them in MPC. For this reason, MPC
+might well be implemented as a virtual register, which is just a gathering place
+for signals, more like an electronic patch panel, than a real register. Making MPC a

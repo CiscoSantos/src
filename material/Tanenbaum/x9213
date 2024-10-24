@@ -1,0 +1,100 @@
+6.5.1 Introduction
+In this section we will give a brief introduction to our two example operating
+systems, UNIX and Windows 7, focusing on the history, structure, and system calls.
+UNIX
+UNIX was developed at Bell Labs in the early 1970s. The first version was
+written by Ken Thompson in assembler for the PDP-7 minicomputer. This was
+soon followed by a version for the PDP-11, written in a new language called C that
+was devised and implemented by Dennis Ritchie. In 1974, Ritchie and his colleague Ken Thompson published a landmark paper about UNIX (Ritchie and
+Thompson, 1974). For the work described in this paper they were later given the
+prestigious ACM Turing Award (Ritchie, 1984, Thompson, 1984). The publication
+of this paper stimulated many universities to ask Bell Labs for a copy of UNIX.
+Since Bell Labs’ parent company, AT&T, was a regulated monopoly at the time
+and was not permitted to be in the computer business, it had no objection to licensing UNIX to universities for a modest fee.
+In one of those coincidences that often shape history, the PDP-11 was the computer of choice at nearly all university computer science departments, and the operating systems that came with the PDP-11 were widely regarded as being dreadful
+by professors and students alike. UNIX quickly filled the void, not in the least because it was supplied with the complete source code, so people could, and did, tinker with it endlessly.
+One of the many universities that acquired UNIX early on was the University of
+California at Berkeley. Because the complete source code was available, Berkeley
+was able to modify the system substantially. Foremost among the changes was a
+port to the VAX minicomputer and the addition of paged virtual memory, the extension of file names from 14 characters to 255 characters, and the inclusion of the
+TCP/IP networking protocol, which is now used on the Internet (largely due to the
+fact that it was in Berkeley UNIX).
+While Berkeley was making all these changes, AT&T itself continued to
+develop UNIX, leading to System III in 1982 and then System V in 1984. By the
+late 1980s, two different, and quite incompatible, versions of UNIX were in widespread use: Berkeley UNIX and System V. This split in the UNIX world, together
+with the fact that there were no standards for binary program formats, greatly
+inhibited the commercial success of UNIX because it was impossible for software
+vendors to write and package UNIX programs with the expectation that they would
+run on any UNIX system (as was routinely done then with MS-DOS). After much
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+483
+
+bickering, a standard called POSIX (Portable Operating System-IX) was created
+by the IEEE Standards Board. POSIX is also known by its IEEE Standards number, P1003. It later became an International Standard.
+The standard is divided into many parts, each one covering a different area of
+UNIX. The first part, P1003.1, defines the system calls; the second part, P1003.2,
+defines the basic utility programs, and so on. The P1003.1 standard defines about
+60 system calls that all conformant systems must support. These are the basic calls
+for reading and writing files, creating new processes, and so on. Nearly all UNIX
+systems now support the P1003.1 system calls. However many UNIX systems also
+support extra system calls, especially those defined by System V and/or those in
+Berkeley UNIX. Typically these add up to 200 system calls.
+In 1987, one author of this book (Tanenbaum) released the source code for a
+tiny version of UNIX, called MINIX, for use at universities (Tanenbaum, 1987).
+One of the students who studied MINIX at his university in Helsinki and ran it on
+his home PC was Linus Torvalds. After becoming thoroughly familiar with
+MINIX, Torvalds decided to write his own clone of MINIX, which was called Linux
+and has become quite popular.
+Many operating systems running today on ARM platforms are based on Linux.
+Both MINIX and Linux are POSIX conformant, and nearly everything said about
+UNIX in this chapter also applies to them unless stated otherwise.
+A rough breakdown of the Linux system calls by category is given in
+Fig. 6-30. The file- and directory-management system calls are the largest and the
+most important categories. Linux is mostly POSIX P1003.1 compliant, although
+the developers did deviate from the specification in some areas. In general, however, it is not difficult to get POSIX-compliant programs to build and run on Linux.
+Category
+
+Some examples
+
+File management
+
+Open, read, write, close, and lock files
+
+Directory management
+
+Create and delete directories; move files around
+
+Process management
+
+Spawn, terminate, trace, and signal processes
+
+Memory management
+
+Share memory among processes; protect pages
+
+Getting/setting parameters
+
+Get user, group, process ID; set priority
+
+Dates and times
+
+Set file access times; use interval timer; profile execution
+
+Networking
+
+Establish/accept connection; send/receive message
+
+Miscellaneous
+
+Enable accounting; manipulate disk quotas; reboot the system
+Figure 6-30. A rough breakdown of the UNIX system calls.
+
+One area that is largely due to Berkeley UNIX rather than System V is networking. Berkeley invented the concept of a socket, which is the endpoint of a
+network connection. The four-pin wall plugs to which telephones can be connected served as the model for this concept. It is possible for a UNIX process to
+create a socket, attach to it, and establish a connection to a socket on a distant
+
+484

@@ -1,0 +1,100 @@
+virtual register simplifies the timing: now events happen only on the falling and rising edges of the clock and nowhere else. But if it is easier for you to think of MPC
+as a real register, that is also a valid viewpoint.
+
+4.2 AN EXAMPLE ISA: IJVM
+Let us continue our example by introducing the ISA level of the machine to be
+interpreted by the microprogram running on the microarchitecture of Fig. 4-6
+(IJVM). For convenience, we will sometimes refer to the Instruction Set Architecture as the macroarchitecture, to contrast it with the microarchitecture. Before
+we describe IJVM, however, we will digress slightly to motivate it.
+
+4.2.1 Stacks
+Virtually all programming languages support the concept of procedures (methods), which have local variables. These variables can be accessed from inside the
+procedure but cease to be accessible once the procedure has returned. The question thus arises: ‘‘Where should these variables be kept in memory?’’
+The simplest solution, to give each variable an absolute memory address, does
+not work. The problem is that a procedure may call itself. We will study these
+recursive procedures in Chap. 5. For the moment, suffice it to say that if a procedure is active (i.e., called) twice, its variables cannot be stored in absolute memory
+locations because the second invocation will interfere with the first.
+Instead, a different strategy is used. An area of memory, called the stack, is
+reserved for variables, but individual variables do not get absolute addresses in it.
+Instead, a register, say, LV, is set to point to the base of the local variables for the
+current procedure. In Fig. 4-8(a), a procedure A, which has local variables a1, a2,
+and a3, has been called, so storage for its local variables has been reserved starting
+at the memory location pointed to by LV. Another register, SP, points to the highest
+word of A’s local variables. If LV is 100 and words are 4 bytes, then SP will be
+108. Variables are referred to by giving their offset (distance) from LV. The data
+structure between LV and SP (and including both words pointed to) is called A’s
+local variable frame.
+Now let us consider what happens if A calls another procedure, B. Where
+should B’s four local variables (b1, b2, b3, b4) be stored? Answer: On the stack,
+on top of A’s, as shown in Fig. 4-8(b). Notice that LV has been adjusted by the procedure call to point to B’s local variables instead of A’s. We can refer to B’s local
+variables by giving their offset from LV. Similarly, if B calls C, LV and SP are
+adjusted again to allocate space for C’s two variables, as shown in Fig. 4-8(c).
+
+SEC. 4.2
+
+SP
+LV
+SP
+
+LV
+SP
+LV
+
+259
+
+AN EXAMPLE ISA: IJVM
+
+a3
+a2
+a1
+
+108
+104
+100
+
+(a)
+
+b4
+b3
+b2
+b1
+a3
+a2
+a1
+
+c2
+c1
+b4
+b3
+b2
+b1
+a3
+a2
+a1
+
+(b)
+
+(c)
+
+SP
+
+LV
+
+d5
+d4
+d3
+d2
+d1
+a3
+a2
+a1
+(d)
+
+Figure 4-8. Use of a stack for storing local variables. (a) While A is active.
+(b) After A calls B. (c) After B calls C. (d) After C and B return and A calls D.
+
+When C returns, B becomes active again, and the stack is adjusted back to
+Fig. 4-8(b) so that LV now points to B’s local variables again. Likewise, when B returns, we get back to the situation of Fig. 4-8(a). Under all conditions, LV points to
+the base of the stack frame for the currently active procedure, and SP points to the
+top of the stack frame.
+Now suppose that A calls D, which has five local variables. We get the situation of Fig. 4-8(d), in which D’s local variables use the same memory that B’s did,

@@ -1,0 +1,100 @@
+have the mouse send a sequence of 3 bytes to the computer every time the mouse
+moves a certain minimum distance (e.g., 0.01 inch), sometimes called a mickey.
+Usually, these characters come in on a serial line, one bit at time. The first byte
+contains a signed integer telling how many units the mouse has moved in the x-direction since the last time. The second byte gives the same information for y
+motion. The third byte contains the current state of the mouse buttons. Sometimes
+2 bytes are used for each coordinate.
+Low-level software in the computer accepts this information as it comes in and
+converts the relative movements sent by the mouse to an absolute position. It then
+displays an arrow on the screen at the position corresponding to where the mouse
+is. When the arrow points at the proper item, the user clicks a mouse button, and
+the computer can then figure out which item has been selected from its knowledge
+of where the arrow is on the screen.
+
+2.4.4 Game Controllers
+Video games typically have heavy user I/O demands, and in the video console
+market specialized input devices have been developed. In this section we look at
+two recent developments in video game controllers, the Nintendo Wiimote and the
+Microsoft Kinect.
+Wiimote Controller
+First released in 2006 with the Nintendo Wii game console, the Wiimote controller contains traditional gamepad buttons plus a dual motion-sensing capability.
+All interactions with the Wiimote are sent in real time to the game console using an
+internal Bluetooth radio. The motion sensors in the Wiimote allow it to sense its
+own movement in three dimensions, plus when pointed at the television it provides
+a fine-grained pointing capability.
+Figure 2-35 illustrates how the Wiimote implements this motion-sensing function. Tracking of the Wiimote’s movement in three dimensions is accomplished
+with an internal 3-axis accelerometer. This device contains three small masses,
+each of which can move in the x, y, and z axis (with respect to the accelerometer
+chip). These masses move in proportion to the degree of acceleration in their particular axis, which changes the capacitance of the mass with respect to a fixed
+metal wall. By measuring these three changing capacitances, it becomes possible
+to sense acceleration in three dimensions. Using this technology and some classic
+calculus, the Wii console can track the Wiimote’s movement in space. As you
+
+SEC. 2.4
+
+121
+
+INPUT/OUTPUT
+
+Sensor Bar
+
+Camera
+3-Axis Accelerometer
+z
+y
+
+x
+
+Figure 2-35. The Wiimote video game controller motion sensors.
+
+swing the Wiimote to hit a virtual tennis ball, the motion of the Wiimote is tracked
+as you swing toward the ball, and if you twist your wrist at the last moment to put
+topspin on the ball, the Wiimote accelerometers will sense that motion as well.
+While the accelerometers perform well at tracking the motion of the Wiimote
+as it moves in three dimensions, they cannot provide the fine-grained motion sensing necessary to control a pointer on the television screen. The accelerometers suffer from unavoidable tiny errors in their acceleration measurements, thus over time
+the exact location of the Wiimote (based on integration of its accelerations) will
+become increasingly inaccurate.
+To provide fine-grained motion sensing, the Wiimote utilizes a clever computer
+vision technology. Sitting atop the television is a ‘‘sensor bar’’ which contains
+LEDs a fixed width apart. Contained in the Wiimote is a camera that when pointed
+
+122
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+at the sensor bar can deduce the distance and orientation of the Wiimote with respect to the television. Since the sensor bar’s LEDs are a fixed distance apart, their
+distance as viewed by the Wiimote is proportional to the Wiimote’s distance from
+the sensor bar. The location of the sensor bar in the Wiimote’s field of view indicates the direction that the Wiimote is pointing with respect to the television. By
+continuously sensing this orientation, it is possible to support a fine-grained pointing capability without the positional errors inherent to accelerometers.
+Kinect Controller
+The Microsoft Kinect takes the computer vision capabilities of game controllers to a whole new level. This device uses computer vision alone to determine
+the user’s interactions with the game console. It works by sensing the user’s position in the room, plus the orientation and motion of their body. Games are controlled by making predetermined motions with your hands, arms, and whatever else
+the game designers think you should flail in an effort to control their game.
+The sensing capability of the Kinect is based on a depth camera combined with
+a video camera. The depth camera computes the distance of object in the Kinect’s
+field of view. It does this by emitting a two-dimensional array of infrared laser
+dots, then capturing their reflections with an infrared camera. Using a computer
+vision technique called ‘‘structured lighting,’’ the Kinect can determine the distance of the objects in its view based on how the stipple of infrared dots is disturbed by the lighted surfaces.
+Depth information is combined with the texture information returned from the
+video camera to produce a textured depth map. This map can then be processed by
+computer vision algorithms to locate the people in the room (even recognizing
+their faces) and the orientation and motion of their body. After processing, information about the persons in the room is sent to the game console which uses this
+data to control the video game.
+
+2.4.5 Printers
+Having prepared a document or fetched a page from the World Wide Web,
+users often want to print it, so many computers can be equipped with a printer. In
+this section we will describe some of the more common kinds of printers.
+Laser Printers
+Probably the most exciting development in printing since Johann Gutenberg
+invented movable type in the fifteenth century is the laser printer. This device
+combines a high-quality image, excellent flexibility, great speed, and moderate cost
+into a single compact peripheral. Laser printers use almost the same technology as
+
+SEC. 2.4
+
+123
+
+INPUT/OUTPUT

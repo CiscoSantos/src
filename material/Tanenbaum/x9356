@@ -1,0 +1,100 @@
+is called the file descriptor and which can be used for reading, writing or closing
+the file. A negative return value means the call failed. At the start of the program,
+three files are already opened with file descriptors: 0 for standard input, 1 for standard output, and 2 for standard error output.
+The READ and WRITE calls have three arguments: the file descriptor, a buffer to
+hold the data, and the number of bytes to transfer. Since the arguments are stacked
+
+714
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+in reverse order, we first push the number of bytes, then the address of the start of
+the buffer, then the file descriptor and finally the call number (READ or WRITE).
+This order of stacking the arguments was chosen to be the same as the standard C
+language calling sequence in which
+read(fd, buffer, bytes);
+
+is implemented by pushing the parameters in the order bytes, buffer, and finally fd.
+The CLOSE call requires just the file descriptor and returns 0 in AX if the file
+could be closed successfully. The EXIT call requires the exit status on the stack and
+does not return.
+The LSEEK call changes the read/write pointer in an open file. The first argument is the file descriptor. Since the second argument is a long, first the high-order
+word, then the low word should be pushed onto the stack, even when the offset
+would fit into a word. The third argument indicates whether the new read/write
+pointer should be computed relative to the start of the file (case 0), relative to the
+current position (case 1), or relative to the end of the file (case 2). The return value
+is the new position of the pointer relative to the start of a file, and can be found as a
+long in the DX : AX register combination.
+Now we come to the functions that are not system calls. The GETCHAR function reads one character from standard input, and puts it in AL. AH is set to zero.
+On failure, AX is set to −1. The call PUTCHAR writes a byte on standard output.
+The return value for a successful write is the byte written; on failure it is −1.
+The call PRINTF outputs formatted information. The first argument to the call
+is the address of a format string, which tells how to format the output. The string
+‘‘%d’’ indicates that the next argument is an integer on the stack, which is converted to decimal notation when printed. In the same way, ‘‘%x’’ converts to hexadecimal and ‘‘%o’’ converts to octal. Furthermore, ‘‘%s’’ indicates that the next
+argument is a null-terminated string, which is passed to the call through a memory
+address on the stack. The number of extra arguments on the stack should match
+the number of conversion indications in the format string.
+For example, the call
+printf(′′x = %d and y = %d\n′′, x, y);
+
+prints the string with the numerical values of x and y substituted for the ‘‘%d’’
+strings in the format string. Again, for compatibility with C, the order in which the
+arguments are pushed is ‘‘y’’, ‘‘x’’, and finally, the address of the format string.
+The reason for this convention is that printf has a variable number of parameters,
+and by pushing them in the reverse order the format string itself is always the last
+one and thus can be located. If the parameters were pushed from left to right, the
+format string would be deep in the stack and the printf procedure would not know
+where to find it.
+In the call PRINTF, the first argument is the buffer, to receive the output string,
+instead of standard output. The other arguments are the same as in PRINTF. The
+
+SEC. C.4
+
+THE 8088 INSTRUCTION SET
+
+715
+
+SSCANF call is the converse of the PRINTF in the sense that the first argument is a
+string, which can contain integers in decimal, octal, or hexadecimal notation, and
+the next argument is the format string, which contains the conversion indications.
+The other arguments are addresses of memory words to receive the converted
+information. These system subroutines are very versatile and an extensive treatment of the possibilities is far beyond the scope of this appendix. In Sec. C.8, several examples show how they can be used in different situations.
+
+C.4.7 Final Remarks on the Instruction Set
+In the official definition of the 8088, there exists a segment override prefix,
+which facilitates the possibility of using effective addresses from a different segment; that is, the first memory address following the override is computed using
+the indicated segment register. For example, the instruction
+ESEG MOV DX,(BX)
+
+first computes the address of BX using the extra segment, and then moves the contents to DX. However, the stack segment, in the case of addresses using SP, and the
+extra segment, in the case of string instructions with the DI register, cannot be overridden. The segment registers SS, DS and ES can be used in the MOV instruction,
+but it is impossible to move immediate data into a segment register, and those registers cannot be used in an XCHG operation. Programming with changing segment
+registers and overrides is quite tricky and should be avoided whenever possible.
+The interpreter uses fixed segment registers, so these problems do not arise here.
+Floating-point instructions are available in most computers, sometimes directly
+in the processor, sometimes in a separate coprocessor, and sometimes only interpreted in the software through a special kind of floating point trap. Discussion of
+those features is outside the scope of this appendix.
+
+C.5 THE ASSEMBLER
+We have now finished our discussion of the 8088 architecture. The next topic
+is the software used to program the 8088 in assembly language, in particular the
+tools we provide for learning assembly language programming. We will first discuss the assembler, then the tracer, and then move on to some practical information
+for using them.
+
+C.5.1 Introduction
+Up until now, we have referred to instructions by their mnemonics, that is, by
+short easy-to-remember symbolic names like ADD and CMP. Registers were also
+called by symbolic names, such as AX and BP. A program written using symbolic
+
+716
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+names for instructions and registers is called an assembly language program. To
+run such a program, it is first necessary to translate it into the binary numbers that
+the CPU actually understands. The program that converts an assembly language
+program into binary numbers is the assembler. The output of the assembler is

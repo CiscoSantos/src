@@ -1,0 +1,100 @@
+hardware.
+S1
+
+Instruction
+fetch
+unit
+
+S2
+
+S3
+
+S4
+
+S5
+
+Instruction
+decode
+unit
+
+Operand
+fetch
+unit
+
+Instruction
+execution
+unit
+
+Write
+back
+unit
+
+Instruction
+decode
+unit
+
+Operand
+fetch
+unit
+
+Instruction
+execution
+unit
+
+Write
+back
+unit
+
+Figure 2-5. Dual five-stage pipelines with a common instruction fetch unit.
+
+Although pipelines, single or double, were originally used on RISC machines
+(the 386 and its predecessors did not have any), starting with the 486 Intel began
+
+68
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+introducing data pipelines into its CPUs. The 486 had one pipeline and the original Pentium had two five-stage pipelines roughly as in Fig. 2-5, although the exact
+division of work between stages 2 and 3 (called decode-1 and decode-2) was
+slightly different than in our example. The main pipeline, called the u pipeline,
+could execute an arbitrary Pentium instruction. The second pipeline, called the v
+pipeline, could execute only simple integer instructions (and also one simple floating-point instruction—FXCH).
+Fixed rules determined whether a pair of instructions were compatible so they
+could be executed in parallel. If the instructions in a pair were not simple enough
+or incompatible, only the first one was executed (in the u pipeline). The second
+one was then held and paired with the instruction following it. Instructions were
+always executed in order. Thus Pentium-specific compilers that produced compatible pairs could produce faster-running programs than older compilers. Measurements showed that a Pentium running code optimized for it was exactly twice as
+fast on integer programs as a 486 running at the same clock rate (Pountain, 1993).
+This gain could be attributed entirely to the second pipeline.
+Going to four pipelines is conceivable, but doing so duplicates too much hardware (computer scientists, unlike folklore specialists, do not believe in the number
+three). Instead, a different approach is used on high-end CPUs. The basic idea is
+to have just a single pipeline but give it multiple functional units, as shown in
+Fig. 2-6. For example, the Intel Core architecture has a structure similar to this figure. It will be discussed in Chap. 4. The term superscalar architecture was
+coined for this approach in 1987 (Agerwala and Cocke, 1987). Its roots, however,
+go back more than 40 years to the CDC 6600 computer. The 6600 fetched an instruction every 100 nsec and passed it off to one of 10 functional units for parallel
+execution while the CPU went off to get the next instruction.
+The definition of ‘‘superscalar’’ has evolved somewhat over time. It is now
+used to describe processors that issue multiple instructions—often four or six—in a
+single clock cycle. Of course, a superscalar CPU must have multiple functional
+units to hand all these instructions to. Since superscalar processors generally have
+one pipeline, they tend to look like Fig. 2-6.
+Using this definition, the 6600 was technically not superscalar because it
+issued only one instruction per cycle. However, the effect was almost the same: instructions were issued at a much higher rate than they could be executed. The conceptual difference between a CPU with a 100-nsec clock that issues one instruction
+every cycle to a group of functional units and a CPU with a 400-nsec clock that issues four instructions per cycle to the same group of functional units is very small.
+In both cases, the key idea is that the issue rate is much higher than the execution
+rate, with the workload being spread across a collection of functional units.
+Implicit in the idea of a superscalar processor is that the S3 stage can issue instructions considerably faster than the S4 stage is able to execute them. If the S3
+stage issued an instruction every 10 nsec and all the functional units could do their
+work in 10 nsec, no more than one would ever be busy at once, negating the whole
+
+SEC. 2.1
+
+69
+
+PROCESSORS
+S4
+ALU
+
+ALU

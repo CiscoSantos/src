@@ -1,0 +1,100 @@
+two minor exceptions) specifies a register that is tested before the operation is executed. If the low-order bit of the register is set, the operation is executed; otherwise, it is skipped. Each of the (up to) five operations is individually predicated.
+An example of a predicated operation is
+IF R2 IADD R4, R5 –> R8
+
+which tests R2 and, if the low-order bit is 1, adds R4 to R5 and stores the result in
+R8. An operation can be made unconditional by using R1 (which is always 1) as
+the predicate register. Using R0 (which is always 0) makes it a no-op.
+The TriMedia multimedia operations can be grouped into the 15 groups listed
+in Fig. 8-5. Many of the operations involve clipping, which specifies an operand
+
+560
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+and a range and forces the operand into the range, using the lowest or highest values for operands that fall outside it. Clipping can be done on 8-, 16-, or 32-bit operands. For example, when clipping is performed with a range of 0 to 255 on 40
+and 340, the clipped results are 40 and 255, respectively. The clip group performs
+clip operations.
+Group
+
+Description
+
+Clip
+
+Clip 4 bytes or 2 half words
+
+DSP absolute value
+
+Clipped, signed, absolute value
+
+DSP add
+
+Clipped signed addition
+
+DSP subtract
+
+Clipped signed subtraction
+
+DSP multiply
+
+Clipped signed multiplication
+
+Min, max
+
+Get minimum or maximum of four byte pairs
+
+Compare
+
+Bytewise compare of two registers
+
+Shift
+
+Shift a pair of 16-bit operands
+
+Sum of products
+
+Signed sum of 8- or 16-bit products
+
+Merge, pack, swap
+
+Byte and half word manipulation
+
+Byte quad averages Unsigned byte-wise quad averaging
+Byte averages
+
+Unsigned byte-wise average of four elements
+
+Byte multiplies
+
+Unsigned 8-bit multiply
+
+Motion estimation
+
+Unsigned sum of absolute values of signed 8-bit diffs
+
+Miscellaneous
+
+Other arithmetic operations
+
+Figure 8-5. The major groups of TriMedia custom operations.
+
+The next four groups in Fig. 8-5 perform the indicated operation on operands
+of various sizes, clipping the results into a specific range. The min, max group examines two registers and for each byte finds the smallest or largest value. Similarly, the compare group regards two registers as four pairs of bytes and compares
+each pair.
+Multimedia operations are rarely performed on 32-bit integers because most
+images are composed of RGB pixels with 8-bit values for each of the red, green,
+and blue colors. When an image is being processed (e.g., compressed), it is normally represented by three components, one for each color (RGB space) or a logically equivalent form (YUV space, discussed later in this chapter). Either way, a
+lot of processing is done on rectangular arrays containing 8-bit unsigned integers.
+The TriMedia has a large number of operations specifically designed for processing arrays of 8-bit unsigned integers efficiently. As a simple example, consider
+the upper left-hand corner of an array of 8-bit values stored in (big-endian) memory as illustrated in Fig. 8-6(a). The 4 × 4 block shown in the corner contains 16
+8-bit values labeled A through P. Suppose, for example, that the image needs to be
+transposed, to produce Fig. 8-6(b). How can this task be achieved?
+
+SEC. 8.1
+
+561
+
+ON-CHIP PARALELLISM
+32-Bit register

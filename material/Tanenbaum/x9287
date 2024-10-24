@@ -1,0 +1,100 @@
+When the access time to remote memory is not hidden (because there is no caching), the system is called NC-NUMA. When coherent caches are present, the
+
+SEC. 8.3
+
+607
+
+SHARED-MEMORY MULTIPROCESSORS
+
+system is called CC-NUMA (at least by the hardware people). The software people often call it hardware DSM because it is basically the same as software distributed shared memory but implemented by the hardware using a small page size.
+One of the first NC-NUMA machines (although the name had not yet been
+coined) was the Carnegie-Mellon Cm*, illustrated in simplified form in Fig. 8-32
+(Swan et al., 1977). It consisted of a collection of LSI-11 CPUs, each with some
+memory addressed over a local bus. (The LSI-11 was a single-chip version of the
+DEC PDP-11, a minicomputer popular in the 1970s.) In addition, the LSI-11 systems were connected by a system bus. When a memory request came into the
+(specially modified) MMU, a check was made to see if the word needed was in the
+local memory. If so, a request was sent over the local bus to get the word. If not,
+the request was routed over the system bus to the system containing the word,
+which then responded. Of course, the latter took much longer than the former.
+While a program could run happily out of remote memory, it took 10 times longer
+to execute than the same program running out of local memory.
+CPU Memory
+
+MMU
+
+Local bus
+
+CPU Memory
+
+Local bus
+
+CPU Memory
+
+Local bus
+
+CPU Memory
+
+Local bus
+
+System bus
+
+Figure 8-32. A NUMA machine based on two levels of buses. The Cm* was the
+first multiprocessor to use this design.
+
+Memory coherence is guaranteed in an NC-NUMA machine because no caching is present. Each word of memory lives in exactly one location, so there is no
+danger of one copy having stale data: there are no copies. Of course, it now matters a great deal which page is in which memory because the performance penalty
+for being in the wrong place is so high. Consequently, NC-NUMA machines use
+elaborate software to move pages around to maximize performance.
+Typically, a daemon process called a page scanner runs every few seconds.
+Its job is to examine the usage statistics and move pages around in an attempt to
+improve performance. If a page appears to be in the wrong place, the page scanner
+unmaps it so that the next reference to it will cause a page fault. When the fault
+occurs, a decision is made about where to place the page, possibly in a different
+memory. To prevent thrashing, usually there is some rule saying that once a page
+is placed, it is frozen in place for a time ΔT . Various algorithms have been studied,
+but the conclusion is that no one algorithm performs best under all circumstances
+(LaRowe and Ellis, 1991). Best performance depends on the application.
+
+608
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Cache Coherent NUMA Multiprocessors
+Multiprocessor designs such as that of Fig. 8-32 do not scale well because they
+do not do caching. Having to go to the remote memory every time a nonlocal
+memory word is accessed is a major performance hit. However, if caching is
+added, then cache coherence must also be added. One way to provide cache coherence is to snoop on the system bus. Technically, doing this is not difficult, but
+beyond a certain number of CPUs, it becomes infeasible. To build really large
+multiprocessors, a fundamentally different approach is needed.
+The most popular approach for building large CC-NUMA (Cache Coherent
+NUMA) multiprocessors currently is the directory-based multiprocessor. The
+idea is to maintain a database telling where each cache line is and what its status is.
+When a cache line is referenced, the database is queried to find out where it is and
+whether it is clean or dirty (modified). Since this database must be queried on
+every single instruction that references memory, it must be kept in extremely fast
+special-purpose hardware that can respond in a fraction of a bus cycle.
+To make the idea of a directory-based multiprocessor somewhat more concrete,
+let us consider a simple (hypothetical) example, a 256-node system, each node
+consisting of one CPU and 16 MB of RAM connected to the CPU via a local bus.
+The total memory is 232 bytes, divided up into 226 cache lines of 64 bytes each.
+The memory is statically allocated among the nodes, with 0–16M in node 0,
+16–32M in node 1, and so on. The nodes are connected by an interconnection network, as shown in Fig. 8-33(a). This network could be a grid, hypercube, or other
+topology. Each node also holds the directory entries for the 218 64-byte cache lines
+comprising its 224 -byte memory. For the moment, we will assume that a line can
+be held in at most one cache.
+To see how the directory works, let us trace a LOAD instruction from CPU 20
+that references a cached line. First the CPU issuing the instruction presents it to its
+MMU, which translates it to a physical address, say, 0x24000108. The MMU
+splits this address into the three parts shown in Fig. 8-33(b). In decimal, the three
+parts are node 36, line 4, and offset 8. The MMU sees that the memory word referenced is from node 36, not node 20, so it sends a request message through the
+interconnection network to the line’s home node, 36, asking whether its line 4 is
+cached, and if so, where.
+When the request arrives at node 36 over the interconnection network, it is
+routed to the directory hardware. The hardware indexes into its table of 218 entries,
+one for each of its cache lines and extracts entry 4. From Fig. 8-33(c) we see that
+the line is not cached, so the hardware fetches line 4 from the local RAM, sends it
+back to node 20, and updates directory entry 4 to indicate that the line is now
+cached at node 20.
+Now let us consider a second request, this time asking about node 36’s line 2.

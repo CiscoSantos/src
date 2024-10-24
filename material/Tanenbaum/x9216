@@ -1,0 +1,100 @@
+CPU, MMU, Interrupt Controllers, Memory, Physical Devices, BIOS
+
+Figure 6-32. The structure of Windows 7.
+
+Above the HAL, the code is divided into two major parts, the NTOS executive
+and the Windows drivers, which includes the file systems, networking, and graphics code. On top of that is the kernel layer. All of this code runs in protected kernel mode.
+The executive manages the fundamental abstractions used in Windows 7, including threads, processes, virtual memory, kernel objects, and configurations.
+Also here are the managers for local procedure calls, the file cache, I/O, and security.
+The kernel layer handles trap and exception handling, as well as scheduling
+and synchronization.
+Outside the kernel are the user programs and the system library used to interface to the operating system. In contrast to UNIX systems, Microsoft does not
+encourage user programs to make direct system calls. Instead they are expected to
+call procedures in the library. To provide standardization across different versions
+of Windows (e.g., XP, Vista, and Windows 7), Microsoft defined a set of calls called the Win32 API (Application Programming Interface). These are library
+procedures that either make system calls to get the work done, or, in some case, do
+the work right in the user-space library procedure. Although many Windows 7 library calls have been added since Win32 was defined, these are the core calls and
+it is them we will focus on. Later, when Windows was ported to 64-bit machines,
+
+488
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+Microsoft changed the name of Win32 to cover both the 32-bit and 64-bit versions,
+but for our purposes, looking at the 32-bit version is sufficient.
+The Win32 API philosophy is completely different from the UNIX philosophy.
+In the latter, the system calls are all publicly known and form a minimal interface:
+removing even one of them would reduce the functionality of the operating system.
+The Win32 philosophy is to provide a very comprehensive interface, often with
+three or four ways of doing the same thing, and including many functions that
+clearly should not be (and are not) system calls, such as an API call to copy an entire file.
+Many Win32 API calls create kernel objects of one kind or another, including
+files, processes, threads, pipes, etc. Every call creating a kernel object returns a result called a handle to the called. This handle can be subsequently used to perform operations on the object. Handles are specific to the process that created the
+object referred to by the handle. They cannot be passed directly to another process
+and used there (just as UNIX file descriptors cannot be passed to other processes
+and used there). However, under certain circumstances, it is possible to duplicate a
+handle and pass it to other processes in a protected way, allowing them controlled
+access to objects belonging to other processes. Every object can have a security
+descriptor associated with it, telling in detail who may and may not perform what
+kinds of operations on the object.
+Windows 7 is sometimes said to be object oriented because the only way to
+manipulate kernel objects is by invoking methods (API functions) on their handles,
+which are returned when the objects are created. On the other hand, it lacks some
+of the most basic properties of object-oriented systems such as inheritance and
+polymorphism.
+
+6.5.2 Examples of Virtual Memory
+In this section we will look at virtual memory in both UNIX and Windows 7.
+For the most part, they are fairly similar from the programmer’s point of view.
+UNIX Virtual Memory
+The UNIX memory model is simple. Each process has three segments: code,
+data, and stack, as illustrated in Fig. 6-33. In a machine with a single, linear address space, the code is generally placed near the bottom of memory, followed by
+the data. The stack is placed at the top of memory. The code size is fixed, but the
+data and stack may each grow, in opposite directions. This model is easy to implement on almost any machine and is the model used by Linux variants that run on
+OMAP4430 ARM CPUs.
+Furthermore, if the machine has paging, the entire address space can be paged,
+without user programs even being aware of it. The only thing they notice is that it
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+Address
+0xFFFFFFFF
+
+489
+
+Stack
+
+Data
+Code
+0
+
+Figure 6-33. The address space of a single UNIX process.
+
+is permitted to have programs larger than the machine’s physical memory. UNIX
+systems that do not have paging generally swap entire processes between memory
+and disk to allow an arbitrarily large number of processes to be timeshared.
+For Berkeley UNIX, the above description (demand-paged virtual memory) is
+basically the entire story. However, System V (and also Linux) include several features that allow users to manage their virtual memory in more sophisticated ways.
+Most important of these is the ability of a process to map a (portion of a) file onto
+part of its address space. For example, if a 12-KB file is mapped at virtual address
+144K, a read to the word at address 144 KB reads the first word of the file. In this
+way file I/O can be done without making system calls. Since some files may
+exceed the size of the virtual address space, it is also possible to map in only a portion of a file instead of the whole file. The mapping is done by first opening the
+file and getting back a file descriptor, fd, which is used to identify the file to be
+mapped. Then the process makes a call
+paddr = mmap(virtual address, length, protection, flags, fd, file offset)
+
+which maps length bytes starting at file offset in the file onto the virtual address
+space starting at virtual address. Alternatively, the flags parameter can be set to
+ask the system to choose a virtual address, which it then returns as paddr. The
+mapped region must be an integral number of pages and aligned at a page boundary. The protection parameter can specify any combination of read, write, or execute permission. The mapping can be removed later with unmap.
+Multiple processes can map onto the same file at the same time. Two options
+are provided for sharing. In the first one, all the pages are shared, so writes done
+by one process are visible to all the others. This option provides a high-bandwidth
+communication path between processes. The other option shares the pages as long
+as no process modifies them. However, as soon as any process attempts to write on
+a page, it gets a protection fault, which causes the operating system to give it a private copy of the page to write on. This scheme, known as copy on write, is used
+when each of multiple processes needs the illusion it is the only one mapped onto a

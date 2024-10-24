@@ -1,0 +1,100 @@
+
+Figure 2-12. (a) A personnel record for a big endian machine. (b) The same
+record for a little endian machine. (c) The result of transferring the record from a
+big endian to a little endian. (d) The result of byte swapping (c).
+
+Both of these representations are fine and internally consistent. The problems
+begin when one of the machines tries to send the record to the other one over a network. Let us assume that the big endian sends the record to the little endian one
+byte at a time, starting with byte 0 and ending with byte 19. (We will be optimistic
+and assume the bits of the bytes are not reversed by the transmission, as we have
+enough problems as is.) Thus the big endian’s byte 0 goes into the little endian’s
+memory at byte 0, and so on, as shown in Fig. 2-12(c).
+When the little endian tries to print the name, it works fine, but the age comes
+out as 21 × 224 and the department is just as garbled. This situation arises because
+
+78
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+the transmission has reversed the order of the characters in a word, as it should, but
+it has also reversed the bytes in an integer, which it should not.
+An obvious solution is to have the software reverse the bytes within a word
+after the copy has been made. Doing this leads to Fig. 2-12(d) which makes the
+two integers fine but turns the string into ‘‘MIJTIMS’’ with the ‘‘H’’ hanging in the
+middle of nowhere. This reversal of the string occurs because when reading it, the
+computer first reads byte 0 (a space), then byte 1 (M), and so on.
+There is no simple solution. One way that works, but is inefficient, is to include a header in front of each data item telling what kind of data follows (string,
+integer, or other) and how long it is. This allows the receiver to perform only the
+necessary conversions. In any event, it should be clear that the lack of a standard
+for byte ordering is a big nuisance when moving data between different machines.
+
+2.2.4 Error-Correcting Codes
+Computer memories occasionally make errors due to voltage spikes on the
+power line, cosmic rays, or other causes. To guard against such errors, some memories use error-detecting or error-correcting codes. When these codes are used,
+extra bits are added to each memory word in a special way. When a word is read
+out of memory, the extra bits are checked to see if an error has occurred.
+To understand how errors can be handled, it is necessary to look closely at
+what an error really is. Suppose that a memory word consists of m data bits to
+which we will add r redundant, or check, bits. Let the total length be n (i.e.,
+n = m + r). An n-bit unit containing m data and r check bits is often referred to as
+an n-bit codeword.
+Given any two codewords, say, 10001001 and 10110001, it is possible to determine how many corresponding bits differ. In this case, 3 bits differ. To determine
+how many bits differ, just compute the bitwise Boolean EXCLUSIVE OR of the
+two codewords and count the number of 1 bits in the result. The number of bit
+positions in which two codewords differ is called the Hamming distance (Hamming, 1950). Its main significance is that if two codewords are a Hamming distance d apart, it will require d single-bit errors to convert one into the other. For
+example, the codewords 11110001 and 00110000 are a Hamming distance 3 apart
+because it takes 3 single-bit errors to convert one into the other.
+With an m-bit memory word, all 2m bit patterns are legal, but due to the way
+the check bits are computed, only 2m of the 2n codewords are valid. If a memory
+read turns up an invalid codeword, the computer knows that a memory error has
+occurred. Given the algorithm for computing the check bits, it is possible to construct a complete list of the legal codewords, and from this list find the two codewords whose Hamming distance is minimum. This distance is the Hamming distance of the complete code.
+The error-detecting and error-correcting properties of a code depend on its
+Hamming distance. To detect d single-bit errors, you need a distance d + 1 code
+
+SEC. 2.2
+
+79
+
+PRIMARY MEMORY
+
+because with such a code there is no way that d single-bit errors can change a valid
+codeword into another valid codeword. Similarly, to correct d single-bit errors,
+you need a distance 2d + 1 code because that way the legal codewords are so far
+apart that even with d changes, the original codeword is still closer than any other
+codeword, so it can be uniquely determined.
+As a simple example of an error-detecting code, consider a code in which a
+single parity bit is appended to the data. The parity bit is chosen so that the number of 1 bits in the codeword is even (or odd). Such a code has a distance 2, since
+any single-bit error produces a codeword with the wrong parity. In other words, it
+takes two single-bit errors to go from a valid codeword to another valid codeword.
+It can be used to detect single errors. Whenever a word containing the wrong parity is read from memory, an error condition is signaled. The program cannot continue, but at least no incorrect results are computed.
+As a simple example of an error-correcting code, consider a code with only
+four valid codewords:
+0000000000, 0000011111, 1111100000, and 1111111111
+
+This code has a distance 5, which means that it can correct double errors. If the
+codeword 0000000111 arrives, the receiver knows that the original must have been
+0000011111 (if there was no more than a double error). If, however, a triple error
+changes 0000000000 into 0000000111, the error cannot be corrected.
+Imagine that we want to design a code with m data bits and r check bits that
+will allow all single-bit errors to be corrected. Each of the 2m legal memory words
+has n illegal codewords at a distance 1 from it. These are formed by systematically
+inverting each of the n bits in the n-bit codeword formed from it. Thus each of the
+2m legal memory words requires n + 1 bit patterns dedicated to it (for the n possible errors and correct pattern). Since the total number of bit patterns is 2n , we
+must have (n + 1)2m ≤ 2n . Using n = m + r, this requirement becomes
+(m + r + 1) ≤ 2r . Given m, this puts a lower limit on the number of check bits
+needed to correct single errors. Figure 2-13 shows the number of check bits required for various memory word sizes.
+Word size
+
+Check bits Total size Percent overhead
+
+8
+
+4
+
+12
+
+50
+
+16

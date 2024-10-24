@@ -1,0 +1,100 @@
+The next block of instructions is used to manipulate the flag bits. The main
+reason for doing this is to prepare for conditional jumps. The double arrow (→
+←) is
+used to indicate the two operands in compare and test operations, which do not
+change during the operation. In the TEST operation, the logical AND of the
+operands is computed to set or clear the zero flag and the sign flag. The computed
+value itself is not stored anywhere and the operand is unmodified. In the CMP, the
+difference of the operands is computed and all four flags are set or cleared as a
+result of the comparison. The direction flag, which determines whether the SI and
+DI registers should be incremented or decremented in the string instructions, can be
+set or cleared by STD and CLD, respectively.
+The 8088 also has a parity flag and an auxiliary carry flag. The parity flag
+gives the parity of the result (odd or even). The auxiliary flag checks whether
+overflow was generated in the low (4-bit) nibble of the destination. There are also
+instructions LAHF and SAHF, which copy the low-order byte of the flag register in
+AH, and vice versa. The overflow flag is in the high-order byte of the condition
+code register and is not copied in these instructions. These instructions and flags
+are mainly used for backward compatibility with the 8080 and 8085 processors.
+
+C.4.3 Loop and Repetitive String Operations
+The following block contains the instructions for looping. The LOOP instruction decrements the CX register and jumps back to the label indicated if the result is
+positive. The instructions LOOPZ, LOOPE, LOOPNZ and LOOPNE also test the zero
+flag to see whether the loop should be aborted before CX is 0.
+
+SEC. C.4
+
+THE 8088 INSTRUCTION SET
+
+709
+
+The destination for all LOOP instructions must be within 128 bytes of the current position of the program counter because the instruction contains an 8-bit
+signed offset. The number of instructions (as opposed to bytes) that can jumped
+over cannot be calculated exactly because different instructions have different
+lengths. Usually, the first byte defines the type of an instruction, and so some
+instructions take only one byte in the code segment. Often, the second byte is used
+to define the registers and register modes of the instruction, and if the instructions
+contain displacements or immediate data, the instruction length can increase to
+four or six bytes. The average instruction length is typically about 2.5 bytes per
+instruction, so the LOOP cannot jump further back than approximatel 50 instructions.
+There also exist some special string instruction looping mechanisms. These
+are REP, REPZ, and REPNZ. Similarly, the five string instructions in the next block
+of Fig. C-4 all have implied addresses and all use auto increment or auto decrement
+mode on the index registers. In all of these instructions, the SI register points into
+the data segment, but the DI register refers to the extra segment, which is based
+on ES. Together with the REP instruction, the MOVSB can be used to move complete strings in one instruction. The length of the string is contained in the CX register. Since the MOVSB instruction does not affect the flags, it is not possible to
+check for an ASCII zero byte during the copy operation by means of the REPNZ,
+but this can be fixed by using first a REPNZ SCASB to get a sensible value in CX
+and later a REP MOVSB. This point will be illustrated by the string copy example
+in Sec. C.8. For all of these instructions, extra attention should be paid to the segment register ES, unless ES and DS have the same value. In the interpreter a small
+memory model is used, so that ES = DS = SS.
+
+C.4.4 Jump and Call Instructions
+The last block is about conditional and unconditional jumps, subroutine calls,
+and returns. The simplest operation here is the JMP instruction. It can have a label
+as destination or the contents of any effective address. A distinction is made
+between a near jump and a far jump. In a near jump, the destination is in the current code segment, which does not change during the operation. In a far jump, the
+CS register is changed during the jump. In the direct version with a label, the new
+value of the code segment register is supplied in the call after the label, in the
+effective address version, a long is fetched from memory, such that the low word
+corresponds to the destination label, and the high word to the new code segment
+register value.
+It is, of course, not surprising, that such a distinction exists. To jump to an
+arbitrary address within a 20-bit address space, some provision has to be made for
+specifying more than 16 bits. The way it is done is by giving new values for CS
+and PC.
+
+710
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+Conditional jumps
+The 8088 has 15 conditional jumps, a few of which have two names (e.g.,
+is the same instruction as JUMP NOT LESS THAN). They
+are listed in Fig. C-5. All of these allow only jumps with a distance of up to 128
+bytes from the instruction. If the destination is not within this range, a jump over
+jump construction has to be used. In such a construction, the jump with the opposite condition is used to jump over the next instruction. If the next instruction contains an unconditional jump to the intended destination, then the effect of these two
+instructions is just a longer-ranging jump of the intended type. for example
+
+JUMP GREATER OR EQUAL
+
+JB FARLABEL
+
+becomes
+JNA 1f
+JMP FARLABEL
+1:
+
+In other words, if it is not possible to do JUMP BELOW, then a JUMP NOT ABOVE to
+a nearby label 1 is placed, followed by an unconditional jump to FARLABEL. The
+effect is the same, at a slightly higher cost in time and space. The assembler generates these jump over jumps automatically when the destination is expected to be
+too distant. Doing the calculation correctly is a bit tricky. Suppose that the distance is close to the edge, but some of the intervening instructions are also conditional jumps. The outer one cannot be resolved until the sizes of the inner ones are
+known, and so on. To be safe, the assembler errs on the side of caution. Sometimes it generates a jump over jump when it is not strictly necessary. It only generates a direct condition jump when it is certain that the target is within range.
+Most conditional jumps depend on the status flags, and are preceded by a compare or test instruction. The CMP instruction subtracts the source from the destination operand, sets the condition codes and discards the result. Neither of the
+operands is changed. If the result is zero or has the sign bit on (i.e., is negative),
+the corresponding flag bit is set. If the result cannot be expressed in the allowed
+number of bits, the overflow flag is set. If there is a carry out of the high-order bit,
+the carry flag is set. The conditional jumps can test all of these bits.
+If the operands are considered to be signed, the instructions using GREATER

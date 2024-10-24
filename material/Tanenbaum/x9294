@@ -1,0 +1,100 @@
+
+(g)
+
+(h)
+
+619
+
+Figure 8-37. Various topologies. The heavy dots represent switches. The CPUs
+and memories are not shown. (a) A star. (b) A complete interconnect. (c) A tree.
+(d) A ring. (e) A grid. (f) A double torus. (g) A cube. (h) A 4D hypercube.
+
+Interconnection networks can be characterized by their dimensionality. For
+our purposes, the dimensionality is determined by the number of choices there are
+to get from the source to the destination. If there is never any choice (i.e., there is
+only one path from each source to each destination), the network is zero dimensional. If there is one dimension in which a choice can be made, for example, go
+
+620
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+east or go west, the network is one dimensional. If there are two axes, so a packet
+can go east or west, or alternatively, go north or south, the network is two dimensional, and so on.
+Several topologies are shown in Fig. 8-37. Only the links (lines) and switches
+(dots) are shown here. The memories and CPUs (not shown) would typically be
+attached to the switches by interfaces. In Fig. 8-37(a), we have a zero-dimensional
+star configuration, in which the CPUs and memories would be attached to the
+outer nodes, with the central one just doing switching. Although a simple design,
+for a large system, the central switch is likely to be a major bottleneck. Also, from
+a fault-tolerance perspective, this is a poor design since a single failure at the central switch completely destroys the system.
+In Fig. 8-37(b), we have another zero-dimensional design that is at the other
+end of the spectrum, a full interconnect. Here every node has a direct connection
+to every other node. This design maximizes the bisection bandwidth, minimizes
+the diameter, and is exceedingly fault tolerant (it can lose any six links and still be
+fully connected). Unfortunately, the number of links required for k nodes is
+k(k − 1)/2, which quickly gets out of hand for large k.
+Another topology is the tree, illustrated in Fig. 8-37(c). A problem with this
+design is that the bisection bandwidth is equal to the link capacity. Since there will
+normally be a lot of traffic near the top of the tree, the top few nodes will become
+bottlenecks. One way around this problem is to increase the bisection bandwidth
+by giving the upper links more bandwidth. For example, the lowest-level links
+might have a capacity b, those at the next level might have a capacity 2b and the
+top-level links might each have 4b. Such a design is called a fat tree and has been
+used in commercial multicomputers, such as the (now-defunct) Thinking Machines’ CM-5.
+The ring of Fig. 8-37(d) is a one-dimensional topology by our definition because every packet sent has a choice of going left or going right. The grid or mesh
+of Fig. 8-37(e) is a two-dimensional design that has been used in many commercial
+systems. It is highly regular, easy to scale up to large sizes, and has a diameter that
+increases only as the square root of the number of nodes. A variant on the grid is
+the double torus of Fig. 8-37(f), which is a grid with the edges connected. Not
+only is it more fault tolerant than the grid, but the diameter is also less because the
+opposite corners can now communicate in only two hops.
+Yet another popular topology is the three-dimensional torus. It consists of a
+3D-structure with nodes at the points (i, j, k) where all coordinates are integers in
+the range from (1, 1, 1) to (l, m, n). Each node has six neighbors, two along each
+axis. The nodes at the edges have links that wrap around to the opposite edge, just
+as with the 2D torus.
+The cube of Fig. 8-37(g) is a regular three-dimensional topology. We have illustrated a 2 × 2 × 2 cube, but in the general case it could be a k × k × k cube. In
+Fig. 8-37(h) we have a four-dimensional cube constructed from two three-dimensional cubes with the corresponding nodes connected. We could make a five-
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+621
+
+dimensional cube by cloning the structure of Fig. 8-37(h) and connecting the corresponding nodes to form a block of four cubes. To go to six dimensions, we could
+replicate the block of four cubes and interconnect the corresponding nodes, and so
+on. An n-dimensional cube formed this way is called a hypercube. Many parallel
+computers use this topology because the diameter grows linearly with the dimensionality. Put in other words, the diameter is the base 2 logarithm of the number of
+nodes, so, for example, a 10-dimensional hypercube has 1024 nodes but a diameter
+of only 10, giving excellent delay properties. Note that in contrast, 1024 nodes
+arranged as a 32 × 32 grid has a diameter of 62, more than six times worse than the
+hypercube. The price paid for the smaller diameter is that the fanout and thus the
+number of links (and the cost) is much larger for the hypercube. Nevertheless, the
+hypercube is a common choice for high-performance systems.
+Multicomputers come in all shapes and sizes, so it is hard to give a clean taxonomy of them. Nevertheless, two general ‘‘styles’’ stand out: the MPPs and the
+clusters. We will now study each of these in turn.
+
+8.4.2 MPPs—Massively Parallel Processors
+The first category consists of the MPPs (Massively Parallel Processors),
+which are huge multimillion-dollar supercomputers. These are used in science, in
+engineering, and in industry for very large calculations, for handling very large
+numbers of transactions per second, or for data warehousing (storing and managing
+immense databases). Initially, MPPs were primarily used as scientific supercomputers, but now most of them are used in commercial environments. In a sense,
+these machines are the successors to the mighty mainframes of the 1960s (but the
+connection is tenuous, sort of like a paleontologist claiming that a flock of sparrows is the successor to the Tyrannosaurus Rex). To a large extent, the MPPs have
+displaced SIMD machines, vector supercomputers, and array processors at the top
+of the digital food chain.
+Most of these machines use standard CPUs as their processors. Popular
+choices are Intel processors, the Sun UltraSPARC, and the IBM PowerPC. What
+sets the MPPs apart is their use of a very high-performance proprietary interconnection network designed to move messages with low latency and at high bandwidth. Both of these are important because the vast majority of all messages are
+small (well under 256 bytes), but most of the total traffic is caused by large messages (more than 8 KB). MPPs also come with extensive proprietary software and
+libraries.
+Another point that characterizes MPPs is their enormous I/O capacity. Problems big enough to warrant using MPPs invariably have massive amounts of data
+to be processed, often terabytes. These data must be distributed among many disks
+and need to be moved around the machine at great speed.
+Finally, another issue specific to MPPs is their attention to fault tolerance.
+With thousands of CPUs, several failures per week are just inevitable. Having an
+

@@ -1,0 +1,100 @@
+
+1
+
+0
+
+0
+
+1
+
+0
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+1
+
+1
+
+0
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+0
+
+1
+
+0
+
+1
+
+1
+
+1
+
+0
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+(a)
+
+(b)
+
+Figure 3-5. Two equivalent functions. (a) AB + AC. (b) A(B + C).
+
+forms that are duals of each other. By interchanging AND and OR and also 0 and
+1, either form can be produced from the other one. All the laws can be easily
+proven by constructing their truth tables. Except for De Morgan’s law, the absorption law, and the AND form of the distributive law, the results should be understandable with some study. De Morgan’s law can be extended to more than two
+variables, for example, ABC = A + B + C.
+De Morgan’s law suggests an alternative notation. In Fig. 3-7(a) the AND
+form is shown with negation indicated by inversion bubbles, both for input and output. Thus, an OR gate with inverted inputs is equivalent to a NAND gate. From
+Fig. 3-7(b), the dual form of De Morgan’s law, it should be clear that a NOR gate
+can be drawn as an AND gate with inverted inputs. By negating both forms of De
+Morgan’s law, we arrive at Fig. 3-7(c) and (d), which show equivalent representations of the AND and OR gates. Analogous symbols exist for the multiple-variable forms of De Morgan’s law (e.g., an n input NAND gate becomes an OR gate

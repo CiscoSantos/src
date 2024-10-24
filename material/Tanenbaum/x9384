@@ -1,0 +1,100 @@
+Comparison instructions, 390–392
+Comparison of instruction sets, 402
+Compiler, 7, 518
+Completeness property, 153
+Complex instruction set computer, 62
+Compute unified device architecture, 583
+Computer,
+data parallel, 70–72
+disposable, 31–33
+game, 35–36
+Computer architecture, 8
+milestones, 13–28
+Computer center, 23
+Computer zoo, 28–39
+Condition code, 350
+Condition code register, 699
+Condition variable, 506
+Conditional branch instructions, 390–392
+Conditional execution, 427
+Conditional jump, 710
+
+753
+
+INDEX
+Consistency,
+cache, 599
+processor, 595–596
+release, 597–598
+sequential, 594–595
+strict, 594
+weak, 596–597, 597–598
+Consistency model, 594
+Constant pool, 260
+Consumer, 474
+Control Data Corporation, 21
+Control signal, 249
+Control store, 61, 253
+Controller, 109
+Conversion between radices, 673–675
+Coprocessor, 574–586
+Copy on write, 489
+Core, 25, 568
+Core 2 duo, 42
+Core dump, 10
+Core i7,
+addressing, 382–384
+addressing modes, 382–384
+banking, 328
+branch predictor, 326
+data types, 360
+hyperthreading, 564–568
+introduction, 35–47
+instruction formats, 367–368
+instructions, 397–400
+ISA level, 351–353
+memory model, 347–348
+microarchitecture, 323–329
+multiprocessor, 569
+photo of the die, 43
+pinout, 204–208
+pipelining, 206–208
+reorder buffer, 327
+retirement unit, 328
+scheduler, 327
+virtual memory, 455–460
+virtualization, 464
+CoreConnect, 572
+Coroutine, 410–413
+Cortex A9, 329–334
+COTS (see Commodity Off The Shelf)
+Counter register, 697
+COW (see Collection of Workstations)
+CP/M, 24
+CPU (see Central Processing Unit)
+
+CPU chip, 185–187
+CPU organization, 56
+Cray, Seymour, 21
+CRAY-1, 14
+CRC (see Cyclic Redundancy Check)
+CRC (see Cyclic Redundancy Code)
+Critical section, 509
+Crossbar switch, 604
+Crosspoint, 604
+CRT (see Cathode Ray Tube)
+Cryptography,
+public-key, 585
+symmetric-key, 585
+Cryptoprocessor, 585–586
+Cube network, 620
+CUDA (see Compute Unified Device Architecture)
+Cycle stealing, 110, 397
+Cyclic redundancy check, 226
+Cylinder, disk, 89
+
+D
+D latch, 171–172
+Daisy chaining, 196
+Data cache, OMAP4430, 331
+Data center, 37

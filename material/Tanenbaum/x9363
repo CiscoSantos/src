@@ -1,0 +1,100 @@
+t88, the full path name can be used.
+On Windows 2000 and XP systems, it is necessary to install the ansi.sys terminal driver by adding the line
+device=%systemRoot%\System32\ansi.sys
+
+to the configuration file, config.nt. The location of this file is as follows:
+Windows 2000: \winnt\system32\config.nt
+Windows XP:
+\windows\system32\config.nt
+
+On UNIX and Linux systems, the driver is usually standard.
+
+C.8 EXAMPLES
+In Sec. C.2 through Sec. C.4, we discussed the 8088 processor, its memory,
+and its instructions. Then, in Sec. C.5, we studied the as88 assembly language
+used in this tutorial. In Sec. C.6 we studied the tracer. Finally, in Sec. C.7, we
+described how to set up the toolkit. In theory, this information is sufficient to write
+and debug assembly programs with the tools provided. Nevertheless, it may be
+helpful for many readers to see some detailed examples of assembly programs and
+how they can be debugged with the tracer. That is the purpose of this section. All
+the example programs discussed in this section are available in the examples directory in the toolkit. The reader is encouraged to assemble and trace each one as it is
+discussed.
+
+C.8.1 Hello World Example
+Let us start with the example of Fig. C-12, HlloWrld.s. The program is listed
+in the left window. Since the assembler’s comment symbol is the exclamation
+mark (!), it is used in the program window to separate the instructions from the line
+numbers that follow. The first three lines contain constant definitions, which connect the conventional names of two system calls and the output file to their corresponding internal representations.
+The pseudoinstruction .SECT, on line 4, states that the following lines should
+be considered to be part of the TEXT section; that is, processor instructions. Similarly, line 17 indicates that what follows is to be considered data. Line 19 initializes a string of data consisting of 12 bytes, including one space and a line feed (\n)
+at the end.
+
+SEC. C.8
+
+727
+
+EXAMPLES
+
+Lines 5, 18 and 20 contain labels, which are indicated by a colon :. These
+labels represent numerical values, similar to constants. In this case, however, the
+assembler has to determine the numerical values. Since start is at the beginning of
+the TEXT section, its value will be 0, but the value of any subsequent labels in the
+TEXT section (not present in this example), would depend on how many bytes of
+code preceded them. Now consider line 6. This line ends with the difference of
+two labels, which is numerically a constant. Thus, line 6 is effectively the same as
+MOV CX,12
+
+except that it lets the assembler determine the string length, rather than making the
+programmer do it. The value indicated here is the amount of space in the data
+reserved for the string on line 19. The MOV on line 6 is the copy command, which
+requires the de − hw to be copied to CX.
+_EXI T = 1
+_WRITE = 4
+_STDOUT = 1
+.SECT .TEXT
+start:
+MOV
+CX,de-hw
+PUSH CX
+PUSH hw
+PUSH _STDOUT
+PUSH _WRITE
+SYS
+ADD
+SP, 8
+SUB
+CX,AX
+PUSH CX
+PUSH _EXIT
+SYS
+.SECT .DATA
+hw:
+. ASCII "Hello World\n "
+de: .BYTE 0
+
+! 1
+! 2
+! 3
+! 4
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 12
+! 13
+! 14
+! 15
+! 16
+! 17
+! 18
+! 19
+! 20
+
+C S : 00
+D S = S S = E S : 002
+AH:00 A L : 0 c
+AX:
+12

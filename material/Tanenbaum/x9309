@@ -1,0 +1,100 @@
+process starts out by executing a loop containing
+out(′′task-bag′′, job);
+
+in which a different job description is output to the tuple space on each iteration.
+Each worker starts out by getting a job-description tuple using
+in(′′task-bag′′, ?job);
+
+which it then carries out. When it is done, it gets another. New work may also be
+put into the task bag during execution. In this simple way, work is dynamically divided among the workers, and each worker is kept busy all the time, all with relatively little overhead.
+Various implementations of Linda on multicomputer systems exist. In all of
+them, a key issue is how to distribute the tuples among the machines and how to
+locate them when needed. Various possibilities include broadcasting and directories. Replication is also an important issue. These points are discussed in Bjornson (1993).
+Orca
+A somewhat different approach to application-level shared memory on a
+multicomputer is to use objects instead of just tuples as the unit of sharing. An object consists of internal (hidden) state plus methods for operating on that state. By
+not allowing the programmer to access the state directly, many possibilities are
+opened to allow sharing over machines that do not have physical shared memory.
+One object-based system that gives the illusion of shared memory on
+multicomputer systems is Orca (Bal, 1991, Bal et al., 1992, and Bal and Tanenbaum, 1988). Orca is a traditional programming language (based on Modula 2) to
+which two new features have been added: objects and the ability to create new
+processes. An Orca object is an abstract data type, analogous to an object in Java
+or a package in Ada. It encapsulates internal data structures and user-written methods, called operations. Objects are passive, that is, they do not contain threads to
+which messages can be sent. Instead, processes access an object’s internal data by
+invoking its methods.
+Each Orca method consists of a list of (guard, block-of-statements) pairs. A
+guard is a Boolean expression that does not contain any side effects, or the empty
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+645
+
+guard, which is the same as the value true. When an operation is invoked, all of its
+guards are evaluated in an unspecified order. If all of them are false, the invoking
+process is delayed until one becomes true. When a guard is found that evaluates to
+true, the block of statements following it is executed. Figure 8-48 depicts a stack
+object with two operations, push and pop.
+Object implementation stack;
+top:integer;
+stack: array [integer 0..N−1] of integer;
+
+# storage for the stack
+
+operation push(item: integer);
+begin
+guard top < N − 1 do
+stack[top] := item;
+top := top + 1;
+od;
+end;
+
+# function returning nothing
+
+operation pop( ): integer;
+begin
+guard top > 0 do
+top := top − 1;
+return stack[top];
+od;
+end;
+
+# function returning an integer
+
+begin
+top := 0;
+end;
+
+# push item onto the stack
+# increment the stack pointer
+
+# suspend if the stack is empty
+# decrement the stack pointer
+# return the top item
+
+# initialization
+
+Figure 8-48. A simplified ORCA stack object, with internal data and two operations.
+
+Once a stack has been defined, variables of this type can be declared, as in
+s, t: stack;
+
+which creates two stack objects and initializes the top variable in each to 0. The
+integer variable k can be pushed onto the stack s by the statement
+s$push(k);
+
+and so forth. The pop operation has a guard, so an attempt to pop a variable from
+an empty stack will suspend the called until another process has pushed something
+on the stack.
+Orca has a fork statement to create a new process on a user-specified processor. The new process runs the procedure named in the fork statement. Parameters, including objects, may be passed to the new process, which is how objects become distributed among machines. For example, the statement
+for i in 1 .. n do fork foobar(s) on i; od;
+
+646
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+generates one new process on each of machines 1 through n, running the program
+foobar in each of them. As these n new processes (and the parent) execute in parallel, they can all push and pop items onto the shared stack s as though they were

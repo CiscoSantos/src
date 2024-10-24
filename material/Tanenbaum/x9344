@@ -1,0 +1,100 @@
+stack frame (the stack frame word with the highest numerical value) and SP points
+to the top (the stack frame word with the lowest numerical value). The current
+stack frame is thus delimited by BP and SP.
+In this register group, there are two index registers: SI, the source index, and
+DI, the destination index. These registers are often used in combination with BP
+to address data in the stack, or with BX to compute the addresses of data memory
+locations. More extensive treatment of these registers will be deferred to the section on addressing modes.
+One of the most important registers, which is a group by itself, is the instruction pointer, which is Intel’s name for the program counter (PC). This register is
+not addressed directly by the instructions, but contains an address in the program
+code segment of the memory. The processor’s instruction cycle starts by fetching
+the instruction pointed to by PC. This register is then incremented before the rest
+of the instruction is executed. In this way this program counter points to the first
+instruction beyond the current one.
+
+SEC. C.2
+
+THE 8088 PROCESSOR
+
+699
+
+The flag register or condition code register is actually a set of single-bit registers. Some of the bits are set by arithmetic instructions and relate to the result, as
+follows:
+Z - result is zero
+S - result is negative (sign bit)
+V - result generated an overflow
+C - result generated a carry
+A - Auxilary carry (out of bit 3)
+P - parity of the result
+
+Other bits in this register control operation of certain aspects of the processor. The
+I bit enables interrupts. The T bit enables tracing mode, which is used for debugging. Finally, the D bit controls the direction of the string operations. Not all 16
+bits of this flag register are used; the unused ones are hardwired to zero.
+There are four registers in the segment register group. Recall that the stack,
+the data and the instruction codes all reside in main memory, but usually in different parts of it. The segment registers govern these different parts of the memory,
+which are called segments. These registers are called CS for the code segment
+register, DS for the data segment register, SS for the stack segment register, and ES
+for the extra segment register. Most of the time, their values are not changed. In
+practice, the data segment and stack segment use the same piece of memory, with
+the data being at the bottom of the segment and the stack being at the top. More
+about these registers will be explained in Sec. C.3.1.
+
+C.3 MEMORY AND ADDRESSING
+The 8088 has a somewhat ungainly memory organization due to its combination of a 1-MB memory and 16-bit registers. With a 1-MB memory, it takes 20 bits
+to represent a memory address. Consequently, it is impossible to store a pointer to
+memory in any of the 16-bit registers. To get around this problem, memory is
+organized as segments, each of them 64 KB, so an address within a segment can be
+represented in 16 bits. We will now go into the 8088 memory architecture in more
+detail.
+
+C.3.1 Memory Organization and Segments
+The memory of the 8088, which consists simply of an array of addressable 8bit bytes, is used for the storage of instructions as well as for the storage of data
+and for the stack. In order to separate the parts of the memory which are used for
+
+700
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+these different purposes, the 8088 uses segments which are chunks of the memory
+set apart for a certain uses. In the 8088, such a segment consists of 65,536 consecutive bytes. There are four segments:
+1. The code segment.
+2. The data segment.
+3. The stack segment.
+4. The extra segment.
+The code segment contains the program instructions. The contents of the PC register are always interpreted as a memory address in the code segment. A PC value of
+0 refers to the lowest address in the code segment, not absolute memory address
+zero. The data segment contains the initialized and uninitialized data for the program. When BX contains a pointer, it points to this data segment. The stack segment contains local variables and intermediate results pushed on the stack.
+Addresses in SP and BP are always in this stack segment. The extra segment is a
+spare segment register that can be placed anywhere in memory that it is needed.
+For each of the segments, there exists a corresponding segment register: the
+16-bit registers CS, DS, SS, and ES. The starting address of a segment is the 20-bit
+unsigned integer which is constructed by shifting the segment register by 4 bits to
+the left, and putting zero’s in the four right-most positions. This means that segment registers always indicate multiples of 16, in a 20-bit address space. The segment register points to the base of the segment. Addresses within the segment can
+be constructed by converting the 16-bit segment register value to its true 20-bit
+address by appending four zero bits to the end and adding the offset to that. In
+effect, an absolute memory address is computed by multiplying the segment register by 16 and then adding the offset to it. For example, if DS is equal to 7, and BX
+is 12, then the address indicated by BX is 7 × 16 + 12 = 124. In other words, the
+20-bit binary address implied by DS = 7 is 00000000000001110000. Adding the
+16-bit offset 0000000000001100 (decimal 12) to the segment’s origin gives the
+20-bit address 00000000000001111100 (decimal 124).
+For every memory reference, one of the segment registers is used to construct
+the actual memory address. If some instruction contains a direct address without
+reference to a register, then this address is automatically in the data segment, and
+DS is used to determine the base of the segment. The physical address is found by
+adding this bottom to the address in the instruction. The physical address in memory of the next instruction code is obtained by shifting the contents of CS by four
+binary places and adding the value of the program counter. In other words, the true
+20-bit address implied by the 16-bit CS register is first computed, then the 16-bit
+PC is added to it to form a 20-bit absolute memory address.
+
+SEC. C.3
+
+MEMORY AND ADDRESSING
+
+701
+
+The stack segment is made up of 2-byte words and so the stack pointer, SP,
+should always contain an even number. The stack is filled up from high addresses
+to low addresses. Thus, the PUSH instruction decreases the stack pointer by 2 and
+then stores the operand in the memory address computed from SS and SP. The

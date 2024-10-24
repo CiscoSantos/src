@@ -1,0 +1,100 @@
+issued. In Fig. 8-8(a) we see how fine-grained multithreading works with a dualissue superscalar CPU. For thread A, the first two instructions can be issued in the
+
+564
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+first cycle, but for thread B we immediately hit a problem in the next cycle, so only
+one instruction can be issued, and so on.
+A1 B1 C1 A3 B2 C3 A5 B3 C5 A6 B5 C7
+
+A1 B1 C1 C3 A3 A5 B2 C5 A6 A8 B3 B5
+
+A2
+
+A2
+
+C2 A4
+
+C4
+
+B4 C6 A7 B6 C8
+
+C2 C4 A4
+
+C6 A7
+
+Cycle
+
+Cycle
+
+(a)
+
+(b)
+
+B4 B6
+
+A1 B1 C2 C4 A4 B2 C6 A7 B3 B5 B7 C7
+A2 C1 C3 A3 A5 C5 A6 A8 B4 B6 B8 C8
+Cycle
+(c)
+
+Figure 8-8. Multithreading with a dual-issue superscalar CPU. (a) Fine-grained
+multithreading. (b) Coarse-grained multithreading. (c) Simultaneous multithreading.
+
+In Fig. 8-8(b), we see how coarse-grained multithreading works with a dualissue CPU, but now with a static scheduler that does not introduce a dead cycle
+after an instruction that stalls. Basically, the threads are run in turn, with the CPU
+issuing two instructions per thread until it hits one that stalls, at which point it
+switches to the next thread at the start of the next cycle.
+With superscalar CPUs, a third possible way of doing multithreading is available, called simultaneous multithreading and illustrated in Fig. 8-8(c). This approach can be seen as a refinement to coarse-grained multithreading, in which a
+single thread is allowed to issue two instructions per cycle as long as it can, but
+when it stalls, instructions are immediately taken from the next thread in sequence
+to keep the CPU fully occupied. Simultaneous multithreading can also help keep
+all the functional units busy. When an instruction cannot be started because a functional unit it needs is occupied, an instruction from a different thread can be chosen
+instead. In this figure, we are assuming that B8 stalls in cycle 11, so C7 is started
+in cycle 12.
+For more information about multithreading, see Gebhart et al. (2011) and
+Wing-kei et al. (2011).
+Hyperthreading on the Core i7
+Having looked at multithreading in the abstract, let us now consider a practical
+example: the Core i7. In the early 2000s, processors such as the Pentium 4 were
+not delivering the performance boosts that Intel needed to keep up sales. After the
+Pentium 4 was already in production, the architects at Intel looked for various
+ways to speed it up without changing the programmers’ interface, something that
+would never have been accepted. Five ways quickly popped up:
+
+SEC. 8.1
+
+ON-CHIP PARALELLISM
+
+565
+
+1. Increasing the clock speed.
+2. Putting two CPUs on a chip.
+3. Adding functional units.
+4. Making the pipeline longer.
+5. Using multithreading.
+An obvious way to improve performance is to increase the clock speed without
+changing anything else. Doing this is relatively straightforward and well understood, so each new chip that comes out is generally slightly faster than its predecessor. Unfortunately, a faster clock also has two main drawbacks that limit how
+great an increase can be tolerated. First, a faster clock uses more energy, which is
+a huge problem for notebook computers and other battery-powered devices. Second, the extra energy input means the chip gets hotter and there is more heat to dissipate.
+Putting two CPUs on a chip is relatively straightforward, but it comes close to
+doubling the chip area if each one has its own caches and thus reduces the number
+of chips per wafer by a factor of two, which essentially doubles the unit manufacturing cost. If the two chips share a common cache as big as the original one, the
+chip area is not doubled, but cache size per CPU is halved, cutting into performance. Also, while high-end server applications can often fully utilize multiple
+CPUs, not all desktop applications have enough inherent parallelism to warrant
+two full CPUs.
+Adding additional functional units is also fairly easy, but it is important to get
+the balance right. Having 10 ALUs does little good if the chip is incapable of feeding instructions into the pipeline fast enough to keep them all busy.
+A longer pipeline with more stages, each doing a smaller piece of work in a
+shorter time period increases performance but also increases the negative effects of
+branch mispredictions, cache misses, interrupts, and other factors that interrupt
+normal pipeline flow. Furthermore, to take full advantage of a longer pipeline, the
+clock speed has to be increased, which means more energy is consumed and more
+heat is produced.
+Finally, multithreading can be added. Its value is in having a second thread
+utilize hardware that would otherwise have lain fallow. After some experimentation, it became clear that a 5% increase in chip area for multithreading support
+gave a 25% performance gain in many applications, making this a good choice.
+Intel’s first multithreaded CPU was the Xeon in 2002, but multithreading was later

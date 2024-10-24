@@ -1,0 +1,100 @@
+
+32 Bits
+
+64 Bits
+
+Signed integer
+
+Type
+
+×
+
+×
+
+×
+
+× (64-bit)
+
+Unsigned integer
+
+×
+
+×
+
+×
+
+× (64-bit)
+
+Binary coded decimal integer
+
+×
+×
+
+×
+
+Floating point
+
+Figure 5-6. The Core i7 numeric data types. Supported types are marked with ×.
+Types marked with ‘‘64-bit’’ are only supported in 64-bit mode.
+
+The Core i7 is also good at manipulating 8-bit ASCII characters: there are special instructions for copying and searching character strings. These instructions
+can be used both with strings whose length is known in advance and with strings
+whose end is marked. They are often used in string manipulation libraries.
+
+SEC. 5.2
+
+361
+
+DATA TYPES
+
+5.2.4 Data Types on the OMAP4430 ARM CPU
+The OMAP4430 ARM CPU supports a wide range of data formats, as shown
+in Fig. 5-7. For integers alone, it can support 8-, 16-, and 32-bit operands, both
+signed and unsigned. The handling of small data types in the OMAP4430 is slightly more clever than in the Core i7. Internally, the OMAP4430 is 32-bit machine
+with 32-bit datapaths and instructions. For loads and stores, the program can specify the size and sign of the value to be loaded (e.g., load signed byte: LDRSB). The
+value is then converted by load instructions into a comparable 32-bit value. Similarly, stores also specify the size and sign of the value to write to memory, and they
+access only the specified portion of the input register.
+Signed integers use two’s complement. Floating-point operands of 32 and 64
+bits are included and conform to the IEEE 754 standard. Binary coded decimal
+numbers are not supported. All operands must be aligned in memory. Character
+and string data types are not supported by special hardware instructions. They are
+manipulated entirely in software.
+8 Bits
+
+16 Bits
+
+32 Bits
+
+Signed integer
+
+Type
+
+×
+
+×
+
+×
+
+Unsigned integer
+
+×
+
+×
+
+×
+
+64 Bits
+
+Binary coded decimal integer
+×
+
+Floating point
+
+×
+
+Figure 5-7. The OMAP4430 ARM CPU numeric data types. Supported types
+are marked with ×.
+
+5.2.5 Data Types on the ATmega168 AVR CPU
+The ATmega168 has a very limited number of data types. With one exception,
+all the registers are 8 bits wide, so integers are also 8 bits wide. Characters are also

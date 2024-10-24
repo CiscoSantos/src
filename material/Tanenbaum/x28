@@ -1,0 +1,100 @@
+
+yotta
+
+−24
+
+10
+
+peta
+exa
+
+Figure 1-16. The principal metric prefixes.
+
+To avoid ambiguity, the standards organizations have introduced the new terms
+kibibyte for 210 bytes, mebibyte for 220 bytes, gibibyte for 230 bytes, and tebibyte
+for 240 bytes, but the industry has been slow to adopt them. We feel that until these
+new terms are in wider use, it is better to stick with the symbols KB, MB, GB, and
+TB for 210 , 220 , 230 , and 240 bytes, respectively, and the symbols kbps, Mbps,
+Gbps, and Tbps for 103 , 106 , 109 , and 1012 bits/sec, respectively.
+
+1.6 OUTLINE OF THIS BOOK
+This book is about multilevel computers (which includes nearly all modern
+computers) and how they are organized. We will examine four levels in considerable detail—namely, the digital logic level, the microarchitecture level, the ISA
+level, and the operating system machine level. Some of the basic issues to be examined include the overall design of the level (and why it was designed that way),
+the kinds of instructions and data available, the memory organization and addressing, and the method by which the level is implemented. The study of these
+topics, and similar ones, is called computer organization or computer architecture.
+We are primarily concerned with concepts rather than details or formal mathematics. For that reason, some of the examples given will be highly simplified, in
+order to emphasize the central ideas and not the details.
+To provide some insight into how the principles presented in this book can be,
+and are, applied in practice, we will use the x86, ARM, and AVR architectures as
+running examples throughout the book. These three have been chosen for several
+reasons. First, all are widely used and the reader is likely to have access to at least
+one of them. Second, each one has its own unique architecture, which provides a
+basis for comparison and encourages a ‘‘what are the alternatives?’’ attitude.
+Books dealing with only one machine often leave the reader with a ‘‘true machine
+design revealed’’ feeling, which is absurd in light of the many compromises and
+arbitrary decisions that designers are forced to make. The reader is encouraged to
+
+SEC. 1.6
+
+OUTLINE OF THIS BOOK
+
+51
+
+study these and all other computers with a critical eye and to try to understand why
+things are the way they are, as well as how they could have been done differently,
+rather than simply accepting them as given.
+It should be made clear from the beginning that this is not a book about how to
+program the x86, ARM, or AVR architectures. These machines will be used for
+illustrative purposes where appropriate, but we make no pretense of being complete. Readers wishing a thorough introduction to one of them should consult the
+manufacturer’s publications.
+Chapter 2 is an introduction to the basic components of a computer—processors, memories, and input/output equipment. It is intended to provide an
+overview of the system architecture and an introduction to subsequent chapters.
+Chapters 3, 4, 5, and 6 each deal with one specific level shown in Fig. 1-2.
+Our treatment is bottom-up, because machines have traditionally been designed
+that way. The design of level k is largely determined by the properties of level
+k − 1, so it is hard to understand any level unless you already have a good grasp of
+the underlying level that motivated it. Also, it is educationally sound to proceed
+from the simpler lower levels to the more complex higher levels rather than vice
+versa.
+Chapter 3 is about the digital logic level, the machine’s true hardware. It discusses what gates are and how they can be combined into useful circuits. Boolean
+algebra, a tool for analyzing digital circuits, is also introduced. Computer buses
+are explained, especially the popular PCI bus. Numerous examples from industry
+are discussed in this chapter, including the three running examples mentioned
+above.
+Chapter 4 introduces the architecture of the microarchitecture level and its control. Since the function of this level is to interpret the level 2 instructions in the
+layer above it, we will concentrate on this topic and illustrate it by means of examples. The chapter also contains discussions of the microarchitecture level of
+some real machines.
+Chapter 5 discusses the ISA level, the one most computer vendors advertise as
+the machine language. We will look at our example machines here in detail.
+Chapter 6 covers some of the instructions, memory organization, and control
+mechanisms present at the operating system machine level. The examples used
+here are the Windows operating system (popular on x86 based desktop systems)
+and UNIX, used on many x86 and ARM based systems.
+Chapter 7 is about the assembly language level. It covers both assembly language and the assembly process. The subject of linking also comes up here.
+Chapter 8 discusses parallel computers, an increasingly important topic nowadays. Some of these parallel computers have multiple CPUs that share a common
+memory. Others have multiple CPUs without common memory. Some are
+supercomputers; some are systems on a chip; others are clusters of computers.
+Chapter 9 contains an alphabetical list of literature citations. Suggested readings are on the book’s Website. See: www.prenhall.com/tanenbaum.
+
+52
+
+INTRODUCTION
+
+CHAP. 1
+
+PROBLEMS
+1. Explain each of the following terms in your own words:
+a. Translator.
+b. Interpreter.
+c. Virtual machine.
+2. Is it conceivable for a compiler to generate output for the microarchitecture level instead of for the ISA level? Discuss the pros and cons of this proposal.
+3. Can you imagine any multilevel computer in which the device level and digital logic
+levels were not the lowest levels? Explain.
+4. Consider a multilevel computer in which all the levels are different. Each level has instructions that are m times as powerful as those of the level below it; that is, one level r
+instruction can do the work of m level r − 1 instructions. If a level-1 program requires
+k seconds to run, how long would equivalent programs take at levels 2, 3, and 4, assuming n level r instructions are required to interpret a single r + 1 instruction?
+5. Some instructions at the operating system machine level are identical to ISA language
+instructions. These instructions are carried out directly by the microprogram or hardware rather than by the operating system. In light of your answer to the preceding
+problem, why do you think this is the case?
+6. Consider a computer with identical interpreters at levels 1, 2, and 3. It takes an interpreter n instructions to fetch, examine, and execute one instruction. A level-1 instruction takes k nanoseconds to execute. How long does it take for an instruction at levels

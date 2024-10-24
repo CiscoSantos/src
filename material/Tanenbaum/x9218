@@ -1,0 +1,100 @@
+OpenFileMapping
+
+Open a previously created file-mapping object
+
+Figure 6-34. The principal Windows 7 API calls for managing virtual memory
+
+The first four API functions are self-explanatory. The next two give a process
+the ability to hardwire some number of pages in memory so they will not be paged
+out and to undo this property. A real-time program might need this ability, for example. Only programs run on behalf of the system administrator may pin pages in
+memory. And a limit is enforced by the operating system to prevent even these
+processes from getting too greedy. Although not shown in Fig. 6-34, Windows 7
+also has API functions to allow a process to access the virtual memory of a different process over which it has been given control (i.e., for which it has a handle).
+The last four API functions listed are for managing memory-mapped files. To
+map a file, a file-mapping object must first be created, with CreateFileMapping.
+This function returns a handle to the file-mapping object and optionally enters a
+name for it into the file system so another process can use it. The next two functions map and unmap files, respectively. A mapped file is (part of) a disk file that
+can be read from or written to just by accessing the virtual address space, with no
+explicit I/O. The last one can be used by a process to map in a file currently also
+mapped in by a different process. In this way, two or more processes can share regions of their address spaces.
+These API functions are the basic ones upon which the rest of the memory
+management system is constructed. For example, there are API functions for
+
+492
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+allocating and freeing data structures on one or more heaps. Heaps are used for
+storing data structures that are dynamically created and destroyed. The heaps are
+not garbage collected by the operating system, so it is up to language run-time systems or user software to free blocks of virtual memory that are no longer in use.
+(Garbage collection is the automatic removal of unused data structures.) Heap
+usage in Windows 7 is similar to the use of the malloc function in UNIX systems,
+except that there can be multiple independently managed heaps.
+
+6.5.3 Examples of OS-Level I/O
+The heart of any operating system is providing services to user programs,
+mostly I/O services such as reading and writing files. Both UNIX and Windows 7
+offer a wide variety of I/O services to user programs. For most UNIX system calls,
+Windows 7 has an equivalent call, but the reverse is not true, as Windows 7 has far
+more calls and each is far more complicated than its UNIX counterpart.
+UNIX I/O
+Much of the popularity of the UNIX system can be traced directly to its simplicity, which, in turn, is a direct result of the organization of the file system. An ordinary file is a linear sequence of 8-bit bytes starting at 0 and going up to a maximum of typically 264 − 1 bytes. The operating system itself imposes no record
+structure on files, although many user programs regard ASCII text files as sequences of lines, each line terminated by a line feed.
+Associated with every open file is a pointer to the next byte to be read or written. The read and write system calls read and write data starting at the file position
+indicated by the pointer. Both calls advance the pointer after the operation by an
+amount equal to the number of bytes transferred. However, random access to files
+is possible by explicitly setting the file pointer to a specific value.
+In addition to ordinary files, the UNIX system also supports special files, which
+are used to access I/O devices. Each I/O device typically has one or more special
+files assigned to it. By reading and writing from the associated special file, a program can read or write from the I/O device. Disks, printers, terminals, and many
+other devices are handled this way.
+The major UNIX file system calls are listed in Fig. 6-35. The creat call (without the e) can be used to create a new file. It is not strictly necessary any more, because open can also create a new file now. Unlink removes a file, assuming that the
+file is in only one directory.
+Open is used to open existing files (and create new ones). The mode flag tells
+how to open it (for reading, for writing, etc.). The call returns a small integer called a file descriptor that identifies the file in subsequent calls. When the file is no
+longer needed, close is called to free up the file descriptor.
+The actual file I/O is done with read and write, each having a file descriptor
+indicating which file to use, a buffer for the data to go to or come from, and a byte
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+System call
+
+493
+
+Meaning
+
+creat(name, mode)
+
+Create a file; mode specifies the protection mode
+
+unlink(name)
+
+Delete a file (assuming that there is only 1 link to it)
+
+open(name, mode)
+
+Open or create a file and return a file descriptor
+
+close(fd)
+
+Close a file
+
+read(fd, buffer, count)
+
+Read count bytes into buffer
+
+write(fd, buffer, count) Write count bytes from buffer
+lseek(fd, offset, w)
+
+Move the file pointer as required by offset and w
+
+stat(name, buffer)
+
+Return information about a file
+
+chmod(name, mode)

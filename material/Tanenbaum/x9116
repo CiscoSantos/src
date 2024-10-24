@@ -1,0 +1,100 @@
+
+Micro-op
+cache
+
+Outoforder
+control
+
+Level 2
+unified
+cache
+
+To shared
+L3 cache
+
+Allocate/Rename unit
+Memory
+scheduler
+
+Nonmemory scheduler
+ALU 1
+
+ALU 2
+
+ALU 3
+
+Retirement unit
+
+Store
+
+Load 1
+
+Load 2
+Level 1
+data
+cache
+
+Figure 4-47. A simplified view of the Core i7 data path.
+
+If the decode unit hits a conditional branch, it looks up its predicted direction
+in the Branch Predictor. The branch predictor contains the history of branches
+encountered in the past, and it uses this history to guess whether or not a conditional branch is going to be taken the next time it is encountered. This is where the
+top-secret algorithm is used.
+If the branch instruction is not in the table, static prediction is used. A backward branch is assumed to be part of a loop and assumed to be taken. The accuracy of these static predictions is extremely high. A forward branch is assumed to
+be part of an if statement and is assumed not to be taken. The accuracy of these
+static predictions is much lower than that of the backward branches.
+
+SEC. 4.6
+
+EXAMPLES OF THE MICROARCHITECTURE LEVEL
+
+327
+
+For a taken branch the BTB (Branch Target Buffer) is consulted to determine
+the target address. The BTB holds the target address of the branch the last time it
+was taken. Most of the time this address is correct (in fact, it is always correct for
+branches with a constant displacement). Indirect branches, such as those used by
+virtual function calls and C++ switch statements, go to many addresses, and they
+may be mispredicted by the BTB.
+The second part of the pipeline, the out-of-order control logic, is fed from the
+micro-op cache. As each micro-op comes in from the front end, up to four per
+cycle, the allocation/renaming unit logs it in a 168-entry table called the ROB
+(ReOrder Buffer). This entry keeps track of the status of the micro-op until it is
+retired. The allocation/renaming unit then checks to see if the resources the microop needs are available. If so, the micro-op is enenqueued for execution in one of
+the scheduler queues. Separate queues are maintained for memory and nonmemory micro-ops. If a micro-op cannot be executed, it is delayed, but subsequent
+micro-ops are processed, leading to out-of-order execution of the micro-ops. This
+strategy was designed to keep all the functional units as busy as possible. As many
+as 154 instructions can be in flight at any instant, and up to 64 of these can be
+loads from memory and up to 36 can be stores into memory.
+Sometimes a micro-op stalls because it needs to write into a register that is
+being read or written by a previous micro-op. These conflicts are called WAR and
+WAW dependences, respectively, as we saw earlier. By renaming the target of the
+new micro-op to allow it to write its result in one of the 160 scratch registers instead of in the intended, but still-busy, target, it may be possible to schedule the
+micro-op for execution immediately. If no scratch register is available, or the
+micro-op has a RAW dependence (which can never be papered over), the allocator
+notes the nature of the problem in the ROB entry. When all the required resources
+become available later, the micro-op is put into one of the scheduler queues.
+The scheduler queues send micro-ops into the six functional units when they
+are ready to execute. The functional units are as follows:
+1. ALU 1 and the floating-point multiply unit.
+2. ALU 2 and the floating-point add/subtract unit.
+3. ALU 3 and branch processing and floating-point comparisons unit.
+4. Store instructions.
+5. Load instructions 1.
+6. Load instructions 2.
+Since the schedulers and the ALUs can process one operation per cycle, a 3-GHz
+Core i7 has the scheduler performance to issue 18 billion operations per second;
+however, in reality the processor will never reach this level of throughput. Since
+the front end supplies at most four micro-ops per cycle, six micro-ops can only be
+
+328
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+issued in short bursts since soon the scheduler queues will empty. Also, the memory units each take four cycles to process their operations, thus they could contribute
+to the peak execution throughput only in small bursts. Despite not being able to
+fully saturate the execution resources, the functional units do provide a significant
+execution capability, and that is why the out-of-order control goes to so much trouble to find work for them to do.
+The three integer ALUs are not identical. ALU 1 can perform all arithmetic

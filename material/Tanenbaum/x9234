@@ -1,0 +1,100 @@
+
+Allocate storage for one or more (initialized) 32-bit (double) data items
+
+DQ
+
+Allocate storage for one or more (initialized) 64-bit (quad) data items
+
+PROC
+
+Start a procedure
+
+ENDP
+
+End a procedure
+
+MACRO
+
+Start a macro definition
+
+ENDM
+
+End a macro definition
+
+PUBLIC
+
+Export a name defined in this module
+
+EXTERN
+
+Import a name from another module
+
+INCLUDE
+
+Fetch and include another file
+
+IF
+
+Start conditional assembly based on a given expression
+
+ELSE
+
+Start conditional assembly if the IF condition above was false
+
+ENDIF
+
+End conditional assembly
+
+COMMENT
+
+Define a new start-of-comment character
+
+PAGE
+
+Generate a page break in the listing
+
+END
+
+Terminate the assembly program
+Figure 7-2. Some of the pseudoinstructions available in the MASM assembler
+(MASM).
+
+The SEGMENT pseudoinstruction starts a new segment, and ENDS terminates
+one. It is allowed to start a text segment, with code, then start a data segment, then
+go back to the text segment, and so on.
+ALIGN forces the next line, usually data, to an address that is a multiple of its
+argument. For example, if the current segment has 61 bytes of data already, then
+after ALIGN 4 the next address allocated will be 64.
+
+SEC. 7.1
+
+INTRODUCTION TO ASSEMBLY LANGUAGE
+
+523
+
+EQU is used to give a symbolic name to an expression. For example, after the
+pseudoinstruction
+BASE EQU 1000
+
+the symbol BASE can be used everywhere instead of 1000. The expression that follows the EQU can involve multiple defined symbols combined with arithmetic and
+other operators, as in
+LIMIT EQU 4 * BASE + 2000
+
+Most assemblers, including MASM, require that a symbol be defined before it is
+used in an expression like this.
+The next four pseudoinstructions, DB, DW, DD, and DQ, allocate storage for one
+or more variables of size 1, 2, 4, or 8 bytes, respectively. For example,
+TABLE DB 11, 23, 49
+
+allocates space for 3 bytes and initializes them to 11, 23, and 49, respectively. It
+also defines the symbol TABLE and sets it equal to the address where 11 is stored.
+The PROC and ENDP pseudoinstructions define the beginning and end of assembly language procedures, respectively. Procedures in assembly language have
+the same function as procedures in other programming languages. Similarly,
+MACRO and ENDM delimit the scope of a macro definition. We will study macros
+later in this chapter.
+The next two pseudoinstructions, PUBLIC and EXTERN, control the visibility of
+symbols. It is common to write programs as a collection of files. Frequently, a
+procedure in one file needs to call a procedure or access a data word defined in another file. To make this cross-file referencing possible, a symbol that is to be made
+available to other files is exported using PUBLIC. Similarly, to prevent the assembler from complaining about the use of a symbol that is not defined in the current
+file, the symbol can be declared as EXTERN, which tells the assembler that it will
+be defined in some other file. Symbols that are not declared in either of these

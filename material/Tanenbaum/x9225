@@ -1,0 +1,100 @@
+A
+
+B
+
+D
+
+E
+
+Original process
+
+C
+
+Children of A
+
+F
+
+Grandchildren of A
+
+Figure 6-43. A process tree in UNIX.
+
+Processes in UNIX can communicate with each other via a structure called a
+pipe. A pipe is a kind of buffer into which one process can write a stream of data
+and another can take it out. Bytes are always retrieved from a pipe in the order
+they were written. Random access is not possible. Pipes do not preserve message
+boundaries, so if one process does four 128-byte writes and the other does a
+512-byte read, the reader will get all the data at once, with no indication that they
+were written in multiple operations.
+In System V and Linux, another way for processes to communicate is by using
+message queues. A process can create a new message queue or open an existing
+one using msgget. Using a message queue, a process can send messages using
+msgsnd and receive them using msgrecv. Messages sent this way differ in several
+ways from data stuffed into a pipe. First, message boundaries are preserved,
+whereas a pipe is just a byte stream. Second, messages have priorities, so urgent
+ones can skip ahead of less important ones. Third, messages are typed, and a
+msgrecv can specify a particular type, if desired.
+Another communication mechanism is the ability of two or more processes to
+share a region of their respective address spaces. UNIX handles this shared memory by mapping the same pages into the virtual address space of all the sharing processes. As a result, a write by one process into the shared region is immediately visible to the other processes. This mechanism provides a very high bandwidth communication path between processes. The system calls involved in shared memory
+go by names like shmat and shmop.
+System V and Linux also provide semaphores. These work essentially as described in the producer-consumer example given in the text.
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+505
+
+Yet another facility provided by all POSIX-conformant UNIX systems is the
+ability to have multiple threads of control within a single process. These threads of
+control, usually just called threads, are like lightweight processes that share a
+common address space and everything associated with that address space, such as
+file descriptors, environment variables, and outstanding timers. However, each
+thread has its own program counter, own registers, and own stack. When a thread
+blocks (i.e., has to stop temporarily until I/O completes or some other event happens), other threads in the same process are still able to run. Two threads in the
+same process operating as a producer and consumer are similar, but not identical,
+to two single-thread processes that are sharing a memory segment containing a
+buffer. The differences have to do with the fact that in the latter case, each process
+has its own file descriptors, etc., whereas in the former case all of these items are
+shared. We saw the use of Java threads in our producer-consumer example earlier.
+Often the Java runtime system uses an operating system thread for each of its
+threads, but it does not have to do this.
+As an example of where threads might be useful, consider a World Wide Web
+server. Such a server might keep a cache of commonly used Web pages in main
+memory. If a request is for a page in the cache, the Web page is returned immediately. Otherwise, it is fetched from disk. Unfortunately, waiting for the disk
+takes a long time (typically 20 msec), during which the process is blocked and cannot serve new incoming requests, even those for Web pages in the cache.
+The solution is to have multiple threads within the server process, all of which
+share the common Web page cache. When one thread blocks, other threads can
+handle new requests. To prevent blocking without threads, one could have multiple
+server processes, but this would probably entail replicating the cache, thus wasting
+valuable memory.
+The UNIX standard for threads is called pthreads, and is defined by POSIX
+(P1003.1C). It contains calls for managing and synchronizing threads. It is not defined whether threads are managed by the kernel or entirely in user space. The
+most commonly used thread calls are listed in Fig. 6-44.
+Let us briefly examine the thread calls shown in Fig. 6-44. The first call,
+pthread create, creates a new thread. After successful completion, one more
+thread is running in the called’s address space than before the call. A thread that
+has done its job and wants to terminate calls pthread exit. A thread can wait for
+another thread to exit by calling pthread join. If the thread waited for has already
+exited, the pthread join finishes immediately. Otherwise it blocks.
+Threads can synchronize using mutexes. A mutex guards some resource, such
+as a buffer shared by two threads. To make sure that only one thread at a time accesses the shared resource, threads are expected to lock the mutex before touching
+the resource and unlock it when they are done. As long as all threads obey this
+protocol, race conditions can be avoided. Mutexes are like binary semaphores
+(semaphores that can take on only the values of 0 and 1). The name ‘‘mutex’’
+comes from the fact that mutexes are used to ensure mutual exclusion.
+
+506
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+Thread call
+
+CHAP. 6
+
+Meaning
+
+pthread create
+
+Create a new thread in the called’s address space
+
+pthread exit

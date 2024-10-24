@@ -1,0 +1,100 @@
+2
+
+3
+
+Idle
+Frame 1
+
+Frame 0
+
+Frame 2
+
+Packets
+from root
+
+Packets
+from root
+SOF
+
+SOF
+
+IN
+
+DATA ACK
+
+Frame 3
+
+SOF
+
+SOF OUT DATA ACK
+From
+device
+
+Data packet
+from device
+
+SYN PID PAYLOAD CRC
+
+SYN PID PAYLOAD CRC
+
+Figure 3-58. The USB root hub sends out frames every 1.00 msec.
+
+In Fig. 3-58 there is no work to be done in frames 0 and 2, so all that is needed is
+one SOF (Start of Frame) packet. This packet is always broadcast to all devices.
+Frame 1 is a poll, for example a request to a scanner to return the bits it has found
+on the image it is scanning. Frame 3 consists of delivering data to some device, for
+example to a printer.
+USB supports four kinds of frames: control, isochronous, bulk, and interrupt.
+Control frames are used to configure devices, give them commands, and inquire
+about their status. Isochronous frames are for real-time devices such as microphones, loudspeakers, and telephones that need to send or accept data at precise
+time intervals. They have a highly predictable delay but provide no retransmissions in the event of errors. Bulk frames are for large transfers to or from devices
+with no real-time requirements, such as printers. Finally, interrupt frames are
+needed because USB does not support interrupts. For example, instead of having
+the keyboard cause an interrupt whenever a key is struck, the operating system can
+poll it every 50 msec to collect any pending keystrokes.
+A frame consists of one or more packets, possibly some in each direction.
+Four kinds of packets exist: token, data, handshake, and special. Token packets are
+from the root to a device and are for system control. The SOF, IN, and OUT packets in Fig. 3-58 are token packets. The SOF packet is the first in each frame and
+marks the beginning of the frame. If there is no work to do, the SOF packet is the
+
+SEC. 3.6
+
+EXAMPLE BUSES
+
+231
+
+only one in the frame. The IN token packet is a poll, asking the device to return
+certain data. Fields in the IN packet tell which bit pipe is being polled so the device knows which data to return (if it has multiple streams). The OUT token packet
+announces that data for the device will follow. A fourth type of token packet,
+SETUP (not shown in the figure), is used for configuration.
+Besides the token packet, three other kinds exist. These are DATA (used to
+transmit up to 64 bytes of information either way), handshake, and special packets.
+The format of a DATA packet is shown in Fig. 3-58. It consists of an 8-bit synchronization field, an 8-bit packet type (PID), the payload, and a 16-bit CRC
+(Cyclic Redundancy Check) to detect errors. Three kinds of handshake packets
+are defined: ACK (the previous data packet was correctly received), NAK (a CRC
+error was detected), and STALL (please wait—I am busy right now).
+Now let us look at Fig. 3-58 again. Every 1.00 msec a frame must be sent
+from the root hub, even if there is no work. Frames 0 and 2 consist of just an SOF
+packet, indicating that there was no work. Frame 1 is a poll, so it starts out with
+SOF and IN packets from the computer to the I/O device, followed by a DATA
+packet from the device to the computer. The ACK packet tells the device that the
+data were received correctly. In case of an error, a NAK would be sent back to the
+device and the packet would be retransmitted for bulk data (but not for isochronous
+data). Frame 3 is similar in structure to frame 1, except that now the data flow is
+from the computer to the device.
+After the USB standard was finalized in 1998, the USB designers had nothing
+to do so they began working on a new high-speed version of USB, called USB 2.0.
+This standard is similar to the older USB 1.1 and backward compatible with it, except that it adds a third speed, 480 Mbps, to the two existing speeds. There are
+also some minor differences, such as the interface between the root hub and the
+controller. With USB 1.1 two new interfaces were available. The first one, UHCI
+(Universal Host Controller Interface), was designed by Intel and put most of the
+burden on the software designers (read: Microsoft). The second one, OHCI
+(Open Host Controller Interface), was designed by Microsoft and put most of
+the burden on the hardware designers (read: Intel). In USB 2.0 everyone agreed to
+a single new interface called EHCI (Enhanced Host Controller Interface).
+With USB now operating at 480 Mbps, it clearly competes with the IEEE 1394
+serial bus popularly called FireWire, which runs at 400 Mbps or 800 Mbps. Because virtually every new Intel-based PC now comes with USB 2.0 or USB 3.0
+(see below) 1394 is likely to vanish in due course. This disappearance is not so
+much due to obsolescence as to turf wars. USB is a product of the computer industry whereas 1394 comes from the consumer electronics industry. When it came to
+connecting cameras to computers, each industry wanted everyone to use its cable.
+It looks like the computer folks won this one.

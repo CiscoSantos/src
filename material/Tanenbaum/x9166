@@ -1,0 +1,100 @@
+
+Pop Register from Stack
+
+REGLIST ← STACK
+
+LSL DST
+
+Logical Shift Left by One
+
+DST ← DST LSL 1
+
+LSR DST
+
+Logical Shift Right by One
+
+DST ← DST LSR 1
+
+ROL DST
+
+Rotate Left by One
+
+DST ← DST ROL 1
+
+ROR DST
+
+Rotate Right by One
+
+DST ← DST ROR 1
+
+ASR DST
+
+Arithmetic Shift Right by One
+
+DST ← DST ASR 1
+
+SRS = source register
+DST = destination register
+IMM = immediate value
+
+XYZ = X, Y, or Z register pair
+MEM[A] = access memory at address A
+
+Figure 5-35. The ATmega168 AVR instruction set.
+
+403
+
+404
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+The OMAP4430 ARM CPU is a modern three-address 32-bit RISC, with a
+load/store architecture, hardly any addressing modes, and a compact and efficient
+instruction set. The ATmega168 AVR architecture is a tiny embedded processor
+designed to fit on a single chip.
+Each machine is the way it is for a good reason. The Core i7’s design was determined by three major factors:
+1. Backward compatibility.
+2. Backward compatibility.
+3. Backward compatibility.
+Given the current state of the art, no one would now design such an irregular machine with so few registers, all of them different. This makes compilers hard to
+write. The lack of registers also forces compilers to constantly spill variables into
+memory and then reload them, an expensive business, even with two or three levels
+of caching. It is a testimonial to the quality of Intel’s engineers that the Core i7 is
+so fast, even with the constraints of this ISA. But as we saw in Chap. 4, the implementation is exceedingly complex.
+The OMAP4430 ARM represents a state-of-the-art ISA design. It has a full
+32-bit ISA. It has many registers, an instruction set that emphasizes three-register
+operations, plus a small group of LOAD and STORE instructions. All instructions
+are the same size, although the number of formats has gotten a bit out of hand.
+Still, it lends itself to a straightforward and efficient implementation. Most new
+designs tend to look like the OMAP4430 ARM architecture, but with fewer instruction formats.
+The ATmega168 AVR has a simple and fairly regular instruction set with relatively few instructions and few addressing modes. It is distinguished by having
+32 8-bit registers, rapid access to data, a way to access registers in the memory
+space, and surprisingly powerful bit-manipulation instructions. Its main claim to
+fame is that it can be implemented with a very small number of transistors, thus
+making it possible to put a large number on a die, which keeps the cost per CPU
+very low.
+
+5.6 FLOW OF CONTROL
+Flow of control refers to the sequence in which instructions are executed dynamically, that is, during program execution. In general, in the absence of
+branches and procedure calls, successively executed instructions are fetched from
+consecutive memory locations. Procedure calls cause the flow of control to be
+altered, stopping the procedure currently executing and starting the called procedure. Coroutines are related to procedures and cause similar alterations in the flow
+of control. They are useful for simulating parallel processes. Traps and interrupts
+
+SEC. 5.6
+
+405
+
+FLOW OF CONTROL
+
+also cause the flow of control to be altered when special conditions occur. All
+these topics will be discussed in the following sections.
+
+5.6.1 Sequential Flow of Control and Branches
+
+Program counter
+
+Program counter
+

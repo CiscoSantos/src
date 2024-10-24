@@ -1,0 +1,100 @@
+
+X
+0
+0
+0
+1
+
+A
+0
+0
+1
+1
+
+(d)
+
+B
+0
+1
+0
+1
+
+X
+0
+1
+1
+1
+
+(e)
+
+Figure 3-2. The symbols and functional behavior for the five basic gates.
+
+If the output signal of Fig. 3-1(b) is fed into an inverter circuit, we get another
+circuit with precisely the inverse of the NAND gate—namely, a circuit whose output
+is 1 if and only if both inputs are 1. Such a circuit is called an AND gate; its symbol and functional description are given in Fig. 3-2(d). Similarly, the NOR gate can
+be connected to an inverter to yield a circuit whose output is 1 if either or both inputs are 1 but 0 if both inputs are 0. The symbol and functional description of this
+circuit, called an OR gate, are given in Fig. 3-2(e). The small circles used as part of
+the symbols for the inverter, NAND gate, and NOR gate are called inversion bubbles. They are often used in other contexts as well to indicate an inverted signal.
+The five gates of Fig. 3-2 are the principal building blocks of the digital logic
+level. From the foregoing discussion, it should be clear that NAND and NOR gates
+require two transistors each, whereas the AND and OR gates require three each. For
+
+150
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+this reason, many computers are based on NAND and NOR gates rather than the
+more familiar AND and OR gates. (In practice, all the gates are implemented somewhat differently, but NAND and NOR are still simpler than AND and OR. ) In passing
+it is worth noting that gates may well have more than two inputs. In principle, a
+NAND gate, for example, may have arbitrarily many inputs, but in practice more
+than eight inputs is unusual.
+Although the subject of how gates are constructed belongs to the device level,
+we would like to mention the major families of manufacturing technology because
+they are referred to frequently. The two major technologies are bipolar and MOS
+(Metal Oxide Semiconductor). The major bipolar types are TTL (Transistor-Transistor Logic), which had been the workhorse of digital electronics for years, and
+ECL (Emitter-Coupled Logic), which was used when very high-speed operation
+was required. For computer circuits, MOS has now largely taken over.
+MOS gates are slower than TTL and ECL but require much less power and
+take up much less space, so large numbers of them can be packed together tightly.
+MOS comes in many varieties, including PMOS, NMOS, and CMOS. While MOS
+transistors are constructed differently from bipolar transistors, their ability to function as electronic switches is the same. Most modern CPUs and memories use
+CMOS technology, which runs on a voltage in the neighborhood of +1.5 volts.
+This is all we will say about the device level. Readers interested in pursuing their
+study of this level should consult the readings suggested on the book’s Website.
+
+3.1.2 Boolean Algebra
+To describe the circuits that can be built by combining gates, a new type of
+algebra is needed, one in which variables and functions can take on only the values
+0 and 1. Such an algebra is called a Boolean algebra, after its discoverer, the English mathematician George Boole (1815–1864). Strictly speaking, we are really
+referring to a specific type of Boolean algebra, a switching algebra, but the term
+‘‘Boolean algebra’’ is so widely used to mean ‘‘switching algebra’’ that we will not
+make the distinction.
+Just as there are functions in ‘‘ordinary’’ (i.e., high school) algebra, so are there
+functions in Boolean algebra. A Boolean function has one or more input variables
+and yields a result that depends only on the values of these variables. A simple
+function, f, can be defined by saying that f ( A) is 1 if A is 0 and f ( A) is 0 if A is 1.
+This function is the NOT function of Fig. 3-2(a).
+Because a Boolean function of n variables has only 2n possible combinations
+of input values, the function can be completely described by giving a table with 2n
+rows, each row telling the value of the function for a different combination of input
+values. Such a table is called a truth table. The tables of Fig. 3-2 are all examples
+of truth tables. If we agree to always list the rows of a truth table in numerical
+order (base 2), that is, for two variables in the order 00, 01, 10, and 11, the function
+can be completely described by the 2n -bit binary number obtained by reading the
+
+SEC. 3.1
+
+151
+
+GATES AND BOOLEAN ALGEBRA
+
+result column of the truth table vertically. Thus, NAND is 1110, NOR is 1000, AND
+is 0001, and OR is 0111. Obviously, only 16 Boolean functions of two variables
+exist, corresponding to the 16 possible 4-bit result strings. In contrast, ordinary
+algebra has an infinite number of functions of two variables, none of which can be
+described by giving a table of outputs for all possible inputs because each variable
+can take on any one of an infinite number of possible values.
+Figure 3-3(a) shows the truth table for a Boolean function of three variables:
+M = f ( A, B, C). This function is the majority logic function, that is, it is 0 if a

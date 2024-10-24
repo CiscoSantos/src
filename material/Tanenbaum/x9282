@@ -1,0 +1,100 @@
+be satisfied out of the cache.
+Action
+
+Local request
+
+Read miss
+
+Fetch data from memory
+
+Read hit
+
+Use data from local cache
+
+Write miss
+
+Update data in memory
+
+Write hit
+
+Update cache and memory
+
+Remote request
+
+Invalidate cache entry
+
+Figure 8-27. The write-through cache coherence protocol. The empty boxes indicate that no action is taken.
+
+600
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+On a write miss, the word that has been modified is written to main memory.
+The line containing the word referenced is not loaded into the cache. On a write
+hit, the cache is updated and the word is written through to main memory in addition. The essence of this protocol is that all write operations result in the word
+being written going through to memory to keep memory up to date at all times.
+Now let us look at all these actions again, but this time from the snooper’s
+point of view, shown in the right-hand column of Fig. 8-27. Let us call the cache
+performing the actions cache 1 and the snooping cache cache 2. When cache 1
+misses on a read, it makes a bus request to fetch a line from memory. Cache 2 sees
+this but does nothing. When cache 1 has a read hit, the request is satisfied locally,
+and no bus request occurs, so cache 2 is not aware of cache 1’s read hits.
+Writes are more interesting. If CPU 1 does a write, cache 1 will make a write
+request on the bus, both on misses and on hits. On all writes, cache 2 checks to see
+whether it has the word being written. If not, from its point of view this is a remote request/write miss and it does nothing. (To clarify a subtle point, note that in
+Fig. 8-27 a remote miss means that the word is not present in the snooper’s cache;
+it does not matter whether it was in the originator’s cache or not. Thus a single request may be a hit locally and a miss at the snooper, or vice versa.)
+Now suppose that cache 1 writes a word that is present in cache 2’s cache (remote request/write hit). If cache 2 does nothing, it will have stale data, so it marks
+the cache entry containing the newly modified word as being invalid. In effect, it
+removes the item from the cache. Because all caches snoop on all bus requests,
+whenever a word is written, the net effect is to update it in the originator’s cache,
+update it in memory, and purge it from all the other caches. In this way, inconsistent versions are prevented.
+Of course, cache 2’s CPU is free to read the same word on the very next cycle.
+In that case, cache 2 will read the word from memory, which is up to date. At that
+point, cache 1, cache 2, and the memory will all have identical copies of it. If either CPU does a write now, the other one’s cache will be purged, and memory will
+be updated.
+Many variations on this basic protocol are possible. For example, on a write
+hit, the snooping cache normally invalidates its entry containing the word being
+written. Alternatively, it could accept the new value and update its cache instead of
+marking it as invalid. Conceptually, updating the cache is the same as invalidating
+it followed by reading the word from memory. In all cache protocols, a choice
+must be made between an update strategy and an invalidate strategy. These protocols perform differently under different loads. Update messages carry payloads
+and are thus larger than invalidates but may prevent future cache misses.
+Another variant is loading the snooping cache on write misses. The correctness of the algorithm is not affected by loading it, only the performance. The
+question is: ‘‘What is the probability that a word just written will be written again
+soon?’’ If it is high, there is something to be said for loading the cache on write
+misses, known as a write-allocate policy. If it is low, it is better not to update on
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+601
+
+write misses. If the word is read soon, it will be loaded by the read miss anyway;
+little is gained by loading it on the write miss.
+As with many simple solutions, this one is inefficient. Every write operation
+goes to memory over the bus, so with a modest number of CPUs, the bus will still
+become a bottleneck. To keep the bus traffic within bounds, other cache protocols
+have been devised. They all have the property that not all writes go directly
+through to memory. Instead, when a cache line is modified, a bit is set inside the
+cache noting that the cache line is correct but memory is not. Eventually, such a
+dirty line has to be written back to memory, but possibly after many writes have
+been made to it. This type of protocol is known as a write-back protocol.
+The MESI Cache Coherence Protocol
+One popular write-back cache coherence protocol is called MESI, after the initials of the names of the four states (M, E, S, and I) that it uses (Papamarcos and
+Patel, 1984). It is based on the earlier write-once protocol (Goodman, 1983). The
+MESI protocol is used by the Core i7 and many other CPUs for snooping on the
+bus. Each cache entry can be in one of the following four states:
+1. Invalid
+
+– The cache entry does not contain valid data.
+
+2. Shared
+
+– Multiple caches may hold the line; memory is up to date.
+
+3. Exclusive– No other cache holds the line; memory is up to date.
+4. Modified – The entry is valid; memory is invalid; no copies exist.

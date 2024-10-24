@@ -1,0 +1,100 @@
+MOV R2,#0
+MOV R3,#4096
+LOOP: MOV R4,A(R2)
+AND R4,B(R2)
+OR R1,R4
+ADD R2,#4
+CMP R2,R3
+BLT LOOP
+
+; accumulate the OR in R1, initially 0
+; R2 = index, i, of current product: A[i] AND B[i]
+; R3 = first index value not to use
+; R4 = A[i]
+; R4 = A[i] AND B[i]
+; OR all the Boolean products into R1
+; i = i + 4 (step in units of 1 word = 4 bytes)
+; are we done yet?
+; if R2 < R3, we are not done, so continue
+
+Figure 5-18. A generic assembly program for computing the OR of Ai
+for two 1024-element arrays.
+
+AND
+
+Bi
+
+Operation of this program is straightforward. We need four registers here:
+1. R1 — Holds the accumulated OR of the Boolean product terms.
+2. R2 — The index, i, that is used to step through the arrays.
+3. R3 — The constant 4096, which is the lowest value of i not to use.
+4. R4 — A scratch register for holding each product as it is formed.
+After initializing the registers, we enter the six-instruction loop. The instruction at
+LOOP fetches Ai into R4. The calculation of the source here uses indexed mode.
+A register, R2, and a constant, the address of A, are added together and used to reference memory. The sum of these two quantities goes to the memory but is not
+stored in any user-visible register. The notation
+MOV R4,A(R2)
+
+means that the destination uses register mode with R4 as the register and the source
+uses indexed mode, with A as the offset and R2 as the register. If A has the value,
+say, 124300, the actual machine instruction for this is likely to look something like
+the one shown in Fig. 5-19.
+MOV
+
+R4
+
+R2
+
+124300
+
+Figure 5-19. A possible representation of MOV R4,A(R2).
+
+The first time through the loop, R2 is 0 (due to it being initialized that way), so
+the memory word addressed is A0 , at address 124300. This word is loaded into R4.
+The next time though the loop, R2 is 4, so the memory word addressed is A1 , at
+124304, and so on.
+As we promised earlier, here the offset in the instruction itself is the memory
+pointer and the value in the register is a small integer that is incremented during the
+
+376
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+calculation. This form requires an offset field in the instruction large enough to
+hold an address, of course, so it is less efficient than doing it the other way; however, it is nevertheless frequently the best way.
+
+5.4.7 Based-Indexed Addressing
+Some machines have an addressing mode in which the memory address is
+computed by adding up two registers plus an (optional) offset. Sometimes this
+mode is called based-indexed addressing. One of the registers is the base and the
+other is the index. Such a mode would have been useful here. Outside the loop we
+could have put the address of A in R5 and the address of B in R6. Then we could
+have replaced the instruction at LOOP and its successor with
+LOOP:
+
+MOV R4,(R2+R5)
+AND R4,(R2+R6)
+
+If there were an addressing mode for indirecting through the sum of two registers
+with no offset, that would be ideal. Alternatively, even an instruction with an 8-bit
+offset would have been an improvement over the original code since we could set
+both offsets to 0. If, however, the offsets are always 32 bits, then we have not
+gained anything by using this mode. In practice, however, machines that have this
+mode usually have a form with an 8-bit or 16-bit offset.
+
+5.4.8 Stack Addressing
+We have already noted that making machine instructions as short as possible is
+highly desirable. The ultimate limit in reducing address lengths is having no addresses at all. As we saw in Chap. 4, zero-address instructions, such as IADD, are
+possible in conjunction with a stack. In this section we will look at stack addressing more closely.
+Reverse Polish Notation
+It is an ancient tradition in mathematics to put the operator between the operands, as in x + y, rather than after the operands, as in x y +. The form with the operator ‘‘in’’ between the operands is called infix notation. The form with the operator after the operands is called postfix or reverse Polish notation, after the Polish
+logician J. Lukasiewicz (1958), who studied the properties of this notation.
+Reverse Polish notation has a number of advantages over infix for expressing
+algebraic formulas. First, any formula can be expressed without parentheses. Second, it is convenient for evaluating formulas on computers with stacks. Third, infix
+operators have precedence, which is arbitrary and undesirable. For example, we
+
+SEC. 5.4
+
+377

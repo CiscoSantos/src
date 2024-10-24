@@ -1,0 +1,100 @@
+
+EAX = I
+EBX = J
+ECX = K
+EAX = I * I
+EBX = J * J
+ECX = K * K
+EAX = I * I + J * J
+EAX = I * I + J * J + K * K
+branch to DONE
+
+5
+6
+6
+2
+3
+3
+2
+2
+5
+
+100
+105
+111
+117
+119
+122
+125
+127
+129
+
+Figure 7-6. The instruction location counter (ILC) keeps track of the address
+where the instructions will be loaded in memory. In this example, the statements
+prior to MARIA occupy 100 bytes.
+
+Pass one of most assemblers uses at least three internal tables: the symbol table, the pseudoinstruction table, and the opcode table. If needed, a literal table is
+also kept. The symbol table has one entry for each symbol, as illustrated in
+Fig. 7-7. Symbols are defined either by using them as labels or by explicit definition (e.g., EQU). Each symbol table entry contains the symbol itself (or a pointer to
+it), its numerical value, and sometimes other information. This additional information may include
+
+SEC. 7.3
+
+531
+
+THE ASSEMBLY PROCESS
+
+1. The length of data field associated with symbol.
+2. The relocation bits. (Does the symbol change value if the program is
+loaded at a different address than the assembler assumed?)
+3. Whether or not the symbol is to be accessible outside the procedure.
+
+Symbol
+
+Value
+
+MARIA
+
+Other information
+
+100
+
+ROBERTA
+
+111
+
+MARILYN
+
+125
+
+STEPHANY
+
+129
+
+Figure 7-7. A symbol table for the program of Fig. 7-6.
+
+The opcode table contains at least one entry for each symbolic opcode
+(mnemonic) in the assembly language. Figure 7-8 shows part of an opcode table.
+Each entry contains the symbolic opcode, two operands, the opcode’s numerical
+value, the instruction length, and a type number that separates the opcodes into
+groups depending on the number and kind of operands.
+
+Opcode
+
+First
+operand
+
+Second
+operand
+
+AAA
+
+—
+
+—
+
+Hex
+opcode
+
+Instruction
+length

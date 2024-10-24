@@ -1,0 +1,100 @@
+REQ#
+
+GNT#
+
+PCI
+arbiter
+
+REQ#
+
+To use the PCI bus, a device must first acquire it. PCI bus arbitration uses a
+centralized bus arbiter, as shown in Fig. 3-53. In most designs, the bus arbiter is
+built into one of the bridge chips. Every PCI device has two dedicated lines running from it to the arbiter. One line, REQ#, is used to request the bus. The other
+line, GNT#, is used to receive bus grants. Note: REQ# is PCI-speak for REQ.
+
+PCI
+device
+
+Figure 3-53. The PCI bus uses a centralized bus arbiter.
+
+To request the bus, a PCI device (including the CPU) asserts REQ# and waits
+until it sees its GNT# line asserted by the arbiter. When that event happens, the device can use the bus on the next cycle. The algorithm used by the arbiter is not defined by the PCI specification. Round-robin arbitration, priority arbitration, and
+other schemes are all allowed. Clearly, a good arbiter will be fair, so as not to let
+some devices wait forever.
+A bus grant is for only one transaction, although the length of this transaction
+is theoretically unbounded. If a device wants to run a second transaction and no
+other device is requesting the bus, it can go again, although often one idle cycle between transactions has to be inserted. However, under special circumstances, in
+
+220
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+the absence of competition for the bus, a device can make back-to-back transactions without having to insert an idle cycle. If a bus master is making a very long
+transfer and some other device has requested the bus, the arbiter can negate the
+GNT# line. The current bus master is expected to monitor the GNT# line, so when it
+sees the negation, it must release the bus on the next cycle. This scheme allows
+very long transfers (which are efficient) when there is only one candidate bus master but still gives fast response to competing devices.
+PCI Bus Signals
+The PCI bus has a number of mandatory signals, shown in Fig. 3-54(a), and a
+number of optional signals, shown in Fig. 3-54(b). The remainder of the 120 or
+184 pins are used for power, ground, and related miscellaneous functions and are
+not listed here. The Master (initiator) and Slave (target) columns tell who asserts
+the signal on a normal transaction. If the signal is asserted by a different device
+(e.g., CLK), both columns are left blank.
+Let us now look briefly at each of the PCI bus signals. We will start with the
+mandatory (32-bit) signals, then move on to the optional (64-bit) signals. The CLK
+signal drives the bus. Most of the other signals are synchronous with it. A PCI bus
+transaction begins at the falling edge of CLK, which is in the middle of the cycle.
+The 32 AD signals are for the address and data (for 32-bit transactions). Generally, during cycle 1 the address is asserted and during cycle 3 the data are asserted.
+The PAR signal is a parity bit for AD. The C/BE# signal is used for two different
+things. On cycle 1, it contains the bus command (read 1 word, block read, etc.).
+On cycle 2 it contains a bit map of 4 bits, telling which bytes of the 32-bit word are
+valid. Using C/BE# it is possible to read or write any 1, 2, or 3 bytes, as well as an
+entire word.
+The FRAME# signal is asserted by the master to start a bus transaction. It tells
+the slave that the address and bus commands are now valid. On a read, usually
+IRDY# is asserted at the same time as FRAME#. It says the master is ready to accept
+incoming data. On a write, IRDY# is asserted later, when the data are on the bus.
+The IDSEL signal relates to the fact that every PCI device must have a 256-byte
+configuration space that other devices can read (by asserting IDSEL). This configuration space contains properties of the device. The plug-and-play feature of some
+operating systems uses the configuration space to find out what devices are on the
+bus.
+Now we come to signals asserted by the slave. The first of these, DEVSEL#,
+announces that the slave has detected its address on the AD lines and is prepared to
+engage in the transaction. If DEVSEL# is not asserted within a certain time limit,
+the master times out and assumes the device addressed is either absent or broken.
+The second slave signal is TRDY#, which the slave asserts on reads to announce
+that the data are on the AD lines and on writes to announce that it is prepared to
+accept data.
+
+SEC. 3.6
+
+221
+
+EXAMPLE BUSES
+
+Signal
+
+Lines
+
+Master
+
+Slave
+×
+
+Description
+
+CLK
+
+1
+
+AD
+
+32
+
+×
+
+Clock (33 or 66 MHz)
+

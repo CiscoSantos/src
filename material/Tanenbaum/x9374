@@ -1,0 +1,100 @@
+here.
+
+SEC. C.8
+
+EXAMPLES
+
+739
+
+In the reverse print program shown in Fig. C-17(b), the first line includes the
+usual system call numbers. On line 3, a dummy value is pushed onto the stack,
+and on line 4, the base pointer, BP, is made to point to the current top of stack. The
+program is going to print ASCII characters one by one, thus the numerical value
+PUTCHAR is pushed onto the stack. Note that BP points to the character to be
+printed when a SYS call is made.
+Line 2, 6 and 7 prepare the registers DI, AL and CX for the repeatable SCASB
+instruction. The count register and the destination index are loaded in a similar
+way as in the string copy routine, but the value of AL is the new line character,
+instead of the value 0. In this way, the SCASB instruction will compare the character values of the string str to \n instead of to 0, and set the zero flag whenever it is
+found.
+The REP SCASB increments the DI register, so, after a hit, the destination index
+points at the zero character following the new line. On line 12, DI is decremented
+by two to have it point to the last letter of the word.
+If the string is scanned in reverse order and printed character by character, we
+have obtained our goal, so on line 10 the direction flag is set to reverse the adjustment of the index registers in the string instructions. Now the LODSB on line 14
+copies the character in AL, and on line 15 this character is put just next to the
+PUTCHAR on the stack, so the SYS instruction prints it.
+The instructions on lines 18 and 19 print an additional new line and the program closes with an EXIT call in the usual way.
+The current version of the program contains a bug. It can be found if the program is traced step by step.
+The command /str will put the string str in the tracer data field. Since the
+numerical value of the data address is also given, we can find out how the index
+registers run through the data with respect to the position of the string.
+The bug, however, is encountered only after hitting the return many times. By
+using the tracer commands we can get to the problem faster. Start the tracer and
+give the command 13 to put us in the middle of the loop. If we now give the command b we set a breakpoint on this line 15. If we give two new lines, then we see
+that the final letter e is printed in the output field. The r command will keep the
+tracer running until either a breakpoint or the end of the process is encountered. In
+this way, we can run through the letters by giving the r command repeatedly until
+we are close to the problem. From this point, we can run the tracer at one step at a
+time until we see what happens at the critical instructions.
+We can also put the breakpoint at a specific line, but then we must keep in
+mind, that the file ../syscalnr is included, which causes the line numbers to be offset by 20. Consequently, the breakpoint on line 16 can be set by the command
+36b. This is not an elegant solution, so it is much better to use the global label
+start on line 2 before the instruction and give the command /start+14b, which puts
+the breakpoint in the same place without having to keep track of the size of the
+included file.
+
+740
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+C.8.6 Dispatch Tables
+In several programming languages, there exist case or switch statements to
+select a jump from several alternatives according to some numerical value of a
+variable. Sometimes, such multiway branches are also needed in assembly language programs, too. Think, for instance, of a set of system call subroutines combined in a single SYS trap routine. The program jumptbl.s, shown in Fig. C-18
+shows how such a multi-branch switch can be programmed in 8088 assembler.
+The program starts by printing the string whose label is strt, inviting the user to
+type an octal digit (lines 4 through 7). Then a character is read from standard input
+(lines 8 and 9). If the value in AX is less than 5, the program interprets it as an end
+of file marker and jumps to the label 8 on line 22 to exit with a status code of 0.
+If end of file has not been encountered, the incoming character, in AL, is inspected. Any character less than the digit 0 is considered to be white space and is
+ignored by the jump on line 13, which retrieves another character. Any character
+over digit 9 is considered to be incorrect input. On line 16, it is mapped onto the
+ASCII colon character, which is the successor of digit 9 in the ASCII character
+sequence.
+Thus, on line 17 we have a value in AX between digit 0 and the colon. This
+value is copied into BX. On line 18, the AND instruction masks off all but the loworder four bits, which leaves the number between 0 and 10 (due to the fact that
+ASCII 0 is 0x30). Since we are going to index into a table of words, rather than
+bytes, the value in BX is multiplied by two using the left shift on line 19.
+On line 20, we have a call instruction. The effective address is found by
+adding the value of BX to the numerical value of label tbl, and the contents of this
+composite address are loaded into the program counter, PC.
+This program chooses one out of ten subroutines according to a character
+which is fetched from standard input. Each of those subroutines pushes the
+address of some message onto the stack and then jumps to a PRINTF system subroutine call which is shared by all of them.
+In order to understand what is happening, we need to be aware that the JMP
+and CALL instructions load some text segment address in PC. Such an address is
+just a binary number, and during the assembly process all addresses are replaced
+by their binary values. Those binary values can be used to initialize an array in the
+data segment, and this is done in line 50. Thus, the array starting at tbl contains the
+starting addresses of rout0, rout1, rout2, and so on, two bytes per address. The
+need for 2-byte addresses explains why we needed the 1-bit shift on line 19. A table of this type is often called a dispatch table.
+How those routines work can be seen in the erout routine on lines 43 through
+48. This routine handles the case of an out-of-range digit. First, the address of the
+message (in AX) is pushed onto the stack on line 43. Then the number of the
+PRINTF system call is pushed onto the stack. After that, the system call is made,
+the stack is cleaned up, and the routine returns. The other nine routines, rout0
+
+SEC. C.8
+
+#include "../syscalnr.h"
+.SECT .TEXT
+jumpstrt:
+PUSH strt
+MOV BP,SP
+PUSH PRINTF
+SYS
+PUSH GETCHAR
+1: SYS

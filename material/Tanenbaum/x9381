@@ -1,0 +1,100 @@
+carry select, 165–166
+full, 165–166
+half, 164–165
+rippler carry, 165
+Additive inverse, 390
+Address, 74, 694
+Address decoding, 233
+Address modes, 371
+Address space, 439
+Address-space identifier, 461
+749
+
+750
+
+INDEX
+
+Algorithm, 8
+Allocation/renaming unit, 327
+Alpha, 14, 26
+ALU (see Arithmetic Logic Unit)
+AMBA (see Advanced Microcontroller Bus
+Architecture)
+Amdahl’s law, 649
+American Standard Code for Information
+Interchange, 138
+Amplitude modulation, 128
+Amsterdam compiler kit, 716
+Analytical engine, 15
+APIC (see Advanced Programmable Interrupt
+Controller)
+Apple II, 24
+Apple Lisa, 14
+Apple Macintosh, 24
+Apple Newton, 14, 45
+Application layer, 654
+Application programming interface, 487
+Application-level shared memory, 640–646
+Application-specific integrated circuit, 578
+Architecture, computer, 8, 60
+Arduino, 34
+Argument, 711
+Arithmetic circuit, 163–166
+Arithmetic logic unit, 6, 56–57, 166–167
+ARM,
+addressing, 384
+bi-endianness, 354
+data types, 361
+instruction formats, 368–370
+instructions, 400–402
+introduction, 45–47
+ISA level, 354–356
+microarchitecture of OMAP4430, 329–334
+virtual memory, 460–462
+ARM (see also OMAP4430)
+ARM addressing modes, 385
+ARM data types, 361
+ARM instruction formats, 368–370
+ARM instructions, 400–402
+ARM v7, 346–347
+ARM virtual memory, 460–462
+As88, 716–720
+ASCII (see American Standard Code for
+Information Interchange)
+ASIC (see Application Specific Integrated Circuit)
+Assembler, 7, 518, 692, 715–721
+8088, 715
+
+Assembler directive, 522
+Assembler pass one, 530–534
+Assembler pass two, 534–536
+Assembly language, 518–529, 691–745
+example, 693–694
+Assembly-language level, 517–550
+Assembly-language macro, 524–529
+Assembly-language program, 716
+Assembly-language statement, 520–521
+Assembly process, 529–536
+Asserted signal, 178
+Associative memory, 454, 535
+Asymmetric DSL, 130
+Asynchronous bus, 194–196
+AT attachment disk, 92
+ATA packet interface, 92
+ATA-3 disk, 92
+Atanasoff, John, 16
+ATAPI-4 disk, 92
+ATAPI-5 disk, 92
+ATmega168, 212–214
+ISA level, 356–358
+addressing modes, 384–385
+data types, 361–362
+instruction formats, 370–371
+instructions, 402
+microarchitecture, 334–336
+Atmel ATmega168 (seeATmega168)
+Attraction memory, 615
+Auto decrement addressing, 704
+Auto increment addressing, 704
+Auxiliary carry flag, 708
+AVR, 47–49

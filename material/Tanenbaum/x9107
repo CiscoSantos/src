@@ -1,0 +1,100 @@
+
+Predict
+branch
+one more
+time
+
+No
+branch
+
+11
+
+Branch
+
+Predict
+branch
+
+No branch
+
+Figure 4-42. A 2-bit finite-state machine for branch prediction.
+
+This is not our first FSM. Figure 4-28 was also an FSM. In fact, all of our
+microprograms can be regarded as FSMs, since each line represents a specific state
+the machine can be in, with well-defined transitions to a finite set of other states.
+FSMs are very widely used in all aspects of hardware design.
+So far, we have assumed that the target of each conditional branch was known,
+typically either as an explicit address to branch to (contained within the instruction
+itself), or as a relative offset from the current instruction (i.e., a signed number to
+add to the program counter). Often this assumption is valid, but some conditional
+branch instructions compute the target address by doing arithmetic on registers,
+and then going there. Even if the FSM of Fig. 4-42 accurately predicts the branch
+will be taken, such a prediction is of no use if the target address is unknown. One
+way of dealing with this situation is to store the actual address branched to the last
+time in the history table, as shown in Fig. 4-41(c). In this way, if the table says that
+the last time the branch at address 516 was taken it went to address 4000, if the
+prediction is now for ‘‘branch,’’ the working assumption will be a branch to 4000
+again.
+A different approach to branch prediction is to keep track of whether the last k
+conditional branches encountered were taken, irrespective of which instructions
+they were. This k-bit number, kept in the branch history shift register, is then
+compared in parallel to all the entries of a history table with a k-bit key and, if a hit
+occurs, the prediction found there used. Somewhat surprisingly, this technique
+works quite well in actual practice.
+
+SEC. 4.5
+
+IMPROVING PERFORMANCE
+
+315
+
+Static Branch Prediction
+All of the branch prediction techniques discussed so far are dynamic, that is,
+are carried out at run time while the program is running. They also adapt to the
+program’s current behavior, which is good. The down side is that they require specialized and expensive hardware and a great deal of chip complexity.
+A different way to go is to have the compiler help out. When the compiler sees
+a statement like
+for (i = 0; i < 1000000; i++) { ... }
+
+it knows very well that the branch at the end of the loop will be taken nearly all the
+time. If only it had a way to tell the hardware, a lot of effort could be saved.
+Although this is an architectural change (and not just an implementation issue),
+some machines, such as the UltraSPARC III, have a second set of conditional
+branch instructions, in addition to the regular ones (which are needed for backward
+compatibility). The new ones contain a bit in which the compiler can specify that
+it thinks the branch will be taken (or not taken). When one of these is encountered,
+the fetch unit just does what it has been told. Furthermore, there is no need to
+waste precious space in the branch history table for these instructions, thus reducing conflicts there.
+Finally, our last branch prediction technique is based on profiling (Fisher and
+Freudenberger, 1992). This, too, is a static technique, but instead of having the
+compiler try to figure out which branches will be taken and which will not, the program is actually run (typically on a simulator) and the branch behavior captured.
+This information is fed into the compiler, which then uses the special conditional
+branch instructions to tell the hardware what to do.
+
+4.5.3 Out-of-Order Execution and Register Renaming
+Most modern CPUs are both pipelined and superscalar, as shown in Fig. 2-6.
+What this generally means is that a fetch unit pulls instruction words out of memory before they are needed in order to feed a decode unit. The decode unit issues
+the decoded instructions to the proper functional units for execution. In some
+cases it may break individual instructions into micro-ops before issuing them, depending on what the functional units can do.
+Clearly, the machine design is simplest if all instructions are executed in the
+order they are fetched (assuming for the moment that the branch prediction algorithm never guesses wrong). However, in-order execution does not always give
+optimal performance due to dependences between instructions. If an instruction
+needs a value computed by the previous instruction, the second one cannot begin
+executing until the first one has produced the needed value. In this situation (a
+RAW dependence), the second instruction has to wait. Other kinds of dependences
+also exist, as we will soon see.
+
+316
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+In an attempt to get around these problems and produce better performance,
+some CPUs allow dependent instructions to be skipped over, to get to future instructions that are not dependent. Needless to say, the internal instruction-scheduling algorithm used must deliver the same effect as if the program were executed in
+the order written. We will now demonstrate how instruction reordering works
+using a detailed example.
+To illustrate the nature of the problem, we will start with a machine that always
+issues instructions in program order and also requires them to complete execution
+in program order. The significance of the latter will become clear later.
+Our example machine has eight registers visible to the programmer, R0
+through R7. All arithmetic instructions use three registers: two for the operands

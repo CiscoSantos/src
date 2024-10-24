@@ -1,0 +1,100 @@
+
+I
+J
+N
+
+DD
+DD
+DD
+
+3
+4
+0
+
+; reserve 4 bytes initialized to 3
+; reserve 4 bytes initialized to 4
+; reserve 4 bytes initialized to 0
+
+Figure 7-1. Computation of N = I + J on the x86.
+
+Several assemblers exist for the Intel family (i.e., x86), each with a different
+syntax. In this chapter we will use the Microsoft MASM assembly language for
+our example. There are many assemblers for the ARM, but the syntax is comparable to the x86 assembler, so one example should siffice.
+
+SEC. 7.1
+
+INTRODUCTION TO ASSEMBLY LANGUAGE
+
+521
+
+Assembly language statements have up to four parts: first, a label field, second,
+an operation (opcode) field, third, an operand field, and fourth, a comments field.
+None of these is mandatory. Labels, which are used to provide symbolic names for
+memory addresses, are needed on executable statements so that the statements can
+be branched to. Additionally, they are needed for data words to permit the data
+stored there to be accessible by symbolic name. If a statement is labeled, the label
+(usually) begins in column 1.
+The example of Fig. 7-1 has four labels: FORMULA, I, J, and N. The MASM
+requires colons on code labels but not on data labels. There is nothing fundamental about this. Other assemblers may have other requirements. Nothing in the underlying architecture suggests one choice or the other. One advantage of the colon
+notation is that with it a label can appear by itself on a line, with the opcode in column 1 of the next line. This style is convenient for compilers to generate. Without
+the colon, there would be no way to tell a label on a line all by itself from an opcode on a line all by itself. The colon eliminates this potential ambiguity.
+It is an unfortunate characteristic of some assemblers that labels are restricted
+to six or eight characters. In contrast, most high-level languages allow the use of
+arbitrarily long names. Long, well-chosen names make programs much more readable and understandable by other people.
+Each machine has some registers, so they need names. The x86 registers have
+names like EAX, EBX, ECX, and so on.
+The opcode field contains either a symbolic abbreviation for the opcode—if
+the statement is a symbolic representation for a machine instruction—or a command to the assembler itself. The choice of an appropriate name is just a matter of
+taste, and different assembly language designers often make different choices. The
+designers of the MASM assembler decided to use MOV for both loading a register
+from memory and storing a register into memory but they could have chosen MOVE
+or LOAD and STORE.
+Assembly progams often need to reserve space for variables. The MASM assembly language designers chose DD (Define Double), since a word on the 8088
+was 16 bits.
+The operand field of an assembly language statement is used to specify the addresses and registers used as operands by the machine instruction. The operand
+field of an integer addition instruction tells what is to be added to what. The operand field of a branch instruction tells where to branch to. Operands can be registers, constants, memory locations, and so on.
+The comments field provides a place for programmers to put helpful explanations of how the program works for the benefit of other programmers who may
+subsequently use or modify the program (or for the benefit of the original programmer a year later). An assembly language program without such documentation is nearly incomprehensible to all programmers, frequently including the
+author as well. The comments field is solely for human consumption; it has no effect on the assembly process or on the generated program.
+
+522
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+7.1.4 Pseudoinstructions
+In addition to specifying which machine instructions to execute, an assembly
+language program can also contain commands to the assembler itself, for example,
+asking it to allocate some storage or to eject to a new page on the listing. Commands to the assembler itself are called pseudoinstructions or sometimes assembler directives. We have already seen a typical pseudoinstruction in Fig. 7-1(a):
+DD. Some other pseudoinstructions are listed in Fig. 7-2. These are taken from the
+Microsoft MASM assembler for the x86.
+Pseudoinstruction
+
+Meaning
+
+SEGMENT
+
+Start a new segment (text, data, etc.) with certain attributes
+
+ENDS
+
+End the current segment
+
+ALIGN
+
+Control the alignment of the next instruction or data
+
+EQU
+
+Define a new symbol equal to a given expression
+
+DB
+
+Allocate storage for one or more (initialized) bytes
+
+DW
+
+Allocate storage for one or more (initialized) 16-bit (word) data items
+
+DD

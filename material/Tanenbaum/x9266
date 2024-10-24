@@ -1,0 +1,100 @@
+country) or wireless Internet (IEEE 802.11, also called WiFi) built in; future ones
+may include all of these. As devices take on more and more functionality, with
+watches becoming GPS-based maps and eyeglasses becoming radios, the need for
+heterogeneous multiprocessors will only increase.
+
+572
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Fairly soon, large chips will have tens of billions of transistors. Such chips are
+far too large to design one gate and one wire at a time. The human effort required
+would render the chips obsolete by the time they were finished. The only feasible
+approach is to use cores (essentially libraries) containing fairly large subassemblies
+and to place and interconnect them on the chip as needed. Designers then have to
+determine which CPU core to use for the control processor and which special-purpose processors to throw in to help it. Putting more of the burden on software running on the control processor makes the system slower but yields a smaller (and
+cheaper) chip. Having multiple special-purpose processors for audio and video
+processing takes up chip area, increasing the cost, but produces higher performance
+at a lower clock rate, which means lower power consumption and less heat dissipation. Thus chip designers increasingly contend with these macroscopic trade-offs
+rather than worrying about where to place each transistor.
+Audiovisual applications are very data intensive. Huge amounts of data have
+to be processed quickly, so typically 50% to 75% of the chip area is devoted to
+memory in one form or another, and the amount is rising. The design issues here
+are numerous. How many levels of cache should be used? Should the cache(s) be
+split or unified? How big should each cache be? How fast should each be? Should
+some actual memory go on the chip, too? Should it be SRAM or SDRAM? The
+answers to each of these questions have major implications for the performance,
+energy consumption, and heat dissipation of the chip.
+Besides design of the processors and memory system, another issue of considerable consequence is the communication system—how do all the cores communicate with each other? For small systems, a single bus will usually do the trick, but
+for larger ones it rapidly becomes a bottleneck. Often the problem can be solved
+by going to multiple buses or possibly a ring from core to core. In the latter case,
+arbitration is handled by passing a small packet called a token around the ring. To
+transmit, a core must first capture the token. When it is done, it puts the token
+back on the ring so it can continue circulating. This protocol prevents collisions on
+the ring.
+As an example of an on-chip interconnect, look at the IBM CoreConnect, illustrated in Fig. 8-13. It is an architecture for connecting cores on a single-chip
+heterogeneous multiprocessor, especially complete system-on-a-chip designs. In a
+sense, CoreConnect is to one-chip multiprocessors what the PCI bus was to the
+Pentium—the glue that holds all the parts together. (With modern Core i7 systems,
+PCIe is the glue, but it is a point-to-point network without a shared bus like PCI.)
+However, unlike the PCI bus, CoreConnect was designed without any requirements
+to be backward compatible with legacy equipment or protocols and without the
+constraints of board-level buses, such as limits on the number of pins the edge connector can have.
+CoreConnect consists of three buses. The processor bus is a high-speed, synchronous, pipelined bus with 32, 64, or 128 data lines clocked at 66, 133, or 183
+MHz. The maximum throughput is thus 23.4 Gbps (vs. 4.2 Gbps for the PCI bus).
+
+SEC. 8.1
+
+573
+
+ON-CHIP PARALELLISM
+
+Control
+CPU
+
+Other
+CPU
+
+Fast
+I/O
+Device
+
+Device
+register
+bus
+
+I/O
+device
+
+I/O
+device
+
+Arbiter
+
+Bus
+bridge
+Peripheral bus
+
+Processor bus
+Memory
+
+Figure 8-13. An example of the IBM CoreConnect architecture.
+
+The pipelining features allow cores to request the bus while a transfer is going on,
+and allow different cores to use different lines at the same time, similar to the PCI
+bus. The processor bus is optimized for short block transfers. It is intended to
+connect fast cores, such as CPUs, MPEG-2 decoders, high-speed networks, and
+similar items.
+Stretching the processor bus over the entire chip would reduce its performance,
+so a second bus is present for low-speed I/O devices, such as UARTs, timers, USB
+controllers, serial I/O devices, and so forth. This peripheral bus has been designed to simplify interfacing 8-, 16-, and 32-bit peripherals to it using no more
+than a few hundred gates. It, too, is a synchronous bus, with a maximum throughput of 300 Mbps. The two buses are connected by a bridge, not unlike the bridges
+that were used to connect the PCI and ISA buses in PCs until the ISA bus was
+phased out a number of years ago.
+The third bus is the device register bus, a very low-speed, asynchronous,
+handshaking bus used to allow the processors to access the device registers of all
+the peripherals in order to control the corresponding devices. It is intended for
+infrequent transfers of only a few bytes at a time.
+By providing a standard on-chip bus, interface, and framework, IBM hopes to

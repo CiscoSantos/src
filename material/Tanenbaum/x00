@@ -1,0 +1,100 @@
+PREFACE
+
+The first five editions of this book were based on the idea that a computer can
+be regarded as a hierarchy of levels, each one performing some well-defined function. This fundamental concept is as valid today as it was when the first edition
+came out, so it has been retained as the basis for the sixth edition. As in the first
+five editions, the digital logic level, the microarchitecture level, the instruction set
+architecture level, the operating-system machine level, and the assembly language
+level are all discussed in detail.
+Although the basic structure has been maintained, this sixth edition does contain many changes, both small and large, that bring it up to date in the rapidly
+changing computer industry. For example, the example machines used have been
+brought up to date. The current examples are the Intel Core i7, the Texas Instrument OMAP4430, and the Atmel ATmega168. The Core i7 is an example of a
+popular CPU used on laptops, desktops, and server machines. The OMAP4430 is
+an example of a popular ARM-based CPU, widely used in smartphones and tablets.
+Although you have probably never heard of the ATmega168 microcontroller,
+you have probably interacted with one many times. The AVR-based ATmega168
+microcontroller is found in many embedded systems, ranging from clock radios to
+microwave ovens. The interest in embedded systems is surging, and the
+ATmega168 is widely used due to its extremely low cost (pennies), the wealth of
+software and peripherals for it, and the large number of programmers available.
+The number of ATmega168s in the world certainly exceeds the number of Pentium
+and Core i3, i5, and i7 CPUs by orders of magnitude. The ATmega168s is also the
+processor found in the Arduino single-board embedded computer, a popular
+xix
+
+xx
+
+PREFACE
+
+hobbyist system designed at an Italian university to cost less than dinner at a pizza
+restaurant.
+Over the years, many professors teaching from the course have repeatedly
+asked for material on assembly language programming. With the sixth edition,
+that material is now available on the book’s Website (see below), where it can be
+easily expanded and kept evergreen. The assembly language chosen is the 8088
+since it is a stripped-down version of the enormously popular iA32 instruction set
+used in the Core i7 processor. We could have used the ARM or AVR instruction set
+or some other ISA almost no one has ever heard of, but as a motivational tool, the
+8088 is a better choice since large numbers of students have an 8088-compatible
+CPU at home. The full Core i7 is far too complex for students to understand in
+detail. The 8088 is similar but much simpler.
+In addition, the Core i7, which is covered in great detail in this edition of the
+book, is capable of running 8088 programs. However, since debugging assembly
+code is very difficult, we have provided a set of tools for learning assembly language programming, including an 8088 assembler, a simulator, and a tracer. These
+tools are provided for Windows, UNIX, and Linux. The tools are on the book’s
+Website.
+The book has become longer over the years (the first edition was 443 pages;
+this one is 769 pages). Such an expansion is inevitable as a subject develops and
+there is more known about it. As a result, when the book is used for a course, it
+may not be possible to finish it in a single course (e.g., in a trimester system). A
+possible approach would be to do all of Chaps. 1, 2, and 3, the first part of Chap. 4
+(up through and including Sec. 4.4), and Chap. 5 as a bare minimum. The remaining time could be filled with the rest of Chap. 4, and parts of Chaps. 6, 7, and 8,
+depending on the interests of the instructor and students.
+A chapter-by-chapter rundown of the major changes since the fifth edition follows. Chapter 1 still contains an historical overview of computer architecture,
+pointing out how we got where we are now and what the milestones were along the
+way. Many students will be amazed to learn that the most powerful computers in
+the world in the 1960s, which cost millions of U.S. dollars, had far less than 1 percent of the computing power in their smartphones. Today’s enlarged spectrum of
+computers that exist is discussed, including FPGAs, smartphones, tablets, and
+game consoles. Our three new example architectures (Core i7, OMAP4430, and
+ATmega168) are introduced.
+In Chapter 2, the material on processing styles has expanded to include dataparallel processors including graphics processing units (GPUs). The storage landscape has been expanded to include the increasingly popular flash-based storage
+devices. New material has been added to the input/output section that details modern game controllers, including the Wiimote and the Kinect as well as the touch
+screens used on smartphones and tablets.
+Chapter 3 has undergone revision in various places. It still starts at the beginning, with how transistors work, and builds up from there so that even students
+
+PREFACE
+
+xxi
+
+with no hardware background at all will be able to understand in principle how a
+modern computer works. We provide new material on field-programmable gate
+arrays (FPGAs), programmable hardware fabrics that bring true large-scale gatelevel design costs down to where they are widely used in the classroom today. The
+three new example architectures are described here at a high level.
+Chapter 4 has always been popular for explaining how a computer really
+works, so most of it is unchanged since the fifth edition. However, there are new
+sections discussing the microarchitecture level of the Core i7, the OMAP4430, and
+the ATmega168.
+Chapters 5 and 6 have been updated using the new example architectures, in
+particular with new sections describing the ARM and AVR instruction sets. Chapter 6 uses Windows 7 rather than Windows XP as an example.
+Chapter 7, on assembly language programming, is largely unchanged from the
+fifth edition.
+Chapter 8 has undergone many revisions to reflect new developments in the
+parallel computing arena. New details on the Core i7 multiprocessor architecture
+are included, and the NVIDIA Fermi general-purpose GPU architecture is
+described in detail. Finally, the BlueGene and Red Storm supercomputer sections
+have been updated to reflect recent upgrades to these enormous machines.
+Chapter 9 has changed. The suggested readings have been moved to the Website, so the new Chap. 9 contains only the references cited in the book, many of
+which are new. Computer organization is a dynamic field.
+Appendices A and B are unchanged since last time. Binary numbers and floating-point numbers haven’t changed much in the past few years. Appendix C,
+about assembly language programming, was written by Dr. Evert Wattel of the
+Vrije Universiteit, Amsterdam. Dr. Wattel has had many years of experience teaching students using these tools. Our thanks to him for writing this appendix. It is
+largely unchanged since the fifth edition, but the tools are now on the Website
+rather than on a CD-ROM included with the book.
+In addition to the assembly language tools, the Website also contains a graphical simulator to be used in conjunction with Chap. 4. This simulator was written
+by Prof. Richard Salter of Oberlin College. Students can use it to help grasp the
+principles discussed in this chapter. Our thanks to him for providing this software.
+The Website, with the tools and so on, is located at
+http://www.pearsonhighered.com/tanenbaum
+From there, click on the Companion Website for this book and select the page you
+are looking. The student resources include:
+* the assembler/tracer software

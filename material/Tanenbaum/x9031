@@ -1,0 +1,100 @@
+BLOCK
+
+Figure 3-42. A block transfer.
+
+Other kinds of bus cycles also exist. For example, on a multiprocessor system
+with two or more CPUs on the same bus, it is often necessary to make sure that
+only one CPU at a time uses some critical data structure in memory. A typical way
+to arrange this is to have a variable in memory that is 0 when no CPU is using the
+data structure and 1 when it is in use. If a CPU wants to gain access to the data
+structure, it must read the variable, and if it is 0, set it to 1. The trouble is, with
+some bad luck, two CPUs might read it on consecutive bus cycles. If each one sees
+that the variable is 0, then each one sets it to 1 and thinks that it is the only CPU
+using the data structure. This sequence of events leads to chaos.
+To prevent this situation, multiprocessor systems often have a special
+read-modify-write bus cycle that allows any CPU to read a word from memory,
+inspect and modify it, and write it back to memory, all without releasing the bus.
+
+200
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+This type of cycle prevents competing CPUs from being able to use the bus and
+thus interfere with the first CPU’s operation.
+Another important kind of bus cycle is for handling interrupts. When the CPU
+commands an I/O device to do something, it usually expects an interrupt when the
+work is done. The interrupt signaling requires the bus.
+Since multiple devices may want to cause an interrupt simultaneously, the
+same kind of arbitration problems are present here that we had with ordinary bus
+cycles. The usual solution is to assign priorities to devices and use a centralized
+arbiter to give priority to the most time-critical devices. Standard interrupt interfaces exist and are widely used. In Intel-processor-based PCs, the chipset incorporates an 8259A interrupt controller, illustrated in Fig. 3-43.
+INT
+INTA
+
+CPU
+
+RD
+WR
+A0
+CS
+
+8259A
+Interrupt
+controller
+
+D0-D7
+
+IR0
+IR1
+IR2
+IR3
+IR4
+IR5
+IR6
+IR7
+
+Clock
+Keyboard
+
+Disk
+Printer
+
+VCC
+
+Figure 3-43. Use of the 8259A interrupt controller.
+
+Up to eight 8259A I/O controllers can be directly connected to the eight IRx
+(Interrupt Request) inputs to the 8259A. When any of these devices wants to cause
+an interrupt, it asserts its input line. When one or more inputs are asserted, the
+8259A asserts INT (INTerrupt), which directly drives the interrupt pin on the CPU.
+When the CPU is able to handle the interrupt, it sends a pulse back to the 8259A
+on INTA (INTerrupt Acknowledge). At that point the 8259A must specify which
+input caused the interrupt by outputting that input’s number on the data bus. This
+operation requires a special bus cycle. The CPU hardware then uses that number
+to index into a table of pointers, called interrupt vectors, to find the address of the
+procedure to run to service the interrupt.
+The 8259A has several registers inside that the CPU can read and write using
+ordinary bus cycles and the RD (ReaD), WR (WRite), CS (Chip Select), and A0 pins.
+When the software has handled the interrupt and is ready to take the next one, it
+writes a special code into one of the registers, which causes the 8259A to negate
+INT, unless it has another interrupt pending. These registers can also be written to
+put the 8259A in one of several modes, mask out a set of interrupts, and enable
+other features.
+When more than eight I/O devices are present, the 8259As can be cascaded. In
+the most extreme case, all eight inputs can be connected to the outputs of eight
+
+SEC. 3.4
+
+CPU CHIPS AND BUSES
+
+201
+
+more 8259As, allowing for up to 64 I/O devices in a two-stage interrupt network.
+The Intel ICH10 I/O controller hub, one of the of the chips in the Core i7 chipset,
+incorporates two 8259A interrupt controllers. This gives the ICH10 15 external interrupts, one less than 16 interrupts on the two 8259A controllers because one of
+the interrupts is used to cascade the second 8259A onto the first one. The 8259A
+has a few pins devoted to handling this cascading, which we have omitted for the
+sake of simplicity. Nowadays, the ‘‘8259A’’ is really part of another chip.
+While we have by no means exhausted the subject of bus design, the material

@@ -1,0 +1,100 @@
+A15
+
+CS
+2K × 8
+EPROM
+
+CS
+2K × 8
+RAM
+
+CS
+PI0
+
+(a)
+A0
+Address bus
+A15
+
+CS
+2K × 8
+EPROM
+
+CS
+2K × 8
+RAM
+
+(b)
+
+Figure 3-61. (a) Full address decoding. (b) Partial address decoding.
+
+CS
+PI0
+
+SEC. 3.8
+
+SUMMARY
+
+237
+
+flip-flops for memories with any word size desired. Memories are available as
+RAM, ROM, PROM, EPROM, EEPROM, and flash. Static RAMs need not be
+refreshed; they keep their stored values as long as the power remains on. Dynamic
+RAMs, on the other hand, must be refreshed periodically to compensate for leakage from the little capacitors on the chip.
+The components of a computer system are connected by buses. Many, but not
+all, of the pins on a typical CPU chip directly drive one bus line. The bus lines can
+be divided into address, data, and control lines. Synchronous buses are driven by a
+master clock. Asynchronous buses use full handshaking to synchronize the slave
+to the master.
+The Core i7 is an example of a modern CPU. Modern systems using it have a
+memory bus, a PCIe bus, and a USB bus. The PCIe interconnect is the dominant
+way to connect the internal parts of a computer at high speeds. The ARM is also a
+modern high-end CPU but is intended for embedded systems and mobile devices
+where low power consumption is important. The Atmel ATmega168 is an example
+of a low-priced chip good for small, inexpensive appliances and many other pricesensitive applications.
+Switches, lights, printers, and many other I/O devices can be interfaced to
+computers using parallel I/O interfaces. These chips can be configured to be part
+of the I/O space or the memory space, as needed. They can be fully decoded or
+partially decoded, depending on the application.
+
+PROBLEMS
+1. Analog circuits are subject to noise that can distort their output. Are digital circuits
+immune to noise? Discuss your answer.
+2. A logician drives into a drive-in restaurant and says, ‘‘I want a hamburger or a hot dog
+and french fries.’’ Unfortunately, the cook flunked out of sixth grade and does not
+know (or care) whether ‘‘and’’ has precedence over ‘‘or.’’ As far as he is concerned,
+one interpretation is as good as the other. Which of the following cases are valid interpretations of the order? (Note that in English ‘‘or’’ means ‘‘exclusive or.’’)
+a. Just a hamburger.
+b. Just a hot dog.
+c. Just french fries.
+d. A hot dog and french fries.
+e. A hamburger and french fries.
+f. A hot dog and a hamburger.
+g. All three.
+h. Nothing—the logician goes hungry for being a wiseguy.
+
+238
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+3. A missionary lost in Southern California stops at a fork in the road. He knows that two
+motorcycle gangs inhabit the area, one of which always tells the truth and one of which
+always lies. He wants to know which road leads to Disneyland. What question should
+he ask?
+4. Use a truth table to show that X = (X AND Y) OR (X AND NOT Y).
+5. There exist four Boolean functions of a single variable and 16 functions of two variables. How many functions of three variables are there? Of n variables?
+6. There exist four Boolean functions of a single variable and 16 functions of two variables. How many functions of four variables are there?
+7. Show how the AND function can be constructed from two NAND gates.
+8. Using the three-variable multiplexer chip of Fig. 3-12, implement a function whose
+output is the parity of the inputs, that is, the output is 1 if and only if an even number
+of inputs are 1.
+9. Put on your thinking cap. The three-variable multiplexer chip of Fig. 3-12 is actually
+capable of computing an arbitrary function of four Boolean variables. Describe how,
+and as an example, draw the logic diagram for the function that is 0 if the English word
+for the truth-table row has an even number of letters, 1 if it has an odd number of letters (e.g., 0000 = zero = four letters → 0; 0111 = seven = five letters → 1; 1101 = thirteen = eight letters → 0). Hint: If we call the fourth input variable D, the eight input
+lines may be wired to V cc , ground, D, or D.
+10. Draw the logic diagram of a 2-bit encoder, a circuit with four input lines, exactly one
+of which is high at any instant, and two output lines whose 2-bit binary value tells
+which input is high.

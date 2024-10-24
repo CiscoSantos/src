@@ -1,0 +1,100 @@
+* the graphical simulator
+* the suggested readings
+
+xxii
+
+PREFACE
+
+The instructor resources include:
+* PowerPoint sheets for the course
+* solutions to the end-of-chapter exercises
+The instructor resources require a password. Instructors should contact their Pearson Education representative to obtain one.
+A number of people have read (parts of) the manuscript and provided useful
+suggestions or have been helpful in other ways. In particular, we would like to
+thank Anna Austin, Mark Austin, Livio Bertacco, Valeria Bertacco, Debapriya
+Chatterjee, Jason Clemons, Andrew DeOrio, Joseph Greathouse, and Andrea Pellegrini.
+The following people reviewed the manuscript and suggested changes: Jason
+D. Bakos (University of South Carolina), Bob Brown (Southern Polytechnic
+State University), Andrew Chen (Minnesota State University, Moorhead), J. Archer
+Harris (James Madison University), Susan Krucke (James Madison University), A.
+Yavuz Oruc (University of Maryland), Frances Marsh (Jamestown Community
+College), and Kris Schindler (University at Buffalo). Our thanks to them.
+Several people helped create new exercises. They are: Byron A. Jeff (Clayton
+University), Laura W. McFall (DePaul University), Taghi M. Mostafavi (University
+of North Carolina at Charlotte), and James Nystrom (Ferris State University).
+Again, we greatly appreciate the help.
+Our editor, Tracy Johnson, has been ever helpful in many ways, large and
+small, as well as being very patient with us. The assistance of Carole Snyder in
+coordinating the various people involved in the project was much appreciated. Bob
+Englehardt did a great job with production.
+I (AST) would like to thank Suzanne once more for her love and patience. It
+never ends, not even after 21 books. Barbara and Marvin are always a joy and now
+know what professors do for a living. Aron belongs to the next generation: kids
+who are heavy computer users before they hit nursery school. Nathan hasn’t gotten that far yet, but after he figures out how to walk, the iPad is next.
+Finally, I (TA) want to take this opportunity to thank my mother-in-law
+Roberta, who helped me carve out some quality time to work on this book. Her
+dining room table in Bassano Del Grappa, Italy had just the right amount of solitude, shelter, and vino to get this important task done.
+ANDREW S. TANENBAUM
+TODD AUSTIN
+
+STRUCTURED COMPUTER ORGANIZATION
+
+This page intentionally left blank
+
+1
+INTRODUCTION
+
+A digital computer is a machine that can do work for people by carrying out
+instructions given to it. A sequence of instructions describing how to perform a
+certain task is called a program. The electronic circuits of each computer can recognize and directly execute a limited set of simple instructions into which all its
+programs must be converted before they can be executed. These basic instructions
+are rarely much more complicated than
+Add two numbers.
+Check a number to see if it is zero.
+Copy a piece of data from one part of the computer’s memory to another.
+Together, a computer’s primitive instructions form a language in which people
+can communicate with the computer. Such a language is called a machine language. The people designing a new computer must decide what instructions to include in its machine language. Usually, they try to make the primitive instructions
+as simple as possible consistent with the computer’s intended use and performance
+requirements, in order to reduce the complexity and cost of the electronics needed.
+Because most machine languages are so simple, it is difficult and tedious for people to use them.
+This simple observation has, over the course of time, led to a way of structuring computers as a sequence of abstractions, each abstraction building on the one
+1
+
+2
+
+INTRODUCTION
+
+CHAP. 1
+
+below it. In this way, the complexity can be mastered and computer systems can
+be designed in a systematic, organized way. We call this approach structured
+computer organization and have named the book after it. In the next section we
+will describe what we mean by this term. After that we will look at some historical
+developments, the state of the art, and some important examples.
+
+1.1 STRUCTURED COMPUTER ORGANIZATION
+As mentioned above, there is a large gap between what is convenient for people and what is convenient for computers. People want to do X, but computers can
+only do Y. This leads to a problem. The goal of this book is to explain how this
+problem can be solved.
+
+1.1.1 Languages, Levels, and Virtual Machines
+The problem can be attacked in two ways: both involve designing a new set of
+instructions that is more convenient for people to use than the set of built-in machine instructions. Taken together, these new instructions also form a language,
+which we will call L1, just as the built-in machine instructions form a language,
+which we will call L0. The two approaches differ in the way programs written in
+L1 are executed by the computer, which, after all, can only execute programs written in its machine language, L0.
+One method of executing a program written in L1 is first to replace each instruction in it by an equivalent sequence of instructions in L0. The resulting program consists entirely of L0 instructions. The computer then executes the new L0
+program instead of the old L1 program. This technique is called translation.
+The other technique is to write a program in L0 that takes programs in L1 as
+input data and carries them out by examining each instruction in turn and executing
+the equivalent sequence of L0 instructions directly. This technique does not require first generating a new program in L0. It is called interpretation and the program that carries it out is called an interpreter.
+Translation and interpretation are similar. In both methods, the computer carries out instructions in L1 by executing equivalent sequences of instructions in L0.
+The difference is that, in translation, the entire L1 program is first converted to an
+L0 program, the L1 program is thrown away, and then the new L0 program is loaded into the computer’s memory and executed. During execution, the newly generated L0 program is running and in control of the computer.
+In interpretation, after each L1 instruction is examined and decoded, it is carried out immediately. No translated program is generated. Here, the interpreter is
+in control of the computer. To it, the L1 program is just data. Both methods, and
+increasingly, a combination of the two, are widely used.
+
+SEC. 1.1
+
+STRUCTURED COMPUTER ORGANIZATION

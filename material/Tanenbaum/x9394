@@ -1,0 +1,100 @@
+Operand stack, 259–260
+Operating system, 437
+CP/M, 24
+history, 9–11
+OS/2, 25
+timesharing, 11
+UNIX, 482–485, 488–489, 492–498, 503–506
+Windows, 490–492
+Windows 7, 485–488, 498–503, 506–509
+Operating-system machine level, 7, 437–510
+Operating-system macro, 11
+Operation code, 244
+Optical discs, 99–108
+Orange book, 105
+Orca, 644–646
+
+INDEX
+Organic light emitting diode, 117
+OS/2, 25
+Osborne-1, 14
+Out-of-order execution, 315–320
+Overlay, 439
+
+P
+Packet, 575, 618
+PCI, 225
+Packet classification, 580
+Packet processing, 580–581
+Packet processing engine, 579
+Packet switching, 575
+Page, 440
+Page directory, 457
+Page fault, 443
+Page frame, 442
+Page scanner, 607
+Page table, 440
+Page-replacement policy, 446–448
+Paging, 439–452
+implementation, 441–443
+Paging algorithm, 446–448
+FIFO, 447
+LRU, 446
+Palm PDA, 27
+Parallel computer,
+coprocessor, 574–586
+grid, 652–655
+multicomputer, 616–652
+multiprocessor, 586–61
+on-chip parallelism, 554–574
+Parallel computers,
+performance, 646–652
+taxonomy, 591–593
+Parallel input/output, 232
+Parallel processing, 471–480
+Parallel virtual machine, 637
+Parallelism, instruction-level, 65–69, 555–561
+on-chip, 554–574
+Parameter, macro, 526–537
+Parent process, 503
+Parity bit, 79
+Parity flag, 708
+Partial address decoding, 235
+Partitioned resource sharing, 566
+
+763
+Pascal, Blaise, 13
+Pass one, assembler, 530–534
+Pass two, assembler, 534–536
+Passive matrix display, 117
+Path, 494
+Path length, 283–291
+reducing, 285–291
+Path selection, 580
+Payload, PCI packet, 225
+PC (see Program counter)
+PCI Bus (see Peripheral Component Interconnect Bus)
+PCI Express, 223–228
+architecture, 224–225
+PCI Express bus, 111–112
+PCI Express. protocol stack, 225–228
+PCIe (see PCI Express)
+PCIe bus (see PCI Express bus)
+PDA (see Personal Digital Assistant)
+PDP-1, 14, 20
+PDP-11, 14
+PDP-8, 14, 20
+Pentium, 25, 41
+Pentium 4, 44
+Perfect shuffle, 605
+Performance,
+hardware metrics, 647–648
+improving, 650–652
+improving network, 582
+software metrics, 648–650
+Performance metrics, 647–650
+hardware, 647–648
+software, 648–650
+Performance of parallel computers, 646–652
+Peripheral bus, 573
+Peripheral component interconnect bus,

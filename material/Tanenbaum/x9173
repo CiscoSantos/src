@@ -1,0 +1,100 @@
+10
+
+15
+
+User
+Printer
+program
+ISR
+User
+
+20
+
+25
+
+35
+
+40
+
+RS232
+ISR
+
+Disk
+ISR
+
+Printer
+ISR
+
+User
+Printer
+
+User
+Printer
+
+User
+
+User
+program
+
+Time
+
+Stack
+
+Figure 5-43. Time sequence of multiple-interrupt example.
+
+At t = 15, the RS232 line wants attention and generates an interrupt. Since the
+RS232 line has a higher priority (5) than the printer (2), the interrupt happens. The
+
+SEC. 5.6
+
+FLOW OF CONTROL
+
+417
+
+state of the machine, which is now running the printer interrupt service routine, is
+pushed onto the stack, and the RS232 interrupt service routine is started.
+A little later, at t = 20, the disk is finished and wants service. However, its priority (4) is lower than that of the interrupt routine currently running (5), so the
+CPU hardware does not acknowledge the interrupt, and it is held pending. At
+t = 25, the RS232 routine is finished, so it returns to the state it was in just before
+the RS232 interrupt happened, namely, running the printer interrupt service routine
+at priority 2. As soon as the CPU switches to priority 2, before even one instruction can be executed, the disk interrupt at priority 4 now is allowed in, and the disk
+service routine runs. When it finishes, the printer routine gets to continue. Finally,
+at t = 40, all the interrupt service routines have completed and the user program
+continues from where it left off.
+Since the 8088, the Intel CPU chips have had two interrupt levels (priorities):
+maskable and nonmaskable. Nonmaskable-interrupts are generally used only for
+signaling near-catastrophes, such as memory parity errors. All the I/O devices use
+the one maskable interrupt.
+When an I/O device issues an interrupt, the CPU uses the interrupt vector to
+index into a 256-entry table to find the address of the interrupt service routine. The
+table entries are 8-byte segment descriptors and the table can begin anywhere in
+memory. A global register points to its start.
+With only one usable interrupt level, there is no way for the CPU to let a
+high-priority device interrupt a medium-priority interrupt service routine while
+prohibiting a low-priority device from doing so. To solve this problem, the Intel
+CPUs are normally used with an external interrupt controller (e.g., an 8259A).
+When the first interrupt comes in, say at priority n, the CPU is interrupted. If a
+subsequent interrupt comes in at a higher priority, the interrupt controller interrupts
+a second time. If the second interrupt is at a lower priority, it is held until the first
+one is finished. To make this scheme work, the interrupt controller must know
+when the current interrupt service routine is finished, so the CPU must send it a
+command when the current interrupt has been fully processed.
+
+5.7 A DETAILED EXAMPLE: THE TOWERS OF HANOI
+Now that we have studied the ISA of three machines, let us put all the pieces
+together by taking a close look at the same example program for the two larger machines. Our example is the Towers of Hanoi program. We gave a Java version of
+this program in Fig. 5-39. In the following sections we will give assembly-code
+programs for the Towers of Hanoi.
+However, we will cheat a tiny bit. Rather than give the translation of the Java
+version, for the Core i7 and OMAP4430 ARM CPU we will give the translation of
+a C version to avoid some problems with Java I/O. The only difference is the replacement of the Java call to println with the standard C statement
+
+418
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+printf(′′Move a disk from %d to %d\n′′, i, j)
+
+For our purposes, the syntax of printf format strings is unimportant (basically, the

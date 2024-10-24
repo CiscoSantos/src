@@ -1,0 +1,100 @@
+386
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Also, every register (including local variable pointer, stack pointer, and program
+counter) should be usable wherever a register is called for. More complicated addressing modes may reduce the number of instructions, but at the expense of introducing sequences of operations that cannot easily be parallelized with other
+sequential operations.
+We have now completed our study of the various trade-offs possible between
+opcodes and addresses, and various forms of addressing. When approaching a new
+computer, you should examine the instructions and addressing modes not only to
+see which ones are available but also to understand why those choices were made
+and what the consequences of alternative choices would have been.
+
+5.5 INSTRUCTION TYPES
+ISA-level instructions can be approximately divided into a half-dozen groups
+that are relatively similar from machine to machine, even though they may differ in
+the details. In addition, every computer has a few unusual instructions, added for
+compatibility with previous models, or because the architect had a brilliant idea, or
+possibly because a government agency paid the manufacturer to include it. We
+will try to briefly cover all the common categories below, without any attempt at
+being exhaustive.
+
+5.5.1 Data Movement Instructions
+Copying data from one place to another is the most fundamental of all operations. By copying we mean the creating of a new object, with the identical bit pattern as the original. This use of the word ‘‘movement’’ is somewhat different from
+its normal usage in English. When we say that Marvin Mongoose has moved from
+New York to California, we do not mean that an identical copy of Mr. Mongoose
+was created in California and that the original is still in New York. When we say
+that the contents of memory location 2000 have been moved to some register, we
+always mean that an identical copy has been created there and that the original is
+still undisturbed in location 2000. Data movement instructions would better be
+called ‘‘data duplication’’ instructions, but the term ‘‘data movement’’ is already
+established.
+There are two reasons for copying data from one location to another. One is
+fundamental: the assignment of values to variables. The assignment
+A=B
+
+is implemented by copying the value at memory address B to location A because
+the programmer has said to do this. The second reason is to stage the data for efficient access and use. As we have seen, many instructions can access variables
+only when they are available in registers. Since there are two possible sources for
+
+SEC. 5.5
+
+INSTRUCTION TYPES
+
+387
+
+a data item (memory or register), and there are two possible destinations for a data
+item (memory or register), four different kinds of copying are possible. Some
+computers have four instructions for the four cases. Others have one instruction
+for all four cases. Still others use LOAD to go from memory to a register, STORE to
+go from a register to memory, MOVE to go from one register to another register, and
+no instruction for a memory-to-memory copy.
+Data movement instructions must indicate the amount of data to be moved. Instructions exist for some ISAs to move variable quantities of data ranging from 1
+bit to the entire memory. On fixed-word-length machines, the amount to be moved
+is often exactly one word. Any more or less must be performed by a software routine using shifting and merging. Some ISAs provide additional capability both for
+copying less than a word (usually in increments of bytes) and for copying multiple
+words. Copying multiple words is tricky, particularly if the maximum number of
+words is large, because such an operation can take a long time, and may have to be
+interrupted in the middle. Some variable-word-length machines have instructions
+specifying only the source and destination addresses but not the amount. The
+move continues until an end-of-data field mark is found in the data.
+
+5.5.2 Dyadic Operations
+Dyadic operations combine two operands to produce a result. All ISAs have
+instructions to perform addition and subtraction on integers. Multiplication and division of integers are nearly standard as well. It is presumably unnecessary to explain why computers are equipped with arithmetic instructions.
+Another group of dyadic operations includes the Boolean instructions. Although 16 Boolean functions of two variables exist, few, if any, machines have instructions for all 16. Usually, AND, OR, and NOT are present; sometimes EXCLUSIVE OR, NOR, and NAND are there as well.
+An important use of AND is for extracting bits from words. Consider, for example, a 32-bit-word-length machine in which four 8-bit characters are stored per
+word. Suppose that it is necessary to separate the second character from the other
+three in order to print it; that is, it is necessary to create a word which contains that
+character in the rightmost 8 bits, referred to as right justified, with zeros in the
+leftmost 24 bits.
+To extract the character, the word containing the character is ANDed with a
+constant, called a mask. The result of this operation is that the unwanted bits are
+all changed into zeros—that is, masked out—as shown below.
+10110111 10111100 11011011 10001011 A
+00000000 11111111 00000000 00000000 B (mask)
+00000000 10111100 00000000 00000000 A AND B
+The result would then be shifted 16 bits to the right to isolate the character to be
+extracted at the right end of the word.
+
+388
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+An important use of OR is to pack bits into a word, packing being the inverse
+of extracting. To change the rightmost 8 bits of a 32-bit word without disturbing
+the other 24 bits, first the unwanted 8 bits are masked out and then the new character is ORed in, as shown below.
+10110111 10111100 11011011 10001011
+11111111 11111111 11111111 00000000
+10110111 10111100 11011011 00000000
+00000000 00000000 00000000 01010111
+10110111 10111100 11011011 01010111
+
+A
+B (mask)
+A AND B

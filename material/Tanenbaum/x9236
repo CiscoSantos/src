@@ -1,0 +1,100 @@
+SWAP
+(b)
+
+Figure 7-3. Assembly language code for interchanging P and Q twice. (a) Without a macro. (b) With a macro.
+
+Although different assemblers have slightly different notations for defining
+macros, all require the same basic parts in a macro definition:
+1. A macro header giving the name of the macro being defined.
+2. The text that is the body of the macro.
+3. A pseudoinstruction marking the end of the definition (e.g., ENDM).
+When the assembler encounters a macro definition, it saves it in a macro definition table for subsequent use. From that point on, whenever the name of the
+macro (SWAP in the example of Fig. 7-3) appears as an opcode, the assembler replaces it by the macro body. The use of a macro name as an opcode is known as a
+macro call and its replacement by the macro body is called macro expansion.
+Macro expansion occurs during the assembly process and not during execution
+of the program. This point is important. The program of Fig. 7-3(a) and that of
+Fig. 7-3(b) will produce precisely the same machine language code. Looking only
+at the machine language program, it is impossible to tell whether or not any macros
+were involved in its generation. The reason is that once macro expansion has been
+completed the macro definitions are discarded by the assembler. No trace of them
+is left in the generated program.
+Macro calls should not be confused with procedure calls. The basic difference
+is that a macro call is an instruction to the assembler to replace the macro name
+
+526
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+with the macro body. A procedure call is a machine instruction that is inserted into
+the object program and that will later be executed to call the procedure. Figure 7-4
+compares macro calls with procedure calls.
+Item
+
+Macro call
+
+Procedure call
+
+When is the call made?
+
+During assembly
+
+During program execution
+
+Is the body inserted into the object
+program every place the call is
+made?
+
+Yes
+
+No
+
+Is a procedure call instruction
+inserted into the object program
+and later executed?
+
+No
+
+Yes
+
+Must a return instruction be used
+after the call is done?
+
+No
+
+Yes
+
+How many copies of the body appear in the object program?
+
+One per macro call
+
+One
+
+Figure 7-4. Comparison of macro calls with procedure calls.
+
+Conceptually, it is best to think of the assembly process as taking place in two
+passes. On pass one, all the macro definitions are saved and the macro calls expanded. On pass two, the resulting text is processed as though it was in the original program. In this view, the source program is read in and is then transformed
+into another program from which all macro definitions have been removed, and in
+which all macro calls have been replaced by their bodies. The resulting output, an
+assembly language program containing no macros at all, is then fed into the assembler.
+It is important to keep in mind that a program is a string of characters including letters, digits, spaces, punctuation marks, and ‘‘carriage returns’’ (change to a
+new line). Macro expansion consists of replacing certain substrings of this string
+with other character strings. A macro facility is a technique for manipulating character strings, without regard to their meaning.
+
+7.2.2 Macros with Parameters
+The macro facility previously described can be used to shorten source programs in which precisely the same sequence of instructions occurs repeatedly. Frequently, however, a program contains several sequences of instructions that are almost but not quite identical, as illustrated in Fig. 7-5(a). Here the first sequence
+exchanges P and Q, and the second sequence exchanges R and S.
+Macro assemblers handle the case of nearly identical sequences by allowing
+macro definitions to provide formal parameters and by allowing macro calls to
+supply actual parameters. When a macro is expanded, each formal parameter
+
+SEC. 7.2
+
+527
+
+MACROS
+
+MOV
+MOV
+MOV

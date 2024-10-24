@@ -1,0 +1,100 @@
+8 bits wide. In essence the only data type that is really supported by the hardware
+for arithmetic operations is the 8-bit byte, as shown in Fig. 5-8.
+Type
+
+8 Bits
+
+Signed integer
+
+×
+
+Unsigned integer
+
+×
+
+16 Bits
+
+32 Bits
+
+64 Bits
+
+×
+
+Binary coded decimal integer
+Floating point
+Figure 5-8. The ATmega168 numeric data types. Supported types are marked
+with ×.
+
+362
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+To facilitate memory accesses, the ATmega168 also includes limited support
+for 16-bit unsigned pointers. The 16-bit pointers X, Y, and Z, can be formed from
+the concatenation of 8-bit register pairs R26/R27, R28/R29, and R30/R31, respectively. When a load uses X, Y, or Z as an address operand, the processor will
+also optionally increment or decrement the value as needed.
+
+5.3 INSTRUCTION FORMATS
+An instruction consists of an opcode, usually along with some additional information such as where operands come from and where results go to. The general
+subject of specifying where the operands are (i.e., their addresses) is called
+addressing and will be discussed in detail later in this section.
+Figure 5-9 shows several possible formats for level 2 instructions. An instruction always has an opcode to tell what the instruction does. There can be zero,
+one, two, or three addresses present.
+OPCODE
+
+OPCODE
+
+(a)
+
+OPCODE
+
+ADDRESS1 ADDRESS2
+
+ADDRESS
+(b)
+
+OPCODE ADDR1 ADDR2 ADDR3
+
+(c)
+
+(d)
+
+Figure 5-9. Four common instruction formats: (a) Zero-address instruction.
+(b) One-address instruction (c) Two-address instruction. (d) Three-address
+instruction.
+
+On some machines, all instructions have the same length; on others there may
+be many different lengths. Instructions may be shorter than, the same length as, or
+longer than the word length. Having all the instructions be the same length is simpler and makes decoding easier but often wastes space, since all instructions then
+have to be as long as the longest one. Other trade-offs are also possible. Figure
+5-10 shows some possible relationships between instruction length and word
+length.
+
+5.3.1 Design Criteria for Instruction Formats
+When a computer design team has to choose instruction formats for its machine, they must consider a number of factors. The difficulty of this decision
+should not be underestimated. The decision about the instruction format must be
+made early in the design of a new computer. If the computer is commercially successful, the instruction set may survive for 40 years or more. The ability to add
+
+SEC. 5.3
+
+363
+
+INSTRUCTION FORMATS
+1 Word
+
+1 Word
+
+Instruction
+
+Instruction
+
+Instruction
+
+Instruction
+
+Instruction
+
+Instruction
+

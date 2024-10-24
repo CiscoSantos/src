@@ -1,0 +1,100 @@
+1
+
+1
+
+SISD
+
+Classical Von Neumann machine
+
+1
+
+Multiple
+
+SIMD
+
+Vector supercomputer, array processor
+
+Multiple
+
+1
+
+MISD
+
+Arguably none
+
+Multiple
+
+Multiple
+
+MIMD
+
+Multiprocessor, multicomputer
+
+Figure 8-22. Flynn’s taxonomy of parallel computers.
+
+Flynn’s classification is based on two concepts—instruction streams and data
+streams. An instruction stream corresponds to a program counter. A system with
+n CPUs has n program counters, hence n instruction streams.
+A data stream consists of a set of operands. For example, in a weather-forecasting system, each of a large number of sensors might emit a stream of temperatures at regular intervals.
+The instruction and data streams are, to some extent, independent, so four
+combinations exist, as listed in Fig. 8-22. SISD is just the classical, sequential von
+Neumann computer. It has one instruction stream, one data stream, and does one
+thing at a time. SIMD machines have a single control unit that issues one instruction at a time, but they have multiple ALUs to carry it out on multiple data sets simultaneously. The ILLIAC IV (Fig. 2-7) is the prototype of SIMD machines.
+Mainstream SIMD machines are increasingly rare, but conventional computers
+sometimes have some SIMD instructions for processing audiovisual material. The
+Core i7 SSE instructions are SIMD. Nevertheless, there is one new area in which
+some of the ideas from the SIMD world are playing a role: stream processors.
+† Carolus Linnaeus (1707–1778) was the Swedish biologist who devised the system now used for
+classifying all plants and animals into kingdom, phylum, class, order, family, genus, and species.
+
+592
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+These machines are specifically designed to handle the demands of multimedia
+rendering and may become important in the future (Kapasi et al., 2003).
+MISD machines are a somewhat strange category, with multiple instructions
+operating on the same piece of data. It is not clear whether any such machines
+exist, although some people regard pipelined machines as MISD.
+Finally, we have MIMD, which are just multiple independent CPUs operating
+as part of a larger system. Most parallel processors fall into this category. Both
+multiprocessors and multicomputers are MIMD machines.
+Flynn’s taxonomy stops here, but we have extended it in Fig. 8-23. SIMD has
+been split into two subgroups. The first one is for numeric supercomputers and
+other machines that operate on vectors, performing the same operation on each
+vector element. The second one is for parallel-type machines, such as the ILLIAC
+IV, in which a master control unit broadcasts instructions to many independent
+ALUs.
+Parallel computer architectures
+
+SISD
+
+SIMD
+
+MISD
+
+(Von Neumann)
+Vector
+processor
+
+MIMD
+
+?
+Array
+processor
+
+UMA
+
+Bus
+
+Multiprocessors
+
+COMA
+
+Switched
+
+Multicomputers
+
+NUMA

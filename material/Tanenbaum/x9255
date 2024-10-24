@@ -1,0 +1,100 @@
+Loosely coupled
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+Figure 8-1. (a) On-chip parallelism. (b) A coprocessor. (c) A multiprocessor.
+(d) A multicomputer. (e) A grid.
+
+8.1.1 Instruction-Level Parallelism
+At the lowest level, one way to achieve parallelism is to issue multiple instructions per clock cycle. Multiple-issue CPUs come in two varieties: superscalar
+processors and VLIW processors. We have touched on both earlier in the book,
+but it may be useful to review this material here.
+We have seen superscalar CPUs before (e.g., Fig. 2-5). In the most common
+configuration, at a certain point in the pipeline an instruction is ready to be executed. Superscalar CPUs are capable of issuing multiple instructions to the execution units in a single clock cycle. The number of instructions actually issued
+depends on both the processor design and current circumstances. The hardware
+determines the maximum number that can be issued, usually two to six instructions. However, if an instruction needs a functional unit that is not available or a
+result that has not yet been computed, the instruction will not be issued.
+The other form of instruction-level parallelism is found in VLIW (Very Long
+Instruction Word) processors. In the original form, VLIW machines indeed had
+long words containing instructions that used multiple functional units. Consider,
+for example, the pipeline of Fig. 8-2(a), where the machine has five functional
+units and can perform two integer operations, one floating-point operation, one
+load, and one store simultaneously. A VLIW instruction for this machine would
+contain five opcodes and five pairs of operands, one opcode and operand pair per
+functional unit. With 6 bits per opcode, 5 bits per register, and 32 bits per memory
+address, instructions could easily be 134 bits—quite long indeed.
+
+556
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Integer
+
+Integer
+
+(a)
+
+Fetch
+
+Decode
+
+Floating
+point
+
+Issue
+
+Retire
+
+Load
+
+Store
+No-op
+(b)
+
+---L-
+
+---L-
+
+l--L-
+
+llF-S
+
+l-FLS
+
+L L lL
+
+llFS
+
+lIF-S
+
+---L-
+
+--LFS
+
+End-of-bundle marker
+
+VLIW instruction
+(c)
+
+l-FL-
+
+lFLS
+
+lFL
+
+lIFS
+
+L
+
+LFS
+
+Bundle
+
+Figure 8-2. (a) A CPU pipeline. (b) A sequence of VLIW instructions. (c) An

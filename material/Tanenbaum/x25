@@ -1,0 +1,100 @@
+create a new company called Advanced RISC Machines (ARM). Their new processor was called the ARM 610, which powered the Apple Newton when it was release in 1993. Unlike the original ARM design, this new ARM processor incorporated a 4-KB cache that significantly improved the design’s performance. Although
+the Apple Newton was not a great success, the ARM 610 did see other successful
+applications including Acorn’s RISC PC computer.
+In the mid 1990s, ARM collaborated with Digital Equipment Corporation to
+develop a high-speed, low-power version of the ARM, intended for energy-frugal
+
+46
+
+INTRODUCTION
+
+CHAP. 1
+
+mobile applications such as PDAs. They produced the StrongARM design, which
+from its first appearance sent waves through the industry due to its high speed (233
+MHz) and ultralow power demands (1 watt). It gained efficiency through a simple,
+clean design that included two 16-KB caches for instructions and data. The StrongARM and its successors at DEC were moderately successful in the marketplace,
+finding their way into a number of PDAs, set-top boxes, media devices, and routers.
+Perhaps the most venerable of the ARM architectures is the ARM7 design,
+first released by ARM in 1994 and still in wide use today. The design included separate instruction and data caches, and it also incorporated the 16-bit Thumb instruction set. The Thumb instruction set is a shorthand version of the full 32-bit
+ARM instruction set, allowing programmers to encode many of the most common
+operations into smaller 16-bit instructions, significantly reducing the amount of
+program memory needed. The processor has worked well for a wide range of lowto middle-end embedded applications such as toasters, engine control, and even the
+Nintendo Gameboy Advance hand-held gaming console.
+Unlike many computer companies, ARM does not manufacture any microprocessors. Instead, it creates designs and ARM-based developer tools and libraries,
+and licenses them to system designers and chip manufacturers. For example, the
+CPU used in the Samsung Galaxy Tab Android-based tablet computer is an ARMbased processor. The Galaxy Tab contains the Tegra 2 system-on-chip processor,
+which includes two ARM Cortex-A9 processors and an Nvidia GeForce graphics
+processing unit. The Tegra 2 cores were designed by ARM, integrated into a system-on-a-chip design by Nvidia, and manufactured by Taiwan Semiconductor
+Manufacturing Company (TSMC). It’s an impressive collaboration by companies
+in different countries in which all of the companies contributed value to the final
+design.
+Figure 1-14 shows a die photo of the Nvidia’s Tegra 2 system-on-a-chip. The
+design contains three ARM processors: two 1.2-GHz ARM Cortex-A9 cores plus
+an ARM7 core. The Cortex-A9 cores are dual-issue out-of-order cores with a
+1-MB L2 cache and support for shared-memory multiprocessing. (That’s a lot of
+buzzwords that we will get into in later chapters. For now, just know that these features make the design very fast!) The ARM7 core is an older and smaller ARM
+core used for system configuration and power management. The graphics core is a
+333-MHz GeForce graphics processing unit (GPU) design optimized for low-power operation. Also included on the Tegra 2 are a video encoder/decoder, an audio
+processor and an HDMI video output interface.
+The ARM architecture has found great success in the low-power, mobile and
+embedded markets. In January 2011, ARM announced that it had sold 15 billion
+ARM processors since its inception, and indicated that sales were continuing to
+grow. While tailored for lower-end markets, the ARM architecture does have the
+computational capability to perform in any market, and there are hints that it may
+be expanding its horizons. For example, in October 2011, a 64-bit ARM was
+
+SEC. 1.4
+
+EXAMPLE COMPUTER FAMILIES
+
+47
+
+Figure 1-14. The Nvidia Tegra 2 system on a chip. © 2011 Nvidia Corporation.
+Used by permission.
+
+announced. Also in January 2011, Nvidia announced ‘‘Project Denver,’’ an ARMbased system-on-a-chip being developed for the server and other markets. The design will incorporate multiple 64-bit ARM processors plus a general-purpose GPU
+(GPGPU). The low-power aspects of the design will help to reduce the cooling requirements of server farms and data centers.
+
+1.4.3 Introduction to the AVR Architecture
+Our third example is very different from our first (the x86 architecture, used in
+personal computers and servers) and second (the ARM architecture, used in PDAs
+and smartphones). It is the AVR architecture, which is used in very low-end embedded systems. The AVR story starts in 1996 at the Norwegian Institute of Technology, where students Alf-Egil Bogen and Vegard Wollan designed an 8-bit RISC
+CPU called the AVR. It was reportedly given this name because it was ‘‘(A)lf and
+(V)egard’s (R)ISC processor.’’ Shortly after the design was completed, Atmel
+bought the design and started Atmel Norway, where the two architects continued to
+refine the AVR processor design. Atmel released their first AVR microcontroller,
+the AT90S1200, in 1997. To ease its adoption by system designers, they implemented the pinout to be exactly the same as that of the Intel 8051, which was one
+
+48
+
+INTRODUCTION
+
+CHAP. 1
+
+of the most popular microcontrollers at the time. Today there is much interest in
+the AVR architecture because it is at the heart of the very popular open-source
+Arduino embedded controller platform.
+The AVR architecture is implemented in three classes of microcontrollers, listed in Fig. 1-15. The lowest class, the tinyAVR is designed for the most area-, power- and cost-constrained applications. It includes an 8-bit CPU, basic digital I/O
+support, and analog input support (for example, reading temperature values off a
+thermistor). The tinyAVR is so small that its pins work double duty, such that they
+can be reprogrammed at run time to any of the digital or analog functions supported by the microcontroller. The megaAVR, which is found in the popular
+Arduino open-source embedded system, also adds serial I/O support, internal
+clocks, and programmable analog outputs. The top end of the bottom end is the
+AVR XMEGA microcontroller, which also incorporates an accelerator for cryptographic operations plus built-in support for USB interfaces.
+Chip
+
+Flash
+
+EEPROM
+
+Pins
+
+Features
+
+tinyAVR
+
+0.5–16 KB
+
+0–512 B
+

@@ -1,0 +1,100 @@
+APP. C
+
+PUSH buf
+PUSH (fildes)
+PUSH READ
+SYS
+ADD SP,8
+MOV CX,AX
+ADD BX,CX
+MOV DI,buf
+RET
+
+! 85
+! 86
+! 87
+! 88
+! 89
+! 90
+! 91
+! 92
+! 93
+
+getnum:
+MOV DI,linein
+PUSH GETCHAR
+1: SYS
+CMPB AL,’\n’
+JL 9b
+JE 1f
+STOSB
+JMP 1b
+1: MOVB (DI),’\0’
+PUSH curlin
+PUSH numfmt
+PUSH linein
+PUSH SSCANF
+SYS
+ADD SP,10
+RET
+
+! 94
+! 95
+! 96
+! 97
+! 98
+! 99
+!100
+!101
+!102
+!103
+!104
+!105
+!106
+!107
+!108
+!109
+!110
+
+.SECT .DATA
+!111
+errmess:
+!112
+.ASCIZ "Open %s failed\n" !113
+numfmt: .ASCIZ "%d"
+!114
+scanerr:
+!115
+.ASCIZ "Type a number.\n" !116
+.ALIGN 2
+!117
+.SECT .BSS
+!118
+linein: .SPACE 80
+!119
+fildes: .SPACE 2
+!120
+linh: .SPACE 8192
+!121
+curlin: .SPACE 4
+!122
+buf:
+.SPACE bufsiz+2 !123
+count: .SPACE 2
+!124
+
+Figure C-19. A program with buffered read and random file access.
+
+SEC. C.8
+
+EXAMPLES
+
+745
+
+so first an argument of 0 is pushed to indicate this on line 57. The next argument is
+the file offset. By definition, this argument is a long (i.e., 32-bit) integer, so we
+first push a 0 word and then the value of AX on lines 58 and 59 to form a 32-bit
+integer. Then the file descriptor and code for LSEEK are pushed and the call is
+made on line 62. The return value of LSEEK is the current position in the file and
+can be found in the DX : AX register combination. If the number fits into a machine
+word (which it will for files shorter than 65536 bytes), then AX contains the

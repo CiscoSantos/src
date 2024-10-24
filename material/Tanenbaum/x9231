@@ -1,0 +1,100 @@
+
+were executed in the context of Figure 6-37. Describe carefully what changes are
+made in the directory system.
+34. Imagine that you had to implement the UNIX system on an embedded system where
+main memory was in short supply. After a considerable amount of shoehorning, it still
+did not quite fit, so you picked a system call at random to sacrifice for the general
+good. You picked pipe, which creates the pipes used to send byte streams from one
+process to another. Is it still possible to implement I/O redirection somehow? What
+about pipelines? Discuss the problems and possible solutions.
+35. The Committee for Fairness to File Descriptors is organizing a protest against the
+UNIX system because whenever the latter returns a file descriptor, it always returns the
+lowest number not currently in use. Consequently, higher-numbered file descriptors
+are hardly ever used. Their plan is to return the lowest number not yet used by the program rather than the lowest number currently not in use. They claim that it is trivial to
+implement, will not affect existing programs, and is fairer. What do you think?
+
+CHAP. 6
+
+PROBLEMS
+
+515
+
+36. In Windows 7 it is possible to set up an access control list in such a way that Roberta
+has no access at all to a file, but everyone else has full access to it. How do you think
+this is implemented?
+37. Describe two different ways to program producer-consumer problems using shared
+buffers and semaphores in Windows 7. Think about how to implement the shared buffer in each case.
+38. It is common to test out page replacement algorithms by simulation. For this exercise,
+you are to write a simulator for a page-based virtual memory for a machine with 64
+1-KB pages. The simulator should maintain a single table of 64 entries, one per page,
+containing the physical page number corresponding to that virtual page. The simulator
+should read in a file containing virtual addresses in decimal, one address per line. If
+the corresponding page is memory, just record a page hit. If it is not in memory, call a
+page replacement procedure to pick a page to evict (i.e., an entry in the table to overwrite) and record a page miss. No page transport actually occurs. Generate a file consisting of random addresses and test the performance for both LRU and FIFO. Now
+generate an address file in which x percent of the addresses are four bytes higher than
+the previous one (to simulate locality). Run tests for various values of x and report on
+your results.
+39. The program of Fig. 6-26 has a fatal race condition because two threads access shared
+variables in an uncontrolled way, without using semaphores or any other mutual exclusion technique. Run this program and see how long it takes to hang. If you cannot
+make it hang, modify it to increase the size of the window of vulnerability by putting
+some computing between adjusting m.in and m.out and testing them. How much computing do you have to put in before it fails, say, once an hour?
+40. Write a program for UNIX or Windows 7 that takes as input the name of a directory.
+The program should print a list of the files in the directory, one line per file, and after
+the file name, print the size of the file. Print the file names in the order they occur in
+the directory. Unused slots in the directory should be listed as (unused).
+
+This page intentionally left blank
+
+7
+THE ASSEMBLY LANGUAGE LEVEL
+
+In Chapters 4, 5, and 6 we discussed three different levels present on most contemporary computers. This chapter is concerned primarily with another level that
+is present on all computers: the assembly language level. The assembly language
+level differs in a significant respect from the microarchitecture, ISA, and operating
+system machine levels—it is implemented by translation rather than by interpretation.
+Programs that convert a user’s program written in some language to another
+language are called translators. The language in which the original program is
+written is called the source language and the language to which it is converted is
+called the target language. Both the source language and the target language
+define levels. If a processor that can directly execute programs written in the
+source language is available, there is no need to translate the source program into
+the target language.
+Translation is used when a processor (either hardware or an interpreter) is
+available for the target language but not for the source language. If the translation
+has been performed correctly, running the translated program will give precisely
+the same results as the execution of the source program would have given had a
+processor for it been available. Consequently, it is possible to implement a new
+level for which there is no processor by first translating programs written for that
+level to a target level and then executing the resulting target-level programs.
+It is important to note the difference between translation, on the one hand, and
+interpretation, on the other hand. In translation, the original program in the source
+517
+
+518
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+language is not directly executed. Instead, it is converted to an equivalent program
+called an object program or executable binary program whose execution is carried out only after the translation has been completed. In translation, there are two
+distinct steps:
+1. Generation of an equivalent program in the target language.
+2. Execution of the newly generated program.
+These two steps do not occur simultaneously. The second step does not begin until
+the first has been completed. In interpretation, there is only one step: executing the
+original source program. No equivalent program need be generated first, although
+sometimes the source program is converted to an intermediate form (e.g., Java byte
+code) for easier interpretation.
+While the object program is being executed, only three levels are in evidence:
+the microarchitecture level, the ISA level, and the operating system machine level.
+Consequently, three programs—the user’s object program, the operating system,
+and the microprogram (if any)—can be found in the computer’s memory at run
+time. All traces of the original source program have vanished. Thus the number of
+levels present at execution time may differ from the number of levels present before translation. It should be noted, however, that although we define a level by the
+instructions and linguistic constructs available to its programmers (and not by the
+implementation technique), other authors sometimes make a greater distinction between levels implemented by execution-time interpreters and levels implemented
+by translation.
+
+7.1 INTRODUCTION TO ASSEMBLY LANGUAGE
+Translators can be roughly divided into two groups, depending on the relationship between the source language and the target language. When the source language is essentially a symbolic representation for a numerical machine language,

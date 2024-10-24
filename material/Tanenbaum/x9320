@@ -1,0 +1,100 @@
+
+mond, WA: Microsoft Press, 2005.
+RUSU, S., MULJONO, H., and CHERKAUER, B.: ‘‘Itanium 2 Processor 6M,’’ IEEE Micro
+
+Magazine, vol. 24, pp. 10–18, March–April 2004.
+SAHA, D., and MUKHERJEE, A.: ‘‘Pervasive Computing: A Paradigm for the 21st Cen-
+
+tury,’’ IEEE Computer Magazine, vol. 36, pp. 25–31, March 2003.
+SAKAMURA, K.: ‘‘Making Computers Invisible,’’ IEEE Micro Magazine, vol. 22, pp.
+
+7–11, 2002.
+SANCHEZ, D., and KOZYRAKIS, C.: ‘‘Vantage: Scalable and Efficient Fine-Grain Cache
+
+Partitioning,’’ Proc. 38th Ann. Int’l Symp. on Computer Arch., ACM, pp. 57–68, 2011.
+SCALES, D.J., GHARACHORLOO, K., and THEKKATH, C.A.: ‘‘Shasta: A Low-Overhead
+
+Software-Only Approach for Supporting Fine-Grain Shared Memory,’’ Proc. Seventh
+Int’l Conf. on Arch. Support for Prog. Lang. and Oper. Syst., ACM, pp. 174–185, 1996.
+SELTZER, M., BOSTIC, K., MCKUSICK, M.K., and STAELIN, C.: ‘‘An Implementation of a
+
+Log-Structured File System for UNIX,’’ Proc. Winter 1993 USENIX Technical Conf.,
+pp. 307–326, 1993.
+SHANLEY, T., and ANDERSON, D.: PCI System Architecture, 4th ed., Reading, MA: Addi-
+
+son-Wesley, 1999.
+
+BIBLIOGRAPHY
+
+667
+
+SHOUFAN, A., HUBER, N., and MOLTER, H.G.: ‘‘A Novel Cryptoprocessor Architecture
+
+for Chained Merkle Signature Schemes,’’ Microprocessors and Microsystems, vol. 35,
+pp. 34–47, Feb. 2011.
+SINGH, G.: ‘‘The IBM PC: The Silicon Story,’’ IEEE Computer, vol. 44, pp. 40–45, Aug.
+
+2011.
+SLATER, R.: Portraits in Silicon, Cambridge, MA: MIT Press, 1987.
+SNIR, M., OTTO, S.W., HUSS-LEDERMAN, S., WALKER, D.W., and DONGARRA, J.: MPI:
+
+The Complete Reference Manual, Cambridge, MA: MIT Press, 1996.
+SOLARI, E., and CONGDON, B.: PCI Express Design & System Architecture, Research
+
+Tech, Inc., 2005.
+SOLARI, E., and WILLSE, G.: PCI and PCI-X Hardware and Software, 6th ed., San Diego,
+
+CA: Annabooks, 2004.
+SORIN, D.J., HILL, M.D., and WOOD, D.A.: A Primer on Memory Consistency and Cache
+
+Coherence, San Francisco: Morgan & Claypool, 2011.
+STETS, R., DWARKADAS, S., HARDAVELLAS, N., HUNT, G., KONTOTHANASSIS, L.,
+PARTHASARATHY, S., and SCOTT, M.: ‘‘CASHMERE-2L: Software Coherent Shared
+
+Memory on Clustered Remote-Write Networks,’’ Proc. 16th Symp. on Operating Systems Principles, ACM, pp. 170–183, 1997.
+SUMMERS, C.K.: ADSL: Standards, Implementation, and Architecture, Boca Raton, FL:
+
+CRC Press, 1999.
+SUNDERRAM, V.B..: ‘‘PVM: A Framework for Parallel Distributed Computing,’’ Concur-
+
+rency: Practice and Experience, vol. 2, pp. 315–339, Dec. 1990.
+SWAN, R.J., FULLER, S.H., and SIEWIOREK, D.P.: ‘‘Cm*—A Modular Multiprocessor,’’
+
+Proc. NCC, pp. 645–655, 1977.
+TAN, W.M.: Developing USB PC Peripherals, San Diego, CA: Annabooks, 1997.
+TANENBAUM, A.S., and WETHERALL, D.J.: Computer Networks, 5th ed., Upper Saddle
+
+River, NJ: Prentice Hall, 2011.
+THOMPSON, K.: ‘‘Reflections on Trusting Trust,’’ Commun. of the ACM, vol. 27, pp.
+
+761–763, Aug. 1984.
+THOMPSON, J., DREISIGMEYER, D.W., JONES, T., KIRBY, M., and LADD, J.: ‘‘Accurate
+
+Fault Prediction of BlueGene/P RAS Logs via Geometric Reduction,’’ IEEE, pp. 8–14,
+2010.
+TRELEAVEN, P.: ‘‘Control-Driven, Data-Driven, and Demand-Driven Computer Architec-
+
+ture,’’ Parallel Computing, vol. 2, 1985.
+TU, X., FAN, X., JIN, H., ZHENG, L., and PENG, X.: ‘‘Transactional Memory Consistency:
+
+A New Consistency Model for Distributed Transactional Memory,’’ Proc. Third Int’l
+Joint Conf. on Computational Science and Optimization, IEEE, 2010.
+VAHALIA, U.: UNIX Internals, Upper Saddle River, NJ: Prentice Hall, 1996.
+VAHID, F.: ‘‘The Softening of Hardware,’’ IEEE Computer Magazine, vol. 36, pp. 27–34,
+
+April 2003.
+
+668
+
+BIBLIOGRAPHY
+
+CHAP. 9
+
+VETTER, P., GODERIS, D., VERPOOTEN, L., and GRANGER, A.: ‘‘Systems Aspects of
+
+APON/VDSL Deployment,’’ IEEE Commun. Magazine, vol. 38, pp. 66–72, May 2000.
+VU, T.D., ZHANG, L., and JESSHOPE, C.: ‘‘The Verification of the On-Chip COMA Cache
+
+Coherence Protocol,’’ Proc. 12th Int’l Conf. on Algebraic Methodology and Software
+Technology, Springer-Verlag, pp. 413–429, 2008.
+WEISER, M.: ‘‘The Computer for the 21st Century,’’ IEEE Pervasive Computing, vol. 1,

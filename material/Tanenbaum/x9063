@@ -1,0 +1,100 @@
+Bits
+
+9
+
+NEXT_ADDRESS
+
+Addr
+
+3
+J
+M
+P
+C
+
+J
+A
+M
+N
+
+8
+J
+A
+M
+Z
+
+JAM
+
+S
+L
+L
+8
+
+9
+
+3
+
+4
+
+S F0 F1 E E I I H O T C L S P M M W R F
+R
+N N N N
+P O P V P C D A R E E
+T
+I
+A
+A B V C
+C S P
+R R T A C
+1
+A
+E D H
+
+ALU
+
+C
+
+Mem
+
+B
+bus
+
+B
+
+B bus registers
+0 = MDR
+1 = PC
+2 = MBR
+3 = MBRU
+4 = SP
+
+5 = LV
+6 = CPP
+7 = TOS
+8 = OPC
+9 -15 none
+
+Figure 4-5. The microinstruction format for the Mic-1 (to be described shortly).
+
+At this point we can control the data path with 9 + 4 + 8 + 2 + 1 = 24 signals,
+hence 24 bits. However, these 24 bits control the data path for only one cycle. The
+second part of the control is to determine what is done on the following cycle. To
+include this in the design of the controller, we will create a format for describing
+the operations to be performed using the 24 control bits plus two additional fields:
+NEXT ADDRESS and JAM. Their contents will be discussed shortly. Figure 4-5
+shows a possible format, divided into the six groups (listed below the instruction)
+and containing the following 36 signals:
+
+SEC. 4.1
+
+AN EXAMPLE MICROARCHITECTURE
+
+253
+
+Addr – Contains the address of a potential next microinstruction.
+JAM
+
+– Determines how the next microinstruction is selected.
+
+ALU
+

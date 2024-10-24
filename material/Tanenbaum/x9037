@@ -1,0 +1,100 @@
+
+UNIPRO
+
+HSI
+
+Ducati
+200Mhz
+
+SDRC
+High bandwidth interconnect with multichannel memory support
+
+On-chip
+L3 RAM
+48KB
+
+DAP
+Debug
+& trace
+
+MMCSD
+(w/DMA)
+8-bit DDR
+
+Crypto
+DMA
+
+Security
+accelerators
+
+8-bit HS-MMC (x)
+
+cJTAG
+STP
+ETM
+
+AES/SHA
+
+Peripherals
+L4
+Per / emu / core / ABE
+
+Power
+Reset
+Clocks
+Manager
+
+RESET, CLOCKS,
+POWER CTRLS
+
+GPMC
+external
+NAND/NOR
+
+NAND/NOR
+
+EMIF0
+LPDDR2
+(400MHz)
+LPDDR2
+
+2nd channel
+LPDDR2
+
+EMIF1
+LPDDR2
+(400MHz)
+
+C2C
+
+4-bit HS-MMC (x)
+12C (x)
+UART (x)
+SPI (x)
+McBS (x)
+Slimbus
+GPIOs (max)
+
+DMM
+
+Figure 3-47. The internal organization of the OMAP4430 system-on-a-chip.
+
+The many processors of the OMAP4430 are incorporated specifically to support its mission of low-power operation. The graphics processor, ISP, and IVA3 are
+all programmable accelerators that provide efficient computation capabilities at
+significantly less energy compared to the same tasks running on the ARM A9
+CPUs alone. Fully powered, the OMAP4430 SoC draws only 600 mW of power.
+Compared to a high-end Core i7, the OMAP4430 uses about 1/250 as much power.
+The OMAP4430 also implements a very efficient sleep mode; when all components are asleep, the design draws only 100 μ W. Efficient sleep modes are crucial
+to mobile applications with long periods of standby time, such as a cell phone. The
+less energy used in sleep mode, the longer the cell phone can stay in standby mode.
+To further reduce power demands of the OMAP4430, the design incorporates a
+variety of power-management facilities, including dynamic voltage scaling and
+power gating. Dynamic voltage scaling allows components to run slower at a
+lower voltage, which significantly reduces power requirements. If you do not need
+the CPU’s most blazing speed for computation, the voltage of the design can be
+lowered to run the CPU at a slower speed and much energy will be saved. Power
+gating is an even more aggressive power-management technique where a component is powered down completely when it is not in use, thereby eliminating its
+power draw. For example in a tablet application, if the user is not watching a
+movie, the IVA3 video processor is completely powered down and draws no power.
+Conversely, when the user is watching a movie, the IVA3 video processor is speeding through its video decoding tasks, while the two ARM A9 CPUs are asleep.
+

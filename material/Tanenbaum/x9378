@@ -1,0 +1,100 @@
+! 30
+! 31
+! 32
+! 33
+! 34
+! 35
+! 36
+! 37
+! 38
+! 39
+! 40
+! 41
+! 42
+
+PUSH EXIT
+PUSH EXIT
+SYS
+3: CALL getnum
+CMP AX,0
+JLE 8f
+MOV BX,(curlin)
+CMP BX,0
+JLE 7f
+CMP BX,(count)
+JG 7f
+SHL BX,1
+MOV AX,linh-2(BX)
+MOV CX,linh(BX)
+PUSH 0
+PUSH 0
+PUSH AX
+PUSH (fildes)
+PUSH LSEEK
+SYS
+SUB CX,AX
+PUSH CX
+PUSH buf
+PUSH (fildes)
+PUSH READ
+SYS
+ADD SP,4
+PUSH 1
+PUSH WRITE
+SYS
+ADD SP,14
+JMP 3b
+8: PUSH scanerr
+PUSH PRINTF
+SYS
+ADD SP,4
+JMP 3b
+7: PUSH 0
+PUSH EXIT
+SYS
+fillbuf:
+PUSH bufsiz
+
+! 43
+! 44
+! 45
+! 46
+! 47
+! 48
+! 49
+! 50
+! 51
+! 52
+! 53
+! 54
+! 55
+! 56
+! 57
+! 58
+! 59
+! 60
+! 61
+! 62
+! 63
+! 64
+! 65
+! 66
+! 67
+! 68
+! 69
+! 70
+! 71
+! 72
+! 73
+! 74
+! 75
+! 76
+! 77
+! 78
+! 79
+! 80
+! 81
+! 82
+! 83
+! 84
+

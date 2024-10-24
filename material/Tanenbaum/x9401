@@ -1,0 +1,28 @@
+Amsterdam Compiler Kit (a retargetable portable compiler), Amoeba (an early distributed
+system used on LANs), and Globe (a wide-area distributed system).
+He is also the author of MINIX, a small UNIX clone initially intended for use in student
+programming labs. It was the direct inspiration for Linux and the platform on which Linux
+was initially developed. The current version of MINIX, called MINIX 3, is now focused on
+being an extremely reliable and secure operating system. Prof. Tanenbaum will consider
+his work done when no computer is equipped with a reset button and no living person has
+ever experienced a system crash. MINIX 3 is an on-going open-source project to which you
+are invited to contribute. Go to www.minix3.org to download a free copy.
+Tanenbaum is a Fellow of the ACM, a Fellow of the the IEEE, and a member of the
+Royal Netherlands Academy of Arts and Sciences. He has also won numerous scientific
+prizes, including:
+• 2010 TAA McGuffey Award for Computer Science and Engineering books
+• 2007 IEEE James H. Mulligan, Jr. Education Medal
+• 2002 TAA Texty Award for Computer Science and Engineering books
+• 1997 SIGCSE Award for Outstanding Contributions to Computer Science Education
+• 1994 ACM Karl V. Karlstrom Outstanding Educator Award
+He also holds two honorary doctorates.
+His home page on the World Wide Web can be found at http://www.cs.vu.nl/~ast/.
+Todd Austin is a Professor of Electrical Engineering and Computer Science at the
+University of Michigan in Ann Arbor. His research interests include computer architecture,
+reliable and secure system design, hardware and software verification, and performance
+analysis tools and techniques. Prior to joining academia, Prof. Austin was a Senior Computer Architect in Intel’s Microcomputer Research Labs, a product-oriented research laboratory in Hillsboro, Oregon. Prof. Austin is the first to take credit (but the last to accept
+blame) for creating the SimpleScalar Tool Set, a popular collection of computer architecture performance analysis tools. In 2002, Prof. Austin was a Sloan Research Fellow, and in
+2007 he received the ACM Maurice Wilkes Award for ‘‘innovative contributions in Computer Architecture including the SimpleScalar Toolkit and the DIVA and Razor architectures.’’ Austin received his Ph.D. in Computer Science from the University of Wisconsin in
+1996.
+
+

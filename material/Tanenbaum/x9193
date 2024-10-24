@@ -1,0 +1,100 @@
+
+Yes
+
+Why was the technique invented?
+
+To simulate large To provide multiple admemories
+dress spaces
+
+Figure 6-9. Comparison of paging and segmentation.
+
+The contents of a page are, in a sense, accidental. The programmer is unaware
+that paging is even occurring. Although putting a few bits in each entry of the
+page table to specify the access allowed would be possible, to utilize this feature
+the programmer would have to keep track of where in his address space the page
+boundaries were. The trouble with this idea is that this is precisely the sort of
+administration that paging was invented to eliminate. Because the user of a segmented memory has the illusion that all segments are in main memory all the time,
+they can be addressed without having to be concerned with the administration of
+overlaying them.
+
+6.1.7 Implementation of Segmentation
+Segmentation can be implemented in one of two ways: swapping and paging.
+In the former scheme, some set of segments is in memory at a given instant. If a
+reference is made to a segment not currently in memory, that segment is brought
+in. If there is no room for it, one or more segments must be written to disk first
+(unless a clean copy already exists there, in which case the memory copy can just
+be abandoned). In a certain sense, segment swapping is not unlike demand paging:
+segments come and segments go as needed.
+However, the implementation of segmentation differs from paging in a very essential way: pages are of fixed size and segments are not. Figure 6-10(a) shows an
+example of physical memory initially containing five segments. Now consider
+what happens if segment 1 is evicted and segment 7, which is smaller, is put in its
+place. We arrive at the memory configuration of Fig. 6-10(b). Between segment 7
+and segment 2 is an unused area—that is, a hole. Then segment 4 is replaced by
+segment 5, as shown in Fig. 6-10(c), and segment 3 is replaced by segment 6, as in
+
+SEC. 6.1
+
+453
+
+VIRTUAL MEMORY
+
+Fig. 6-10(d). After the system has been running for a while, memory will be divided up into a number of chunks, some containing segments and some containing
+holes. This phenomenon is called external fragmentation (because space is
+wasted external to the segments, in the holes between them). Sometimes external
+fragmentation is called checkerboarding.
+(3K)
+
+(3K)
+
+Segment 5
+(4K)
+
+Segment 5
+(4K)
+
+Segment 4
+(7K)
+
+Segment 4
+(7K)
+
+Segment 3
+(8K)
+
+Segment 3
+(8K)
+
+Segment 3
+(8K)
+
+Segment 2
+(5K)
+
+Segment 2
+(5K)
+
+Segment 2
+(5K)
+
+Segment 2
+(5K)
+
+(3K)
+
+(3K)
+
+(3K)
+
+Segment 2
+(5K)
+
+Segment 7
+(5K)
+
+Segment 7
+(5K)
+
+Segment 7
+(5K)
+
+Segment 7

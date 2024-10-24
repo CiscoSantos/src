@@ -1,0 +1,100 @@
+SUB M
+MUL M
+DIV M
+
+MOV
+ADD
+SUB
+MUL
+DIV
+
+(X = Y)
+(X = X+Y)
+(X = X−Y)
+(X = X∗Y)
+(X = X/Y)
+
+CHAP. 5
+
+3 Address
+MOV
+ADD
+SUB
+MUL
+DIV
+
+(X = Y)
+(X = Y+Z)
+(X = Y−Z)
+(X = Y∗Z)
+(X = Y/Z)
+
+M is a 16-bit memory address, and X, Y , and Z are either 16-bit addresses or 4-bit registers. The 0-address machine uses a stack, the 1-address machine uses an accumulator, and the other two have 16 registers and instructions operating on all combinations
+of memory locations and registers. SUB X,Y subtracts Y from X and SUB X,Y,Z subtracts
+Z from Y and puts the result in X. With 8-bit opcodes and instruction lengths that are
+multiples of 4 bits, how many bits does each machine need to compute X?
+8. Devise an addressing mechanism that allows an arbitrary set of 64 addresses, not necessarily contiguous, in a large address space to be specifiable in a 6-bit field.
+9. Give a disadvantage of self-modifying code that was not mentioned in the text.
+10. Convert the following formulas from infix to reverse Polish notation.
+a. A + B + C + D − E
+b. (A − B) × (C + D) + E
+c. (A × B) + (C × D) − E
+d. (A − B) × (((C − D × E) / F) / G) × H
+11. Which of the following pairs of reverse Polish notation formulas are mathematically
+equivalent?
+a. A B + C + and A B C + +
+b. A B − C − and A B C − −
+c. A B × C + and A B C + ×
+12. Convert the following reverse Polish notation formulas to infix.
+a. A B − C + D ×
+b. A B /C D / +
+c. A B C D E + × × /
+d. A B C D E × F / + G − H / × +
+13. Write three reverse Polish notation formulas that cannot be converted to infix.
+14. Convert the following infix Boolean formulas to reverse Polish notation.
+a. (A AND B) OR C
+b. (A OR B) AND (A OR C)
+c. (A AND B) OR (C AND D)
+15. Convert the following infix formula to reverse Polish notation and generate IJVM code
+to evaluate it.
+(5 × 2 + 7) − (4 / 2 + 1)
+
+CHAP. 5
+
+PROBLEMS
+
+433
+
+16. How many registers does the machine whose instruction formats are given in Fig. 5-24
+have?
+17. In Fig. 5-24, bit 23 is used to distinguish the use of format 1 from format 2. No bit is
+provided to distinguish the use of format 3. How does the hardware know to use it?
+18. It is common in programming for a program to need to determine where a variable X is
+with respect to the interval A to B. If a three-address instruction were available with
+operands A, B, and X, how many condition code bits would have to be set by this instruction?
+19. Describe one advantage and one disadvantage of program-counter-relative addressing.
+20. The Core i7 has a condition code bit that keeps track of the carry out of bit 3 after an
+arithmetic operation. What good is it?
+21. One of your friends has just come bursting into your room at 3 A.M., out of breath, to
+tell you about his brilliant new idea: an instruction with two opcodes. Should you send
+your friend off to the patent office or back to the drawing board?
+22. Tests of the form
+if (k == 0) ...
+if (a > b) ...
+if (k < 5) ...
+
+are common in programming. Devise an instruction to perform these tests efficiently.
+What fields are present in your instruction?
+23. For the 16-bit binary number 1001 0101 1100 0011, show the effect of:
+a. A right shift of 4 bits with zero fill.
+b. A right shift of 4 bits with sign extension.
+c. A left shift of 4 bits.
+d. A left rotate of 4 bits.
+e. A right rotate of 4 bits.
+24. How can you clear a memory word on a machine with no CLR instruction?
+25. Compute the Boolean expression ( A AND B) OR C for
+A = 1101 0000 1010 0011
+B = 1111 1111 0000 1111
+C = 0000 0000 0010 0000
+26. Devise a way to interchange two variables A and B without using a third variable or
+register. Hint: Think about the EXCLUSIVE OR instruction.

@@ -1,0 +1,100 @@
+wallets are full of them? Again, when the public learns about what RFID chips can
+do, there is likely to be some public discussion about the matter.
+The technology used in RFID chips is developing rapidly. The smallest ones
+are passive (not internally powered) and capable only of transmitting their unique
+numbers when queried. However, larger ones are active, can contain a small battery and a primitive computer, and are capable of doing some calculations. Smart
+cards used in financial transactions fall into this category.
+RFID chips differ not only in being active or passive, but also in the range of
+radio frequencies they respond to. Those operating at low frequencies have a limited data rate but can be sensed at great distances from the antenna. Those operating
+at high frequencies have a higher data rate and a shorter range. The chips also differ in other ways and are being improved all the time. The Internet is full of information about RFID chips, with www.rfid.org being one good starting point.
+
+1.3.4 Microcontrollers
+Next up the ladder we have computers that are embedded inside devices that
+are not sold as computers. The embedded computers, sometimes called microcontrollers, manage the devices and handle the user interface. Microcontrollers are
+found in a large variety of different devices, including the following. Some examples of each category are given in parentheses.
+1. Appliances (clock radio, washer, dryer, microwave, burglar alarm).
+2. Communications gear (cordless phone, cell phone, fax, pager).
+3. Computer peripherals (printer, scanner, modem, CD ROM-drive).
+4. Entertainment devices (VCR, DVD, stereo, MP3 player, set-top box).
+5. Imaging devices (TV, digital camera, camcorder, lens, photocopier).
+6. Medical devices (X-ray, MRI, heart monitor, digital thermometer).
+7. Military weapon systems (cruise missile, ICBM, torpedo).
+8. Shopping devices (vending machine, ATM, cash register).
+9. Toys (talking doll, game console, radio-controlled car or boat).
+A car can easily contain 50 microcontrollers, running subsystems including the
+antilock brakes, fuel injection, radio, lights, and GPS. A jet plane can easily have
+200 or more. A family might easily own several hundred computers without even
+
+34
+
+INTRODUCTION
+
+CHAP. 1
+
+knowing it. Within a few years, practically everything that runs on electricity or
+batteries will contain a microcontroller. The number of microcontrollers sold
+every year dwarfs that of all other kinds of computers except disposable computers
+by orders of magnitude.
+While RFID chips are minimal systems, microcontrollers are small, but complete, computers. Each microcontroller has a processor, memory, and I/O capability. The I/O capability usually includes sensing the device’s buttons and switches
+and controlling the device’s lights, display, sound, and motors. In most cases, the
+software is built into the chip in the form of a read-only memory created when the
+microcontroller is manufactured. Microcontrollers come in two general types:
+general purpose and special purpose. The former are just small, but ordinary computers; the latter have an architecture and instruction set tuned to some specific application, such as multimedia. Microcontrollers come in 4-bit, 8-bit, 16-bit, and
+32-bit versions.
+However, even the general-purpose microcontrollers differ from standard PCs
+in important ways. First, they are extremely cost sensitive. A company buying
+millions of units may make the choice based on a 1-cent price difference per unit.
+This constraint leads manufacturers to make architectural choices based much
+more on manufacturing costs, a criteria less dominant on chips costing hundreds of
+dollars. Microcontroller prices vary greatly depending on how many bits wide
+they are, how much and what kind of memory they have, and other factors. To get
+an idea, an 8-bit microcontroller purchased in large enough volume can probably
+be had for as little as 10 cents per unit. This price is what makes it possible to put
+a computer inside a $9.95 clock radio.
+Second, virtually all microcontrollers operate in real time. They get a stimulus
+and are expected to give an instantaneous response. For example, when the user
+presses a button, often a light goes on, and there should not be any delay between
+the button being pressed and the light going on. The need to operate in real time
+often has impact on the architecture.
+Third, embedded systems often have physical constraints in terms of size,
+weight, battery consumption, and other electrical and mechanical limits. The
+microcontrollers used in them have to be designed with these restrictions in mind.
+One particularly fun application of microcontrollers is in the Arduino embedded control platform. Arduino was designed by Massimo Banzi and David Cuartielles in Ivrea, Italy. Their goal for the project was to produce a complete embedded computing platform that costs less than a large pizza with extra toppings, making it easily accessible to students and hobbyists. (This was a difficult task, because there is a glut of pizzas in Italy, so they are really cheap.) They achieved
+their goal well: a complete Arduino system costs less than 20 US dollars!
+The Arduino system is an open-source hardware design, which means that all
+its details are published and free so that anyone can build (and even sell) an
+Arduino system. It is based on the Atmel AVR 8-bit RISC microcontroller, and
+most board designs also include basic I/O support. The board is programmed using
+
+SEC. 1.3
+
+THE COMPUTER ZOO
+
+35
+
+an embedded programming language called Wiring which has built-in all the bells
+and whistles required to control real-time devices. What makes the Arduino platform fun to use is its large and active development community. There are thousands of published projects using the Arduino, ranging from an electronic pollutant
+sniffer, to a biking jacket with turn signals, a moisture detector that sends email
+when a plant needs to be watered, and an unmanned autonomous airplane. To learn
+more about the Arduino and get your hands dirty on your own Arduino projects, go
+to www.arduino.cc.
+
+1.3.5 Mobile and Game Computers
+A step up are the mobile platforms and video game machines. They are normal computers, often with special graphics and sound capability but with limited
+software and little extensibility. They started out as low-end CPUs for simple
+phones and action games like ping pong on TV sets. Over the years they have
+evolved into far more powerful systems, rivaling or even outperforming personal
+computers in certain dimensions.
+To get an idea of what is inside these systems, consider the specifications of
+three popular products. First, the Sony PlayStation 3. It contains a 3.2-GHz multicore proprietary CPU (called the Cell microprocessor), which is based on the IBM
+PowerPC RISC CPU, and seven 128-bit Synergistic Processing Elements (SPEs).
+The PlayStation 3 also contains 512 MB of RAM, a 550-MHz custom Nvidia
+graphics chip, and a Blu-ray player. Second, the Microsoft Xbox 360. It contains
+a 3.2-GHz IBM triple-core PowerPC CPU with 512 MB of RAM, a 500-MHz custom ATI graphics chip, a DVD player, and a hard disk. Third, the Samsung Galaxy
+Tablet (on which this book was proofread). It contains two 1-GHz ARM cores
+plus a graphics processing unit (integrated into the Nvidia Tegra 2 system-on-a-chip), 1 GB of RAM, dual cameras, a 3-axis gyroscope, and flash memory storage.
+While these machines are not quite as powerful as high-end personal computers produced in the same time period, they are not that far behind, and in some
+ways they are ahead (e.g., the 128-bit SPE in the PlayStation 3 is wider than the
+CPU in any PC). The main difference between these machines and a PC is not so
+much the CPU as it is their being closed systems. Users may not expand them
+with plug-in cards, although USB or FireWire interfaces are sometimes provided.

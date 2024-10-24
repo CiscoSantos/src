@@ -1,0 +1,100 @@
+GOTO (0xA7)
+
+GOTO (0xA7)
+
+GOTO (0xA7)
+
+GOTO (0xA7)
+
+n
+
+n+1
+
+n+1
+
+n+2
+
+n+2
+
+n
+
+n
+
+n
+
+OFFSET BYTE 1
+
+OFFSET BYTE 1
+
+OFFSET BYTE 2
+
+n
+Registers
+PC
+OPC
+MBR
+
+0xA7
+
+0xA7
+
+OFFSET 1 << 8
+
+H
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+Figure 4-22. The situation at the start of various microinstructions. (a) Main1.
+(b) goto1. (c) goto2. (d) goto3. (e) goto4.
+
+new address to put in PC, in goto5. Note carefully that we use MBRU in goto4 instead of MBR because we do not want sign extension of the second byte. The
+16-bit offset is constructed, in fact, by ORing the two halves together. Finally, we
+have to fetch the next opcode before going back to Main1 because the code there
+expects the next opcode in MBR. The last cycle, goto6, is necessary because the
+memory data must be fetched in time to appear in MBR during Main1.
+The offsets used in the goto IJVM instruction are signed 16-bit values, with a
+minimum of −32768 and a maximum of +32767. This means that branches either
+way to labels more distant than these values are not possible. This property can be
+regarded as either a bug or a feature in IJVM (and also in JVM). The bug camp
+would say that the JVM definition should not restrict their programming style. The
+feature camp would say that the work of many programmers would be radically
+improved if they had nightmares about the dreaded compiler message
+Program is too big and hairy. You must rewrite it. Compilation aborted.
+
+Unfortunately (in our view) this message appears only when a then or else clause
+exceeds 32 KB, typically at least 50 pages of Java.
+Now consider the three IJVM conditional branch instructions: IFLT, IFEQ, and
+IF ICMPEQ. The first two pop the top word from the stack, branching if it is less
+than zero or equal to zero, respectively. IF ICMPEQ pops the top two words off the
+stack and branches if and only if they are equal. In all three cases, it is necessary
+to read in a new top-of-stack word to store in TOS.
+The control for these three instructions is similar: the operand or operands are
+first put in registers, then the new top-of-stack value is read into TOS, finally the
+test and branch are made. Consider IFLT first. The word to test is already in TOS,
+
+282
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+but since IFLT pops a word off the stack, the new top of stack must be read in to
+store in TOS. This read is started in iflt1. In iflt2, the word to be tested is saved in
+OPC for the moment, so the new value can be put in TOS shortly without losing the
+current one. In iflt3 the new top-of-stack word is available in MDR, so it is copied
+to TOS. Finally, in iflt4 the word to be tested, now saved in OPC, is run through the
+ALU without being stored and the N bit latched and tested. This microinstruction
+also contains a branch, choosing either T if the test was successful or F otherwise.
+If successful, the remainder of the operation is essentially the same as at the
+beginning of the GOTO instruction, and the sequence simply continues in the middle of the GOTO sequence, with goto2. If unsuccessful, a short sequence (F, F2,
+and F3) is necessary to skip over the rest of the instruction (the offset) before returning to Main1 to continue with the next instruction.
+The code in ifeq2 and ifeq3 follows the same logic, only using the Z bit instead
+of the N bit. In both cases, it is up to the assembler for MAL to recognize that the
+addresses T and F are special and to make sure that their addresses are placed at

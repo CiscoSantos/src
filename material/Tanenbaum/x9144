@@ -1,0 +1,100 @@
+
+ADDRESSING
+
+know that a × b + c means (a × b) + c and not a × (b + c) because multiplication
+has been arbitrarily defined to have precedence over addition. But does left shift
+have precedence over Boolean AND? Who knows? Reverse Polish notation eliminates this nuisance.
+Several algorithms for converting infix formulas into reverse Polish notation
+exist. The one given below is an adaptation of an idea due to E. W. Dijkstra. Assume that a formula is composed of the following symbols: variables, the dyadic
+(two-operand) operators + − * /, and left and right parentheses. To mark the ends
+of a formula, we will insert the symbol after the last symbol and before the first
+symbol.
+A
+
+California
+
+x
+
+(
+
+B
+
++
+
+C
+
+)
+
+⊥
+
+New York
+Switch
+
+Texas
+⊥
+
+Figure 5-20. Each railroad car represents one symbol in the formula to be converted from infix to reverse Polish notation.
+
+Figure 5-20 shows a railroad track from New York to California, with a spur in
+the middle that heads off in the direction of Texas. Think of the New York to California line as the main line with the branch down to Texas as a siding for temporary storage. The names and directions are not important. What matters is the distinction between the main line and the alternative place for temporarily storing
+things. Each symbol in the formula is represented by one railroad car. The train
+moves westward (to the left). When each car arrives at the switch, it must stop just
+before it and ask if it should go to California directly or take a side trip to Texas.
+Cars containing variables always go directly to California and never to Texas. Cars
+containing all other symbols must inquire about the contents of the nearest car on
+the Texas line before entering the switch.
+The table of Fig. 5-21 shows what happens, depending on the contents of the
+nearest car on the Texas line and the car poised at the switch. The first always
+goes to Texas. The numbers refer to the following situations:
+
+378
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+1. The car at the switch heads toward Texas.
+2. The most recent car on the Texas line turns and goes to California.
+3. Both the car at the switch and the most recent car on the Texas line
+are diverted and disappear (i.e., both are deleted).
+4. Stop. The symbols now in California represent the reverse Polish
+notation formula when read from left to right.
+
+Most recently arrived car
+on the Texas line
+
+5. Stop. An error has occurred. The original formula was not correctly
+balanced.
+
+⊥
+
+Car at the switch
++ – x
+/
+(
+
+)
+
+⊥
+
+4
+
+1
+
+1
+
+1
+
+1
+
+1
+
+5
+
++
+
+2
+
+2
+
+2

@@ -1,0 +1,100 @@
+100K
+10K
+
+Core 2
+Core Duo
+Pentium 4
+
+4004
+
+1K
+
+8080
+
+80486
+
+Pentium
+Pro
+
+80386
+
+8086
+8008
+
+8008
+
+100
+10
+1
+1970
+
+1975
+
+1980
+
+1985
+
+1990
+
+1995
+
+2000
+
+2005
+
+2010
+
+Year of introduction
+
+Figure 1-13. Moore’s law for (Intel) CPU chips.
+
+While Moore’s law will probably continue to hold for some years to come, another problem is starting to overshadow it: heat dissipation. Smaller transistors
+make it possible to run at higher clock frequencies, which requires using a higher
+voltage. Power consumed and heat dissipated is proportional to the square of the
+voltage, so going faster means having more heat to get rid of. At 3.6 GHz, the
+Pentium 4 consumes 115 watts of power. That means it gets about as hot as a
+100-watt light bulb. Speeding up the clock makes the problem worse.
+In November 2004, Intel canceled the 4-GHz Pentium 4 due to problems dissipating the heat. Large fans can help but the noise they make is not popular with
+users, and water cooling, while used on large mainframes, is not an option for
+desktop machines (and even less so for notebook computers). As a consequence,
+the once-relentless march of the clock may have ended, at least until Intel’s engineers figure out an efficient way to get rid of all the heat generated. Instead, Intel
+CPU designs now put two or more CPUs on a single chip, along with large shared
+
+SEC. 1.4
+
+EXAMPLE COMPUTER FAMILIES
+
+45
+
+cache. Because of the way power consumption is related to voltage and clock
+speed, two CPUs on a chip consume far less power than one CPU at twice the
+speed. As a consequence, the gain offered by Moore’s law may be increasingly
+exploited in the future to include more cores and larger on-chip caches, rather than
+higher and higher clock speeds. Taking advantage of these multiprocessors poses
+great challenges to programmers, because unlike the sophisticated uniprocessor
+microarchitectures of the past that could extract more performance from existing
+programs, multiprocessors require the programmer to explicitly orchestrate parallel
+execution, using threads, semaphores, shared memory and other headache- and
+bug-inducing technologies.
+
+1.4.2 Introduction to the ARM Architecture
+In the early 80s, the U.K.-based company Acorn Computer, flush with the success of their 8-bit BBC Micro personal computer, began working on a second machine with the hope of competing with the recently released IBM PC. The BBC
+Micro was based on the 8-bit 6502 processor, and Steve Furber and his colleagues
+at Acorn felt that the 6502 did not have the muscle to compete with the IBM PC’s
+16-bit 8086 processor. They began looking at the options in the marketplace, and
+decided that they were too limited.
+Inspired by the Berkeley RISC project, in which a small team designed a
+remarkably fast processor (which eventually led to the SPARC architecture), they
+decided to build their own CPU for the project. They called their design the Acorn
+RISC Machine (or ARM, which would later be rechristened the Advanced RISC
+machine when ARM eventually split from Acorn). The design was completed in
+1985. It included 32-bit instructions and data, and a 26-bit address space, and it
+was manufactured by VLSI Technology.
+The first ARM architecture (called the ARM2) appeared in the Acorn
+Archimedes personal computer. The Archimedes was a very fast and inexpensive
+machine for its day, running up to 2 MIPS (millions of instructions per second) and
+costing only 899 British pounds at launch. The machine became very popular in
+the UK, Ireland, Australia and New Zealand, especially in schools.
+Based on the success of the Archimedes, Apple approached Acorn to develop
+an ARM processor for their upcoming Apple Newton project, the first palmtop
+computer. To better focus on the project, the ARM architecture team left Acorn to

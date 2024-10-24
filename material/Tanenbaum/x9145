@@ -1,0 +1,100 @@
+
+1
+
+1
+
+1
+
+2
+
+–
+
+2
+
+2
+
+2
+
+1
+
+1
+
+1
+
+2
+
+x
+
+2
+
+2
+
+2
+
+2
+
+2
+
+1
+
+2
+
+/
+
+2
+
+2
+
+2
+
+2
+
+2
+
+1
+
+2
+
+(
+
+5
+
+1
+
+1
+
+1
+
+1
+
+1
+
+3
+
+Figure 5-21. Decision table used by the infix-to-reverse Polish notation algorithm
+
+After each action is taken, a new comparison is made between the car currently
+at the switch, which may be the same car as in the previous comparison or may be
+the next car, and the car that is now the last one on the Texas line. The process
+continues until step 4 is reached. Notice that the Texas line is being used as a
+stack, with routing a car to Texas being a push operation, and turning a car already
+on the Texas line around and sending it to California being a pop operation.
+Infix
+
+Reverse Polish notation
+
+A+B×C
+
+ABC×+
+
+A×B+C
+
+AB×C+
+
+A×B+C×D
+
+AB×CD×+
+
+(A + B) / (C − D)
+
+AB+CD−/

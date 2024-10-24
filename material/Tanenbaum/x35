@@ -1,0 +1,100 @@
+3
+
+4
+
+5
+
+6
+
+7
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+S3:
+S4:
+S5:
+1
+
+2
+
+3
+
+4
+5
+Time
+(b)
+
+…
+
+Figure 2-4. (a) A five-stage pipeline. (b) The state of each stage as a function of
+time. Nine clock cycles are illustrated.
+
+In Fig. 2-4(b) we see how the pipeline operates as a function of time. During
+clock cycle 1, stage S1 is working on instruction 1, fetching it from memory. During cycle 2, stage S2 decodes instruction 1, while stage S1 fetches instruction 2.
+During cycle 3, stage S3 fetches the operands for instruction 1, stage S2 decodes
+instruction 2, and stage S1 fetches the third instruction. During cycle 4, stage S4
+executes instruction 1, S3 fetches the operands for instruction 2, S2 decodes instruction 3, and S1 fetches instruction 4. Finally, in cycle 5, S5 writes the result of
+instruction 1 back, while the other stages work on the following instructions.
+Let us consider an analogy to clarify the concept of pipelining. Imagine a cake
+factory in which the baking of the cakes and the packaging of the cakes for shipment are separated. Suppose that the shipping department has a long conveyor belt
+with five workers (processing units) lined up along it. Every 10 sec (the clock
+cycle), worker 1 places an empty cake box on the belt. The box is carried down to
+worker 2, who places a cake in it. A little later, the box arrives at worker 3’s station, where it is closed and sealed. Then it continues to worker 4, who puts a label
+on the box. Finally, worker 5 removes the box from the belt and puts it in a large
+container for later shipment to a supermarket. Basically, this is the way computer
+pipelining works, too: each instruction (cake) goes through several processing
+steps before emerging completed at the far end.
+
+SEC. 2.1
+
+67
+
+PROCESSORS
+
+Getting back to our pipeline of Fig. 2-4, suppose that the cycle time of this machine is 2 nsec. Then it takes 10 nsec for an instruction to progress all the way
+through the five-stage pipeline. At first glance, with an instruction taking 10 nsec,
+it might appear that the machine can run at 100 MIPS, but in fact it does much better than this. At every clock cycle (2 nsec), one new instruction is completed, so
+the actual rate of processing is 500 MIPS, not 100 MIPS.
+Pipelining allows a trade-off between latency (how long it takes to execute an
+instruction), and processor bandwidth (how many MIPS the CPU has). With a
+cycle time of T nsec, and n stages in the pipeline, the latency is nT nsec because
+each instruction passes through n stages, each of which takes T nsec.
+Since one instruction completes every clock cycle and there are 109 /T clock
+cycles/second, the number of instructions executed per second is 109 /T . For example, if T = 2 nsec, 500 million instructions are executed each second. To get
+the number of MIPS, we have to divide the instruction execution rate by 1 million
+to get (109 /T )/106 = 1000/T MIPS. Theoretically, we could measure instruction
+execution rate in BIPS instead of MIPS, but nobody does that, so we will not either.
+Superscalar Architectures
+If one pipeline is good, then surely two pipelines are better. One possible design for a dual pipeline CPU, based on Fig. 2-4, is shown in Fig. 2-5. Here a single
+instruction fetch unit fetches pairs of instructions together and puts each one into
+its own pipeline, complete with its own ALU for parallel operation. To be able to
+run in parallel, the two instructions must not conflict over resource usage (e.g., registers), and neither must depend on the result of the other. As with a single
+pipeline, either the compiler must guarantee this situation to hold (i.e., the hardware does not check and gives incorrect results if the instructions are not compatible), or conflicts must be detected and eliminated during execution using extra

@@ -1,0 +1,100 @@
+which case the sentence might read
+The effect of executing a reserved opcode is implementation defined.
+This means that the compiler writer cannot count on any particular behavior, thus
+giving different implementers the freedom to make different choices. Most architectural specifications are accompanied by test suites that check to see if an implementation that claims to conform to the specification really does.
+
+SEC. 5.1
+
+OVERVIEW OF THE ISA LEVEL
+
+347
+
+It is clear why the ARM v7 has a document that defines its ISA level: so that
+all ARM chips will run the same software. For many years, there was no formal
+defining document for the IA-32 ISA (sometimes called the x86 ISA) because Intel
+did not want to make it easy for other vendors to make Intel-compatible chips. In
+fact, Intel went to court to try to stop other vendors from cloning its chips, although it lost the case. In the late 1990s, however, Intel finally released a complete
+specification of the IA-32 instruction set. Perhaps this was because they felt the
+error of their ways and wanted to help out fellow architects and programmers, or
+perhaps it was because the United States, Japan, and Europe were all investigating
+Intel for possibly violating antitrust laws. This well-written ISA reference is still
+updated today at Intel’s developer website (http://developer.intel.com). The version
+released with Intel’s Core i7 weighs in at 4161 pages, reminding us once again that
+the Core i7 is a complex instruction set computer.
+Another important property of the ISA level is that on most machines there are
+at least two modes. Kernel mode is intended to run the operating system and allows all instructions to be executed. User mode is intended to run application programs and does not permit certain sensitive instructions (such as those that manipulate the cache directly) to be executed. In this chapter we will primarily focus on
+user-mode instructions and properties.
+
+5.1.2 Memory Models
+All computers divide memory up into cells that have consecutive addresses.
+The most common cell size at the moment is 8 bits, but cell sizes from 1 to 60 bits
+have been used in the past (see Fig. 2-10). An 8-bit cell is called a byte (or octet).
+The reason for using 8-bit bytes is that ASCII characters are 7 bits, so one ASCII
+character (plus a rarely used parity bit) fits into a byte. Other codes, such as Unicode and UTF-8, use multiples of 8 bits to represent characters.
+Bytes are generally grouped into 4-byte (32-bit) or 8-byte (64-bit) words with
+instructions available for manipulating entire words. Many architectures require
+words to be aligned on their natural boundaries. For example, a 4-byte word may
+begin at address 0, 4, 8, etc., but not at address 1 or 2. Similarly, an 8-byte word
+may begin at address 0, 8, or 16, but not at address 4 or 6. Alignment of 8-byte
+words is illustrated in Fig. 5-2.
+Alignment is often required because memories operate more efficiently that
+way. The Core i7, for example, fetches 8 bytes at a time from memory using a
+DDR3 interface which supports only aligned 64-bit accesses.. Thus the Core i7
+could not even make a nonaligned memory reference if it wanted to because memory interface requires addresses that are multiples of 8.
+However, this alignment requirement sometimes causes problems. On the
+Core i7, programs are allowed to reference words starting at any address, a property that goes back to the 8088, which had a 1-byte-wide data bus (and thus no requirement about aligning memory references on 8-byte boundaries). If a Core i7
+
+348
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Address
+
+Address
+
+8 Bytes
+
+15
+
+14
+
+13
+
+12
+
+11
+
+8 Bytes
+
+10
+
+9
+
+8
+
+24
+16
+8
+0
+
+19
+15
+
+14
+
+13
+
+17
+
+16
+
+12
+
+Aligned 8-byte
+word at address 8
+(a)
+
+18
+

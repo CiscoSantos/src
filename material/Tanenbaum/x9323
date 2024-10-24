@@ -1,0 +1,100 @@
+1
+
+1
+
+0
+
+1
+
+0
+
+0
+
+0
+
+1
+
+1 × 210 + 1 × 29 + 1 × 28 + 1 × 27 + 1 × 26 + 0 × 25 + 1 × 24 + 0 × 23 + 0 × 22 + 0 × 21 + 1 × 20
++0
++ 16
++0
++0
++0
++1
+1024 + 512 + 256 + 128 + 64
+Octal
+
+3
+
+7
+
+2
+
+1
+
+3 × 83 + 7 × 82 + 2 × 81 + 1 × 80
+1536 + 448 + 16 + 1
+Decimal
+
+2
+
+0
+
+0
+
+1
+
+2 × 103 + 0 × 102 + 0 × 101 + 1 × 100
+2000 + 0
++0
++1
+Hexadecimal
+
+7
+
+D
+
+1
+
+.
+
+7 × 162 + 13 × 161 + 1 × 160
+1792 + 208
++1
+
+Figure A-2. The number 2001 in binary, octal, and hexadecimal.
+
+As an example of binary, octal, decimal, and hexadecimal notation, consider
+Fig. A-3, which shows a collection of nonnegative integers expressed in each of
+these four different systems. Perhaps some archaeologist thousands of years from
+now will discover this table and regard it as the Rosetta Stone to late twentieth century and early twenty-first century number systems.
+
+SEC. A.3
+
+CONVERSION FROM ONE RADIX TO ANOTHER
+
+Decimal
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+20
+30
+40
+50
+60
+70
+80

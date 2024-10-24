@@ -1,0 +1,100 @@
+PCI cont.
+
+9 I/O
+boards
+
+PCI slot
+
+Figure 8-34. The Sun Microsystems E25K multiprocessor.
+
+The centerplane is composed of a set of three 18 × 18 crossbar switches for
+connecting the 18 boardsets. One crossbar is for the address lines, one is for responses, and one is for data transfer. In addition to the 18 expander boards, the centerplane also has a system control boardset plugged into it. This boardset has a single CPU but also interfaces to the CD-ROM, tape, serial lines, and other peripheral
+devices needed for booting, maintaining, and controlling the system.
+The heart of any multiprocessor is the memory subsystem. How does one connect 144 CPUs to the distributed memory? The straightforward ways—a big shared snooping bus or a 144 × 72 crossbar switch—do not work well. The former
+fails due to the bus being a bottleneck and the latter fails because the switch is too
+difficult and expensive to build. Thus large multiprocessors such as the E25K are
+forced to use a more complex memory subsystem.
+At the boardset level, snooping logic is used so all local CPUs can check all
+memory requests coming from the boardset to references to blocks they currently
+have cached. Thus when a CPU needs a word from memory, it first converts the
+virtual address to a physical address and checks its cache. (Physical addresses are
+43 bits, but packaging restrictions limit memory to 576 GB.) If the cache block it
+
+612
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+needs is in its own cache, the word is returned. Otherwise, the snooping logic
+checks if a copy of that word is available somewhere else on the boardset. If so,
+the request is satisfied. If not, the request is passed on via the 18 × 18 address
+crossbar switch as described below. The snooping logic can do one snoop per
+clock cycle. The system clock runs at 150 MHz, so it is possible to perform 150
+million snoops/sec per boardset or 2.7 billion snoops/sec system wide.
+Although the snooping logic is logically a bus, as portrayed in Fig. 8-34, physically it is a device tree, with commands being relayed up and down the tree.
+When a CPU or PCI board puts out an address, it goes to an address repeater via a
+point-to-point connection, as shown in Fig. 8-35. The two address repeaters converge on the expander board, where the addresses are sent back down the tree for
+each device to check for hits. This arrangement is used to avoid having a bus that
+involves three boards.
+
+3x3
+Data
+switch
+
+3 x 3 Data switch
+
+C
+5x5
+Data
+switch
+
+M
+
+C
+5x5
+Data
+switch
+
+Memory
+M
+
+C
+
+M
+
+Addr
+rep.
+
+PCI
+cont.
+
+3x3
+Data
+switch
+PCI
+cont.
+
+Level 1
+I/O board
+
+C
+
+CPU-memory board
+
+Snooping domain
+
+CPU
+
+Level 2
+
+18 x 18 Data
+crossbar switch
+
+Directory and
+snooping management
+
+Addr
+rep.
+
+Level 3

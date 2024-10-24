@@ -1,0 +1,100 @@
+
+Figure 6-2. A mapping in which virtual addresses 4096 to 8191 are mapped onto
+main memory addresses 0 to 4095.
+
+In terms of this picture of mapping addresses from the address space onto the
+actual memory locations, a 4-KB machine without virtual memory simply has a
+fixed mapping between the addresses 0 to 4095 and the 4096 words of memory.
+An interesting question is: ‘‘What happens if a program branches to an address between 8192 and 12287?’’ On a machine that lacks virtual memory, the program
+would cause an error trap that would print a suitably rude message, for example:
+‘‘Nonexistent memory referenced,’’ and terminate the program. On a machine with
+virtual memory, the following sequence of steps would occur:
+1. The contents of main memory would be saved on disk.
+2. Words 8192 to 12287 would be located on disk.
+3. Words 8192 to 12287 would be loaded into main memory.
+4. The address map would be changed to map addresses 8192 to 12287
+onto memory locations 0 to 4095.
+5. Execution would continue as though nothing unusual had happened.
+This technique for automatic overlaying is called paging and the chunks of program read in from disk are called pages.
+A more sophisticated way of mapping addresses from the address space onto
+the actual memory locations is certainly possible. To avoid confusion, we will call
+the addresses that the program can refer to the virtual address space, and the actual, hardwired (physical) memory locations the physical address space. A memory map or page table specifies for each virtual address what the corresponding
+
+SEC. 6.1
+
+VIRTUAL MEMORY
+
+441
+
+physical address is. We presume that there is enough room on disk to store the entire virtual address space (or at least that portion of it that is being used).
+Programs are written just as though there were enough main memory for the
+whole virtual address space, even though that is not the case. Programs may load
+from, or store into, any word in the virtual address space, or branch to any instruction located anywhere within the virtual address space, without regard to the fact
+that there really is not enough physical memory. In fact, the programmer can write
+programs without even being aware that virtual memory exists. The computer just
+looks as if it has a big memory.
+This point is crucial and will be contrasted later with segmentation, where the
+programmer must be aware of the existence of segments. To emphasize it once
+more, paging gives the programmer the illusion of a large, continuous, linear main
+memory, the same size as the virtual address space. In reality, the main memory
+available may be smaller (or larger) than the virtual address space. The simulation
+of this large main memory by paging cannot be detected by the program (except by
+running timing tests). Whenever an address is referenced, the proper instruction or
+data word appears to be present. Because the programmer can program as though
+paging did not exist, the paging mechanism is said to be transparent.
+The idea that a programmer may use some nonexistent feature without being
+concerned with how it works is not new to us, after all. The ISA-level instruction
+set often includes a MUL instruction, even though the underlying microarchitecture
+does not have a multiplication device in the hardware. The illusion that the machine can multiply is typically sustained by microcode. Similarly, the virtual machine provided by the operating system can provide the illusion that all the virtual
+addresses are backed up by real memory, even though this is not true. Only operating system writers (and students of operating systems) have to know how the illusion is supported.
+
+6.1.2 Implementation of Paging
+One essential requirement for a virtual memory is a disk on which to keep the
+whole program and all the data. The disk could be a rotating hard disk or a solidstate disk. Throughout the rest of this book we will refer to ‘‘disk’’ or ‘‘hard disk’’
+for simplicity, but understand that this includes solid-state disks as well. It is conceptually simpler if one thinks of the copy of the program on the disk as the original one and the pieces brought into main memory every now and then as copies
+rather than the other way around. Naturally, it is important to keep the original up
+to date. When changes are made to the copy in main memory, they should also be
+reflected in the original (eventually).
+The virtual address space is broken up into a number of equal-sized pages.
+Page sizes ranging from 512 to 64 KB per page are common at present, although
+sizes as large as 4 MB are used occasionally. The page size is always a power of 2,
+for example, 2k , so that all the addresses can be represented in k bits. The physical
+
+442
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+address space is broken up into pieces in a similar way, each piece being the same
+size as a page, so that each piece of main memory is capable of holding exactly
+one page. These pieces of main memory into which the pages go are called page
+frames. In Fig. 6-2 the main memory contains only one page frame. In practical
+designs it will usually contain thousands of them.
+Figure 6-3(a) illustrates one possible way to divide up the first 64 KB of a virtual address space—in 4-KB pages. (Note that we are talking about 64 KB and 4K
+of addresses here. An address might be a byte but could equally well be a word on
+a computer in which consecutive words had consecutive addresses.) The virtual
+memory of Fig. 6-3 would be implemented by means of a page table with as many
+entries as there are pages in the virtual address space. For simplicity, we have
+shown only the first 16 entries here. When the program tries to reference a word in
+the first 64 KB of its virtual address space, whether to fetch instructions, fetch
+data, or store data, it first generates a virtual address between 0 and 65532 (assuming that word addresses must be divisible by 4). Indexing, indirect addressing, and
+all the usual techniques may be used to generate this address.
+Figure 6-3(b) shows a physical memory consisting of eight 4-KB page frames.
+This memory might be limited to 32 KB because (1) that is all the machine had (a
+processor embedded in a washing machine or microwave oven might not need
+more), or (2) the rest of the memory was allocated to other programs.
+Now consider how a 32-bit virtual address can be mapped onto a physical
+main-memory address. After all, the only thing the memory understands are main
+memory addresses, not virtual addresses, so that is what it must be given. Every
+computer with virtual memory has a device for doing the virtual-to-physical mapping. This device is called the MMU (Memory Management Unit). It may be
+on the CPU chip, or it may be on a separate chip that works closely with the CPU
+chip. Since our sample MMU maps from a 32-bit virtual address to a 15-bit physical address, it needs a 32-bit input register and a 15-bit output register.
+To see how the MMU works, consider the example of Fig. 6-4. When the
+MMU is presented with a 32-bit virtual address, it separates the address into a
+20-bit virtual page number and a 12-bit offset within the page (because the pages
+in our example are 4K). The virtual page number is used as an index into the page
+table to find the entry for the page referenced. In Fig. 6-4, the virtual page number
+is 3, so entry 3 of the page table is selected, as shown.
+The first thing the MMU does with the page-table entry is check to see if the
+page referenced is currently in main memory. After all, with 220 virtual pages and

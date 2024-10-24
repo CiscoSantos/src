@@ -1,0 +1,100 @@
+allow the interpreter to run on multiple platforms, a set of seven system calls and
+five functions are supported by the interpreter. They are listed in Fig. C-7.
+
+SEC. C.4
+
+Nr
+
+Name
+
+5
+8
+3
+4
+6
+19
+1
+117
+122
+127
+121
+125
+
+713
+
+THE 8088 INSTRUCTION SET
+
+Arguments
+
+Return value
+
+OPEN
+CREAT
+READ
+WRITE
+CLOSE
+LSEEK
+EXIT
+
+*name, 0/1/2
+*name, *mode
+fd, buf, nbytes
+fd, buf, nbytes
+fd
+fd, offset(long), 0/1/2
+status
+
+file descriptor
+file descriptor
+# bytes
+# bytes
+0 on success
+position (long)
+
+GETCHAR
+PUTCHAR
+PRINTF
+SPRINTF
+SSCANF
+
+char
+*format, arg
+buf, *format, arg
+buf, *format, arg
+
+Description
+Open file
+Create file
+Read nbytes in buffer buf
+Write nbytes from buffer buf
+Close file with fd
+Move file pointer
+Close files Stop process
+
+read character Read character from std input
+write byte
+Write character to std output
+Print formatted on std output
+Print formatted in buffer buf
+Read arguments from buffer buf
+
+Figure C-7. Some UNIX system calls and subroutines in the interpreter.
+
+These twelve routines can be activated by the standard calling sequence; first
+push the necessary arguments on the stack in reverse order, then push the call number, and finally execute the system trap instruction SYS without operands. The system routine finds all the necessary information on the stack, including the call
+number of the required system service. Return values are put either in the AX register, or in the DX : AX register combination (when the return value is a long).
+It is guaranteed that all other registers will keep their values over the SYS
+instruction. Also, the arguments will still be on the stack after the call. Since they
+are not needed any more, the stack pointer should be adjusted after the call (by the
+caller), unless they are needed for a subsequent call.
+For convenience, the names of the system calls can be defined as constants at
+the start of the assembler program, so that they can be called by name instead of by
+number. In the examples, several system calls will be discussed, so in this section
+only a minimum of necessary detail is supplied.
+In these system calls, files are opened either by the OPEN or by the CREAT call.
+In both cases, the first argument is the address of the start of a string containing the
+file name. The second argument in the OPEN call is either 0 (if the file should be
+opened for reading), 1 (if it should be opened for writing), or 2 (for both). If the
+file should allow writes, and does not exist, it is created by the call. In the CREAT
+call an empty file is created, with permission set according to the second argument.
+Both the OPEN and the CREAT call return a small integer in the AX register, which

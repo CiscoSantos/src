@@ -1,0 +1,100 @@
+P16-19
+
+Strip 16
+
+Strip 17
+
+Strip 18
+
+Strip 19
+
+RAID level 4
+
+Figure 2-23. RAID levels 0 through 5. Backup and parity drives are shown shaded.
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+97
+
+was immense, because in one sector time it could write 32 sectors worth of data.
+Also, losing one drive did not cause problems, because loss of a drive amounted to
+losing 1 bit in each 39-bit word read, something the Hamming code could handle
+on the fly.
+On the down side, this scheme requires all the drives to be rotationally synchronized, and it makes sense only with a substantial number of drives (even with
+32 data drives and 6 parity drives, the overhead is 19 percent). It also asks a lot of
+the controller, since it must do a Hamming checksum every bit time.
+RAID level 3 is a simplified version of RAID level 2. It is illustrated in
+Fig. 2-23(d). Here a single parity bit is computed for each data word and written to
+a parity drive. As in RAID level 2, the drives must be exactly synchronized, since
+individual data words are spread over multiple drives.
+At first thought, it might appear that a single parity bit gives only error detection, not error correction. For the case of random undetected errors, this observation is true. However, for the case of a drive crashing, it provides full 1-bit error
+correction since the position of the bad bit is known. If a drive crashes, the controller just pretends that all its bits are 0s. If a word has a parity error, the bit from
+the dead drive must have been a 1, so it is corrected. Although both RAID levels 2
+and 3 offer very high data rates, the number of separate I/O requests per second
+they can handle is no better than for a single drive.
+RAID levels 4 and 5 work with strips again, not individual words with parity,
+and do not require synchronized drives. RAID level 4 [see Fig. 2-23(e)] is like
+RAID level 0, with a strip-for-strip parity written onto an extra drive. For example,
+if each strip is k bytes long, all the strips are EXCLUSIVE ORed together, resulting in a parity strip k bytes long. If a drive crashes, the lost bytes can be
+recomputed from the parity drive.
+This design protects against the loss of a drive but performs poorly for small
+updates. If one sector is changed, all the drives must be read in order to recalculate
+the parity, which then must be rewritten. Alternatively, the old user data and the
+old parity data can be read and the new parity recomputed from them. Even with
+this optimization, a small update requires two reads and two writes, clearly a bad
+arrangement.
+As a consequence of the heavy load on the parity drive, it may become a bottleneck. This bottleneck is eliminated in RAID level 5 by distributing the parity
+bits uniformly over all the drives, round robin fashion, as shown in Fig. 2-23(f).
+However, in the event of a drive crash, reconstructing the contents of the failed
+drive is a complex process.
+
+2.3.6 Solid-State Disks
+Disks made from nonvolatile flash memory, often called solid-state disks
+(SSDs), are growing in popularity as a high-speed alternative to traditional magnetic disk technologies. The invention of the SSD is a classic tale of ‘‘When they
+
+98
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+give you lemons, make lemonade.’’ While modern electronics may seem totally reliable, the reality is that transistors slowly wear out as they are used. Every time
+they switch, they wear out a little bit more and get closer to no longer working.
+One likely way that a transistor will fail is due to ‘‘hot carrier injection,’’ a failure
+mechanism in which an electron charge gets embedded inside a once-working transistor, leaving it in a state where it is permanently stuck on or off. While generally
+thought of as a death sentence for a (likely) innocent transistor, Fujio Masuoka
+while working for Toshiba discovered a way to harness this failure mechanism to
+create a new nonvolatile memory. In the early 1980s, he invented the first flash
+memory.
+Programming voltage
+12 V
+
+Control Gate
+Insulator
+Floating Gate
+
+Trapped negative
+charge
+
+Insulator
+Test tap
+
+Source
+
+Channel
+
+Drain
+
+Semiconductor
+
+Ground
+
+Figure 2-24. A flash memory cell.
+
+Flash disks are made of many solid-state flash memory cells. The flash memory cells are made from a single special flash transistor. A flash memory cell is
+shown in Fig. 2-24. Embedded inside the transistor is a floating gate that can be
+charged and discharged using high voltages. Before being programmed, the floating gate does not affect the operation of the transistor, essentially acting as an extra
+insulator between the control gate and the transistor channel. If the flash cell is
+tested, it will act like a simple transistor.

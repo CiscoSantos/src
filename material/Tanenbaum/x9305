@@ -1,0 +1,100 @@
+of a full-blown standardization bureaucracy is not necessarily a drawback. When
+all was said and done, it appears that MPI won.
+
+8.4.5 Scheduling
+MPI programmers can easily create jobs requesting multiple CPUs and running for substantial periods of time. When multiple independent requests are available from different users, each needing a different number of CPUs for different
+time periods, the cluster needs a scheduler to determine which job gets to run
+when.
+In the simplest model, the job scheduler requires each job to specify how many
+CPUs it needs. Jobs are then run in strict FIFO order, as shown in Fig. 8-45(a). In
+this model, after a job is started, a check is made to see if enough CPUs are available to start the next job in the input queue. If so, it is started, and so on. Otherwise, the system waits until more CPUs become available. As an aside, although
+we have suggested that this cluster has eight CPUs, it might well have 128 CPUs
+that are allocated in units of 16 (giving eight CPU groups), or another combination.
+CPU group
+
+CPU group
+
+CPU group
+
+0 1 2 3 4 5 6 7
+
+0 1 2 3 4 5 6 7
+
+0 1 2 3 4 5 6 7
+
+1
+
+1
+2
+
+6
+
+Time
+
+8
+
+9
+
+5
+
+8
+
+2
+
+6
+
+7
+
+3
+6
+
+9
+
+5
+5
+
+4
+
+4
+
+7
+
+3
+
+3
+
+1
+
+4
+
+9
+
+2
+
+8
+
+7
+
+(a)
+
+(b)
+
+(c)
+
+Figure 8-45. Scheduling a cluster. (a) FIFO. (b) Without head-of-line blocking.
+(c) Tiling. The shaded areas indicate idle CPUs.
+
+A better scheduling algorithm avoids head-of-line blocking by skipping over
+jobs that do not fit and picking the first one that does fit. Whenever a job finishes,
+the queue of remaining jobs is checked in FIFO order. This algorithm gives the result of Fig. 8-45(b).
+A still more sophisticated scheduling algorithm requires each submitted job to
+specify its shape, that is, how many CPUs for how many minutes. With that information, the job scheduler can attempt to tile the CPU-time rectangle. Tiling is
+
+640
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+especially effective when jobs are submitted during the daytime for execution at
+night, so the job scheduler has all the information about all the jobs in advance and

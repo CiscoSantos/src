@@ -1,0 +1,100 @@
+Rn
+
+Cond
+
+000 PU 1WL
+
+Rn
+
+Rd
+
+Offset1 1 S H 1 Offset2 Halfword transfer: Immediate offset
+
+Cond
+
+000 PU 0WL
+
+Rn
+
+Rd
+
+0000 1 S H 1
+
+Cond
+
+101 L
+
+Data processing / PSR Transfer
+
+Load/Store Byte/Word
+
+Register List
+
+Load/Store Multiple
+
+Rm
+
+Offset
+
+Branch
+
+Cond
+
+0001 0010 1111 1111 1111 0001
+
+Cond
+
+110 P U NWL
+
+Cond
+
+1110
+
+Cond
+
+1 1 1 0 Op1 L
+
+Cond
+
+1111
+
+Op1
+
+Halfword transfer: Register offset
+
+Rn
+
+Offset
+
+Branch Exchange
+
+Rn
+
+CRd
+
+CPNum
+
+CRn
+
+CRd
+
+CPNum Op2 0
+
+CRm
+
+Coprocessor data operation
+
+Rd
+
+CPNum Op2 1
+
+CRm
+
+Coprocessor register transfer
+
+CRn
+
+SWI Number
+
+Coprocessor data transfer
+

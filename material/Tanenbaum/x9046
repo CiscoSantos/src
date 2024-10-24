@@ -1,0 +1,100 @@
+
+1
+
+×
+
+ACK64#
+
+1
+
+Multiplexed address and data lines
+
+Select configuration space instead of memory
+
+Slave
+
+Description
+Request to run a 64-bit transaction
+
+×
+
+Permission is granted for a 64-bit transaction
+
+32
+
+×
+
+Additional 32 bits of address or data
+
+PAR64
+
+1
+
+×
+
+Parity for the extra 32 address/data bits
+
+C/BE#
+
+4
+
+×
+
+Additional 4 bits for byte enables
+
+LOCK
+
+1
+
+×
+
+Lock the bus to allow multiple transactions
+
+SBO#
+
+1
+
+Hit on a remote cache (for a multiprocessor)
+
+SDONE
+
+1
+
+Snooping done (for a multiprocessor)
+
+INTx
+
+4
+
+Request an interrupt
+
+JTAG
+
+5
+
+IEEE 1149.1 JTAG test signals
+
+M66EN
+
+1
+
+Wired to power or ground (66 MHz or 33 MHz)
+(b)
+
+AD
+
+Figure 3-54. (a) Mandatory PCI bus signals. (b) Optional PCI bus signals.
+
+The next three signals are for error reporting. The first of these is STOP#,
+which the slave asserts if something disastrous happens and it wants to abort the
+current transaction. The next one, PERR#, is used to report a data parity error on
+the previous cycle. For a read, it is asserted by the master; for a write it is asserted
+by the slave. It is up to the receiver to take the appropriate action. Finally, SERR#
+is for reporting address errors and system errors.
+
+222
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+

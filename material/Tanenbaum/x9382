@@ -1,0 +1,100 @@
+
+B
+Babbage, Charles, 14–15
+Baby feeding algorithm, 445
+Backward compatibility, 344
+Ball grid array, 211
+Bank, 206
+Banking, Core i7, 328
+Bardeen, John, 19
+Base, 148
+Base pointer, 698
+Base register, 695
+Based-indexed addressing, 376
+
+751
+
+INDEX
+Basic block, 320
+Basic input/output system, 91
+Batch system, 10–11
+Baud, 129
+Bayer filter, 135
+BCD (see Binary Coded Decimal)
+Benchmark, 293
+Best-fit algorithm, 454
+Bi-endian processor, 354
+Big endian memory, 76–78
+Binary, 671
+Binary arithmetic, 678
+Binary coded decimal, 74, 702
+Binary number,
+addition of, 678
+conversion between radices, 673–675
+negative, 675–677
+Binary program, 692
+Binary search, 536
+Binding time, 542–545
+BIOS (see Basic Input Output System)
+Bipolar transistor, 150
+Bisection bandwidth, 618
+Bit, 74, 672
+Bit map, 360
+Bit slice, 166
+Block cache, 484
+Block started by symbol, 717
+Blocking network, 606
+Blu-ray disc, 108
+BlueGene, 622–626
+BlueGene/L, 622
+BlueGene/P, 622–626
+BlueGene/P vs. Red Storm, 629–631
+Boole, George,
+Boolean algebra, 147–157
+Boolean function, 152–153
+Branch history shift register, 314
+Branch instructions, addressing, 380–381
+Branch prediction, 310–315, 315
+dynamic, 312–315
+Branch predictor, Core i7, 326
+Branch target buffer, 327
+Brattain, Walter, 19
+Breakpoint, 724
+Broadband, 129
+BSS section, 717
+BTB (see Branch Target Buffer)
+Bubblejet printer, 126
+Bucket, 536
+
+Buffered message passing, 637
+Bundle, Itanium 2, 425
+Burroughs B5000, 14, 21
+Bus, 20, 55, 108–112, 187–201, 214–232
+ACP, 217
+asynchronous, 194–196
+Core i7, 206–209
+EISA, 111
+ISA, 110
+multiplexed, 191
+PCI, 111–112
+PCIe, 111–112
+synchronous, 191–194
+system, 188
+Bus arbiter, 110
+Bus arbitration, 196–198
+Bus clocking, 191–194
+Bus cycle, 191
+Bus driver, 189
+Bus grant, 196
+Bus master, 189
+Bus operation, 198–201
+Bus protocol, 188
+Bus receiver, 189
+Bus skew, 112, 191
+Bus slave, 189
+Bus transceiver, 189
+Bus width, 190–191
+Busy waiting, 395
+Byron, Lord, 15
+Byte, 75, 347
+Byte instruction, 701

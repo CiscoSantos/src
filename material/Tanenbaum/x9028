@@ -1,0 +1,100 @@
+least 2 nsec prior to MREQ being asserted. This time can be important if MREQ
+drives chip select on the memory chip because some memories require an address
+setup time prior to chip select. Clearly, the system designer should not choose a
+memory chip that needs a 3-nsec setup time.
+The constraints on T M and T RL mean that MREQ and RD will both be asserted
+within 3 nsec from the T 1 falling clock. In the worst case, the memory chip will
+have only 10 + 10 − 3 − 2 = 15 nsec after the assertion of MREQ and RD to get its
+data onto the bus. This constraint is in addition to (and independent of) the
+15-nsec interval needed after the address is stable.
+T MH and T RH tell how long it takes MREQ and RD to be negated after the data
+have been strobed in. Finally, T DH tells how long the memory must hold the data
+on the bus after RD has been negated. As far as our example CPU is concerned, the
+memory can remove the data from the bus as soon as RD has been negated. On
+some actual CPUs, however, the data must be kept stable a little longer.
+We would like to point out that Fig. 3-38 is a highly simplified version of real
+timing constraints. In reality, many more critical times are always specified.
+Nevertheless, it gives a good flavor for how a synchronous bus works.
+A last point worth making is that control signals can be asserted high or low. It
+is up to the bus designers to determine which is more convenient, but the choice is
+essentially arbitrary. One can regard it as the hardware equivalent of a programmer’s choice to represent free disk blocks in a bit map as 0s vs. 1s.
+Asynchronous Buses
+Although synchronous buses are easy to work with due to their discrete time
+intervals, they also have some problems. For example, everything works in multiples of the bus clock. If a CPU and memory are able to complete a transfer in 3.1
+cycles, they have to stretch it to 4.0 because fractional cycles are forbidden.
+Worse yet, once a bus cycle has been chosen, and memory and I/O cards have
+been built for it, it is difficult to take advantage of future improvements in technology. For example, suppose a few years after the system of Fig. 3-38 was built, new
+memories became available with access times of 8 nsec instead of 15 nsec. These
+would get rid of the wait state, speeding up the machine. Then suppose 4-nsec
+memories became available. There would be no further gain in performance because the minimum time for a read is two cycles with this design.
+Putting this in slightly different terms, if a synchronous bus has a heterogeneous collection of devices, some fast and some slow, the bus has to be geared to
+the slowest one and the fast ones cannot use their full potential.
+Mixed technology can be handled by going to an asynchronous bus, that is,
+one with no master clock, as shown in Fig. 3-39. Instead of tying everything to the
+clock, when the bus master has asserted the address, MREQ, RD, and anything else
+
+SEC. 3.4
+
+195
+
+CPU CHIPS AND BUSES
+
+it needs to, it then asserts a special signal that we will call MSYN (Master SYNchronization). When the slave sees this, it performs the work as fast as it can.
+When it is done, it asserts SSYN (Slave SYNchronization).
+Memory address to be read
+
+ADDRESS
+MREQ
+
+RD
+
+MSYN
+
+Data
+
+DATA
+SSYN
+
+Figure 3-39. Operation of an asynchronous bus.
+
+As soon as the master sees SSYN asserted, it knows that the data are available,
+so it latches them and then negates the address lines, along with MREQ, RD, and
+MSYN. When the slave sees the negation of MSYN, it knows that the cycle has been
+completed, so it negates SSYN, and we are back in the original situation, with all
+signals negated, waiting for the next master.
+Timing diagrams of asynchronous buses (and sometimes synchronous buses as
+well) use arrows to show cause and effect, as in Fig. 3-39. The assertion of MSYN
+causes the data lines to be asserted and also causes the slave to assert SSYN. The
+assertion of SSYN, in turn, causes the negation of the address lines, MREQ, RD, and
+MSYN. Finally, the negation of MSYN causes the negation of SSYN, which ends the
+read and returns the system to its original state.
+A set of signals that interlocks this way is called a full handshake. The essential part consists of four events:
+1. MSYN is asserted.
+2. SSYN is asserted in response to MSYN.
+3. MSYN is negated in response to SSYN.
+4. SSYN is negated in response to the negation of MSYN.
+It should be clear that full handshakes are timing independent. Each event is
+caused by a prior event, not by a clock pulse. If a particular master/slave pair is
+slow, that in no way affects a subsequent master/slave pair that is much faster.
+
+196
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+The advantage of an asynchronous bus should now be clear, but the fact is that
+most buses are synchronous. The reason is that it is easier to build a synchronous
+system. The CPU just asserts its signals, and the memory just reacts. There is no
+feedback (cause and effect), but if the components have been chosen properly,
+everything will work without handshaking. Also, there is a lot of investment in
+synchronous bus technology.
+
+3.4.5 Bus Arbitration
+Up until now, we have tacitly assumed that there is only one bus master, the
+CPU. In reality, I/O chips have to become bus master to read and write memory,
+and also to cause interrupts. Coprocessors may also need to become bus master.
+The question then arises: ‘‘What happens if two or more devices all want to become bus master at the same time?’’ The answer is that some bus arbitration
+mechanism is needed to prevent chaos.
+Arbitration mechanisms can be centralized or decentralized. Let us first consider centralized arbitration. One particularly simple form of this is shown in
+Fig. 3-40(a). In this scheme, a single bus arbiter determines who goes next. Many

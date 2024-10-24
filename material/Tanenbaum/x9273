@@ -1,0 +1,100 @@
+
+P
+P
+P
+
+P
+
+P
+(a)
+
+P
+
+CPU
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+
+P
+P
+
+P
+
+P
+
+P
+
+(b)
+
+Figure 8-19. (a) A multiprocessor with 16 CPUs sharing a common memory.
+(b) An image partitioned into 16 sections, each being analyzed by a different
+CPU.
+
+into the next section by reading the words of that section. In this example, some
+objects will be discovered by multiple processes, so some coordination is needed at
+the end to determine how many houses, trees, and airplanes there are.
+Because all CPUs in a multiprocessor see the same memory image, there is
+only one copy of the operating system. Consequently, there is only one page map
+and one process table. When a process blocks, its CPU saves its state in the operating-system tables, then looks in those tables to find another process to run. It is
+this single-system image that distinguishes a multiprocessor from a multicomputer,
+in which each computer has its own copy of the operating system.
+A multiprocessor, like all computers, must have I/O devices, such as disks, network adapters, and other equipment. In some multiprocessor systems, only certain
+CPUs have access to the I/O devices, and thus have a special I/O function. In other
+ones, every CPU has equal access to every I/O device. When every CPU has equal
+access to all the memory modules and all the I/O devices, and is treated as interchangeable with the others by the operating system, the system is called an SMP
+(Symmetric MultiProcessor).
+Multicomputers
+The second possible design for a parallel architecture is one in which each
+CPU has its own private memory, accessible only to itself and not to any other
+CPU. Such a design is called a multicomputer, or sometimes a distributed memory system, and is illustrated in Fig. 8-20(a). The key aspect of a multicomputer
+that distinguishes it from a multiprocessor is that each CPU in a multicomputer has
+its own private, local memory that it can access by just executing LOAD and STORE
+instructions but that no other CPU can access using LOAD and STORE instructions.
+
+588
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Thus multiprocessors have a single physical address space shared by all the CPUs,
+whereas multicomputers have one physical address space per CPU.
+Since the CPUs on a multicomputer cannot communicate by just reading and
+writing the common memory, they need a different communication mechanism.
+What they do is pass messages back and forth using the interconnection network.
+Examples of multicomputers include the IBM BlueGene/L, Red Storm, and the
+Google cluster.
+
+M
+
+P
+
+M
+

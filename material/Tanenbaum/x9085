@@ -1,0 +1,100 @@
+control store addresses that differ only in the leftmost bit.
+The logic for IF ICMPEQ is roughly similar to IFEQ except that here we need to
+read in the second operand as well. It is stored in H in if icmpeq3, where the read
+of the new top-of-stack word is started. Again the current top-of-stack word is
+saved in OPC and the new one installed in TOS. Finally, the test in if icmpeq6 is
+similar to ifeq4.
+Now, we consider the implementation of INVOKEVIRTUAL and IRETURN, the instructions for invoking a procedure call and return, as described in Sec. 4.2.3.
+INVOKEVIRTUAL, a sequence of 22 microinstructions, is the most complex IJVM instruction implemented. Its operation was shown in Fig 4-12. The instruction uses
+its 16-bit offset to determine the address of the method to be invoked. In our implementation, the offset is simply an offset into the constant pool. This location in
+the constant pool points to the method to be invoked. Remember, however, that the
+first 4 bytes of each method are not instructions. Instead they are two 16-bit pointers. The first one gives the number of parameter words (including OBJREF—see
+Fig. 4-12). The second one gives the size of the local variable area in words.
+These fields are fetched through the 8-bit port and assembled just as if they were
+two 16-bit offsets within an instruction.
+Then, the linkage information necessary to restore the machine to its previous
+state—the address of the start of the old local variable area and the old PC—is stored immediately above the newly created local variable area and below the new
+stack. Finally, the opcode of the next instruction is fetched and PC is incremented
+before returning to Main1 to begin the next instruction.
+IRETURN is a simple instruction containing no operands. It simply uses the address stored in the first word of the local variable area to retrieve the linkage information. Then it restores SP, LV, and PC to their previous values and copies the return value from the top of the current stack onto the top of the original stack, as
+shown in Fig 4-13.
+
+SEC. 4.4
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+283
+
+4.4 DESIGN OF THE MICROARCHITECTURE LEVEL
+Like just about everything else in computer science, the design of the microarchitecture level is full of trade-offs. Computers have many desirable characteristics, including speed, cost, reliability, ease of use, energy requirements, and
+physical size. However, one trade-off drives the most important choices the CPU
+designer must make: speed versus cost. In this section we will look at this issue in
+detail to see what can be traded off against what, how high performance can be
+achieved, and at what price in hardware and complexity.
+
+4.4.1 Speed versus Cost
+While faster technology has resulted in the greatest speedup over any period of
+time, that is beyond the scope of this text. Speed improvements due to organization, while less amazing than that due to faster circuits, have nevertheless been
+impressive. Speed can be measured in a variety of ways, but given a circuit technology and an ISA, there are three basic approaches for increasing the speed of execution:
+1. Reduce the number of clock cycles needed to execute an instruction.
+2. Simplify the organization so that the clock cycle can be shorter.
+3. Overlap the execution of instructions.
+The first two are obvious, but there is a surprising variety of design opportunities
+that can dramatically affect either the number of clock cycles, the clock period,
+or—most often—both. In this section, we will give an example of how the encoding and decoding of an operation can affect the clock cycle.
+The number of clock cycles needed to execute a set of operations is known as
+the path length. Sometimes the path length can be shortened by adding specialized hardware. For example, by adding an incrementer (conceptually, an adder
+with one side permanently wired to add 1) to PC, we no longer have to use the
+ALU to advance PC, eliminating cycles. The price paid is more hardware. However, this capability does not help as much as might be expected. For most instructions, the cycles consumed incrementing the PC are also cycles where a read operation is being performed. The subsequent instruction could not be executed earlier
+anyway because it depends on the data coming from the memory.
+Reducing the number of instruction cycles necessary for fetching instructions
+requires more than just an additional circuit to increment the PC. In order to speed
+up the instruction fetching to any significant degree, the third technique—overlapping the execution of instructions—must be exploited. Separating
+out the circuitry for fetching the instructions—the 8-bit memory port, and the MBR
+and PC registers—is most effective if the unit is made functionally independent of
+the main data path. In this way, it can fetch the next opcode or operand on its own,
+
+284
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+perhaps even performing asynchronously with respect to the rest of the CPU and
+fetching one or more instructions ahead.
+One of the most time-consuming phases of the execution of many instructions
+is fetching a 2-byte offset, extending it appropriately, and accumulating it in the H
+register in preparation for an addition, for example, in a branch to PC ± n bytes.
+One potential solution—making the memory port 16 bits wide—greatly complicates the operation, because the memory is actually 32 bits wide. The 16 bits
+needed might span word boundaries, so that even a single read of 32 bits will not
+necessarily fetch both bytes needed.
+Overlapping the execution of instructions is by far the most interesting approach and offers the most opportunity for dramatic increases in speed. Simple
+overlap of instruction fetch and execution is surprisingly effective. More sophisticated techniques go much further, however, overlapping execution of many instructions. In fact this idea is at the heart of modern computer design. We will discuss
+some of the basic techniques for overlapping instruction execution below and motivate some of the more sophisticated ones.
+Speed is half the picture; cost is the other half. Cost can also be measured in a
+variety of ways, but a precise definition of cost is problematic. Some measures are
+as simple as a count of the number of components. This was particularly true in
+the days when processors were built of discrete components that were purchased
+and assembled. Today, the entire processor exists on a single chip, but bigger,
+more complex chips are much more expensive than smaller, simpler ones. Individual components—for example, transistors, gates, or functional units—can be
+counted, but often the count is not as important as the amount of area required on
+the integrated circuit. The more area required for the functions included, the larger
+the chip. And the manufacturing cost of the chip grows much faster than its area.
+For this reason, designers often speak of cost in terms of ‘‘real estate,’’ that is, the
+area required for a circuit (presumably measured in pico-acres).
+One of the most thoroughly studied circuits in history is the binary adder.
+There have been thousands of designs, and the fastest ones are much quicker than
+the slowest ones. They are also far more complex. The system designer has to
+decide whether the greater speed is worth the real estate.
+Adders are not the only component with many choices. Nearly every component in the system can be designed to run faster or slower, with a cost differential.
+The challenge to the designer is to identify the components in the system to speed
+up in order to improve the system the most. Interestingly enough, many an individual component can be replaced with a much faster component with little or no
+effect on speed. In the following sections we will look at some of the design issues
+and the corresponding trade-offs.
+A key factor in determining how fast the clock can run is the amount of work
+that must be done on each clock cycle. Obviously, the more work to be done, the
+longer the clock cycle. It’s not quite that simple, of course, because the hardware
+is quite good at doing things in parallel, so it’s actually the sequence of operations
+
+SEC. 4.4
+

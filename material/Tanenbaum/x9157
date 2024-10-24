@@ -1,0 +1,100 @@
+The solution lies in going back to programmed I/O, but having somebody else
+do it. (The solution to many problems lies in having somebody else do the work.)
+Figure 5-32 shows how this is arranged. Here we have added a new chip, a DMA
+(Direct Memory Access) controller to the system, with direct access to the bus.
+The DMA chip has (at least) four registers inside it, all of which can be loaded
+by software running on the CPU. The first contains the memory address to be read
+or written. The second contains the count of how many bytes (or words) are to be
+transferred. The third specifies the device number or I/O space address to use, thus
+specifying which I/O device is desired. The fourth tells whether data are to be read
+from or written to the I/O device.
+To write a block of 32 bytes from memory address 100 to a terminal (say, device 4), the CPU writes the numbers 32, 100, and 4 into the first three DMA registers, and then the code for WRITE (say, 1) in the fourth one, as illustrated in
+Fig. 5-32. Once initialized like this, the DMA controller makes a bus request to
+read byte 100 from the memory, the same way the CPU would read from the memory. Having gotten this byte, the DMA controller then makes an I/O request to device 4 to write the byte to it. After both of these operations have been completed,
+
+SEC. 5.5
+
+397
+
+INSTRUCTION TYPES
+Terminal
+
+Address
+CPU
+
+DMA
+Count
+
+…
+
+100
+
+RS232C
+Controller
+
+…
+
+Device
+
+Memory
+
+100
+32
+4
+1
+Direction
+
+Bus
+
+Figure 5-32. A system with a DMA controller.
+
+the DMA controller increments its address register by 1 and decrements its count
+register by 1. If the count register is still greater than 0, another byte is read from
+memory and then written to the device.
+When the count finally goes to 0, the DMA controller stops transferring data
+and asserts the interrupt line on the CPU chip. With DMA, the CPU only has to initialize a few registers. After that, it is free to do something else until the complete
+transfer is finished, at which time it gets an interrupt from the DMA controller.
+Some DMA controllers have two, or three, or more sets of registers, so they can
+control multiple simultaneous transfers.
+While DMA greatly relieves the CPU from the burden of I/O, the process is
+not totally free. If a high-speed device, such as a disk, is being run by DMA, many
+bus cycles will be needed, both for memory references and device references. During these cycles the CPU will have to wait (DMA always has a higher bus priority
+than the CPU because I/O devices frequently cannot tolerate delays). The process
+of having a DMA controller take bus cycles away from the CPU is called cycle
+stealing. Nevertheless, the gain in not having to handle one interrupt per byte (or
+word) transferred far outweighs the loss due to cycle stealing.
+
+5.5.8 The Core i7 Instructions
+In this section and the next two, we will look at the instruction sets of our three
+example machines: the Core i7, the OMAP4430 ARM CPU, and the ATmega168
+AVR. Each has a core of instructions that compilers normally generate, plus a set
+
+398
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Transfer of control
+
+Moves
+MOV DST,SRC
+
+Move SRC to DST
+
+JMP ADDR
+
+Jump to ADDR
+
+PUSH SRC
+
+Push SRC onto the stack
+
+Jxx ADDR
+
+Conditional jumps based on flags
+
+POP DST
+
+Pop a word from the stack to DST
+

@@ -1,0 +1,100 @@
+
+CHAP. 3
+
+3.2 BASIC DIGITAL LOGIC CIRCUITS
+In the previous sections we saw how to implement truth tables and other simple circuits using individual gates. In practice, few circuits are actually constructed
+gate-by-gate anymore, although this once was common. Nowadays, the usual
+building blocks are modules containing a number of gates. In the following sections we will examine these building blocks more closely and see how they are
+used and how they can be constructed from individual gates.
+
+3.2.1 Integrated Circuits
+Gates are not manufactured or sold individually but rather in units called Integrated Circuits, often called ICs or chips. An IC is a rectangular piece of silicon
+of varied size depending on how many gates are required to implement the chip’s
+components. Small dies will measure about 2 mm × 2 mm, while larger dies can be
+as large as 18 mm × 18 mm. ICs are mounted into plastic or ceramic packages that
+can be much larger than the dies they house, if many pins are required to connect
+the chip to the outside world. Each pin connects to the input or output of some
+gate on the chip or to power or to ground.
+Figure 3-10 shows a number of common IC packages used for chips today.
+Smaller chips, such as those used to house microcontrollers or RAM chips, will
+use Dual Inline Packages or DIPs. A DIP is a package with two rows of pins that
+fit into a matching socket on the motherboard. The most common DIP packages
+have 14, 16, 18, 20, 22, 24, 28, 40, 64, or 68 pins. For large chips, square packages
+with pins on all four sides or on the bottom are often used. Two common packages
+for larger chips are Pin Grid Arrays or PGAs and Land Grid Arrays or LGAs.
+PGA have pins on the bottom of the package, which fit into a matching socket on
+the motherboard. PGA sockets often utilize a zero-insertion-force mechanism in
+which the PGA can be placed into the socket without force, then a lever can be
+thrown which will apply lateral pressure to all of the PGA’s pins, holding it firmly
+in the PGA socket. LGAs, on the other hand, have small flat pads on the bottom of
+the chip, and an LGA socket will have a cover that fits over the LGA and applies a
+downward force on the chip, ensuring that all of the LGA pads make contact with
+the LGA socket pads.
+Because many IC packages are symmetric in shape, figuring out which orientation is correct is a perennial problem with IC installation. DIPs typically have a
+notch in one end which matches a corresponding mark on the DIP socket. PGAs
+typically have one pin missing, so if you attempt to insert the PGA into the socket
+incorrectly, the PGA will not insert. Because LGAs do not have pins, correct installation is enforced by placing a notch on one or two sides of the LGA, which
+matches a notch in the LGA socket. The LGA will not enter the socket unless the
+two notches match.
+
+SEC. 3.2
+
+159
+
+BASIC DIGITAL LOGIC CIRCUITS
+
+(a)
+
+(b)
+
+(c)
+
+Figure 3-10. Common types of integrated-circuit packages, including a dual-inline package (a), pin grid array (b), and land grid array (c).
+
+For our purposes, all gates are ideal in the sense that the output appears as soon
+as the input is applied. In reality, chips have a finite gate delay, which includes
+both the signal propagation time through the chip and the switching time. Typical
+delays are 100s of picoseconds to a few nanoseconds.
+It is within the current state of the art to put more than 1 billion transistors on a
+single chip. Because any circuit can be built up from NAND gates, you might think
+that a manufacturer could make a very general chip containing 500 million NAND
+gates. Unfortunately, such a chip would need 1,500,000,002 pins. With the standard pin spacing of 1 millimeter, an LGA would have to be 38 meters on a side to
+accommodate all of those pins, which might have a negative effect on sales. Clearly, the only way to take advantage of the technology is to design circuits with a
+high gate/pin ratio. In the following sections we will look at simple circuits that
+combine a number of gates internally to provide a useful function requiring only a
+limited number of external connections (pins).
+
+3.2.2 Combinational Circuits
+Many applications of digital logic require a circuit with multiple inputs and
+outputs in which the outputs are uniquely determined by the current input values.
+Such a circuit is called a combinational circuit. Not all circuits have this property. For example, a circuit containing memory elements may generate outputs that
+depend on the stored values as well as the input variables. A circuit implementing
+a truth table, such as that of Fig. 3-3(a), is a typical example of a combinational circuit. In this section we will examine some frequently used combinational circuits.
+Multiplexers
+At the digital logic level, a multiplexer is a circuit with 2n data inputs, one
+data output, and n control inputs that select one of the data inputs. The selected
+data input is ‘‘gated’’ (i.e., sent) to the output. Figure 3-11 is a schematic diagram
+
+160
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+for an eight-input multiplexer. The three control lines, A, B, and C, encode a 3-bit
+number that specifies which of the eight input lines is gated to the OR gate and
+thence to the output. No matter what value is on the control lines, seven of the
+AND gates will always output 0; the other one may output either 0 or 1, depending
+on the value of the selected input line. Each AND gate is enabled by a different
+combination of the control inputs. The multiplexer circuit is shown in Fig. 3-11.
+D0
+D1
+D2
+D3
+F
+
+D4
+D5
+D6
+D7
+A A B B C C

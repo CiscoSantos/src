@@ -1,0 +1,100 @@
+00001010
+11111101
+
++7
+
+1 00000110
+
+1 00000111
+
+carry 1
+
+discarded
+
+00000111
+
+Figure A-9. Addition in one’s complement and two’s complement.
+
+If the addend and the augend are of opposite signs, overflow error cannot occur. If they are of the same sign and the result is of the opposite sign, overflow
+error has occurred and the answer is wrong. In both one’s and two’s complement
+arithmetic, overflow occurs if and only if the carry into the sign bit differs from the
+carry out of the sign bit. Most computers preserve the carry out of the sign bit, but
+the carry into the sign bit is not visible from the answer. For this reason, a special
+overflow bit is usually provided.
+
+APP. A
+
+679
+
+PROBLEMS
+
+PROBLEMS
+1. Convert the following numbers to binary: 1984, 4000, 8192.
+2. What is 1001101001 (binary) in decimal? In octal? In hexadecimal?
+3. Which of the following are valid hexadecimal numbers? BED, CAB, DEAD,
+DECADE, ACCEDED, BAG, DAD.
+4. Express the decimal number 100 in all radices from 2 to 9.
+5. How many different positive integers can be expressed in k digits using radix r numbers?
+6. Most people can only count to 10 on their fingers; however, computer scientists can do
+better. If you regard each finger as one binary bit, with finger extended as 1 and finger
+touching palm as 0, how high can you count using both hands? With both hands and
+both feet? Now use both hands and both feet, with the big toe on your left foot as a
+sign bit for two’s complement numbers. What is the range of expressible numbers?
+7. Perform the following calculations on 8-bit two’s complement numbers.
+00101101
++ 01101111
+
+11111111
++ 11111111
+
+00000000
+− 11111111
+
+11110111
+− 11110111
+
+8. Repeat the calculation of the preceding problem but now in one’s complement.
+9. Consider the following addition problems for 3-bit binary numbers in two’s complement. For each sum, state
+a. Whether the sign bit of the result is 1.
+b. Whether the low-order 3 bits are 0.
+c. Whether an overflow occurred.
+000
++ 001
+
+000
++ 111
+
+111
++ 110
+
+100
++ 111
+
+100
++ 100
+
+10. Signed decimal numbers consisting of n digits can be represented in n + 1 digits without a sign. Positive numbers have 0 as the leftmost digit. Negative numbers are
+formed by subtracting each digit from 9. Thus the negative of 014725 is 985274.
+Such numbers are called nine’s complement numbers and are analogous to one’s complement binary numbers. Express the following as three-digit nine’s complement numbers: 6, −2, 100, −14, −1, 0.
+11. Determine the rule for addition of nine’s complement numbers and then perform the
+following additions.
+0001
++ 9999
+
+0001
++ 9998
+
+9997
++ 9996
+
+9241
++ 0802
+
+12. Ten’s complement is analogous to two’s complement. A ten’s complement negative
+number is formed by adding 1 to the corresponding nine’s complement number, ignoring the carry. What is the rule for ten’s complement addition?
+
+680
+
+BINARY NUMBERS
+
+APP. A

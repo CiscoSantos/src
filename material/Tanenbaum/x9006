@@ -1,0 +1,100 @@
+A
+
+B
+
+A
+
+D2
+
+A
+
+D3
+
+B
+
+D4
+
+B
+C
+
+C
+C
+
+D5
+
+D6
+
+D7
+
+Figure 3-13. A three-to-eight decoder circuit.
+
+The operation of the circuit of Fig. 3-13 is straightforward. Each AND gate has
+three inputs, of which the first is either A or A, the second is either B or B, and the
+third is either C or C. Each gate is enabled by a different combination of inputs:
+D0 by A B C, D1 by A B C, and so on.
+Comparators
+Another useful circuit is the comparator, which compares two input words.
+The simple comparator of Fig. 3-14 takes two inputs, A and B, each of length 4
+bits, and produces a 1 if they are equal and a 0 otherwise. The circuit is based on
+the XOR (EXCLUSIVE OR) gate, which puts out a 0 if its inputs are equal and a 1
+otherwise. If the two input words are equal, all four of the XOR gates must output
+0. These four signals can then be ORed together; if the result is 0, the input words
+are equal, otherwise not. In our example we have used a NOR gate as the final
+stage to reverse the sense of the test: 1 means equal, 0 means unequal.
+
+SEC. 3.2
+
+163
+
+BASIC DIGITAL LOGIC CIRCUITS
+
+EXCLUSIVE OR gate
+A0
+B0
+
+A1
+B1
+A=B
+A2
+B2
+
+A3
+B3
+
+Figure 3-14. A simple 4-bit comparator.
+
+3.2.3 Arithmetic Circuits
+It is now time to move on from the general-purpose circuits discussed above to
+combinational circuits. As a reminder, combinational circuits have outs that are
+functions of their inputs, but circuits used for doing arithmetic do not have this
+property. We will begin with a simple 8-bit shifter, then look at how adders are
+constructed, and finally examine arithmetic logic units, which play a central role in
+any computer.
+Shifters
+Our first arithmetic circuit is an eight-input, eight-output shifter (see
+Fig. 3-15). Eight bits of input are presented on lines D0 , . . . , D7 . The output,
+which is just the input shifted 1 bit, is available on lines S 0 , . . . , S 7 . The control
+line, C, determines the direction of the shift, 0 for left and 1 for right. On a left
+shift, a 0 is inserted into bit 7. Similarly, on a right shift, a 1 is inserted into bit 0.
+To see how the circuit works, notice the pairs of AND gates for all the bits except the gates on the end. When C = 1, the right member of each pair is turned on,
+passing the corresponding input bit to output. Because the right AND gate is wired
+to the input of the OR gate to its right, a right shift is performed. When C = 0, it is
+the left member of the AND gate pair that turns on, doing a left shift.
+
+164
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+D0
+
+D1
+
+D2
+
+D3
+
+D4
+
+D5

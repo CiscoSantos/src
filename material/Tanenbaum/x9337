@@ -1,0 +1,100 @@
+
+IEEE FLOATING-POINT STANDARD 754
+
+Item
+
+Single precision
+
+Double precision
+
+Bits in sign
+
+1
+
+1
+
+Bits in exponent
+
+8
+
+11
+
+Bits in fraction
+
+23
+
+52
+
+Bits, total
+Exponent system
+Exponent range
+Smallest normalized number
+Largest normalized number
+
+32
+
+64
+
+Excess 127
+
+Excess 1023
+
+−126 to +127
+
+−1022 to +1023
+
+2−126
+
+2−1022
+128
+
+−38
+
+Decimal range
+
+approx. 10
+
+Smallest denormalized number
+
+approx. 21024
+
+approx. 2
+
+to 10
+
+38
+
+approx. 10
+
+−45
+
+approx. 10
+
+−308
+
+approx. 10
+
+to 10
+
+308
+
+−324
+
+Figure B-5. Characteristics of IEEE floating-point numbers.
+Normalized ±
+
+0 < Exp < Max
+
+Any bit pattern
+
+Denormalized ±
+
+0
+
+Any nonzero bit pattern
+
+Zero ±
+
+0
+
+0

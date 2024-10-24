@@ -1,0 +1,100 @@
+PD3
+PD4
+VCC
+GND
+PB6
+PB7
+PD5
+PD6
+PD7
+PB0
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+28
+27
+26
+25
+24
+23
+22
+21
+20
+19
+18
+17
+16
+15
+
+PC5
+PC4
+PC3
+PC2
+PC1
+PC0
+GND
+AREF
+AVCC
+PB5
+PB4
+PB3
+PB2
+PB1
+
+Figure 3-49. Physical pinout of the ATmega168.
+
+As we mentioned in Chap. 1, the Atmel ATmega168 microcontroller is widely
+used, mostly due to its very low cost (about $1). As we will see shortly, it is also a
+versatile chip, which makes interfacing to it simple and inexpensive. So let us now
+examine this chip, whose physical pinout is shown in Fig. 3-49.
+As can be seen from the figure, the ATmega168 normally comes in a standard
+28-pin package (although other packages are available). At first glance, you probably noticed that the pinout on this chip is a bit strange compared to the previous
+two designs we examined. In particular, this chip has no address and data lines.
+This is because the chip is not designed to be connected to memory, only to devices. All of the memory, SRAM and flash, is contained within the processor, obviating the need for any address and data pins as shown in Fig. 3-50.
+
+213
+
+EXAMPLE CPU CHIPS
+
+Watchdog
+timer
+Watchdog
+oscillator
+
+Oscillator
+circuits/
+clock
+generation
+
+VCC
+
+GND
+
+SEC. 3.5
+
+Power
+supervision
+POR/BOD &
+RESET
+
+debugWIRE
+
+Flash
+
+SRAM
+
+Program
+logic

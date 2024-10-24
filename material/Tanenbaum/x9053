@@ -1,0 +1,100 @@
+more carefully at how this is done. Let us consider a simple 16-bit embedded computer consisting of a CPU, a 2KB × 8 byte EPROM for the program, a 2 − KB × 8
+byte RAM for the data, and a PIO interface. This small system might be used as a
+prototype for the brain of a cheap toy or simple appliance. Once in production, the
+EPROM might be replaced by a ROM.
+The PIO interface can be selected in one of two ways: as a true I/O device or as
+part of memory. If we choose to use it as an I/O device, then we must select it
+
+234
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+using an explicit bus line that indicates that an I/O device is being referenced, and
+not memory. If we use the other approach, memory-mapped I/O, then we must
+assign it 4 bytes of the memory space for the three ports and the control register.
+The choice is somewhat arbitrary. We will choose memory-mapped I/O because it
+illustrates some interesting issues in I/O interfacing.
+The EPROM needs 2 KB of address space, the RAM also needs 2K of address
+space, and the PIO needs 4 bytes. Because our example address space is 64K, we
+must make a choice about where to put the three devices. One possible choice is
+shown in Fig. 3-60. The EPROM occupies addresses to 2K, the RAM occupies addresses 32 KB to 34 KB, and the PIO occupies the highest 4 bytes of the address
+space, 65532 to 65535. From the programmer’s point of view, it makes no difference which addresses are used; however, for interfacing it does matter. If we
+had chosen to address the PIO via the I/O space, it would not need any memory addresses (but it would need four I/O space addresses).
+EPROM at address 0
+
+0
+
+RAM at address 8000H
+
+PIO at FFFCH
+
+4K 8K 12K 16K 20K 24K 28K 32K 36K 40K 44K 48K 52K 56K 60K 64K
+
+Figure 3-60. Location of the EPROM, RAM, and PIO in our 64-KB address space.
+
+With the address assignments of Fig. 3-60, the EPROM should be selected by
+any 16-bit memory address of the form 00000xxxxxxxxxxx (binary). In other
+words, any address whose 5 high-order bits are all 0s falls in the bottom 2 KB of
+memory, hence in the EPROM. Thus, the EPROM’s chip select could be wired to
+a 5-bit comparator, one of whose inputs was permanently wired to 00000.
+A better way to achieve the same effect is to use a five-input OR gate, with the
+five inputs attached to address lines A11 to A15. If and only if all five lines are 0
+will the output be 0, thus asserting CS (which is asserted low). This addressing approach is illustrated in Fig. 3-60(a) and is called full-address decoding.
+The same principle can be used for the RAM. However, the RAM should respond to binary addresses of the form 10000xxxxxxxxxxx, so an additional
+inverter is needed as shown in the figure. The PIO address decoding is somewhat
+more complicated, because it is selected by the four addresses of the form
+11111111111111xx. A possible circuit that asserts CS only when the correct address appears on the address bus is shown in the figure. It uses two eight-input
+NAND gates to feed an OR gate.
+However, if the computer really consists of only the CPU, two memory chips,
+and the PIO, we can use a trick to greatly simplify the address decoding. The trick
+
+SEC. 3.7
+
+INTERFACING
+
+235
+
+is based on the fact that all EPROM addresses, and only EPROM addresses, have a
+0 in the high-order bit, A15. Therefore, we can just wire CS to A15 directly, as
+shown in Fig. 3-61(b).
+At this point the decision to put the RAM at 8000H may seem much less arbitrary. The RAM decoding can be done by noting that the only valid addresses of
+the form 10xxxxxxxxxxxxxx are in the RAM, so 2 bits of decoding are sufficient.
+Similarly, any address starting with 11 must be a PIO address. The complete decoding logic is now two NAND gates and an inverter.
+The address decoding logic of Fig. 3-61(b) is called partial address decoding,
+because the full addresses are not used. It has the property that a read from addresses 0001000000000000, 0001100000000000, or 0010000000000000 will give
+the same result. In fact, every address in the bottom half of the address space will
+select the EPROM. Because the extra addresses are not used, no harm is done, but
+if one is designing a computer that may be expanded in the future (an unlikely occurrence in a toy), partial decoding should be avoided because it ties up too much
+address space.
+Another common address-decoding technique is to use a decoder, such as that
+shown in Fig. 3-13. By connecting the three inputs to the three high-order address
+lines, we get eight outputs, corresponding to addresses in the first 8K, second 8K,
+and so on. For a computer with eight RAMs, each 8K × 8, one such chip provides
+the complete decoding. For a computer with eight 2K × 8 memory chips, a single
+decoder is also sufficient, provided that the memory chips are each located in distinct 8-KB chunks of address space. (Remember our earlier remark that the position of the memory and I/O chips within the address space matters.)
+
+3.8 SUMMARY
+Computers are constructed from integrated circuit chips containing tiny
+switching elements called gates. The most common gates are AND, OR, NAND,
+NOR, and NOT. Simple circuits can be built up by directly combining individual
+gates.
+More complex circuits are multiplexers, demultiplexers, encoders, decoders,
+shifters, and ALUs. Arbitrary Boolean functions can be programmed using a
+FPGA. If many Boolean functions are needed, FPGAs are often more efficient.
+The laws of Boolean algebra can be used to transform circuits from one form to
+another. In many cases more economical circuits can be produced this way.
+Computer arithmetic is done by adders. A single-bit full adder can be constructed from two half adders. An adder for a multibit word can be built by connecting multiple full adders in such a way as to allow the carry out of each one
+feed into its left-hand neighbor.
+The components of (static) memories are latches and flip-flops, each of which
+can store one bit of information. These can be combined linearly into latches and
+
+236
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+A0
+Address bus

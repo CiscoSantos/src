@@ -1,0 +1,100 @@
+
+3
+
+Rather than thinking in terms of translation or interpretation, it is often simpler
+to imagine the existence of a hypothetical computer or virtual machine whose machine language is L1. Let us call this virtual machine M1 (and let us call the machine corresponding to L0, M0). If such a machine could be constructed cheaply
+enough, there would be no need for having language L0 or a machine that executed
+programs in L0 at all. People could simply write their programs in L1 and have the
+computer execute them directly. Even if the virtual machine whose language is L1
+is too expensive or complicated to construct out of electronic circuits, people can
+still write programs for it. These programs can be either interpreted or translated
+by a program written in L0 that itself can be directly executed by the existing computer. In other words, people can write programs for virtual machines, just as
+though they really existed.
+To make translation or interpretation practical, the languages L0 and L1 must
+not be ‘‘too’’ different. This constraint often means that L1, although better than
+L0, will still be far from ideal for most applications. This result is perhaps discouraging in light of the original purpose for creating L1—relieving the programmer of
+the burden of having to express algorithms in a language more suited to machines
+than people. However, the situation is not hopeless.
+The obvious approach is to invent still another set of instructions that is more
+people-oriented and less machine-oriented than L1. This third set also forms a language, which we will call L2 (and with virtual machine M2). People can write
+programs in L2 just as though a virtual machine with L2 as its machine language
+really existed. Such programs can be either translated to L1 or executed by an
+interpreter written in L1.
+The invention of a whole series of languages, each one more convenient than
+its predecessors, can go on indefinitely until a suitable one is finally achieved.
+Each language uses its predecessor as a basis, so we may view a computer using
+this technique as a series of layers or levels, one on top of another, as shown in
+Fig. 1-1. The bottommost language or level is the simplest and the topmost language or level is the most sophisticated.
+There is an important relation between a language and a virtual machine. Each
+machine has a machine language, consisting of all the instructions that the machine
+can execute. In effect, a machine defines a language. Similarly, a language defines
+a machine—namely, the machine that can execute all programs written in the language. Of course, the machine defined by a certain language may be enormously
+complicated and expensive to construct directly out of electronic circuits but we
+can imagine it nevertheless. A machine with C or C++ or Java as its machine language would be complex indeed but could be built using today’s technology.
+There is a good reason, however, for not building such a computer: it would not be
+cost effective compared to other techniques. Merely being doable is not good
+enough: a practical design must be cost effective as well.
+In a certain sense, a computer with n levels can be regarded as n different virtual machines, each one with a different machine language. We will use the terms
+
+4
+
+INTRODUCTION
+
+Virtual machine Mn, with
+machine language Ln
+
+Level 3
+
+Virtual machine M3, with
+machine language L3
+
+…
+
+Level n
+
+Level 2
+
+Level 1
+
+Level 0
+
+CHAP. 1
+Programs in Ln are
+either interpreted by
+an interpreter running
+on a lower machine, or
+are translated to the
+machine language of a
+lower machine
+
+Virtual machine M2, with
+machine language L2
+
+Programs in L2 are
+either interpreted by
+interpreters running
+on M1 or M0, or are
+translated to L1 or L0
+
+Virtual machine M1, with
+machine language L1
+
+Programs in L1 are
+either interpreted by
+an interpreter running on
+M0, or are translated to L0
+
+Actual computer M0, with
+machine language L0
+
+Programs in L0 can be
+directly executed by
+the electronic circuits
+
+Figure 1-1. A multilevel machine.
+
+‘‘level’’ and ‘‘virtual machine’’ interchangeably. However, please note that like
+many terms in computer science, ‘‘virtual machine’’ has other meanings as well.
+We will look at another one of these later on in this book. Only programs written
+in language L0 can be directly carried out by the electronic circuits, without the
+need for intervening translation or interpretation. Programs written in L1, L2, ...

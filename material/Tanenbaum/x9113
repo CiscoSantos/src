@@ -1,0 +1,100 @@
+back there just in time. Even better, all future instructions needing it can have their
+sources renamed to the register where it really is stored. In any case, the I8 addition got to start earlier this way.
+On many real machines, renaming is deeply embedded in the way the registers
+are organized. There are many secret registers and a table that maps the registers
+visible to the programmer onto the secret registers. Thus the real register being
+used for, say, R0 is located by looking at entry 0 of this mapping table. In this way,
+there is no real register R0, just a binding between the name R0 and one of the
+secret registers. This binding changes frequently during execution to avoid dependences.
+Notice in Fig. 4-44, when reading down the fourth column, that the instructions have not been issued in order. Nor they have been retired in order. The conclusion of this example is simple: using out-of-order execution and register renaming, we were able to speed up the computation by a factor of two.
+
+4.5.4 Speculative Execution
+In the previous section we introduced the concept of reordering instructions in
+order to improve performance. Although we did not mention it explicitly, the
+focus there was on reordering instructions within a single basic block. It is now
+time to look at this point more closely.
+Computer programs can be broken up into basic blocks, each consisting of a
+linear sequence of code with one entry point on top and one exit on the bottom. A
+basic block does not contain any control structures (e.g., if statements or while
+
+SEC. 4.5
+
+321
+
+IMPROVING PERFORMANCE
+
+statements) so that its translation into machine language does not contain any
+branches. The basic blocks are connected by control statements.
+A program in this form can be represented as a directed graph, as shown in
+Fig. 4-45. Here we compute the sum of the cubes of the even and odd integers up
+to some limit and accumulate them in evensum and oddsum, respectively. Within
+each basic block, the reordering techniques of the previous section work fine.
+evensum = 0;
+
+evensum = 0;
+
+oddsum = 0;
+
+oddsum = 0;
+i = 0;
+
+i = 0;
+while (i < limit) {
+
+i >= limit
+
+while (i < limit)
+
+k = i * i * i;
+
+k = i * i * i;
+if ((i/2) * 2) = = i)
+
+if (((i/2) * 2) = = i)
+evensum = evensum + k;
+
+T
+
+F
+
+evensum = evensum + k;
+
+else
+
+oddsum = oddsum + k;
+
+oddsum = oddsum + k;
+i = i + 1;
+
+i = i + 1;
+}
+(a)
+
+(b)
+
+Figure 4-45. (a) A program fragment. (b) The corresponding basic block graph.
+
+The trouble is that most basic blocks are short and there is insufficient parallelism in them to exploit effectively. Consequently, the next step is to allow the
+reordering to cross basic block boundaries in an attempt to fill all the issue slots.
+The biggest gains come when a potentially slow operation can be moved upward in
+the graph to start it early. This might be a LOAD instruction, a floating-point operation, or even the start of a long dependence chain. Moving code upward over a
+branch is called hoisting.
+Imagine that in Fig. 4-45 all the variables were kept in registers except evensum and oddsum (for lack of registers). It might make sense then to move their
+LOAD instructions to the top of the loop, before computing k, to get them started
+early on, so the values will be available when needed. Of course, only one of them
+will be needed on each iteration, so the other LOAD will be wasted, but if the cache
+and memory are pipelined and there are issue slots available, it might still be worth
+doing this. Executing code before it is known if it is even going to be needed is
+called speculative execution. Using this technique requires support from the compiler and the hardware as well as some architectural extensions. Normally, reordering instructions over basic block boundaries is beyond the capability of hardware,
+so the compiler must move the instructions explicitly.
+
+322
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+Speculative execution introduces some interesting problems. For one, it is essential that none of the speculative instructions have irrevocable results because it
+may turn out later that they should not have been executed. In Fig. 4-45, it is fine
+to fetch evensum and oddsum, and it is also fine to do the addition as soon as k is
+available (even before the if statement), but it is not fine to store the results back in

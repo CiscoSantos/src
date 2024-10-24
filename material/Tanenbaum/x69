@@ -1,0 +1,100 @@
+
+photocopy machines. In fact, many companies make devices that combine copying
+and printing (and sometimes fax as well).
+The basic technology is illustrated in Fig. 2-36. The heart of the printer is a
+rotating precision drum (or in some high-end systems, a belt). At the start of each
+page cycle, it is charged up to about 1000 volts and coated with a photosensitive
+material. Then light from a laser is scanned along the length of the drum by
+reflecting it of a rotating octagonal mirror. The light beam is modulated to produce
+a pattern of light and dark spots. The spots where the beam hits lose their charge.
+Rotating octagonal
+mirror
+
+Laser
+
+Drum sprayed and charged
+Light beam
+strikes drum
+Drum
+
+Toner
+Scraper
+Discharger
+Heated
+rollers
+Blank
+paper
+
+Stacked
+output
+
+Figure 2-36. Operation of a laser printer.
+
+After a line of dots has been painted, the drum rotates a fraction of a degree to
+allow the next line to be painted. Eventually, the first line of dots reaches the toner,
+a reservoir of an electrostatically sensitive black powder. The toner is attracted to
+those dots that are still charged, thus forming a visual image of that line. A little
+later in the transport path, the toner-coated drum is pressed against the paper, transferring the black powder to the paper. The paper is then passed through heated
+rollers to fuse the toner to the paper permanently, fixing the image. Later in its
+rotation, the drum is discharged and scraped clean of any residual toner, preparing
+it for being charged and coated again for the next page.
+That this process is an exceedingly complex combination of physics, chemistry, mechanical engineering, and optical engineering hardly needs to be said.
+Nevertheless, complete assemblies, called print engines, are available from several
+vendors. Laser printer manufacturers combine the print engines with their own
+electronics and software to make a complete printer. The electronics consist of a
+fast embedded CPU along with megabytes of memory to hold a full-page bit map
+and numerous fonts, some of them built in and some of them downloadable. Most
+
+124
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+printers accept commands that describe the pages to be printed (as opposed to simply accepting bit maps prepared by the main CPU). These commands are given in
+languages such as HP’s PCL and Adobe’s PostScript or PDF, which are complete,
+albeit specialized, programming languages.
+Laser printers at 600 dpi and up can do a reasonable job of printing black and
+white photographs but the technology is trickier than it might at first appear. Consider a photograph scanned in at 600 dpi that is to be printed on a 600-dpi printer.
+The scanned image contains 600 × 600 pixels/inch, each one consisting of a gray
+value from 0 (white) to 255 (black). The printer can also print 600 dpi, but each
+printed pixel is either black (toner present) or white (no toner present). Gray values cannot be printed.
+The usual solution to printing images with gray values is to use halftoning, the
+same as commercially printed posters. The image is broken up into halftone cells,
+each typically 6 × 6 pixels. Each cell can contain between 0 and 36 black pixels.
+The eye perceives a cell with many pixels as darker than one with fewer pixels.
+Gray values in the range 0 to 255 are represented by dividing this range into 37
+zones. Values from 0 to 6 are in zone 0, values from 7 to 13 are in zone 1, and so
+on (zone 36 is slightly smaller than the others because 37 does not divide 256 exactly). Whenever a gray value in zone 0 is encountered, its halftone cell on the
+paper is left blank, as illustrated in Fig. 2-37(a). A zone-1 value is printed as 1
+black pixel. A zone-2 value is printed as 2 black pixels, as shown in Fig. 2-37(b).
+Other zone values are shown in Fig. 2-37(c)–(f). Of course, taking a photograph
+scanned at 600 dpi and halftoning this way reduces the effective resolution to 100
+cells/inch, called the halftone screen frequency, conventionally measured in lpi
+(lines per inch).
+
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+(f)
+
+Figure 2-37. Halftone dots for various grayscale ranges. (a) 0–6. (b) 14–20.
+(c) 28–34. (d) 56–62. (e) 105–111. (f) 161–167.
+
+Color Printing
+Although most laser printers are monochrome, color laser printers are starting
+to become more common, so some explanation of color printing (also applicable to
+inkjet and other printers) is perhaps useful here. As you might imagine, it is not
+trivial. Color images can be viewed in one of two ways: transmitted light and
+reflected light. Transmitted-light images, such as those produced on monitors, are
+
+SEC. 2.4
+
+INPUT/OUTPUT

@@ -1,0 +1,100 @@
+than the allocation unit, the average space wasted will be half an allocation unit.
+The larger the allocation unit, the larger the amount of wasted space. If the average file is much smaller than the allocation unit, most of the disk space will be
+wasted.
+For example, on an MS-DOS or Windows 95 release 1 disk partition of 2 GB,
+the allocation units were 32 KB, so a 100-character file wasted 32,668 bytes of
+disk space. Storage efficiency argues for small allocation units. Due to the everdecreasing price of large disks, efficiency in time (i.e., faster performance) tends to
+be the most important factor nowadays, so allocation units tend to be increasing
+over time and the wasted disk space simply accepted.
+
+SEC. 6.3
+
+OSM-LEVEL I/O INSTRUCTIONS
+
+471
+
+6.3.3 Directory Management Instructions
+In the early days of computing, people kept their programs and data on
+punched cards in file cabinets in their offices. As the programs and data grew in
+size and number, this situation became less and less desirable. It eventually led to
+the idea of using the computer’s secondary memory (e.g., disk) as a storage place
+for programs and data as an alternative to file cabinets. Information that is directly
+accessible to the computer without the need for human intervention is said to be
+online, as contrasted with offline information, which requires human intervention
+(e.g., inserting a tape, CD-ROM, USB stick, or SD card) before the computer can
+access it.
+Online information is stored in files, making it accessible to programs via the
+file I/O instructions discussed above. However, additional instructions are needed
+to keep track of the information stored online, collect it into convenient units, and
+protect it from unauthorized use.
+The usual way for an operating system to organize online files is to group them
+into directories. Figure 6-23 shows an example directory organization. System
+calls are provided for at least the following functions:
+1. Create a file and enter it in a directory.
+2. Delete a file from a directory.
+3. Rename a file.
+4. Change the protection status of a file.
+All modern operating systems allow users to maintain more than one file directory. Each directory is typically itself a file and, as such, may be listed in another
+directory, thus giving rise to a tree of directories. Multiple directories are particularly useful for programmers working on several projects. They can then group all
+the files related to one project together in one directory. While working on that
+project, they will not be distracted by unrelated files. Directories are also a convenient way for people to share files with members of their group.
+
+6.4 OSM-LEVEL INSTRUCTIONS FOR PARALLEL PROCESSING
+Some computations can be most conveniently programmed for two or more cooperating processes running in parallel (i.e., simultaneously, on different processors) rather than for a single process. Other computations can be divided into
+pieces, which can then be carried out in parallel to decrease the elapsed time required for the total computation. In order for several processes to work together in
+
+472
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+File 0
+
+File name:
+
+Rubber-ducky
+
+File 1
+
+Length:
+
+1840
+
+File 2
+
+Type:
+
+image/jpeg
+
+File 3
+
+Creation date:
+
+March 16, 1066
+
+File 4
+
+Last access:
+
+September 1, 1492
+
+File 5
+
+Last change:
+
+July 4, 1776
+
+File 6
+
+Total accesses: 144
+
+File 7
+
+Block 0:
+
+Track 4
+
+Sector 6
+
+File 8
+
+Block 1:

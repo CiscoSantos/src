@@ -1,0 +1,100 @@
+/lib
+
+ast
+jim
+
+…
+
+…
+/usr/ast
+
+/usr/jim
+
+bin
+
+jotto
+
+data
+foo.c
+
+…
+
+…
+/usr/ast/bin
+game 1
+game 2
+game 3
+game 4
+
+…
+Data files
+
+Figure 6-37. Part of a typical UNIX directory system.
+
+link(′′/usr/ast/bin/game3′′, ′′/usr/jim/jotto′′)
+
+or an equivalent call using relative path names, depending on the working directory
+of the program making the call. Unlink removes a directory entry. If the file has
+
+496
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+System call
+mkdir(name, mode)
+
+CHAP. 6
+
+Meaning
+Create a new directory
+
+rmdir(name)
+
+Delete an empty directory
+
+opendir(name)
+
+Open a directory for reading
+
+readdir(dirpointer)
+
+Read the next entry in a directory
+
+closedir(dirpointer)
+
+Close a directory
+
+chdir(dirname)
+
+Change working directory to dirname
+
+link(name1, name2)
+
+Create a directory entry name2 pointing to name1
+
+unlink(name)
+
+Remove name from its directory
+
+Figure 6-38. The principal UNIX directory-management calls.
+
+only one link, the file is deleted. If it has two or more links, it is kept. It does not
+matter whether a removed link is the original or a copy made later. Once a link is
+made, it is a first-class citizen, indistinguishable from the original. The call
+unlink(′′/usr/ast/bin/game3′′)
+
+makes game3 accessible only via the path /usr/jim/jotto henceforth. Link and
+unlink can be used in this way to ‘‘move’’ files from one directory to another.
+Associated with every file (including directories, because they are also files) is
+a bit map telling who may access the file. The map contains three RWX fields, the
+first controlling the Read, Write, eXecute permissions for the owner, the second for
+others in the owner’s group, and the third for everybody else. Thus RWX R-X --X
+means that the owner can read the file, write the file, and execute the file (obviously, it is an executable program, or execute would be off), whereas others in his
+group can read or execute it and strangers can only execute it. With these permissions, strangers can use the program but not steal (copy) it because they do not
+have read permission. The assignment of users to groups is done by the system
+administrator, usually called the superuser. The superuser also has the power to
+override the protection mechanism and read, write, or execute any file.
+Let us now briefly examine how files and directories are implemented in
+UNIX. For a more complete treatment, see Vahalia (1996). Associated with each
+file (and each directory, because a directory is also a file) is a 64-byte block of
+information called an i-node. The i-node tells who owns the file, what the permissions are, where to find the data, and similar things. The i-nodes for the files on

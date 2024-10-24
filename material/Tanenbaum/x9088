@@ -1,0 +1,100 @@
+If an instruction has additional fields (for operands), each field must be explicitly fetched, 1 byte at a time, and assembled before it can be used. Fetching and
+assembling a field ties up the ALU for at least one cycle per byte to increment the
+PC, and then again to assemble the resulting index or offset. The ALU is used
+nearly every cycle for a variety of operations having to do with fetching the instruction and assembling the fields within the instruction, in addition to the real
+‘‘work’’ of the instruction.
+In order to overlap the main loop, it is necessary to free up the ALU from some
+of these tasks. This might be done by introducing a second ALU, though a full
+ALU is not necessary for much of the activity. Notice that in many cases the ALU
+is simply used as a path to copy a value from one register to another. These cycles
+might be eliminated by introducing additional data paths not going through the
+ALU. Some benefit may be derived, for example, by creating a path from TOS to
+MDR, or from MDR to TOS, since the top word of stack is frequently copied between those two registers.
+In the Mic-1, much of the load can be removed from the ALU by creating an
+independent unit to fetch and process the instructions. This unit, called an IFU
+(Instruction Fetch Unit), can independently increment PC and fetch bytes from
+the byte stream before they are needed. This unit requires only an incrementer, a
+circuit far simpler than a full adder. Carrying this idea further, the IFU can also
+assemble 8- and 16-bit operands so that they are ready for immediate use whenever
+needed. There are at least two ways this can be accomplished:
+1. The IFU can actually interpret each opcode, determining how many
+additional fields must be fetched, and assemble them into a register
+ready for use by the main execution unit.
+2. The IFU can take advantage of the stream nature of the instructions
+and make available at all times the next 8- and 16-bit pieces, whether
+or not doing so makes any sense. The main execution unit can then
+ask for whatever it needs.
+
+SEC. 4.4
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+289
+
+MBR2
+
+Shift register
+From memory
+
+MBR1
+
+IMAR
++1
+2 low-order bits
+
+C bus
+
+B bus
+
+PC
++1, 2
+Write PC
+
+Figure 4-27. A fetch unit for the Mic-1.
+
+We show the rudiments of the second scheme in Fig. 4-27. Rather than a single
+8-bit MBR, there are now two MBRs: the 8-bit MBR1 and the 16-bit MBR2. The IFU
+keeps track of the most recent byte or bytes consumed by the main execution unit.
+It also makes available in MBR1 the next byte, just as in the Mic-1, except that it
+automatically senses when the MBR1 is read, prefetches the next byte, and loads it
+into MBR1 immediately. As in the Mic-1, it has two interfaces to the B bus: MBR1
+and MBR1U. The former is sign-extended to 32 bits; the latter is zero-extended.
+Similarly, MBR2 provides the same functionality but holds the next 2 bytes. It
+also has two interfaces to the B bus: MBR2 and MBR2U, gating the 32-bit sign-extended and zero-extended values, respectively.
+The IFU is responsible for fetching a stream of bytes. It does this by using a
+conventional 4-byte memory port, fetching entire 4-byte words ahead of time and
+loading the consecutive bytes into a shift register that supplies them one or two at a
+time, in the order fetched. The function of the shift register is to maintain a queue
+of bytes from memory, to feed MBR1 and MBR2.
+At all times, MBR1 holds the oldest byte in the shift register and MBR2 holds
+the oldest 2 bytes (oldest byte on the left), forming a 16-bit integer [see
+Fig. 4-19(b)]. The 2 bytes in MBR2 may be from different memory words, because
+IJVM instructions do not align on word boundaries in memory.
+Whenever MBR1 is read, the shift register shifts right 1 byte. Whenever MBR2
+is read, it shifts right 2 bytes. Then MBR1 and MBR2 are reloaded from the oldest
+byte and pair of bytes, respectively. If there is sufficient room now left in the shift
+register for another whole word, the IFU starts a memory cycle in order to read it.
+
+290
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+We assume that when any of the MBR registers is read, it is refilled by the start of
+the next cycle, so it can be read out on consecutive cycles.
+The design of the IFU can be modeled by an FSM (Finite State Machine) as
+shown in Fig. 4-28. All FSMs consist of two parts: states, shown as circles, and
+transitions, shown as arcs from one state to another. Each state represents one
+possible situation the FSM can be in. This particular FSM has seven states, corresponding to the seven states of the shift register of Fig. 4-27. The seven states
+correspond to how many bytes are currently in the shift register, a number between
+0 and 6, inclusive.
+Word fetched
+Word fetched
+Word fetched
+
+0
+
+MBR1
+
+1

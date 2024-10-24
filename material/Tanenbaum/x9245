@@ -1,0 +1,100 @@
+The first step is performed by the compiler or assembler and the second one is performed by the linker.
+The translation from source procedure to object module represents a change of
+level because the source language and target language have different instructions
+and notation. The linking process, however, does not represent a change of level,
+since both the linker’s input and the linker’s output are programs for the same virtual machine. The linker’s function is to collect procedures translated separately
+and link them together to be run as a unit called an executable binary program.
+On Windows systems, the object modules have extension .obj and the executable
+binary programs have extension .exe. On UNIX, the object modules have extension
+.o; executable binary programs have no extension.
+Compilers and assemblers translate each source file separately for a very good
+reason. If a compiler or assembler were to read a series of source procedures and
+immediately produce a ready-to-run machine language program, changing one
+
+538
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+Source
+file 1
+
+Source
+file 2
+
+Source
+file 3
+
+CHAP. 7
+
+Object
+module 1
+
+Translator
+
+Object
+module 2
+
+Linker
+
+Executable
+binary
+program
+
+Object
+module 3
+
+Figure 7-12. Generation of an executable binary program from a collection of
+independently translated source procedures requires using a linker.
+
+statement in one source procedure would require all the procedures to be retranslated.
+If the separate-object-module technique of Fig. 7-12 is used, it is only necessary to retranslate the modified procedure and not the unchanged ones, although it
+is necessary to relink all the object modules again. Linking is usually much faster
+than translating, however; thus the two-step process of translating and linking can
+save a great deal of time during the development of a program. This gain is especially important for programs with hundreds or thousands of modules.
+
+7.4.1 Tasks Performed by the Linker
+At the start of pass one of the assembly process, the instruction location counter is set to 0. This step is equivalent to assuming that the object module will be located at (virtual) address 0 during execution. Figure 7-13 shows four object modules for a generic machine. In this example, each module begins with a BRANCH
+instruction to a MOVE instruction within the module.
+In order to run the program, the linker brings the object modules from the disk
+into main memory to form the image of the executable binary program, as shown
+in Fig. 7-14(a). The idea is to make an exact image of the executable program’s
+virtual address space inside the linker and position all the object modules at their
+correct locations. If there is not enough (virtual) memory to form the image, a disk
+file can be used. Typically, a small section of memory starting at address zero is
+used for interrupt vectors, communication with the operating system, catching
+uninitialized pointers, or other purposes, so programs often start above 0. In this
+figure we have (arbitrarily) started programs at address 100.
+The program of Fig. 7-14(a), although loaded into the image of the executable
+binary file, is not yet ready for execution. Consider what would happen if execution began with the instruction at the beginning of module A. The program would
+not branch to the MOVE instruction as it should, because that instruction is now at
+
+SEC. 7.4
+
+Object module A
+400
+
+Object module B
+600
+
+300
+
+CALL B
+
+500
+
+200
+
+MOVE P TO X
+
+400
+300
+
+100
+0
+
+500
+
+BRANCH TO 200
+
+200
+

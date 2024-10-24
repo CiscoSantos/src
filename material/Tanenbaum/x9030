@@ -1,0 +1,100 @@
+whether it is permitted to use the bus during the next cycle. Compared to centralized arbitration, this arbitration method requires more bus lines but avoids the
+potential cost of the arbiter. It also limits the number of devices to the number of
+request lines.
+Another kind of decentralized bus arbitration, shown in Fig. 3-41, uses only
+three lines, no matter how many devices are present. The first bus line is a wiredOR line for requesting the bus. The second bus line is called BUSY and is asserted
+by the current bus master. The third line is used to arbitrate the bus. It is daisy
+chained through all the devices. The head of this chain is held asserted by tying it
+to the power supply.
+Bus request
+Busy
+VCC
+Arbitration
+line
+
+In Out
+
+In Out
+
+In Out
+
+In Out
+
+In Out
+
+1
+
+2
+
+3
+
+4
+
+5
+
+Figure 3-41. Decentralized bus arbitration.
+
+When no device wants the bus, the asserted arbitration line is propagated
+through to all devices. To acquire the bus, a device first checks to see if the bus is
+idle and the arbitration signal it is receiving, IN, is asserted. If IN is negated, it may
+not become bus master, and it negates OUT. If IN is asserted, however, and the device wants the bus, the device negates OUT, which causes its downstream neighbor
+to see IN negated and to negate its OUT. Then all downstream devices all see IN
+negated and correspondingly negate OUT. When the dust settles, only one device
+will have IN asserted and OUT negated. This device becomes bus master, asserts
+BUSY and OUT, and begins its transfer.
+Some thought will reveal that the leftmost device that wants the bus gets it.
+Thus, this scheme is similar to the original daisy chain arbitration, except without
+having the arbiter, so it is cheaper, faster, and not subject to arbiter failure.
+
+3.4.6 Bus Operations
+Up until now, we have discussed only ordinary bus cycles, with a master (typically the CPU) reading from a slave (typically the memory) or writing to one. In
+fact, several other kinds of bus cycles exist. We will now look at some of these.
+
+SEC. 3.4
+
+199
+
+CPU CHIPS AND BUSES
+
+Normally, one word at a time is transferred. However, when caching is used, it
+is desirable to fetch an entire cache line (e.g., 8 consecutive 64-bit words) at once.
+Often block transfers can be made more efficient than successive individual transfers. When a block read is started, the bus master tells the slave how many words
+are to be transferred, for example, by putting the word count on the data lines during T 1 . Instead of just returning one word, the slave outputs one word during each
+cycle until the count has been exhausted. Figure 3-42 shows a modified version of
+Fig. 3-38(a), but now with an extra signal BLOCK that is asserted to indicate that a
+block transfer is requested. In this example, a block read of 4 words takes 6 cycles
+instead of 12.
+T1
+
+T2
+
+T3
+
+T4
+
+T5
+
+T6
+
+Data
+
+Data
+
+Data
+
+T7
+
+Φ
+ADDRESS
+
+DATA
+
+Memory address to be read
+
+Count
+
+Data
+
+MREQ
+RD
+WAIT

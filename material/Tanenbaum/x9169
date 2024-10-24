@@ -1,0 +1,100 @@
+Old FP
+Return addr
+j=3
+i=1
+n=3
+
+k
+Old FP = 1024
+Return addr
+j=2
+i=1
+n=1
+k=3
+Old FP = 1000
+Return addr
+j=2
+i=1
+n=2
+k=2
+Old FP
+Return addr
+j=3
+i=1
+n=3
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+SP
+
+SP
+
+SP
+
+FP
+
+FP
+k
+Old FP
+Return addr
+j=3
+i=1
+n=3
+(a)
+
+SP
+
+1068
+1064
+1060
+1056
+1052
+1048
+1044
+1040
+1036
+1032
+1028
+1024
+1020
+1016
+1012
+1008
+1004
+1000
+
+Figure 5-40. The stack at several points during the execution of Fig. 5-39.
+
+state of the stack to what it was just prior to the current procedure invocation.
+The code that saves the old frame pointer, sets up the new one, and advances
+the stack pointer to reserve space for local variables is called the procedure prolog. Upon procedure exit, the stack must be cleaned up again, something called
+the procedure epilog. One of the most important characteristics of any computer
+is how short and fast it can make the prolog and epilog. If they are long and slow,
+procedure calls will be expensive. Programmers who worship at the altar of efficiency will learn to avoid writing many short procedures and write large, monolithic, unstructured programs instead. The Core i7 ENTER and LEAVE instructions
+
+410
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+have been designed to do most of the procedure prolog and epilog work efficiently.
+Of course, they have a particular model of how the frame pointer should be managed, and if the compiler has a different model, they cannot be used.
+Now let us get back to the Towers of Hanoi problem. Each procedure call adds
+a new frame to the stack and each procedure return removes a frame from the
+stack. In order to illustrate the use of a stack in implementing recursive procedures, we will trace the calls starting with
+towers(3, 1, 3)
+
+Figure 5-40(a) shows the stack just after this call has been made. The procedure
+first tests to see if n = 1, and on discovering that n = 3, fills in k and makes the call
+towers(2, 1, 2)
+
+After this call is completed the stack is as shown in Fig. 5-40(b), and the procedure
+starts again at the beginning (a called procedure always starts at the beginning).
+This time the test for n = 1 fails again, so it fills in k again and makes the call

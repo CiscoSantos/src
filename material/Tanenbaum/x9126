@@ -1,0 +1,100 @@
+24
+16
+8
+0
+
+Nonaligned 8-byte
+word at address 12
+(b)
+
+Figure 5-2. An 8-byte word in a little-endian memory. (a) Aligned. (b) Not
+aligned. Some machines require that words in memory be aligned.
+
+program reads a 4-byte word at address 7, the hardware has to make one memory
+reference to get bytes 0 through 7 and a second to get bytes 8 through 15. Then the
+CPU has to extract the required 4 bytes from the 16 bytes read from memory and
+assemble them in the right order to form a 4-byte word. Doing this on a regular
+basis does not lead to blinding speed.
+Having the ability to read words at arbitrary addresses requires extra logic on
+the chip, which makes it bigger and more expensive. The design engineers would
+love to get rid of it and simply require all programs to make word-aligned references to memory. The trouble is, whenever the engineers say: ‘‘Who cares about
+running musty old 8088 programs that reference memory wrong?’’ the folks in
+marketing have a succinct answer: ‘‘Our customers.’’
+Most machines have a single linear address space at the ISA level, extending
+from address 0 up to some maximum, often 232 − 1 bytes or 264 − 1 bytes. However, a few machines have separate address spaces for instructions and data, so that
+an instruction fetch at address 8 goes to a different address space than a data fetch
+at address 8. This scheme is more complex than having a single address space, but
+it has two advantages. First, it becomes possible to have 232 bytes of program and
+an additional 232 bytes of data while using only 32-bit addresses. Second, because
+all writes automatically go to data space, it becomes impossible for a program to
+accidentally overwrite itself, thus eliminating one source of program bugs. Separating instruction and data spaces also makes attacks by malware much harder to pull
+off because the malware cannot change the program—it cannot even address it.
+Note that having separate address spaces for instructions and data is not the
+same as having a split level 1 cache. In the former case the total amount of address
+space is doubled and reads to any given address yield different results, depending
+on whether an instruction or a data word is being read. With a split cache, there is
+still just one address space, only different caches store different parts of it.
+Yet another aspect of the ISA level memory model is the memory semantics.
+It is perfectly natural to expect that a LOAD instruction that occurs after a STORE
+instruction and that references the same address will return the value just stored.
+
+SEC. 5.1
+
+OVERVIEW OF THE ISA LEVEL
+
+349
+
+In many designs, however, as we saw in Chap. 4, microinstructions are reordered.
+Thus there is a real danger that the memory will not have the expected behavior.
+The problem gets even worse on a multiprocessor, with each of multiple CPUs
+sending a stream of (possibly reordered) read and write requests to shared memory.
+System designers can take any one of several approaches to this problem. At
+one extreme, all memory requests can be serialized, so that each one is completed
+before the next is issued. This strategy hurts performance but gives the simplest
+memory semantics (all operations are executed in strict program order).
+At the other extreme, no guarantees of any kind are given. To force an ordering on memory, the program must execute a SYNC instruction, which blocks the issuing of all new memory operations until all previous ones have completed. This
+design puts a great burden on the compilers because they have to understand how
+the underlying microarchitecture works in detail, but it gives the hardware designers the maximum freedom to optimize memory usage.
+Intermediate memory models are also possible, in which the hardware automatically blocks the issuing of certain memory references (e.g., those involving a
+RAW or WAR dependence) but not others. While having all these peculiarities
+caused by the microarchitecture be exposed to the ISA level is annoying (at least to
+the compiler writers and assembly-language programmers), it is very much the
+trend. This trend is caused by the underlying implementations such as microinstruction reordering, deep pipelines, multiple cache levels, and so on. We will
+see more examples of such unnatural effects later in this chapter.
+
+5.1.3 Registers
+All computers have some registers visible at the ISA level. They are there to
+control execution of the program, hold temporary results, and serve other purposes.
+In general, the registers visible at the microarchitecture level, such as TOS and MAR
+in Fig. 4-1, are not visible at the ISA level. A few of them, however, such as the
+program counter and stack pointer, are visible at both levels. On the other hand,
+registers visible at the ISA level are always visible at the microarchitecture level
+since that is where they are implemented.
+ISA-level registers can be roughly divided into two categories: special-purpose
+registers and general-purpose registers The special-purpose registers include things
+like the program counter and stack pointer, as well as other registers with a specific
+function. In contrast, the general-purpose registers are there to hold key local variables and intermediate results of calculations. Their main function is to provide
+rapid access to heavily used data (basically, avoiding memory accesses). RISC
+machines, with their fast CPUs and (relatively) slow memories, usually have at
+least 32 general-purpose registers, and the trend in new CPU designs is to have
+even more.
+On some machines, the general-purpose registers are completely symmetric
+and interchangeable. Each one can do anything the others can do. If the registers
+
+350
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+are all equivalent, a compiler can use R1 to hold a temporary result, but it can
+equally well use R25. The choice of register does not matter.
+On other machines, however, some of the general-purpose registers may be
+somewhat special. For example, on the Core i7, there is a register called EDX that
+can be used as a general register, but which also receives half the product in a multiplication and holds half the dividend in a division.
+Even when the general-purpose registers are completely interchangeable, it is
+common for the operating system or compilers to adopt conventions about how
+they are used. For example, some registers may hold parameters to procedures called and others may be used as scratch registers. If a compiler puts an important
+local variable in R1 and then calls a library procedure that thinks R1 is a scratch
+register available to it, when the library procedure returns, R1 may contain garbage.
+If there are system-wide conventions on how the registers are to be used, compilers

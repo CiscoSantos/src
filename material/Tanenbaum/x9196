@@ -1,0 +1,100 @@
+Relative
+address
+0
+4
+
+Segment type and protection
+Privilege level (0-3)
+0 : Segment is absent from memory
+1 : Segment is present in memory
+
+Figure 6-13. A Core i7 code segment descriptor. Data segments differ slightly.
+
+The format of the selector has been cleverly chosen to make locating the descriptor easy. First either the LDT or GDT is selected, based on selector bit 2.
+Then the selector is copied to an MMU scratch register, and the 3 low-order bits
+are set to 0, effectively multiplying the 13-bit selector number by eight. Finally,
+the address of either the LDT or GDT table (kept in internal MMU registers) is
+added to it, to give a direct pointer to the descriptor. For example, selector 72
+refers to entry 9 in the GDT, which is located at address GDT + 72.
+Let us trace the steps by which a (selector, offset) pair is converted to a physical address. As soon as the hardware knows which segment register is being used,
+it can find the complete descriptor corresponding to that selector in its internal registers. If the segment does not exist (selector 0) or is currently not in memory (P is
+0), a trap occurs. The former case is a programming error; the latter case requires
+the operating system to go get it.
+
+SEC. 6.1
+
+457
+
+VIRTUAL MEMORY
+
+It then checks to see if the offset is beyond the end of the segment, in which
+case a trap also occurs. Logically, there should simply be a 32-bit field in the descriptor giving the size of the segment, but only 20 bits are available, so a different
+scheme is used. If the G (Granularity) field is 0, the LIMIT field is the exact segment size, up to 1 MB. If it is 1, the LIMIT field gives the segment size in pages instead of bytes. The Core i7 page size is never smaller than 4 KB, so 20 bits is
+enough for segments up to 232 bytes.
+Assuming that the segment is in memory and the offset is in range, the Core i7
+then adds the 32-bit BASE field in the descriptor to the offset to form what is called
+a linear address, as shown in Fig. 6-14. The BASE field is broken up into three
+pieces and spread all over the descriptor for backward compatibility with the
+80286, in which the BASE is only 24 bits. In effect, the BASE field allows each
+segment to start at an arbitrary place within the 32-bit linear address space.
+Selector
+
+Offset
+Descriptor
+Base address
+
++
+
+Limit
+Other fields
+
+32-Bit linear address
+
+Figure 6-14. Conversion of a (selector, offset) pair to a linear address.
+
+If paging is disabled (by a bit in a global control register), the linear address is
+interpreted as the physical address and sent to the memory for the read or write.
+Thus with paging disabled, we have a pure segmentation scheme, with each segment’s base address given in its descriptor. Segments are permitted to overlap,
+incidentally, probably because it would be too much trouble and take too much
+time to verify that they were all disjoint.
+On the other hand, if paging is enabled, the linear address is interpreted as a
+virtual address and mapped onto the physical address using page tables, pretty
+much as in our examples. The only complication is that with a 32-bit virtual address and a 4-KB page, a segment might contain 1 million pages, so a two-level
+mapping is used to reduce the page-table size for small segments.
+Each running program has a page directory consisting of 1024 32-bit entries.
+It is located at an address pointed to by a global register. Each entry in this directory points to a page table also containing 1024 32-bit entries. The page-table entries point to page frames. The scheme is shown in Fig. 6-15.
+
+458
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+Bits
+
+10
+
+Linear address
+10
+
+12
+
+DIR
+
+PAGE
+
+OFF
+
+CHAP. 6
+
+(a)
+Page directory
+
+Page table
+
+Page frame
+
+Word selected
+DIR
+
+PAGE
+OFF
+(b)

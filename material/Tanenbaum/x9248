@@ -1,0 +1,100 @@
+B
+
+BRANCH TO 300
+
+0
+
+Figure 7-14. (a) The object modules of Fig. 7-13 after being positioned in the binary image but before being relocated and linked. (b) The same object modules
+after linking and after relocation has been performed.
+
+Object
+module
+A
+
+SEC. 7.4
+
+LINKING AND LOADING
+
+541
+
+1. It constructs a table of all the object modules and their lengths.
+2. Based on this table, it assigns a base address to each object module.
+3. It finds all the instructions that reference memory and adds to each a
+relocation constant equal to the starting address of its module.
+4. It finds all the instructions that reference other procedures and inserts
+the address of these procedures in place.
+The object module table constructed in step 1 is shown for the modules of
+Fig. 7-14 below. It gives the name, length, and starting address of each module.
+Module
+A
+B
+C
+D
+
+Length
+400
+600
+500
+300
+
+Starting address
+100
+500
+1100
+1600
+
+Figure 7-14(b) shows how the address space of Fig. 7-14(a) looks after the linker
+has performed these steps.
+
+7.4.2 Structure of an Object Module
+Object modules often contain six parts, as shown in Fig. 7-15. The first part
+contains the name of the module, certain information needed by the linker, such as
+the lengths of the various parts of the module, and sometimes the assembly date.
+End of module
+Relocation
+dictionary
+
+Machine instructions
+and constants
+
+External reference table
+Entry point table
+Identification
+
+Figure 7-15. The internal structure of an object module produced by a translator.
+The Identification field comes first.
+
+The second part of the object module is a list of the symbols defined in the
+module that other modules may reference, together with their values. For example,
+if the module consists of a procedure named bigbug, the entry point table will
+
+542
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+contain the character string ‘‘bigbug’’ followed by the address to which it corresponds. The assembly language programmer indicates which symbols are to be
+declared as entry points by using a pseudoinstruction such as PUBLIC in Fig. 7-2.
+The third part of the object module consists of a list of the symbols that are
+used in the module but which are defined in other modules, along with a list of
+which machine instructions use which symbols. The linker needs the latter list in
+order to be able to insert the correct addresses into the instructions that use external
+symbols. A procedure can call other independently translated procedures by
+declaring the names of the called procedures to be external. The assembly language programmer indicates which symbols are to be declared as external symbols by using a pseudoinstruction such as EXTERN in Fig. 7-2. On some computers
+entry points and external references are combined into one table.
+The fourth part of the object module is the assembled code and constants. This
+part of the object module is the only one that will be loaded into memory to be executed. The other five parts will be used by the linker to help it do its work and
+then discarded before execution begins.
+The fifth part of the object module is the relocation dictionary. As shown in
+Fig. 7-14, instructions that contain memory addresses must have a relocation constant added. Since the linker has no way of telling by inspection which of the data
+words in part four contain machine instructions and which contain constants, information about which addresses are to be relocated is provided in this table. The
+information may take the form of a bit table, with 1 bit per potentially relocatable
+address, or an explicit list of addresses to be relocated.
+The sixth part is an end-of-module mark, perhaps a checksum to catch errors
+made while reading the module, and the address at which to begin execution.
+Most linkers require two passes. On pass one the linker reads all the object
+modules and builds up a table of module names and lengths, and a global symbol
+table consisting of all entry points and external references. On pass two the object
+modules are read, relocated, and linked one module at a time.
+

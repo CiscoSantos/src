@@ -1,0 +1,100 @@
+4
+
+1
+5
+
+1
+6
+
+1
+7
+
+0
+8
+
+0 0 0 0 1 0 1 1 0 1 1 1 0
+9 10 11 12 13 14 15 16 17 18 19 20 21
+
+Parity bits
+
+Figure 2-15. Construction of the Hamming code for the memory word
+1111000010101110 by adding 5 check bits to the 16 data bits.
+
+2.2.5 Cache Memory
+Historically, CPUs have always been faster than memories. As memories have
+improved, so have CPUs, preserving the imbalance. In fact, as it becomes possible
+to put more and more circuits on a chip, CPU designers are using these new facilities for pipelining and superscalar operation, making CPUs go even faster. Memory designers have usually used new technology to increase the capacity of their
+chips, not the speed, so the problem appears to be getting worse over time. What
+this imbalance means in practice is that after the CPU issues a memory request, it
+will not get the word it needs for many CPU cycles. The slower the memory, the
+more cycles the CPU will have to wait.
+As we pointed out above, there are two ways to deal with this problem. The
+simplest way is to just start memory READs when they are encountered but continue executing and stall the CPU if an instruction tries to use the memory word
+before it has arrived. The slower the memory, the greater the penalty when it does
+occur. For example, if one instruction in five touches memory and the memory access time is five cycles, execution time will be twice what it would have been with
+instantaneous memory. But if the memory access time is 50 cycles, then execution
+time will be up by a factor of 11 (5 cycles for executing instructions plus 50 cycles
+for waiting for memory).
+The other solution is to have machines that do not stall but instead require the
+compilers not to generate code to use words before they have arrived. The trouble
+is that this approach is far easier said than done. Often after a LOAD there is nothing else to do, so the compiler is forced to insert NOP (no operation) instructions,
+which do nothing but occupy a slot and waste time. In effect, this approach is a
+software stall instead of a hardware stall, but the performance degradation is the
+same.
+Actually, the problem is not technology, but economics. Engineers know how
+to build memories that are as fast as CPUs, but to run them at full speed, they have
+to be located on the CPU chip (because going over the bus to memory is very
+slow). Putting a large memory on the CPU chip makes it bigger, which makes it
+more expensive, and even if cost were not an issue, there are limits to how big a
+
+SEC. 2.2
+
+83
+
+PRIMARY MEMORY
+
+CPU chip can be made. Thus the choice comes down to having a small amount of
+fast memory or a large amount of slow memory. What we would prefer is a large
+amount of fast memory at a low price.
+Interestingly enough, techniques are known for combining a small amount of
+fast memory with a large amount of slow memory to get the speed of the fast memory (almost) and the capacity of the large memory at a moderate price. The small,
+fast memory is called a cache (from the French cacher, meaning to hide, and pronounced ‘‘cash’’). Below we will briefly describe how caches are used and how
+they work. A more detailed description will be given in Chap. 4.
+The basic idea behind a cache is simple: the most heavily used memory words
+are kept in the cache. When the CPU needs a word, it first looks in the cache.
+Only if the word is not there does it go to main memory. If a substantial fraction of
+the words are in the cache, the average access time can be greatly reduced.
+Success or failure thus depends on what fraction of the words are in the cache.
+For years, people have known that programs do not access their memories completely at random. If a given memory reference is to address A, it is likely that the
+next memory reference will be in the general vicinity of A. A simple example is
+the program itself. Except for branches and procedure calls, instructions are
+fetched from consecutive locations in memory. Furthermore, most program execution time is spent in loops, in which a limited number of instructions are executed
+over and over. Similarly, a matrix manipulation program is likely to make many
+references to the same matrix before moving on to something else.
+The observation that the memory references made in any short time interval
+tend to use only a small fraction of the total memory is called the locality principle and forms the basis for all caching systems. The general idea is that when a
+word is referenced, it and some of its neighbors are brought from the large slow
+memory into the cache, so that the next time it is used, it can be accessed quickly.
+A common arrangement of the CPU, cache, and main memory is illustrated in
+Fig. 2-16. If a word is read or written k times in a short interval, the computer will
+need 1 reference to slow memory and k − 1 references to fast memory. The larger
+k is, the better the overall performance.
+Main
+memory
+CPU
+Cache
+
+Bus
+
+Figure 2-16. The cache is logically between the CPU and main memory. Physically, there are several possible places it could be located.
+
+84
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+We can formalize this calculation by introducing c, the cache access time, m,
+the main memory access time, and h, the hit ratio, which is the fraction of all references that can be satisfied out of the cache. In our little example of the previous
+paragraph, h = (k − 1)/k. Some authors also define the miss ratio, which is 1 − h.
+With these definitions, we can calculate the mean access time as follows:

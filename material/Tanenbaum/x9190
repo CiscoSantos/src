@@ -1,0 +1,100 @@
+
+Virtual page 7
+
+Virtual page 6
+
+Virtual page 6
+
+Virtual page 6
+
+Virtual page 5
+
+Virtual page 5
+
+Virtual page 5
+
+Virtual page 4
+
+Virtual page 4
+
+Virtual page 4
+
+Virtual page 3
+
+Virtual page 3
+
+Virtual page 3
+
+Virtual page 2
+
+Virtual page 2
+
+Virtual page 2
+
+Virtual page 1
+
+Virtual page 1
+
+Virtual page 0
+
+Virtual page 0
+
+Virtual page 8
+
+Virtual page 8
+
+(a)
+
+(b)
+
+(c)
+
+Figure 6-6. Failure of the LRU algorithm.
+
+After executing the instructions on virtual page 8, the program branches back
+to the top of the loop, to virtual page 0. This step causes another page fault. Virtual page 0, which was just thrown out, has to be brought back in. The LRU algorithm chooses page 1 to be thrown out, producing the situation in Fig. 6-6(c). The
+program continues on page 0 for a little while. Then it tries to fetch an instruction
+from virtual page 1, causing a page fault. Page 1 has to be brought back in again
+and page 2 will be thrown out.
+It should be apparent by now that here the LRU algorithm is consistently making the worst choice every time (other algorithms also fail under similar conditions). If, however, the available main memory exceeds the size of the working set,
+LRU tends to minimize the number of page faults.
+Another page-replacement algorithm is FIFO (First-In First-Out). FIFO removes the least recently loaded page, independent of when this page was last referenced. Associated with each page frame is a counter. Initially, all the counters are
+set to 0. After each page fault has been handled, the counter for each page presently in memory is increased by one, and the counter for the page just brought in is
+set to 0. When it becomes necessary to choose a page to remove, the page whose
+counter is highest is chosen. Since its counter is the highest, it has witnessed the
+largest number of page faults. This means that it was loaded prior to the loading of
+any of the other pages in memory and therefore (hopefully) has a large a priori
+chance of no longer being needed.
+If the working set is larger than the number of available page frames, no algorithm that is not an oracle will give good results, and page faults will be frequent.
+
+448
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+A program that generates page faults frequently and continuously is said to be
+thrashing. Needless to say, thrashing is an undesirable characteristic to have in
+your system. If a program uses a large amount of virtual address space but has a
+small, slowly changing working set that fits in available main memory, it will give
+little trouble. This observation is true, even if, over its lifetime, the program uses
+hundreds of times as many words of virtual memory as the machine has words of
+main memory.
+If a page about to be evicted has not been modified since it was read in (a likely occurrence if the page contains program rather than data), it is not necessary to
+write it back onto disk, because an accurate copy already exists there. If it has
+been modified since it was read in, the copy on the disk is no longer accurate, and
+the page must be rewritten.
+If there is a way to tell whether a page has not changed since it was read in
+(page is clean) or whether it, in fact, has been stored into (page is dirty), all the
+rewriting of clean pages can be avoided, thus saving a lot of time. Many computers have 1 bit per page, in the MMU, which is set to 0 when a page is loaded
+and set to 1 by the microprogram or hardware whenever it is stored into (i.e., is
+made dirty). By examining this bit, the operating system can find out if the page is
+clean or dirty, and hence whether it need be rewritten or not.
+
+6.1.5 Page Size and Fragmentation
+If the user’s program and data accidentally happen to fill an integral number of
+pages exactly, there will be no wasted space when they are in memory. Otherwise,
+there will be some unused space on the last page. For example, if the program and
+data need 26,000 bytes on a machine with 4096 bytes per page, the first six pages
+will be full, totaling 6 × 4096 = 24,576 bytes, and the last page will contain 26,000
+− 24576 = 1424 bytes. Since there is room for 4096 bytes per page, 2672 bytes

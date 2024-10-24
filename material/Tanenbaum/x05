@@ -1,0 +1,100 @@
+time, say Wednesday morning 3 to 5 A.M. (many programmers liked to work when
+it was quiet in the machine room). When the time arrived, the programmer headed
+for the machine room with a deck of 80-column punched cards (an early input
+medium) in one hand and a sharpened pencil in the other. Upon arriving in the
+computer room, he or she gently nudged the previous programmer toward the door
+and took over the computer.
+If the programmer wanted to run a FORTRAN program, the following steps
+were necessary:
+1. He† went over to the cabinet where the program library was kept,
+took out the big green deck labeled FORTRAN compiler, put it in the
+card reader, and pushed the START button.
+2. He put his FORTRAN program in the card reader and pushed the
+CONTINUE button. The program was read in.
+†
+
+‘‘He’’ should be read as ‘‘he or she’’ throughout this book.
+
+10
+
+INTRODUCTION
+
+CHAP. 1
+
+3. When the computer stopped, he read his FORTRAN program in a
+second time. Although some compilers required only one pass over
+the input, many required two or more. For each pass, a large card
+deck had to be read in.
+4. Finally, the translation neared completion. The programmer often
+became nervous near the end because if the compiler found an error
+in the program, he had to correct it and start the entire process all over
+again. If there were no errors, the compiler punched out the translated machine language program on cards.
+5. The programmer then put the machine language program in the card
+reader along with the subroutine library deck and read them both in.
+6. The program began executing. More often than not it did not work
+and unexpectedly stopped in the middle. Generally, the programmer
+fiddled with the console switches and looked at the console lights for
+a while. If lucky, he figured out the problem, corrected the error, and
+went back to the cabinet containing the big green FORTRAN compiler to start over again. If less fortunate, he made a printout of the contents of memory, called a core dump, and took it home to study.
+This procedure, with minor variations, was normal at many computer centers
+for years. It forced the programmers to learn how to operate the machine and to
+know what to do when it broke down, which was often. The machine was frequently idle while people were carrying cards around the room or scratching their
+heads trying to find out why their programs were not working properly.
+Around 1960 people tried to reduce the amount of wasted time by automating
+the operator’s job. A program called an operating system was kept in the computer at all times. The programmer provided certain control cards along with the
+program that were read and carried out by the operating system. Figure 1-3 shows
+a sample job for one of the first widespread operating systems, FMS (FORTRAN
+Monitor System), on the IBM 709.
+The operating system read the ∗JOB card and used the information on it for accounting purposes. (The asterisk was used to identify control cards, so they would
+not be confused with program and data cards.) Later, it read the ∗FORTRAN card,
+which was an instruction to load the FORTRAN compiler from a magnetic tape.
+The compiler then read in and compiled the FORTRAN program. When the compiler finished, it returned control back to the operating system, which then read the
+∗DATA card. This was an instruction to execute the translated program, using the
+cards following the ∗DATA card as the data.
+Although the operating system was designed to automate the operator’s job
+(hence the name), it was also the first step in the development of a new virtual machine. The ∗FORTRAN card could be viewed as a virtual ‘‘compile program’’
+instruction. Similarly, the *DATA card could be regarded as a virtual ‘‘execute
+
+SEC. 1.1
+
+STRUCTURED COMPUTER ORGANIZATION
+
+11
+
+*JOB, 5494, BARBARA
+*XEQ
+*FORTRAN
+FORTRAN
+program
+
+*DATA
+Data
+cards
+
+*END
+Figure 1-3. A sample job for the FMS operating system.
+
+program’’ instruction. A level with only two instructions was not much of a level
+but it was a start in that direction.
+In subsequent years, operating systems became more and more sophisticated.
+New instructions, facilities, and features were added to the ISA level until it began
+to take on the appearance of a new level. Some of this new level’s instructions
+were identical to the ISA-level instructions, but others, particularly input/output instructions, were completely different. The new instructions were often known as
+operating system macros or supervisor calls. The usual term now is system call.
+Operating systems developed in other ways as well. The early ones read card
+decks and printed output on the line printer. This organization was known as a
+batch system. Usually, there was a wait of several hours between the time a program was submitted and the time the results were ready. Developing software was
+difficult under those circumstances.
+In the early 1960s researchers at Dartmouth College, M.I.T., and elsewhere developed operating systems that allowed (multiple) programmers to communicate
+directly with the computer. In these systems, remote terminals were connected to
+the central computer via telephone lines. The computer was shared among many
+users. A programmer could type in a program and get the results typed back almost immediately, in the office, in a garage at home, or wherever the terminal was
+located. These systems were called timesharing systems.
+Our interest in operating systems is in those parts that interpret the instructions
+and features present in level 3 and not present in the ISA level rather than in the
+timesharing aspects. Although we will not emphasize it, you should keep in mind
+that operating systems do more than just interpret features added to the ISA level.
+The Migration of Functionality to Microcode
+Once microprogramming had become common (by 1970), designers realized
+that they could add new instructions by just extending the microprogram. In other
+words, they could add ‘‘hardware’’ (new machine instructions) by programming.

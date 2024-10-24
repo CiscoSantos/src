@@ -1,0 +1,100 @@
+this by accessing the link pointer (which is the word identified by the current LV
+pointer). In this location, remember, where the OBJREF was originally stored, the
+INVOKEVIRTUAL instruction stored the address containing the old PC. This word
+and the word above it are retrieved to restore PC and LV, respectively, to their old
+values. The return value, which is stored at the top of the stack of the terminating
+method, is copied to the location where the OBJREF was originally stored, and SP
+is restored to point to this location. Control is therefore returned to the instruction
+immediately following the INVOKEVIRTUAL instruction.
+So far, our machine does not have any input/output instructions. Nor are we
+going to add any. It does not need them any more than the Java Virtual Machine
+needs them, and the official specification for JVM never even mentions I/O. The
+theory is that a machine that does no input or output is ‘‘safe.’’ (Reading and writing are performed in JVM by means of calls to special I/O methods.)
+
+4.2.4 Compiling Java to IJVM
+Let us now see how Java and IJVM relate to one another. In Fig. 4-14(a) we
+show a simple fragment of Java code. When fed to a Java compiler, the compiler
+would probably produce the IJVM assembly-language shown in Fig. 4-14(b). The
+
+266
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+line numbers from 1 to 15 at the left of the assembly language program are not part
+of the compiler output. Nor are the comments (starting with //). They are there to
+help explain a subsequent figure. The Java assembler would then translate the assembly program into the binary program shown in Fig. 4-14(c). (Actually, the Java
+compiler does its own assembly and produces the binary program directly.) For
+this example, we have assumed that i is local variable 1, j is local variable 2, and k
+is local variable 3.
+i = j + k;
+if (i == 3)
+k = 0;
+else
+j = j − 1;
+
+(a)
+
+1
+ILOAD j
+2
+ILOAD k
+3
+IADD
+4
+ISTORE i
+5
+ILOAD i
+6
+BIPUSH 3
+7
+IF ICMPEQ L1
+8
+ILOAD j
+9
+BIPUSH 1
+10
+ISUB
+11
+ISTORE j
+12
+GOTO L2
+13 L1: BIPUSH 0
+14
+ISTORE k
+15 L2:
+(b)
+
+// i = j + k
+
+// if (i == 3)
+
+// j = j − 1
+
+// k = 0
+
+0x15 0x02
+0x15 0x03
+0x60
+0x36 0x01
+0x15 0x01
+0x10 0x03
+0x9F 0x00 0x0D
+0x15 0x02
+0x10 0x01
+0x64
+0x36 0x02
+0xA7 0x00 0x07
+0x10 0x00
+0x36 0x03
+(c)
+
+Figure 4-14. (a) A Java fragment. (b) The corresponding Java assembly language. (c) The IJVM program in hexadecimal.
+
+The compiled code is straightforward. First j and k are pushed onto the stack,
+added, and the result stored in i. Then i and the constant 3 are pushed onto the
+stack and compared. If they are equal, a branch is taken to L1, where k is set to 0.
+If they are unequal, the compare fails and code following IF ICMPEQ is executed.
+When it is done, it branches to L2, where the then and else parts merge.
+The operand stack for the IJVM program of Fig. 4-14(b) is shown in Fig. 4-15.

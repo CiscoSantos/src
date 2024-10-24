@@ -1,0 +1,100 @@
+381
+
+ADDRESSING
+8
+
+1
+
+5
+
+5
+
+5
+
+1
+
+OPCODE
+
+0
+
+DEST
+
+SRC1
+
+SRC2
+
+2
+
+OPCODE
+
+1
+
+DEST
+
+SRC1
+
+3
+
+OPCODE
+
+8
+
+OFFSET
+
+OFFSET
+
+Figure 5-24. A simple design for the instruction formats of a three-address machine.
+
+assigned to each (conditional) branch, procedure call, etc., leaving 24 bits for a PC
+relative offset. Assuming that this offset counted in words, the range would be ±32
+MB. Also a few opcodes could be reserved for LOADs and STOREs that need the
+long offsets of format 3. These would not be fully general (e.g., only R0 could be
+loaded or stored), but they would rarely be used.
+Now consider a design for a two-address machine that can use a memory word
+for either operand. It is shown in Fig. 5-25. Such a machine can add a memory
+word to a register, add a register to a memory word, add a register to a register, or
+add a memory word to a memory word. At present, memory accesses are relatively expensive, so this design is not currently popular, but if advances in cache
+or memory technology make memory accesses cheap in the future, it is a particularly easy and efficient design to compile to. The PDP-11 and VAX were highly
+successful machines that dominated the minicomputer world for two decades using
+designs similar to this one.
+Bits
+
+8
+
+3
+
+OPCODE
+
+MODE
+
+5
+
+4
+
+3
+
+5
+
+4
+
+REG
+
+OFFSET
+
+MODE
+
+REG
+
+OFFSET
+
+(Optional 32-bit direct address or offset)
+(Optional 32-bit direct address or offset)
+
+Figure 5-25. A simple design for the instruction formats of a two-address machine.
+
+In this design, we again have an 8-bit opcode, but now we have 12 bits for
+specifying the source and an additional 12 bits for specifying the destination. For
+each operand, 3 bits give the mode, 5 bits tell the register, and 4 bits provide the
+offset. With 3 mode bits, we could support immediate, direct, register, register
+indirect, indexed, and stack modes, and have room left over for two more future
+modes. This is a clean and regular design that is easy to compile for and quite

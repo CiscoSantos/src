@@ -1,0 +1,100 @@
+0
+
+SHR(B)
+SAR(B)
+SAL(B) (=SHL(B))
+ROL(B)
+ROR(B)
+RCL(B)
+RCR(B)
+
+Logical shift right
+Arithmetic shift right
+shift left
+Rotate left
+Rotate right
+Rotate left with carry
+Rotate right with carry
+
+e←
+e←
+e←
+e←
+e←
+e←
+e←
+
+*
+*
+*
+*
+*
+*
+*
+
+*
+*
+*
+-
+
+*
+*
+*
+-
+
+*
+*
+*
+*
+*
+*
+*
+
+TEST(B)
+CMP(B)
+STD
+CLD
+STC
+CLC
+CMC
+
+Test operands
+Compare operands
+Set direction flag (↓)
+Clear direction flag (↑)
+Set carry flag
+Clear carry flag
+Complement carry
+
+e→
+← r, e →
+←#
+e→
+← r, e →
+←#
+-
+
+0
+*
+-
+
+*
+*
+-
+
+*
+*
+-
+
+0
+*
+1
+0
+*
+
+LOOP
+LOOPZ LOOPE
+LOOPNZ LOOPNE
+REP REPZ REPNZ
+
+Jump back if decremented CX ≥ 0

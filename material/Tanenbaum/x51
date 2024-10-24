@@ -1,0 +1,100 @@
+
+dis
+kr
+ota
+
+40
+96
+da
+ta
+
+ti o
+n
+
+bit
+s
+C
+
+Width of
+1 bit is
+0.1 to 0.2 microns
+
+C
+
+E
+
+Disk
+arm
+
+Figure 2-19. A portion of a disk track. Two sectors are illustrated.
+
+All disks have movable arms that are capable of moving in and out to different
+radial distances from the spindle about which the platter rotates. At each radial
+distance, a different track can be written. The tracks are thus a series of concentric
+circles about the spindle. The width of a track depends on how large the head is
+and how accurately the head can be positioned radially. With current technology,
+disks have around 50,000 tracks per centimeter, giving track widths in the
+200-nanometer range (1 nanometer = 1/1,000,000 mm). It should be noted that a
+track is not a physical groove in the surface, but simply an annulus (ring) of magnetized material, with small guard areas separating it from the tracks inside and
+outside it.
+The linear bit density around the circumference of the track is different from
+the radial one. In other words, the number of bits per millimeter measured going
+around a track is different from the number of bits per millimeter starting from the
+center and moving outward. The density along a track is determined largely by the
+purity of the surface and air quality. Current disks achieve densities of 25 gigabits/cm. The radial density is determined by how accurately the arm can be made
+to seek to a track. Thus a bit is many times larger in the radial direction as compared to the circumference, as suggested by Fig. 2-19.
+Ultrahigh density disks utilize a recording technology in which the ‘‘long’’
+dimension of the bits is not along the circumference of the disk, but vertically,
+down into the iron oxide. This technique is called perpendicular recording, and it
+has been demonstrated to provide data densities of up to 100 gigabits/cm. It is
+likely to become the dominant technology in the coming years.
+In order to achieve high surface and air quality, most disks are sealed at the
+factory to prevent dust from getting in. Such drives were originally called Winchester disks because the first such drives (created by IBM) had 30 MB of sealed,
+fixed storage and 30 MB of removable storage. Supposedly, these 30-30 disks
+reminded people of the Winchester 30-30 rifles that played a great role in opening
+the American frontier, and the name ‘‘Winchester’’ stuck. Now they are just called
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+89
+
+hard disks to differentiate them from the long-vanished floppy disks used on the
+very first personal computers. In this business, it is difficult to pick a name for
+anything and not have it be ridiculous 30 years later.
+Most disks consist of multiple platters stacked vertically, as depicted in
+Fig. 2-20. Each surface has its own arm and head. All the arms are ganged together so they move to different radial positions all at once. The set of tracks at a
+given radial position is called a cylinder. Current PC and server disks typically
+have 1 to 12 platters per drive, giving 2 to 24 recording surfaces. High-end disks
+can store 1 TB on a single platter and that limit is sure to grow with time.
+Read/write head (1 per surface)
+Surface 7
+Surface 6
+Surface 5
+Surface 4
+Surface 3
+Direction of arm motion
+Surface 2
+Surface 1
+Surface 0
+
+Figure 2-20. A disk with four platters.
+
+Disk performance depends on a variety of factors. To read or write a sector,
+first the arm must be moved to the right radial position. This action is called a
+seek. Average seek times (between random tracks) range in the 5- to 10-msec
+range, although seeks between consecutive tracks are now down below 1 msec.
+Once the head is positioned radially, there is a delay, called the rotational latency,
+until the desired sector rotates under the head. Most disks rotate at 5400 RPM,
+7200 RPM, or 10,800 RPM, so the average delay (half a rotation) is 3 to 6 msec.
+Transfer time depends on the linear density and rotation speed. With typical internal transfer rate of 150 MB/sec, a 512-byte sector takes about 3.5 μ sec. Consequently, the seek time and rotational latency dominate the transfer time. Reading
+random sectors all over the disk is clearly an inefficient way to operate.
+It is worth mentioning that on account of the preambles, the ECCs, the intersector gaps, the seek times, and the rotational latencies, there is a big difference between a drive’s maximum burst rate and its maximum sustained rate. The maximum burst rate is the data rate once the head is over the first data bit. The computer must be able to handle data coming in this fast. However, the drive can keep
+up that rate only for one sector. For some applications, such as multimedia, what
+
+90
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2

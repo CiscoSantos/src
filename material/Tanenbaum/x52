@@ -1,0 +1,100 @@
+
+matters is the average sustained rate over a period of seconds, which has to take
+into account the necessary seeks and rotational delays as well.
+A little thought and the use of that old high-school math formula for the circumference of a circle, c = 2π r, will reveal that the outer tracks have more linear
+distance around them than the inner ones do. Since all magnetic disks rotate at a
+constant angular velocity, no matter where the heads are, this observation creates a
+problem. In older drives, manufacturers used the maximum possible linear density
+on the innermost track, and successively lowered linear bit densities on tracks further out. If a disk had 18 sectors per track, for example, each one occupied 20
+degrees of arc, no matter which cylinder it was in.
+Nowadays, a different strategy is used. Cylinders are divided into zones (typically 10 to 30 per drive), and the number of sectors per track is increased in each
+zone moving outward from the innermost track. This change makes keeping track
+of information harder but increases the drive capacity, which is viewed as more important. All sectors are the same size. A disk with five zones is shown in
+Fig. 2-21.
+Sector
+
+Figure 2-21. A disk with five zones. Each zone has many tracks.
+
+Associated with each drive is a disk controller, a chip that controls the drive.
+Some controllers contain a full CPU. The controller’s tasks include accepting
+commands from the software, such as READ, WRITE, and FORMAT (writing all the
+preambles), controlling the arm motion, detecting and correcting errors, and converting 8-bit bytes read from memory into a serial bit stream and vice versa. Some
+controllers also handle buffering of multiple sectors, caching sectors read for
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+91
+
+potential future use, and remapping bad sectors. This latter function is caused by
+the existence of sectors with a bad (permanently magnetized) spot. When the controller discovers a bad sector, it replaces it by one of the spare sectors reserved for
+this purpose within each cylinder or zone.
+
+2.3.3 IDE Disks
+Modern personal computer disks evolved from the one in the IBM PC XT,
+which was a 10-MB Seagate disk controlled by a Xebec disk controller on a plugin card. The Seagate disk had 4 heads, 306 cylinders, and 17 sectors/track. The
+controller was capable of handling two drives. The operating system read from
+and wrote to a disk by putting parameters in CPU registers and then calling the
+BIOS (Basic Input Output System), located in the PC’s built-in read-only memory. The BIOS issued the machine instructions to load the disk controller registers
+that initiated transfers.
+The technology evolved rapidly from having the controller on a separate board,
+to having it closely integrated with the drives, starting with IDE (Integrated Drive
+Electronics) drives in the mid 1980s. However, the BIOS calling conventions
+were not changed for reasons of backward compatibility. These calling conventions addressed sectors by giving their head, cylinder, and sector numbers, with the
+heads and cylinders numbered starting at 0 and the sectors starting at 1. This
+choice was probably due to a mistake on the part of the original BIOS programmer,
+who wrote his masterpiece in 8088 assembler. With 4 bits for the head, 6 bits for
+the sector, and 10 bits for the cylinder, the maximum drive could have 16 heads, 63
+sectors, and 1024 cylinders, for a total of 1,032,192 sectors. Such a maximum
+drive has a capacity of 504 MB, which probably seemed like infinity at the time
+but certainly does not today. (Would you fault a new machine today that could not
+handle drives bigger than 1000 TB?)
+Unfortunately, before too long, drives below 504 MB appeared but with the
+wrong geometry (e.g., 4 heads, 32 sectors, 2000 cylinders is 256,000 sectors).
+There was no way for the operating system to address them due to the long-frozen
+BIOS calling conventions. As a result, disk controllers began to lie, pretending
+that the geometry was within the BIOS limits but actually remapping the virtual
+geometry onto the real geometry. Although this approach worked, it wreaked
+havoc with operating systems that carefully placed data to minimize seek times.
+Eventually, IDE drives evolved into EIDE drives (Extended IDE), which also
+support a second addressing scheme called LBA (Logical Block Addressing),
+which just numbers the sectors starting at 0 up until a maximum of 228 − 1. This
+scheme requires the controller to convert LBA addresses to head, sector, and cylinder addresses, but at least it does get beyond the 504-MB limit. Unfortunately, it
+created a new bottleneck at 228 × 29 bytes (128 GB). In 1994, when the EIDE
+standard was adopted, nobody in their wildest imagination could imagine 128-GB
+
+92
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+disks. Standards committees, like politicians, have a tendency to push problems
+forward in time so the next committee has to solve them.
+EIDE drives and controllers also had other improvements as well. For example, EIDE controllers could have two channels, each with a primary and a secondary drive. This arrangement allowed a maximum of four drives per controller.
+CD-ROM and DVD drives were also supported, and the transfer rate was increased
+from 4 MB/sec to 16.67 MB/sec.
+As disk technology continued to improve, the EIDE standard continued to
+evolve, but for some reason the successor to EIDE was called ATA-3 (AT Attachment), a reference to the IBM PC/AT (where AT referred to the then-Advanced
+Technology of a 16-bit CPU running at 8 MHz). In the next edition, the standard
+was called ATAPI-4 (ATA Packet Interface) and the speed was increased to 33
+MB/sec. In ATAPI-5 it went to 66 MB/sec.
+By this time, the 128-GB limit imposed by the 28-bit LBA addresses was
+looming larger and larger, so ATAPI-6 changed the LBA size to 48 bits. The new
+standard will run into trouble when disks reach 248 × 29 bytes (128 PB). With a
+50% annual increase in capacity, the 48-bit limit will probably last until about
+2035. To find out how the problem was solved, please consult the 11th edition of
+this book. The smart money is betting on increasing the LBA size to 64 bits. The
+ATAPI-6 standard also increased the transfer rate to 100 MB/sec and addressed the
+issue of disk noise for the first time.
+The ATAPI-7 standard is a radical break with the past. Instead of increasing
+the size of the drive connector (to increase the data rate), this standard uses what is
+called serial ATA to transfer 1 bit at a time over a 7-pin connector at speeds starting at 150 MB/sec and expected to rise over time to 1.5 GB/sec. Replacing the old
+80-wire flat cable with a round cable only a few mm thick improves airflow within
+the computer. Also, serial ATA uses 0.5 volts for signaling (compared to 5 volts on
+ATAPI-6 drives), which reduces power consumption. It is likely that within a few
+years, all computers will use serial ATA. The issue of power consumption by disks
+is an increasingly important one, both at the high end, where data centers have vast
+disk farms, and at the low end, where notebooks are power limited (Gurumurthi et
+al., 2003).

@@ -1,0 +1,100 @@
+time?
+40. Calculate the bus bandwidth needed to display 1280 × 960) color video at 30
+frames/sec. Assume that the data must pass over the bus twice, once from the CDROM to the memory and once from the memory to the screen.
+41. Which of the signals of Fig. 3-55 is not strictly necessary for the bus protocol to work?
+
+CHAP. 3
+
+241
+
+PROBLEMS
+
+42. A PCI Express system has 10 Mbps links (gross capacity). How many signal wires are
+needed in each direction for 16x operation? What is the gross capacity each way?
+What is the net capacity each way?
+43. A computer has instructions that each require two bus cycles, one to fetch the instruction and one to fetch the data. Each bus cycle takes 10 nsec and each instruction takes
+20 nsec (i.e., the internal processing time is negligible). The computer also has a disk
+with 2048 512-byte sectors per track. Disk rotation time is 5 msec. To what percent of
+its normal speed is the computer reduced during a DMA transfer if each 32-bit DMA
+transfer takes one bus cycle?
+44. The maximum payload of an isochronous data packet on the USB bus is 1023 bytes.
+Assuming that a device may send only one data packet per frame, what is the maximum bandwidth for a single isochronous device?
+45. What would the effect be of adding a third input line to the
+PIO of Fig. 3-61(b) if this new line were connected to A13?
+
+NAND
+
+gate selecting the
+
+46. Write a program to simulate the behavior of an m × n array of two-input NAND gates.
+This circuit, contained on a chip, has j input pins and k output pins. The values of j, k,
+m, and n are compile-time parameters of the simulation. The program should start off
+by reading in a ‘‘wiring list,’’ each wire of which specifies an input and an output. An
+input is either one of the j input pins or the output of some NAND gate. An output is either one of the k output pins or an input to some NAND gate. Unused inputs are logical
+1. After reading in the wiring list, the program should print the output for each of the
+2 j possible inputs. Gate array chips like this one are widely used for putting custom
+circuits on a chip because most of the work (depositing the gate array on the chip) is
+independent of the circuit to be implemented. Only the wiring is specific to each design.
+47. Write a program in your favorite programming language to read in two arbitrary
+Boolean expressions and see if they represent the same function. The input language
+should include single letters, as Boolean variables, the operands AND, OR, and NOT, and
+parentheses. Each expression should fit on one input line. The program should compute the truth tables for both functions and compare them.
+
+This page intentionally left blank
+
+4
+THE MICROARCHITECTURE LEVEL
+
+Above the digital logic level is the microarchitecture level. Its job is to implement the ISA (Instruction Set Architecture) level above it, as illustrated in Fig. 1-2.
+Its design depends on the ISA being implemented, as well as the cost and performance goals of the computer. Many modern ISAs, particularly RISC designs,
+have simple instructions that can usually be executed in a single clock cycle. More
+complex ISAs, such as the Core i7 instruction set, may require many cycles to execute a single instruction. Executing an instruction may require locating the operands in memory, reading them, and storing results back into memory. The
+sequencing of operations within a single instruction often leads to a different approach to control than that for simple ISAs.
+
+4.1 AN EXAMPLE MICROARCHITECTURE
+Ideally, we would like to introduce this subject by explaining the general principles of microarchitecture design. Unfortunately, there are no general principles;
+every ISA is a special case. Consequently, we will discuss a detailed example instead. For our example ISA, we have chosen a subset of the Java Virtual Machine.
+This subset contains only integer instructions, so we have named it IJVM to
+emphasize it deals only with integers.
+We will start out by describing the microarchitecture on top of which we will
+implement IJVM. IJVM has some complex instructions. Many such architectures
+243
+
+244
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+have been implemented through microprogramming, as discussed in Chap. 1. Although IJVM is small, it is a good starting point for describing the control and
+sequencing of instructions.
+Our microarchitecture will contain a microprogram (in ROM), whose job is to
+fetch, decode, and execute IJVM instructions. We cannot use the Oracle JVM
+interpreter because we need a tiny microprogram that drives the individual gates in
+the actual hardware efficiently. In contrast, the Oracle JVM interpreter was written
+in C for portability and cannot control the hardware at all.
+Since the actual hardware used consists only of the basic components described in Chap. 3, in theory, after fully understanding this chapter, the reader
+should be able to go out and buy a large bag full of transistors and build this subset
+of the JVM machine. Students who successfully accomplish this task will be given
+extra credit (and a complete psychiatric examination).
+As a convenient model for the design of the microarchitecture we can think of
+it as a programming problem, where each instruction at the ISA level is a function
+to be called by a master program. In this model, the master program is a simple,
+endless loop that determines a function to be invoked, calls the function, then starts
+over, very much like Fig. 2-3.
+The microprogram has a set of variables, called the state of the computer,
+which can be accessed by all the functions. Each function changes at least some of
+the variables making up the state. For example, the Program Counter (PC) is part
+of the state. It indicates the memory location containing the next function (i.e.,
+ISA instruction) to be executed. During the execution of each instruction, the PC
+is advanced to point to the next instruction to be executed.
+IJVM instructions are short and sweet. Each instruction has a few fields, usually one or two, each of which has some specific purpose. The first field of every
+instruction is the opcode (short for operation code), which identifies the instruction, telling whether it is an ADD or a BRANCH, or something else. Many instructions have an additional field, which specifies the operand. For example, instructions that access a local variable need a field to tell which variable.
+This model of execution, sometimes called the fetch-decode-execute cycle, is
+useful in the abstract and may also be the basis for implementation for ISAs like
+IJVM that have complex instructions. Below we will describe how it works, what
+the microarchitecture looks like, and how it is controlled by the microinstructions,
+each of which controls the data path for one cycle. Together, the list of microinstructions forms the microprogram, which we will present and discuss in detail.
+
+4.1.1 The Data Path
+The data path is that part of the CPU containing the ALU, its inputs, and its

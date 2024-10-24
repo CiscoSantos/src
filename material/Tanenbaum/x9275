@@ -1,0 +1,100 @@
+
+P
+
+(b)
+
+Figure 8-20. (a) A multicomputer with 16 CPUs, each with its own private memory. (b) The bit-map image of Fig. 8-19 split up among the 16 memories.
+
+The absence of hardware shared memory on a multicomputer has important
+implications for the software structure. Having a single virtual address space with
+all processes being able to read and write all of memory by just executing LOAD
+and STORE instructions is impossible on a multicomputer. For example, if CPU 0
+(the one in the upper left-hand corner) of Fig. 8-19(b) discovers that part of its object extends into the section assigned to CPU 1, it can nevertheless just continue
+reading memory to access the tail of the airplane. On the other hand, if CPU 0 in
+Fig. 8-20(b) makes the same discovery, it cannot just read CPU 1’s memory. It has
+to do something quite different to get the data it needs.
+In particular, it has to discover (somehow) which CPU has the data it needs
+and send that CPU a message requesting a copy of the data. Typically it will then
+block until the request is answered. When the message arrives at CPU 1, software
+there has to analyze it and send back the needed data. When the reply message
+gets back to CPU 0, the software is unblocked and can continue executing.
+On a multicomputer, communication between processes often uses software
+primitives such as send and receive. This gives the software a different, and far
+more complicated, structure than on a multiprocessor. It also means that correctly
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+589
+
+dividing up the data and placing them in the optimal locations is a major issue on a
+multicomputer. It is less of an issue on a multiprocessor since placement does not
+affect correctness or programmability although it may affect performance. In
+short, programming a multicomputer is much more difficult than programming a
+multiprocessor.
+Under these conditions, why would anyone build multicomputers, when multiprocessors are easier to program? The answer is simple: large multicomputers are
+much simpler and cheaper to build than multiprocessors with the same number of
+CPUs. Implementing a memory shared by even a few hundred CPUs is a substantial undertaking, whereas building a multicomputer with 10,000 CPUs or more is
+straightforward. Later in this chapter we will study a multicomputer with over
+50,000 CPUs.
+Thus we have a dilemma: multiprocessors are hard to build but easy to program whereas multicomputers are easy to build but hard to program. This observation has led to a great deal of effort to construct hybrid systems that are relatively
+easy to build and relatively easy to program. This work has led to the realization
+that shared memory can be implemented in various ways, each with its own set of
+advantages and disadvantages. In fact, much research in parallel architectures
+these days relates to the convergence of multiprocessor and multicomputer architectures into hybrid forms that combine the strengths of each. The holy grail here
+is to find designs that are scalable, that is, continue to perform well as more and
+more CPUs are added.
+One approach to building hybrid systems is based on the fact that modern computer systems are not monolithic but are constructed as a series of layers—the
+theme of this book. This insight opens the possibility of implementing the shared
+memory at any one of several layers, as shown in Fig. 8-21. In Fig. 8-21(a) we see
+the shared memory being implemented by the hardware as a true multiprocessor.
+In this design, there is a single copy of the operating system with a single set of
+tables, in particular, the memory allocation table. When a process needs more
+memory, it traps to the operating system, which then looks in its table for a free
+page and maps the page into the called’s address space. As far as the operating
+system is concerned, there is a single memory and it keeps track of which process
+owns which page in software. There are many ways to implement hardware shared
+memory, as we will see later.
+A second possibility is to use multicomputer hardware and have the operating
+system simulate shared memory by providing a single system-wide paged shared
+virtual address space. In this approach, called DSM (Distributed Shared Memory) (Li and Hudak, 1989), each page is located in one of the memories of
+Fig. 8-20(a). Each machine has its own virtual memory and its own page tables.
+When a CPU does a LOAD or STORE on a page it does not have, a trap to the operating system occurs. The operating system then locates the page and asks the CPU
+currently holding it in its memory to unmap the page and send it over the interconnection network. When it finally arrives, the page is mapped in and the faulting
+
+590
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Machine 1
+
+Machine 2
+
+Machine 1
+
+Machine 2
+
+Machine 1
+
+Machine 2
+
+Application
+
+Application
+
+Application
+
+Application
+
+Application
+
+Application
+
+Language
+run-time
+system
+
+Language

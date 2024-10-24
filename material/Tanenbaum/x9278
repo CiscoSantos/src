@@ -1,0 +1,100 @@
+
+CC-NUMA
+
+Shared memory
+
+NC-NUMA
+
+MPP
+
+Grid
+
+COW
+
+Hypercube
+
+Message passing
+
+Figure 8-23. A taxonomy of parallel computers.
+
+In our taxonomy, the MIMD category has been split into multiprocessors (shared-memory machines) and multicomputers (message-passing machines). Three
+kinds of multiprocessors exist, distinguished by the way the shared memory is implemented on them. They are called UMA (Uniform Memory Access), NUMA
+(NonUniform Memory Access), and COMA (Cache Only Memory Access).
+These categories exist because in large multiprocessors, the memory is usually
+split up into multiple modules. UMA machines have the property that each CPU
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+593
+
+has the same access time to every memory module. In other words, every memory
+word can be read as fast as every other memory word. If this is technically impossible, the fastest references are slowed down to match the slowest ones, so programmers do not see the difference. This is what ‘‘uniform’’ means here. This
+uniformity makes the performance predictable, an important factor for writing efficient code.
+In contrast, in a NUMA multiprocessor, this property does not hold. Often
+there is a memory module close to each CPU and accessing that memory module is
+much faster than accessing distant ones. The result is that for performance reasons, it matters where code and data are placed. COMA machines are also nonuniform, but in a different way. We will study each of these types and their subcategories in detail later.
+The other main category of MIMD machines consists of the multicomputers,
+which, unlike the multiprocessors, do not have shared primary memory at the
+architectural level. In other words, the operating system on a multicomputer CPU
+cannot access memory attached to a different CPU by just executing a LOAD instruction. It has to send an explicit message and wait for an answer. The ability of
+the operating system to read a distant word by just doing a LOAD is what distinguishes multiprocessors from multicomputers. As we mentioned before, even on a
+multicomputer, user programs may have the ability to access remote memory by
+using LOAD and STORE instructions, but this illusion is supported by the operating
+system, not the hardware. This difference is subtle, but very important. Because
+multicomputers do not have direct access to remote memory, they are sometimes
+called NORMA (NO Remote Memory Access) machines.
+Multicomputers can be roughly divided into two categories. The first contains
+the MPPs (Massively Parallel Processors), which are expensive supercomputers
+consisting of many CPUs tightly coupled by a high-speed proprietary interconnection network. The IBM SP/3 is a well-known commercial example.
+The other category consists of regular PCs, workstations, or servers, possibly
+rack mounted, and connected by commercial off-the-shelf interconnection technology. Logically, there is not much difference, but huge supercomputers costing
+many millions of dollars are used differently than networks of PCs assembled by
+the users for a fraction of the price of an MPP. These home-brew machines go by
+various names, including NOW (Network of Workstations), COW (Cluster of
+Workstations), or sometimes just cluster.
+
+8.3.2 Memory Semantics
+Even though all multiprocessors present the CPUs with the image of a single
+shared address space, often many memory modules are present, each holding some
+portion of the physical memory. The CPUs and memories are often connected by a
+complex interconnection network, as discussed in Sec. 8.1.2. Several CPUs may
+be attempting to read a memory word at the same time several other CPUs are
+
+594
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+attempting to write the same word, and some of the request messages may pass
+each other in transit and be delivered in a different order than they were issued.
+Add to this problem the existence of multiple copies of some blocks of memory
+(e.g., in caches), and the result can easily be chaos unless strict measures are taken
+to prevent it. In this section we will see what shared memory really means and
+look at how memories can reasonably respond under these circumstances.
+One view of memory semantics is to see it as a contract between the software
+and the memory hardware (Adve and Hill, 1990). If the software agrees to abide
+by certain rules, the memory agrees to deliver certain results. The discussion then
+centers around what the rules are. These rules are called consistency models, and
+many different ones have been proposed and implemented (Sorin et al., 2011).
+To give an idea of what the problem is, suppose that CPU 0 writes the value 1
+to some memory word and a little later CPU 1 writes the value 2 to the same word.
+Now CPU 2 reads the word and gets the value 1. Should the computer owner bring
+the computer to the repair shop to get it fixed? That depends on what the memory
+promised (its contract).
+Strict Consistency
+The simplest model is strict consistency. With this model, any read to a location x always returns the value of the most recent write to x. Programmers love
+this model, but it is effectively impossible to implement in any way other than having a single memory module that simply services all requests first-come, firstserved, with no caching and no data replication. Such an implementation would
+make memory an enormous bottleneck and is thus not a serious candidate, unfortunately.
+Sequential Consistency
+Next best is a model called sequential consistency (Lamport, 1979). The idea
+here is that in the presence of multiple read and write requests, some interleaving
+of all the requests is chosen by the hardware (nondeterministically), but all CPUs
+see the same order.
+To see what this means, consider an example. Suppose that CPU 1 writes the
+value 100 to word x, and 1 nsec later CPU 2 writes the value 200 to word x. Now
+suppose that 1 nsec after the second write was issued (but not necessarily completed yet) two other CPUs, 3 and 4, read word x twice in rapid succession, as
+shown in Fig. 8-24(a). Three possible orderings of the six events (two writes and
+four reads) are shown in Fig. 8-24(b)–(d), respectively. In Fig. 8-24(b), CPU 3

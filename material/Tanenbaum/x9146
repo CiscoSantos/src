@@ -1,0 +1,100 @@
+
+A×B/C
+
+AB×C/
+
+((A + B) × C + D)/(E + F + G)
+
+AB+C×D+EF+G+/
+
+Figure 5-22. Some examples of infix expressions and their reverse Polish notation equivalents.
+
+The order of the variables is the same in infix and in reverse Polish notation.
+The order of the operators, however, is not always the same. Operators appear in
+
+SEC. 5.4
+
+ADDRESSING
+
+379
+
+reverse Polish notation in the order they will actually be executed during the evaluation of the expression. Figure 5-22 gives several examples of infix formulas and
+their reverse Polish notation equivalents.
+Evaluation of Reverse Polish Notation Formulas
+Reverse Polish notation is the ideal notation for evaluating formulas on a computer with a stack. The formula consists of n symbols, each one either an operand
+or an operator. The algorithm for evaluating a reverse Polish notation formula
+using a stack is simple. Scan the reverse Polish notation string from left to right.
+When an operand is encountered, push it onto the stack. When an operator is
+encountered, execute the corresponding instruction.
+Figure 5-23 shows the evaluation of
+(8 + 2 × 5 ) / ( 1 + 3 × 2 − 4)
+
+in IJVM. The corresponding reverse Polish notation formula is
+825×+132×+4−/
+
+In the figure, we have introduced IMUL and IDIV as the multiplication and division
+instructions, respectively. The number on top of the stack is the right operand, not
+the left operand. This point is important for division (and subtraction) since the
+order of the operands is significant (unlike addition and multiplication). In other
+words, IDIV has been carefully defined so that first pushing the numerator, then
+pushing the denominator, and then doing the operation gives the correct result.
+Notice how easy code generation is from reverse Polish notation to IJVM: just scan
+the reverse Polish notation formula and output one instruction per symbol. If the
+symbol is a constant or variable, output an instruction to push it onto the stack. If
+the symbol is an operator, output an instruction to perform the operation.
+
+5.4.9 Addressing Modes for Branch Instructions
+So far we have been looking only at instructions that operate on data. Branch
+instructions (and procedure calls) also need addressing modes for specifying the
+target address. The modes we have examined so far also work for branches for the
+most part. Direct addressing is certainly a possibility, with the target address simply being included in the instruction in full.
+However, other addressing modes also make sense. Register indirect addressing allows the program to compute the target address, put it in a register, and
+then go there. This mode gives the most flexibility since the target address is computed at run time. It also presents the greatest opportunity for creating bugs that
+are nearly impossible to find.
+Another reasonable mode is indexed mode, which offsets a known distance
+from a register. It has the same properties as register indirect mode.
+
+380
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+Step
+
+Remaining string
+
+Instruction
+
+Stack
+
+1
+
+825×+132×+4−/
+
+BIPUSH 8
+
+8
+
+2
+
+25×+132×+4−/
+
+BIPUSH 2
+
+8, 2
+
+3
+
+5×+132×+4−/
+
+BIPUSH 5
+
+8, 2, 5
+
+4
+
+×+132×+4−/
+
+IMUL
+
+8, 10
+

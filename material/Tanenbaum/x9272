@@ -1,0 +1,100 @@
+
+With 512 CUDA cores, the Fermi GPU would grind to a halt without significant memory bandwidth. To provide this bandwidth, the Fermi GPU implements a
+modern memory hierarchy as illustrated in Fig. 8-18. Each SM has both a dedicated shared memory and a private level 1 data cache. The dedicated shared memory
+
+SEC. 8.2
+
+COPROCESSORS
+
+585
+
+is directly addressed by the CUDA cores, and it provides fast sharing of data between threads within a single SM. The level 1 cache speeds up accesses to DRAM
+data. To accommodate the wide range of program data usage, the SMs can be configured with 16-KB shared memory and 48-KB level 1 cache or 48-KB shared
+memory and 16-KB level 1 cache. All SMs share a single unified 768-KB level 2
+cache. The level 2 cache provides faster access to DRAM data that do not fit in the
+level 1 caches. The level 2 cache also provides sharing between SMs, although this
+mode of sharing is much slower than the intra-SM sharing that occurs within an
+SM’s shared memory. Beyond the level 2 cache is the DRAM, which holds the remaining data, imagery, and textures used by programs running on the Fermi GPU.
+Efficient programs will try to avoid accessing DRAM at all costs, as a single access can take hundreds of cycles to complete.
+For a savvy programmer, the Fermi GPU represents one of the most computationally capable platforms ever created. A single Fermi-based GTX 580 GPU running at 772 MHz with 512 CUDA cores can achieve a sustained computational rate
+of 1.5 teraflops while consuming 250 watts of power. This statistic is even more
+impressive when one considers that the street price of a GTX 580 GPU is less than
+600 U.S. dollars. By way of historical comparison, in 1990, the fastest computer
+in the world, the Cray-2, had a performance of 0.002 teraflops and a price tag (in
+inflation-adjusted dollars) of $30 million. It also filled a modest-sized room and
+came with its own liquid-cooling system to dissipate the 150 kW of power it consumed. The GTX 580 has 750 times more horsepower for 1/50000 of the price
+while consuming 1/600th as much energy. Not a bad deal.
+
+8.2.3 Cryptoprocessors
+A third area in which coprocessors are popular is security, especially network
+security. When a connection is established between a client and a server, in many
+cases they must first authenticate each other. Then a secure, encrypted connection
+has to be established between them so data can be transferred in a secure way to
+foil any snoopers who may tap the line.
+The problem with security is that to achieve it, cryptography has to be used,
+and cryptography is very compute intensive. Cryptography comes in two general
+flavors, called symmetric key cryptography and public-key cryptography. The
+former is based on mixing up the bits very thoroughly, sort of the electronic equivalent of throwing a message into an electric blender. The latter is based on multiplication and exponentiation of large (e.g., 1024-bit) numbers and is extremely
+time consuming.
+To handle the computation needed to encrypt data securely for transmission or
+storage and then decrypt them later, various companies have produced crypto
+coprocessors, sometimes as PCI bus plug-in cards. These coprocessors have special hardware that enables them to do the necessary cryptography much faster than
+an ordinary CPU can do it. Unfortunately, a detailed discussion of how they work
+
+586
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+would first require explaining quite a bit about cryptography itself, which is
+beyond the scope of this book. For more information about crypto coprocessors,
+see Gaspar et al. (2010), Haghighizadeh et al. (2010), and Shoufan et al. (2011).
+
+8.3 SHARED-MEMORY MULTIPROCESSORS
+We have now seen how parallelism can be added to single chips and to individual systems by adding a coprocessor. The next step is to see how multiple fullblown CPUs can be combined into larger systems. Systems with multiple CPUs
+can be divided into multiprocessors and multicomputers. After taking a close look
+at what these terms actually mean, we will first study multiprocessors and then
+multicomputers.
+
+8.3.1 Multiprocessors vs. Multicomputers
+In any parallel computer system, CPUs working on different parts of the same
+job must communicate to exchange information. Precisely how they should do this
+is the subject of much debate in the architectural community. Two distinct designs,
+multiprocessors and multicomputers, have been proposed and implemented. The
+key difference between the two is the presence or absence of shared memory. This
+difference permeates how they are designed, built, and programmed, as well as
+their scale and price.
+Multiprocessors
+A parallel computer in which all the CPUs share a common memory is called a
+multiprocessor, as indicated symbolically in Fig. 8-19. All processes working together on a multiprocessor can share a single virtual address space mapped onto
+the common memory. Any process can read or write a word of memory by just executing a LOAD or STORE instruction. Nothing else is needed. The hardware does
+the rest. Two processes can communicate by simply having one of them write data
+to memory and having the other one read them back.
+The ability for two (or more) processes to communicate by just reading and
+writing memory is the reason multiprocessors are popular. It is an easy model for
+programmers to understand and is applicable to a wide range of problems. Consider, for example, a program that inspects a bit-map image and lists all the objects in
+it. One copy of the image is kept in memory, as shown in Fig. 8-19(b). Each of
+the 16 CPUs runs a single process, which has been assigned one of the 16 sections
+to analyze. Nevertheless, each process has access to the entire image, which is essential, since some objects may occupy multiple sections. If a process discovers
+that one of its objects extends over a section boundary, it just follows the object
+
+SEC. 8.3
+
+587
+
+SHARED-MEMORY MULTIPROCESSORS
+
+P
+
+P
+
+P
+
+P
+
+P
+P
+
+Shared
+memory

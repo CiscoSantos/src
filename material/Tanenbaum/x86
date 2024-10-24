@@ -1,0 +1,100 @@
+majority of its inputs are 0 and 1 if a majority of its inputs are 1. Although any
+Boolean function can be fully specified by giving its truth table, as the number of
+variables increases, this notation becomes increasingly cumbersome. Instead, another notation is frequently used.
+A B C
+
+A B C
+
+A
+1
+A
+4
+
+5
+
+B
+
+ABC
+
+ABC
+
+2
+A
+0
+0
+0
+0
+1
+1
+1
+1
+
+B
+0
+0
+1
+1
+0
+0
+1
+1
+
+C
+0
+1
+0
+1
+0
+1
+0
+1
+
+(a)
+
+M
+0
+0
+0
+1
+0
+1
+1
+1
+
+8
+
+B
+
+M
+
+6
+ABC
+C
+3
+C
+7
+
+ABC
+
+(b)
+
+Figure 3-3. (a) The truth table for the majority function of three variables.
+(b) A circuit for (a).
+
+To see how this other notation comes about, note that any Boolean function
+can be specified by telling which combinations of input variables give an output
+value of 1. For the function of Fig. 3-3(a) there are four combinations of input
+variables that make M equal to 1. By convention, we will place a bar over an input
+
+152
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+variable to indicate that its value is inverted. The absence of a bar means that it is
+not inverted. Furthermore, we will use implied multiplication or a dot to mean the
+Boolean AND function and + to mean the Boolean OR function. Thus, for example, ABC takes the value 1 only when A = 1 and B = 0 and C = 1. Also,
+AB + BC is 1 only when ( A = 1 and B = 0) or (B = 1 and C = 0). The four rows
+of Fig. 3-3(a) producing 1 bits in the output are: ABC, ABC, ABC, and ABC. The
+function, M, is true (i.e., 1) if any of these four conditions is true, so we can write

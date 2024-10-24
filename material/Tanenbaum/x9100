@@ -1,0 +1,100 @@
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+with the Goto bit on and still has ample room left in the queue, the queueing unit
+then sends an acknowledgement signal back to the decoding unit. When the decoding unit sees the acknowledgement, it sends the index of the next IJVM instruction to the queueing unit.
+In this way, the sequence of IJVM instructions in memory are ultimately converted into a sequence of micro-operations in a queue. These micro-operations
+feed the MIRs, which send the signals out to control the data path. However, another factor we now have to consider is that the fields on each micro-operation are not
+active at the same time. The A and B fields are active during the first cycle, the ALU
+field is active during the second cycle, the C field is active during the third cycle,
+and any memory operations take place in the fourth cycle.
+To make this work properly, we have introduced four independent MIRs into
+Fig. 4-35. At the start of each clock cycle (the Δw time in Fig. 4-3), MIR3 is copied
+to MIR4, MIR2 is copied to MIR3, MIR1 is copied to MIR2, and MIR1 is loaded with a
+fresh micro-operation from the micro-operation queue. Then each MIR puts out its
+control signals, but only some of them are used. The A and B fields from MIR1 are
+used to select the registers that drive the A and B latches, but the ALU field in MIR1
+is not used and is not connected to anything else in the data path.
+One clock cycle later, this micro-operation has moved on to MIR2 and the registers that it selected are now safely sitting in the A and B latches waiting for the
+adventures to come. Its ALU field is now used to drive the ALU. In the next cycle,
+its C field will write the results back into the registers. After that, it will move on
+to MIR4 and initiate any memory operations needed using the now-loaded MAR
+(and MDR, for a write).
+One last aspect of the Mic-4 needs some discussion now: microbranches.
+Some IJVM instructions, such as IFLT, need to conditionally branch based on, say,
+the N bit. When a microbranch occurs, the pipeline cannot continue. To deal with
+that, we have added the Goto bit to the micro-operation. When the queueing unit
+hits a micro-operation with this bit set while copying it to the queue, it realizes that
+there is trouble ahead and refrains from sending an acknowledgement to the decoding unit. As a result, the machine will stall at this point until the microbranch has
+been resolved.
+Conceivably, some IJVM instructions beyond the branch have already been fed
+into the decoding unit (but not into the queueing unit), since it does not send back
+an acknowledge (i.e., continue) signal when it hits a micro-operation with the Goto
+bit on. Special hardware and mechanisms are needed to clean up the mess and get
+back on track, but they are beyond the scope of this book. When Edsger Dijkstra
+wrote his famous letter ‘‘GOTO Statement Considered Harmful’’ (Dijkstra, 1968a),
+he had no idea how right he was.
+We have come a long way since the Mic-1. The Mic-1 was a very simple piece
+of hardware, with nearly all the control done in software. The Mic-4 is a highly
+pipelined design, with seven stages and far more complex hardware. The pipeline
+is shown schematically in Fig. 4-36, with the circled numbers keyed back to the
+
+SEC. 4.4
+
+303
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+components in Fig. 4-35. The Mic-4 automatically prefetches a stream of bytes
+from memory, decodes them into IJVM instructions, converts them to a sequence
+of micro-operations using a ROM, and queues them for use as needed. The first
+three stages of the pipeline can be tied to the data path clock if desired, but there
+will not always be work to do. For example, the IFU certainly cannot feed a new
+IJVM opcode to the decoding unit on every clock cycle because IJVM instructions
+take several cycles to execute and the queue would rapidly overflow.
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+IFU
+
+Decoder
+
+Queue
+
+Operands
+
+Exec
+
+Write
+back
+
+Memory
+
+Figure 4-36. The Mic-4 pipeline.
+
+On each clock cycle, the MIRs are shifted forward and the micro-operation at
+the bottom of the queue is copied into MIR1 to start its execution. The control signals from the four MIRs then spread out through the data path, causing actions to
+occur. Each MIR controls a different portion of the data path and thus different
+microsteps.
+In this design we have a deeply pipelined CPU, which allows the individual
+steps to be very short and thus the clock frequency high. Many CPUs are designed
+in essentially this way, especially those that have to implement an older (CISC) instruction set. For example, the Core i7 implementation is conceptually similar to
+the Mic-4 in some ways, as we will see later in this chapter.
+
+4.5 IMPROVING PERFORMANCE
+All computer manufacturers want their systems to run as fast as possible. In
+this section, we will look at a number of advanced techniques currently being
+investigated to improve system (primarily CPU and memory) performance. Due to
+the highly competitive nature of the computer industry, the lag between new research ideas that can make a computer faster and their incorporation into products

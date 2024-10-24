@@ -1,0 +1,100 @@
+directory names, so this advantage is lost to programs using Win32.
+As with UNIX, a file is just a linear sequence of bytes, although up to a maximum of 264 − 1 bytes. File pointers also exist, as in UNIX, but are 64 rather than
+32 bits wide, to handle files of the maximum length. The Win32 API function
+calls for file and directory manipulation are roughly similar to their UNIX counterparts, except that most have more parameters and the security model is different.
+Opening a file returns a handle, which is then used for reading and writing the file.
+However, unlike in UNIX, handles are not small integers because they are used to
+identify all kernel objects, of which there are potentially millions. The principal
+Win32 API functions for file management are listed in Fig. 6-39.
+API function
+
+UNIX
+
+Meaning
+
+CreateFile
+
+open
+
+Create a file or open an existing file; return a handle
+
+DeleteFile
+
+unlink
+
+Delete an existing file entry from a directory
+
+CloseHandle
+
+close
+
+Close a file
+
+ReadFile
+
+read
+
+Read data from a file
+
+WriteFile
+
+write
+
+Write data to a file
+
+SetFilePointer
+
+lseek
+
+Set the file pointer to a specific place in the file
+
+GetFileAttributes
+
+stat
+
+Return the file properties
+
+LockFile
+
+fcntl
+
+Lock a region of the file to provide mutual exclusion
+
+UnlockFile
+
+fcntl
+
+Unlock a previously locked region of the file
+
+Figure 6-39. The principal Win32 API functions for file I/O. The second column gives the nearest UNIX equivalent.
+
+Let us now examine these calls briefly. CreateFile can be used to create a new
+file and return a handle to it. This API function is also used to open existing files
+as there is no open API function. We have not listed the parameters for the Windows 7 API functions because they are so voluminous. As an example, CreateFile
+has seven parameters, as follows:
+1. A pointer to the name of the file to create or open.
+2. Flags telling whether the file can be read, written, or both.
+3. Flags telling whether multiple processes can open the file at once.
+4. A pointer to the security descriptor, telling who can access the file.
+5. Flags telling what to do if the file exists/does not exist.
+6. Flags dealing with attributes such as archiving, compression, etc.
+7. The handle of a file whose attributes are to be cloned for the new file.
+
+500
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+The next six API functions in Fig. 6-39 are fairly similar to the corresponding
+UNIX system calls. Note, however, that Windows 7 I/O is, in principle, asynchro-
+
+nous, although it is possible for a process to wait for completion. The last two
+functions allow a region of a file to be locked and unlocked to permit a process to
+get guaranteed mutual exclusion to it.
+Using these API functions, it is possible to write a procedure to copy a file,
+analogous to the UNIX version of Figure 6-36. Such a procedure (without any
+error checking) is shown in Fig. 6-40. It has been designed to mimic the structure
+of Fig. 6-36. In practice, one would not have to program a copy file function since
+CopyFile is an API function (which executes something close to this program as a
+library procedure).

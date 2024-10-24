@@ -1,0 +1,100 @@
+Eight years after the introduction of USB 2.0, the USB 3.0 interface standard
+was announced. USB 3.0 supports a whopping 5-Gbps bandwidth over the cable,
+although the link modulation is adaptive, and one is likely to achieve this top speed
+
+232
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+only with professional-grade cabling. USB 3.0 devices are structurally identical to
+earlier USB devices, and they fully implement the USB 2.0 standard. If plugged
+into a USB 2.0 socket, they will operate correctly.
+
+3.7 INTERFACING
+A typical small- to medium-sized computer system consists of a CPU chip,
+chipset, memory chips, and some I/O devices, all connected by a bus. Sometimes,
+all of these devices are integrated into a system-on-a-chip, like the TI OMAP4430
+SoC. We have already studied memories, CPUs, and buses in some detail. Now it
+is time to look at the last part of the puzzle, the I/O interfaces. It is through these
+I/O ports that the computer communicates with the external world.
+
+3.7.1 I/O Interfaces
+Numerous I/O interfaces are already available and new ones are being introduced all the time. Common interfaces include UARTs, USARTs, CRT controllers, disk controllers, and PIOs. A UART (Universal Asynchronous Receiver
+Transmitter) is an I/O interface that can read a byte from the data bus and output
+it a bit at a time on a serial line for a terminal, or input data from a terminal.
+UARTs usually allow various speeds from 50 to 19,200 bps; character widths from
+5 to 8 bits; 1, 1.5, or 2 stop bits; and provide even, odd, or no parity, all under program control. USARTs (Universal Synchronous Asynchronous Receiver
+Transmitters) can handle synchronous transmission using a variety of protocols as
+well as performing all the UART functions. Since UARTs have become less
+important as telephone modems are vanishing, let us now study the parallel interface as an example of an I/O chip.
+PIO Interfaces
+A typical PIO (Parallel Input/Output) interface (based on the classic Intel
+8255A PIO design) is illustrated in Fig. 3-59. It has a collection of I/O lines (e.g.,
+24 I/O lines in the example in the figure) that can interface to any digital logic device interface, for example, keyboards, switches, lights, or printers. In a nutshell,
+the CPU program can write a 0 or 1 to any line, or read the input status of any line,
+providing great flexibility. A small CPU-based system using a PIO interface can
+control a variety of physical devices, such as a robot, toaster, or electron microscope. Typically, PIO interfaces are found in embedded systems.
+The PIO interface is configured with a 3-bit configuration register, which
+specifies if the three independent 8-bit ports are to be used for digital signal input
+(0) or output (1). Setting the appropriate value in the configuration register will
+allow any combination of input and output for the three ports. Associated with
+
+SEC. 3.7
+
+233
+
+INTERFACING
+8
+
+CS
+2
+
+A0-A1
+
+Parallel I/O
+(PIO)
+Interface
+
+WR
+RD
+RESET
+8
+
+D0-D7
+
+8
+
+8
+
+Port A
+
+Port B
+
+Port C
+
+Figure 3-59. A 24-bit PIO Interface.
+
+each port is an 8-bit latch register. To set the lines on an output port, the CPU just
+writes an 8-bit number into the corresponding register, and the 8-bit number appears on the output lines and stays there until the register is rewritten. To use a port
+configured for input, the CPU just reads the corresponding 8-bit latch register.
+It is possible to build more sophisticated PIO interfaces. For example, one popular operating mode provides for handshaking with external devices. For example,
+to output to a device that is not always ready to accept data, the PIO can present
+data on an output port and wait for the device to send a pulse back saying that it
+has accepted the data and wants more. The necessary logic for latching such pulses
+and making them available to the CPU includes a ready signal plus an 8-bit register
+queue for each output port.
+From the functional diagram of the PIO we can see that in addition to 24 pins
+for the three ports, it has eight lines that connect directly to the data bus, a chip
+select line, read and write lines, two address lines, and a line for resetting the chip.
+The two address lines select one of the four internal registers, corresponding to
+ports A, B, C, and the port configuration register. Normally, the two address lines
+are connected to the low-order bits of the address bus. The chip select line allows
+the 24-bit PIO to be combined to form larger PIO interfaces, by adding additional
+address lines and using them to select the proper PIO interface by asserting its chip
+select line.
+
+3.7.2 Address Decoding
+Up until now we have been deliberately vague about how chip select is
+asserted on the memory and I/O chips we have looked at. It is now time to look

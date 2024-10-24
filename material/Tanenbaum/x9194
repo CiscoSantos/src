@@ -1,0 +1,100 @@
+(5K)
+
+Segment 0
+(4K)
+
+Segment 0
+(4K)
+
+Segment 0
+(4K)
+
+Segment 0
+(4K)
+
+Segment 0
+(4K)
+
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+Segment 1
+(8K)
+
+10K
+
+(4K)
+Segment 6
+(4K)
+
+Segment 5
+(4K)
+Segment 6
+(4K)
+
+Figure 6-10. (a)–(d) Development of external fragmentation. (e) Removal of the
+external fragmentation by compaction.
+
+Consider what would happen if the program referenced segment 3 at the time
+memory was suffering from external fragmentation, as in Fig. 6-10(d). The total
+space in the holes is 10K, more than enough for segment 3, but because the space
+is distributed in small, useless pieces, segment 3 cannot simply be loaded. Instead,
+another segment must be removed first.
+One way to avoid external fragmentation is as follows: every time a hole appears, move the segments following the hole closer to memory location 0, thereby
+eliminating that hole but leaving a big hole at the end. Alternatively, one could
+wait until the external fragmentation became quite serious (e.g., more than a certain percentage of the total memory wasted in holes) before performing the
+compaction (squeezing out the holes). Figure 6-10(e) shows how the memory of
+Fig. 6-10(d) would look after compaction. The intention of compacting memory is
+to collect all the small useless holes into one big hole, into which one or more segments can be placed. Compacting has the obvious drawback that some time is
+wasted doing the compacting. Compacting after every hole is created is usually
+too time consuming.
+
+454
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+If the time required for compacting memory is unacceptably large, an algorithm is needed to determine which hole to use for a particular segment. Hole
+management requires maintaining a list of the addresses and sizes of all holes.
+One popular algorithm, called best fit, chooses the smallest hole into which the
+needed segment will fit. The idea is to match holes and segments so as to avoid
+breaking off a piece of a big hole, which may be needed later for a big segment.
+Another popular algorithm, called first fit, circularly scans the hole list and
+chooses the first hole big enough for the segment to fit into. Doing so obviously
+takes less time than checking the entire list to find the best fit. Surprisingly, first fit
+is also a better algorithm in terms of overall performance than best fit, because the
+latter tends to generate a great many small, totally useless holes (Knuth, 1997).
+First fit and best fit tend to decrease the average hole size. Whenever a segment is placed in a hole bigger than itself, which happens almost every time (exact
+fits are rare), the hole is divided into two parts. One part is occupied by the segment and the other part is the new hole. The new hole is always smaller than the
+old hole. Unless there is a compensating process re-creating big holes out of small
+ones, both first fit and best fit will eventually fill memory with small useless holes.
+One such compensating process is the following one. Whenever a segment is
+removed from memory and one or both of its nearest neighbors are holes rather
+than segments, the adjacent holes can be coalesced into one big hole. If segment 5
+were removed from Fig. 6-10(d), the two surrounding holes and the 4 KB used by
+the segment would be merged into a single 11-KB hole.
+At the beginning of this section, we stated that there are two ways to implement segmentation: swapping and paging. The discussion so far has centered on
+swapping. In this scheme, whole segments are shuttled back and forth between
+memory and disk on demand. The other way to implement segmentation is by
+dividing each segment up into fixed-size pages and demand paging them. In this
+scheme, some of the pages of a segment may be in memory and some may be on
+disk. To page a segment, a separate page table is needed for each segment. Since a
+segment is just a linear address space, all the techniques we have seen so far for
+paging apply to each segment. The only new feature here is that each segment gets
+its own page table.
+An early operating system that combined segmentation with paging was
+MULTICS (MULTiplexed Information and Computing Service), initially a
+joint effort of M.I.T., Bell Labs, and General Electric (Corbato´ and Vyssotsky,
+1965; and Organick, 1972). MULTICS addresses had two parts: a segment number
+and an address within the segment. There was a descriptor segment for each process, which contained a descriptor for each segment. When a virtual address was
+presented to the hardware, the segment number was used as an index into the descriptor segment to locate the descriptor for the segment being accessed, as shown
+in Fig. 6-11. The descriptor pointed to the page table, allowing each segment to be
+paged in the usual way. To speed up performance, the most recently used segment/page combinations were held in a 16-entry hardware associative memory

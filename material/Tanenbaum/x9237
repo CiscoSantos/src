@@ -1,0 +1,100 @@
+MOV
+
+EAX,P
+EBX,Q
+Q,EAX
+P,EBX
+
+MOV
+MOV
+MOV
+MOV
+
+EAX,R
+EBX,S
+S,EAX
+R,EBX
+
+CHANGE
+
+MACRO P1, P2
+MOV EAX,P1
+MOV EBX,P2
+MOV P2,EAX
+MOV P1,EBX
+ENDM
+CHANGE P, Q
+CHANGE R, S
+
+(a)
+
+(b)
+
+Figure 7-5. Nearly identical sequences of statements. (a) Without a macro.
+(b) With a macro.
+
+appearing in the macro body is replaced by the corresponding actual parameter.
+The actual parameters are placed in the operand field of the macro call. Figure
+7-5(b) shows the program of Fig. 7-5(a) rewritten using a macro with two parameters. The symbols P1 and P2 are the formal parameters. Each occurrence of P1
+within a macro body is replaced by the first actual parameter when the macro is expanded. Similarly, P2 is replaced by the second actual parameter. In the macro
+call
+CHANGE P, Q
+
+P is the first actual parameter and Q is the second actual parameter. Thus the executable programs produced by both parts of Fig. 7-5 are identical. They contain
+precisely the same instructions with the same operands.
+
+7.2.3 Advanced Features
+Most macro processors have a whole raft of advanced features to make life
+easier for the assembly language programmer. In this section we will take a look at
+a few of MASM’s advanced features. One problem that occurs with all assemblers
+that support macros is label duplication. Suppose that a macro contains a conditional branch instruction and a label that is branched to. If the macro is called two
+or more times, the label will be duplicated, causing an assembly error. One solution is to have the programmer supply a different label on each call as a parameter.
+A different solution (used by MASM) is to allow a label to be declared LOCAL,
+with the assembler automatically generating a different label on each expansion of
+the macro. Some other assemblers have a rule that numeric labels are automatically local.
+MASM and most other assemblers allow macros to be defined within other
+macros. This feature is most useful in combination with conditional assembly.
+
+528
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+Typically, the same macro is defined in both parts of an IF statement, like this:
+M1
+M2
+
+M2
+
+MACRO
+IF WORDSIZE GT 16
+MACRO
+...
+ENDM
+ELSE
+MACRO
+...
+ENDM
+ENDIF
+ENDM
+
+Either way, the macro M2 will be defined, but the definition will depend on whether the program is being assembled on a 16-bit machine or a 32-bit machine. If M1
+is not called, M2 will not be defined at all.
+Finally, macros can call other macros, including themselves. If a macro is
+recursive, that is, it calls itself, it must pass itself a parameter that is changed on
+each expansion and the macro must test the parameter and terminate the recursion
+when it reaches a certain value. Otherwise the assembler can be put into an infinite
+loop. If this happens, the assembler must be killed explicitly by the user.
+
+7.2.4 Implementation of a Macro Facility in an Assembler
+To implement a macro facility, an assembler must be able to perform two functions: save macro definitions and expand macro calls. We will examine these now.
+The assembler must maintain a table of all macro names and, along with each
+name, a pointer to its stored definition so that it can be retrieved when needed.
+Some assemblers have a separate table for macro names and some have a combined opcode table in which all machine instructions, pseudoinstructions, and macro
+names are kept.
+When a macro definition is encountered, a table entry is made giving the name
+of the macro, the number of formal parameters, and a pointer to another table—the
+macro definition table—where the macro body will be kept. A list of the formal
+parameters is also constructed at this time for use in processing the definition. The
+macro body is then read and stored in the macro definition table. Formal parameters occurring within the body are indicated by some special symbol. For example,

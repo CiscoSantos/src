@@ -1,0 +1,100 @@
+DDR chip running at 200 MHz outputs two 8-bit values 200 million times a second
+(for a short interval, of course), giving a theoretical burst rate of 3.2 Gbps. The
+DDR2 and DDR3 memory interfaces provide additional performance over DDR by
+increasing the memory-bus speeds to 533 MHz and 1067 MHz, respectively. At
+the time this book went to press, the fastest DDR3 chips could output data at
+17.067 GB/sec.
+Nonvolatile Memory Chips
+RAMs are not the only kind of memory chips. In many applications, such as
+toys, appliances, and cars, the program and some of the data must remain stored
+even when the power is turned off. Furthermore, once installed, neither the program nor the data are ever changed. These requirements have led to the development of ROMs (Read-Only Memories), which cannot be changed or erased, intentionally or otherwise. The data in a ROM are inserted during its manufacture, essentially by exposing a photosensitive material through a mask containing the desired bit pattern and then etching away the exposed (or unexposed) surface. The
+only way to change the program in a ROM is to replace the entire chip.
+ROMs are much cheaper than RAMs when ordered in large enough volumes to
+defray the cost of making the mask. However, they are inflexible, because they
+cannot be changed after manufacture, and the turnaround time between placing an
+order and receiving the ROMs may be weeks. To make it easier for companies to
+develop new ROM-based products, the PROM (Programmable ROM) was invented. A PROM is like a ROM, except that it can be programmed (once) in the field,
+eliminating the turnaround time. Many PROMs contain an array of tiny fuses inside. A specific fuse can be blown out by selecting its row and column and then
+applying a high voltage to a special pin on the chip.
+The next development in this line was the EPROM (Erasable PROM), which
+can be not only field-programmed but also field-erased. When the quartz window
+in an EPROM is exposed to a strong ultraviolet light for 15 minutes, all the bits are
+set to 1. If many changes are expected during the design cycle, EPROMs are far
+more economical than PROMs because they can be reused. EPROMs usually have
+the same organization as static RAMs. The 4-Mbit 27C040 EPROM, for example,
+uses the organization of Fig. 3-31(a), which is typical of a static RAM. What is interesting is that ancient chips like this one do not die off. They just become cheaper and find their way into lower-end products that are highly cost sensitive. A
+27C040 can now be bought retail for under $3 and much less in large volumes.
+Even better than the EPROM is the EEPROM which can be erased by applying pulses to it instead of putting it in a special chamber for exposure to ultraviolet
+light. In addition, an EEPROM can be reprogrammed in place, whereas an
+EPROM has to be inserted in a special EPROM programming device to be programmed. On the minus side, the biggest EEPROMs are typically only 1/64 as
+
+SEC. 3.3
+
+183
+
+MEMORY
+
+large as common EPROMs and they are only half as fast. EEPROMs cannot compete with DRAMs or SRAMs because they are 10 times slower, 100 times smaller
+in capacity, and much more expensive. They are used only in situations where
+their nonvolatility is crucial.
+A more recent kind of EEPROM is flash memory. Unlike EPROM, which is
+erased by exposure to ultraviolet light, and EEPROM, which is byte erasable, flash
+memory is block erasable and rewritable. Like EEPROM, flash memory can be
+erased without removing it from the circuit. Various manufacturers produce small
+printed-circuit cards with up to 64 GB of flash memory on them for use as ‘‘film’’
+for storing pictures in digital cameras and many other purposes. As we discussed
+in Chap. 2, flash memory is now starting to replace mechanical disks. As a disk,
+flash memory provides faster access times at lower power, but with a much higher
+cost per bit. A summary of the various kinds of memory is given in Fig. 3-32.
+Byte
+alterable
+
+Volatile
+
+Electrical
+
+Yes
+
+Yes
+
+Level 2 cache
+
+Read/write
+
+Electrical
+
+Yes
+
+Yes
+
+Main memory (old)
+
+Read/write
+
+Electrical
+
+Yes
+
+Yes
+
+Main memory (new)
+
+ROM
+
+Read-only
+
+Not possible No
+
+No
+
+Large-volume appliances
+
+PROM
+
+Read-only
+
+Not possible No
+
+No
+
+Small-volume equipment

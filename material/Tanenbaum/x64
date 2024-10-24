@@ -1,0 +1,100 @@
+controller
+
+Main
+memory
+
+Video
+controller
+
+Network
+controller
+PCI bus
+
+Figure 2-31. A typical PC built around the PCI bus. The SCSI controller is a
+PCI device.
+
+No matter how fast something is in the computer world, a lot of people think it
+is too slow. This fate also befell the PCI bus, which is being replaced by PCI
+Express, abbreviated as PCIe. Most modern computers support both, so users can
+attach new, fast devices to the PCIe bus and older, slower ones to the PCI bus.
+While the PCI bus was just an upgrade to the older ISA bus with higher speeds
+and more bits transferred in parallel, PCIe represents a radical change from the PCI
+bus. In fact, it is not even a bus at all. It is point-to-point network using bit-serial
+lines and packet switching, more like the Internet than like a traditional bus. It’s
+architecture is shown in Fig. 2-32.
+
+112
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CPU
+Cache
+
+CHAP. 2
+
+Memory
+
+Root complex
+Port 1
+
+Port 2
+PCIe device
+
+PCIe device
+
+PCIe device
+
+Port 3
+PCI bridge
+
+Switch
+
+PCI bus
+
+PCIe device
+
+PCIe device
+
+PCIe device
+
+Figure 2-32. Sample architecture of a PCIe system with three PCIe ports.
+
+Several things stand out immediately about PCIe. First, the connections between the devices are serial, that is, 1-bit wide rather than 8-, 16-, 32-, or 64-bits
+wide. While one might think that a 64-bit-wide connection would have a higher
+bandwidth than a 1-bit wide connection, in practice, differences in propagation
+time of the 64 bits, called the skew, means relatively low speeds have to be used.
+With a serial connection much higher speeds can be used and this more than offsets
+the loss of parallelism. PCI buses run at a maximum clock rate of 66 MHz. With
+64 bits transferred per cycle, the data rate is 528 MB/sec. With a clock rate of 8
+Gbps, even with serial transfer, the data rate of PCIe is 1 GB/sec. Furthermore, devices are not limited to a single wire pair to communicate with the root complex or
+a switch. A device can have up to 32 wire pairs, called lanes. These lanes are not
+synchronous, so skew is not important here. Most motherboards have a 16-lane
+slot for the graphics card, which in PCIe 3.0 will give the graphics card a bandwidth of 16 GB/sec, about 30 times faster than what a PCI graphics card can get.
+This bandwidth is necessary for increasingly demanding applications, such as 3D.
+Second, all communication is point to point. When the CPU wants to talk to a
+device, it sends a packet to the device and generally later gets an answer. The
+packet goes through the root complex, which is on the motherboard, and then on to
+the device, possibly through a switch (or if the device is a PCI device, through the
+PCI bridge). This evolution from a system in which all devices listened to the
+same bus to one using point-to-point communications parallels the development of
+Ethernet (a popular local area network), which also started with a broadcast channel but now uses switches to enable point-to-point communication.
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+113
+
+2.4.2 Terminals
+Many kinds of I/O devices are available today. A few of the common ones are
+discussed below. Computer terminals consist of two parts: a keyboard and a monitor. In the mainframe world, these parts are often integrated into a single device
+and attached to the main computer by a serial line or over a telephone line. In the
+airline reservation, banking, and other mainframe-oriented industries, these devices
+are still in use. In the personal computer world, the keyboard and monitor are independent devices. Either way, the technology of the two parts is the same.
+Keyboards
+Keyboards come in several varieties. The original IBM PC came with a
+keyboard that had a snap-action switch under each key that gave tactile feedback
+and made a click when the key was depressed far enough. Nowadays, the cheaper
+keyboards have keys that just make mechanical contact when depressed. Better
+ones have a sheet of elastometric material (a kind of rubber) between the keys and
+the underlying printed circuit board. Under each key is a small dome that buckles

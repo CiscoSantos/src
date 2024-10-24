@@ -1,0 +1,100 @@
+Web server via the telephone system using ADSL, which was discussed in Chap. 2.
+(Alternatively, cable TV can be used, in which case the left-hand part of Fig. 8-14
+is slightly different and the cable company is the ISP.) The user’s computer breaks
+the data to be sent to the server into packets and sends these packets to the user’s
+ISP (Internet Service Provider), a company that offers Internet access to its customers. The ISP has a high-speed (fiber-optic) connection to one of the regional or
+backbone networks that comprise the Internet. The user’s packets are forwarded
+hop-by-hop across the Internet until they arrive at the Web server.
+Most companies offering Web service have a specialized computer called a
+firewall that filters all incoming traffic in an attempt to remove unwanted packets
+(e.g., from hackers trying to break in). The firewall is connected to the local LAN,
+typically an Ethernet switch, which routes packets to the desired server. Of course,
+reality is a lot more complicated than we have shown, but the basic idea of
+Fig. 8-14 is still valid.
+Network software consists of multiple protocols, each one being a set of formats, exchange sequences, and rules about what the packets mean. For example,
+when a user wants to fetch a Web page from a server, the user’s browser sends a
+packet containing a GET PAGE request using the HTTP (HyperText Transfer
+Protocol) to the server, which understands how to process such requests. Many
+protocols are in use and often combined. In most situations, protocols are structured as a series of layers. Upper layers hand packets to lower layers for processing, with the bottom layer doing the actual transmission. At the receiving side,
+the packets work their way up the layers in the reverse order.
+Since protocol processing is what network processors do for a living, it is necessary to explain a little bit about protocols before looking at the network processors themselves. Let us go back for a moment to the GET PAGE request. How
+is that sent to the Web server? The browser first establishes a connection to the
+Web server using a protocol called TCP (Transmission Control Protocol). The
+software that implements this protocol checks that all packets have been correctly
+received and in the proper order. If a packet gets lost, the TCP software assures
+that it is retransmitted as often as need be until it is received.
+In practice, what happens is that the Web browser formats the GET PAGE request as a correct HTTP message and then hands it to the TCP software to transmit
+over the connection. The TCP software adds a header in front of the message containing a sequence number and other information. This header is naturally called
+the TCP header.
+When it is done, the TCP software takes the TCP header and payload (containing the GET PAGE request) and passes it to another piece of software that implements the IP protocol (Internet Protocol). This software attaches an IP
+header to the front containing the source address (the machine the packet is coming from), the destination address (the machine the packet is supposed to go to),
+how many more hops the packet may live (to prevent lost packets from living forever), a checksum (to detect transmission and memory errors), and other fields.
+
+SEC. 8.2
+
+577
+
+COPROCESSORS
+
+Next the resulting packet (now consisting of the IP header, TCP header, and
+GET PAGE request) is passed down to the data link layer, where a data link header
+is attached to the front for actual transmission. The data link layer also adds a
+checksum to the end called a CRC (Cyclic Redundancy Code) used to detect
+transmission errors. It might seem that having checksums in both the data link
+layer and the IP layer is redundant, but it improves reliability. At each hop, the
+CRC is checked and the header and CRC stripped and regenerated, with a format
+being chosen that is appropriate for the outgoing link. Figure 8-15 shows what the
+packet looks like when on the Ethernet. On a telephone line (for ADSL) it is similar except with a ‘‘telephone-line header’’ instead of an Ethernet header. Header
+management is important and is one of the things network processors can do.
+Needless to say, we have only scratched the surface of the subject of computer networking. For a more comprehensive treatment, see Tanenbaum and Wetherall
+(2011).
+
+Ethernet
+header
+
+IP
+header
+
+TCP
+header
+
+Payload
+
+C
+R
+C
+
+Figure 8-15. A packet as it appears on the Ethernet.
+
+Introduction to Network Processors
+Many kinds of devices are connected to networks. End users have personal
+computers (desktop and notebook), of course, but increasingly also game machines, PDAs (palmtops), and smartphones. Companies have PCs and servers as
+end systems. However, there are also numerous devices that function as intermediate systems in networks, including routers, switches, firewalls, Web proxies, and
+load balancers. Interestingly enough, the intermediate systems are the most demanding, since they are expected to move the largest number of packets per second. Servers are also demanding but the user machines are not.
+Depending on the network and the packet itself, an incoming packet may need
+various kinds of processing before being forwarded to either the outgoing line or
+the application program. This processing may include deciding where to send the
+packet, fragmenting it or reassembling its pieces, managing its quality of service
+(especially for audio and video streams), managing security (e.g., encryption or decryption), compression/decompression, and so on.
+With LAN speeds approaching 40 gigabits/sec and 1-KB packets, a networked
+computer might have to process almost 5 million packets/sec. With 64-byte packets, the number of packets that have to be processed per second rises to nearly 80
+million. Performing the various functions mentioned above in 12–200 nsec (in addition to making the multiple copies of the packet that are invariably needed) is just
+not doable in software. Hardware assistance is essential.
+
+578
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+One kind of hardware solution for fast packet processing is to use a custom
+ASIC (Application-Specific Integrated Circuit). Such a chip is like a hardwired
+program that does whatever set of processing functions it was designed for. Many
+current routers uses ASICs. ASICs have many problems, however. First, they take
+a long time to design and manufacture. They are also rigid, so if new functionality
+is needed, a new chip is needed. Furthermore, bug management is a nightmare,
+since the only way to fix one is to design, manufacture, ship, and install new chips.
+They are also expensive unless the volume is so large as to allow amortizing the
+development effort over a substantial number of chips.
+A second solution is the FPGA (Field Programmable Gate Array), a collection of gates that can be organized into the desired circuit by rewiring them in the
+field. These chips have a much shorter time to market than ASICs and can be

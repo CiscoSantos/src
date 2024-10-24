@@ -1,0 +1,100 @@
+as well as part of C’s. With this memory organization, memory is allocated only
+for procedures that are currently active. When a procedure returns, the memory
+used by its local variables is released.
+Besides holding local variables, stacks have another use. They can hold operands during the computation of an arithmetic expression. When used this way, the
+stack is referred to as the operand stack. Suppose, for example, that before calling B, A has to do the computation
+a1 = a2 + a3;
+
+One way of doing this sum is to push a2 onto the stack, as shown in Fig. 4-9(a).
+Here SP has been incremented by the number of bytes in a word, say, 4, and the
+first operand stored at the address now pointed to by SP. Next, a3 is pushed onto
+the stack, as shown in Fig. 4-9(b). (As an aside on notation, we will typeset all
+program fragments in Helvetica, as above. We will also use this font for assembly-language opcodes and machine registers, but in running text, program variables
+and procedures will be given in italics. The difference is that variables and procedure names are chosen by the user; opcodes and register names are built in.)
+SP
+SP
+
+LV
+
+a2
+a3
+a2
+a1
+(a)
+
+LV
+
+a3
+a2
+a3
+a2
+a1
+(b)
+
+SP
+
+LV
+
+a2 + a3
+a3
+a2
+a1
+
+SP
+LV
+
+(c)
+
+Figure 4-9. Use of an operand stack for doing an arithmetic computation.
+
+a3
+a2
+a2 + a3
+(d)
+
+260
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+The actual computation can now be done by executing an instruction that pops
+two words off the stack, adds them together, and pushes the result back onto the
+stack, as shown in Fig. 4-9(c). Finally, the top word can be popped off the stack
+and stored back in local variable a1, as illustrated in Fig. 4-9(d).
+The local variable frames and the operand stacks can be intermixed. For example, when computing an expression like x 2 + f (x), part of the expression (e.g.,
+x 2 ) may be on the operand stack when a function f is called. The result of the
+function is left on the stack, on top of x 2 , so the next instruction can add them.
+It is worth noting that while all machines use a stack for storing local variables,
+not all use an operand stack like this for doing arithmetic. In fact, most of them do
+not, but JVM and IJVM work like this, which is why we have introduced stack operations here. We will study them in more detail in Chap. 5.
+
+4.2.2 The IJVM Memory Model
+We are now ready to look at the IJVM’s architecture. Basically, it consists of a
+memory that can be viewed in either of two ways: an array of 4,294,967,296 bytes
+(4 GB) or an array of 1,073,741,824 words, each consisting of 4 bytes. Unlike
+most ISAs, the Java Virtual Machine makes no absolute memory addresses directly
+visible at the ISA level, but there are several implicit addresses that provide the
+base for a pointer. IJVM instructions can access memory only by indexing from
+these pointers. At any time, the following areas of memory are defined:
+1. The constant pool. This area cannot be written by an IJVM program
+and consists of constants, strings, and pointers to other areas of memory that can be referenced. It is loaded when the program is brought
+into memory and not changed afterward. There is an implicit register,
+CPP, that contains the address of the first word of the constant pool.
+2. The Local variable frame. For each invocation of a method, an area is
+allocated for storing variables during the lifetime of the invocation. It
+is called the local variable frame. At the beginning of this frame
+reside the parameters (also called arguments) with which the method
+was invoked. The local variable frame does not include the operand
+stack, which is separate. However, for efficiency reasons, our implementation chooses to implement the operand stack immediately above
+the local variable frame. An implicit register contains the address of
+the first location in the local variable frame. We will call this register
+LV. The parameters passed at the invocation of the method are stored
+at the beginning of the local variable frame.
+3. The operand stack. The stack frame is guaranteed not to exceed a
+certain size, computed in advance by the Java compiler. The operand
+stack space is allocated directly above the local variable frame, as
+
+SEC. 4.2
+
+261

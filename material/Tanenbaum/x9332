@@ -1,0 +1,100 @@
+
+13. Construct the multiplication tables for radix 3 numbers.
+14. Multiply 0111 and 0011 in binary.
+15. Write a program that takes in a signed decimal number as an ASCII string and prints
+out its representation in two’s complement in binary, octal, and hexadecimal.
+16. Write a program that takes in two 32-character ASCII strings containing 0s and 1s,
+each representing a two’s complement 32-bit binary number. The program should
+print their sum as a 32-character ASCII string of 0s and 1s.
+
+B
+FLOATING-POINT NUMBERS
+
+In many calculations the range of numbers used is very large. For example, a
+calculation in astronomy might involve the mass of the electron, 9 × 10−28 grams,
+and the mass of the sun, 2 × 1033 grams, a range exceeding 1060 . These numbers
+could be represented by
+0000000000000000000000000000000000.0000000000000000000000000009
+2000000000000000000000000000000000.0000000000000000000000000000
+and all calculations could be carried out keeping 34 digits to the left of the decimal
+point and 28 places to the right of it. Doing so would allow 62 significant digits in
+the results. On a binary computer, multiple-precision arithmetic could be used to
+provide enough significance. However, the mass of the sun is not even known
+accurately to five significant digits, let alone 62. In fact few measurements of any
+kind can (or need) be made accurately to 62 significant digits. Although it would
+be possible to keep all intermediate results to 62 significant digits and then throw
+away 50 or 60 of them before printing the final results, doing this is wasteful of
+both CPU time and memory.
+What is needed is a system for representing numbers in which the range of
+expressible numbers is independent of the number of significant digits. In this
+appendix, such a system will be discussed. It is based on the scientific notation
+commonly used in physics, chemistry, and engineering.
+
+681
+
+682
+
+FLOATING-POINT NUMBERS
+
+APP. B
+
+B.1 PRINCIPLES OF FLOATING POINT
+One way of separating the range from the precision is to express numbers in
+the familiar scientific notation
+n = f × 10e
+where f is called the fraction, or mantissa, and e is a positive or negative integer
+called the exponent. The computer version of this notation is called floating
+point. Some examples of numbers expressed in this form are
+3.14
+= 0.314 × 101 = 3.14 × 100
+0.000001 = 0.1
+× 10−5 = 1.0 × 10−6
+1941
+= 0.1941 × 104 = 1.941 × 103
+The range is effectively determined by the number of digits in the exponent and the
+precision is determined by the number of digits in the fraction. Because there is
+more than one way to represent a given number, one form is usually chosen as the
+standard. In order to investigate the properties of this method of representing numbers, consider a representation, R, with a signed three-digit fraction in the range
+0. 1 ≤ f < 1 or zero and a signed two-digit exponent. These numbers range in
+magnitude from +0. 100 × 10−99 to +0. 999 × 10+99 , a span of nearly 199 orders of
+magnitude, yet only five digits and two signs are needed to store a number.
+Floating-point numbers can be used to model the real-number system of mathematics, although there are some differences. Figure B-1 gives an exaggerated
+schematic of the real number line. The real line is divided up into seven regions:
+1. Large negative numbers less than −0. 999 × 1099 .
+2. Negative numbers between −0. 999 × 1099 and −0. 100 × 10−99 .
+3. Small negative numbers with magnitudes less than 0. 100 × 10−99 .
+4. Zero.
+5. Small positive numbers with magnitudes less than 0. 100 × 10−99 .
+6. Positive numbers between 0. 100 × 10−99 and 0. 999 × 1099 .
+7. Large positive numbers greater than 0. 999 × 1099 .
+One major difference between the set of numbers representable with three fraction and two exponent digits and the real numbers is that the former cannot be used
+to express any numbers in regions 1, 3, 5, or 7. If the result of an arithmetic operation yields a number in regions 1 or 7—for example, 1060 × 1060 = 10120 —overflow error will occur and the answer will be incorrect. The reason for this is due
+to the finite nature of the representation for numbers and is thus unavoidable. Similarly, a result in regions 3 or 5 cannot be expressed either. This situation is called
+
+SEC. B.1
+
+683
+
+PRINCIPLES OF FLOATING POINT
+5
+Positive
+underflow
+
+3
+Negative
+underflow
+1
+Negative
+overflow
+
+4
+Zero
+
+2
+Expressible
+negative numbers
+
+–1099
+
+–10–100
+

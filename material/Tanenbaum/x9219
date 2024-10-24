@@ -1,0 +1,100 @@
+
+Change the protection mode of a file
+
+fcntl(fd, cmd, ...)
+
+Do various control operations such as locking (part of) a file
+Figure 6-35. The principal UNIX file system calls.
+
+count telling how much data to transmit. Lseek is used to position the file pointer,
+making random access to files possible.
+Stat returns information about a file, including its size, time of last access,
+owner, and more. Chmod changes the protection mode of a file, for example, allowing or forbidding users other than the owner from reading it. Finally, fcntl does
+various miscellaneous operations on a file, such as locking or unlocking it.
+Figure 6-36 illustrates how the major file I/O calls work. This code is minimal
+and does not include the necessary error checking. Before entering the loop, the
+program opens an existing file, data, and creates a new file, newf. Each call returns
+a file descriptor, infd, and outfd, respectively. The second parameters to the two
+calls are protection bits specifying that the files are to be read and written, respectively. Both calls return a file descriptor. If either open or creat fails, a negative file descriptor is returned, telling that the call failed.
+/* Open the file descriptors. */
+infd = open(′′data′′, 0);
+outfd = creat(′′newf′′, ProtectionBits);
+/* Copy loop. */
+do {
+count = read(infd, buffer, bytes);
+if (count > 0) write(outfd, buffer, count);
+} while (count > 0);
+/* Close the files. */
+close(infd);
+close(outfd);
+Figure 6-36. A program fragment for copying a file using the UNIX system calls.
+This fragment is in C because Java hides the low-level system calls and we are
+trying to expose them.
+
+494
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+The call to read has three parameters: a file descriptor, a buffer, and a byte
+count. The call tries to read the desired number of bytes from the indicated file
+into the buffer. The number of bytes actually read is returned in count, which will
+be smaller than bytes if the file was too short. The write call deposits the newly
+read bytes on the output file. The loop continues until the input file has been completely read, at which time the loop terminates and both files are closed.
+File descriptors in UNIX are small integers (usually below 20). File descriptors
+0, 1, and 2 are special and correspond to standard input, standard output, and
+standard error, respectively. Normally, these refer to the keyboard, the display,
+and the display, respectively, but they can be redirected to files by the user. Many
+UNIX programs get their input from standard input and write the processed output
+on standard output. Such programs are often called filters.
+Closely related to the file system is the directory system. Each user may have
+multiple directories, with each directory containing both files and subdirectories.
+UNIX systems normally are configured with a main directory, called the root
+directory, containing subdirectories bin (for frequently executed programs), dev
+(for the special I/O device files), lib (for libraries), and usr (for user directories), as
+shown in Fig. 6-37. In this example, the usr directory contains subdirectories for
+ast and jim. The ast directory contains two files, data and foo.c, and a subdirectory, bin, containing four games.
+When multiple disks or disk partitions are present, they can be mounted in the
+naming tree so that all files on all disks appear in the same directory hierarchy, all
+reachable from the root directory.
+Files can be named by giving their path from the root directory. A path contains a list of all the directories traversed from the root to the file, with directory
+names separated by slashes. For example, the absolute path name of game2 is
+/usr/ast/bin/game2. A path starting at the root is called an absolute path.
+At every instant, each running program has a working directory. Path names
+may also be relative to the working directory, in which case they do not begin with
+a slash, to distinguish them from absolute path names. Such paths are called relative paths. When /usr/ast is the working directory, game3 can be accessed using
+the path bin/game3. A user may create a link to someone else’s file using the link
+system call. In the above example, /usr/ast/bin/game3 and /usr/jim/jotto both access the same file. To prevent cycles in the directory system, links are not permitted to directories. The calls open and creat take either absolute or relative path
+names as arguments.
+The major directory-management system calls in UNIX are listed in Fig. 6-38.
+Mkdir creates a new directory and rmdir deletes an existing (empty) directory. The
+next three calls are used to read directory entries. The first one opens the directory,
+the next one reads entries from it, and the last one closes the directory. Chdir
+changes the working directory.
+Link makes a new directory entry with the new entry pointing to an existing
+file. For example, the entry /usr/jim/jotto might have been created by the call
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+495
+
+Root directory
+bin
+dev
+lib
+usr
+
+…
+/dev
+
+/bin
+
+…
+
+/usr
+
+…
+

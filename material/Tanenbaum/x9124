@@ -1,0 +1,100 @@
+Software
+
+ISA level
+Hardware
+ISA program executed
+by microprogram or hardware
+
+Hardware
+
+Figure 5-1. The ISA level is the interface between the compilers and the hardware.
+
+gineers cannot implement in a cost-effective way (e.g., a branch-and-do-payroll instruction), it does not go in. Similarly, if the hardware folks have some nifty new
+feature they want to put in (e.g., a memory in which the words whose addresses are
+prime numbers are superfast), but the software folks cannot figure out how to generate code to use it, it will die on the drawing board. After much negotiation and
+simulation, an ISA perfectly optimized for the intended programming languages
+will emerge and be implemented.
+That is the theory. Now the grim reality. When a new machine comes along,
+the first question all the potential customers ask is: ‘‘Is it compatible with its predecessor?’’ The second is: ‘‘Can I run my old operating system on it?’’ The third is:
+‘‘Will it run all my existing application programs unmodified?’’ If any of the
+answers are ‘‘no,’’ the designers will have a lot of explaining to do. Customers are
+rarely keen on throwing out all their old software and starting all over again.
+This attitude puts a great deal of pressure on computer architects to keep the
+ISA the same between models, or at least make it backward compatible. By this
+we mean that the new machine must be able to run old programs without change.
+However, it is completely acceptable for the new machine to have new instructions
+and other features that can be exploited only by new software. In terms of Fig. 5-1,
+as long as the designers make the ISA backward compatible with the previous
+models, they are pretty much free to do whatever they want with the hardware, as
+hardly anyone cares about the real hardware (or even knows what it does). They
+can switch from a microprogrammed design to direct execution, or add pipelines or
+superscalar facilities or anything else they want, provided that they maintain backward compatibility with the previous ISA. The goal is to make sure that old programs run on the new machine. The challenge then becomes building better machines subject to the backward compatibility constraint.
+
+SEC. 5.1
+
+OVERVIEW OF THE ISA LEVEL
+
+345
+
+The foregoing is not intended to imply that ISA design does not matter. A
+good ISA has significant advantages over a poor one, particularly in raw computing power vs. cost. For otherwise equivalent designs, different ISAs might account
+for a difference of as much as 25% in performance. Our point is just that market
+forces make it hard (but not impossible) to throw out an ancient ISA and introduce
+a new one. Nevertheless, every once in a while a new general-purpose ISA
+emerges, and in specialized markets (e.g., embedded systems or multimedia processors) this occurs much more frequently. Consequently, understanding ISA design is important.
+What makes a good ISA? There are two primary factors. First, a good ISA
+should define a set of instructions that can be implemented efficiently in current
+and future technologies, resulting in cost-effective designs over several generations. A poor design is more difficult to implement and may require many more
+gates to implement a processor and more memory for executing programs. It also
+may run slower because the ISA obscures opportunities to overlap operations, requiring much more sophisticated designs to achieve equivalent performance. A design that takes advantage of the peculiarities of a particular technology may be a
+flash in the pan, providing a single generation of cost-effective implementations,
+only to be surpassed by more forward-looking ISAs.
+Second, a good ISA should provide a clean target for compiled code. Regularity and completeness of a range of choices are important traits that are not always present in an ISA. These are important properties for a compiler, which may
+have trouble making the best choice among limited alternatives, particularly when
+some seemingly obvious alternatives are not permitted by the ISA. In short, since
+the ISA is the interface between the hardware and the software, it should make the
+hardware designers happy (be easy to implement efficiently) and make the software designers happy (be easy to generate good code for).
+
+5.1 OVERVIEW OF THE ISA LEVEL
+Let us start our study of the ISA level by asking what it is. This may seem like
+a simple question, but it has more complications than one might at first imagine.
+In the following section we will raise some of these issues. Then we will look at
+memory models, registers, and instructions.
+
+5.1.1 Properties of the ISA Level
+In principle, the ISA level is defined by how the machine appears to a machine-language programmer. Since no (sane) person does much programming in
+machine language any more, let us redefine this to say that ISA-level code is what
+a compiler outputs (ignoring operating-system calls and ignoring symbolic assembly language for the moment). To produce ISA-level code, the compiler writer has
+
+346
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+to know what the memory model is, what registers there are, what data types and
+instructions are available, and so on. The collection of all this information is what
+defines the ISA level.
+According to this definition, issues such as whether the microarchitecture is
+microprogrammed or not, whether it is pipelined or not, whether it is superscalar or
+not, and so on are not part of the ISA level because they are not visible to the compiler writer. However, this remark is not entirely true because some of these properties do affect performance, and that is visible to the compiler writer. Consider,
+for example, a superscalar design that can issue back-to-back instructions in the
+same cycle, provided that one is an integer instruction and one is a floating-point
+instruction. If the compiler alternates integer and floating-point instructions, it will
+get observably better performance than if it does not. Thus the details of the superscalar operation are visible at the ISA level, so the separation between the layers is
+not quite as clean as it might appear at first.
+For some architectures, the ISA level is specified by a formal defining document, often produced by an industry consortium. For others it is not. For example,
+the ARM v7 (version 7 ARM ISA) has an official definition published by ARM
+Ltd. The purpose of a defining document is to make it possible for different implementers to build the machines and have them all run exactly the same software and
+get exactly the same results.
+In the case of the ARM ISA, the idea is to allow multiple chip vendors to manufacture ARM chips that are functionally identical, differing only in performance
+and price. To make this idea work, the chip vendors have to know what an ARM
+chip is supposed to do (at the ISA level). Therefore the defining document tells
+what the memory model is, what registers are present, what the instructions do, and
+so on, but not what the microarchitecture is like.
+Such defining documents contain normative sections, which impose requirements, and informative sections, which are intended to help the reader but are
+not part of the formal definition. The normative sections constantly use words like
+shall, may not, and should to require, prohibit, and suggest aspects of the architecture, respectively. For example, a sentence like
+Executing a reserved opcode shall cause a trap.
+says that if a program executes an opcode that is not defined, it must cause a trap
+and not be just ignored. An alternative approach might be to leave this open, in

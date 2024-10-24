@@ -1,0 +1,100 @@
+1. The TAG field corresponds to the Tag bits stored in a cache entry.
+2. The LINE field indicates which cache entry holds the corresponding
+data, if they are present.
+3. The WORD field tells which word within a line is referenced.
+4. The BYTE field is usually not used, but if only a single byte is requested, it tells which byte within the word is needed. For a cache
+supplying only 32-bit words, this field will always be 0.
+When the CPU produces a memory address, the hardware extracts the 11 LINE
+bits from the address and uses these to index into the cache to find one of the 2048
+entries. If that entry is valid, the TAG field of the memory address and the Tag field
+in cache entry are compared. If they agree, the cache entry holds the word being
+requested, a situation called a cache hit. On a hit, a word being read can be taken
+from the cache, eliminating the need to go to memory. Only the word actually
+needed is extracted from the cache entry. The rest of the entry is not used. If the
+cache entry is invalid or the tags do not match, the needed entry is not present in
+the cache, a situation called a cache miss. In this case, the 32-byte cache line is
+fetched from memory and stored in the cache entry, replacing what was there.
+However, if the existing cache entry has been modified since being loaded, it must
+be written back to main memory before being overwritten.
+
+308
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+Despite the complexity of the decision, access to a needed word can be
+remarkably fast. As soon as the address is known, the exact location of the word is
+known if it is present in the cache. This means that it is possible to read the word
+out of the cache and deliver it to the processor at the same time that it is being determined if this is the correct word (by comparing tags). So the processor actually
+receives a word from the cache simultaneously, or possibly even before it knows
+whether the word is the requested one.
+This mapping scheme puts consecutive memory lines in consecutive cache entries. In fact, up to 64 KB of contiguous data can be stored in the cache. However,
+two lines that differ in their address by precisely 65,536 bytes or any integral multiple of that number cannot be stored in the cache at the same time (because they
+have the same LINE value). For example, if a program accesses data at location X
+and next executes an instruction that needs data at location X + 65,536 (or any
+other location within the same line), the second instruction will force the cache
+entry to be reloaded, overwriting what was there. If this happens often enough, it
+can result in poor behavior. In fact, the worst-case behavior of a cache is worse
+than if there were no cache at all, since each memory operation involves reading in
+an entire cache line instead of just one word.
+Direct-mapped caches are the most common kind of cache, and they perform
+quite effectively, because collisions such as the one described above can be made
+to occur only rarely, or not at all. For example, a very clever compiler can take
+cache collisions into account when placing instructions and data in memory.
+Notice that the particular case described would not occur in a system with separate
+instruction and data caches, because the colliding requests would be serviced by
+different caches. Thus we see a second benefit of two caches rather than one: more
+flexibility in dealing with conflicting memory patterns.
+Set-Associative Caches
+As mentioned above, many different lines in memory compete for the same
+cache slots. If a program using the cache of Fig. 4-38(a) heavily uses words at addresses 0 and at 65,536, there will be constant conflicts, with each reference potentially evicting the other one from the cache. A solution is to allow two or more
+lines in each cache entry. A cache with n possible entries for each address is called
+an n-way set-associative cache. A four-way set-associative cache is illustrated in
+Fig. 4-39.
+A set-associative cache is inherently more complicated than a direct-mapped
+cache because, although the correct set of cache entries to examine can be computed from the memory address being referenced, a set of n cache entries must be
+checked to see if the needed line is present. And they have to be checked very fast.
+Nevertheless, simulations and experience show that two-way and four-way caches
+perform well enough to make this extra circuitry worthwhile.
+
+SEC. 4.5
+
+309
+
+IMPROVING PERFORMANCE
+
+Valid
+
+Valid
+
+Tag
+
+Data
+
+Valid
+
+Tag
+
+Data
+
+Valid
+
+Tag
+
+Data
+
+Tag
+
+Data
+
+2047
+
+7
+6
+5
+4
+3
+2
+1
+0

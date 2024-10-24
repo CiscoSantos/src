@@ -1,0 +1,100 @@
+
+cessor. Architectural Features Supporting HPC,’’ Proc. 10th Int’l Symp. on Parallel
+and Dist. Computing, pp. 17–24, 2011.
+GERBER, R., and BINSTOCK, A.: Programming with Hyper-Threading Technology, Santa
+
+Clara, CA: Intel Press, 2004.
+GHARACHORLOO, K., LENOSKI, D., LAUDON, J., GIBBONS, P.B., GUPTA, A., and HENNESSY, J.L.: ‘‘Memory Consistency and Event Ordering in Scalable Shared-Memory
+
+Multiprocessors,’’ Proc. 17th Ann. Int’l Symp. on Comp. Arch., ACM, pp. 15–26, 1990.
+GHEMAWAT, S., GOBIOFF, H., and LEUNG, S.-T.: ‘‘The Google File System,’’ Proc. 19th
+
+Symp. on Operating Systems Principles, ACM, pp. 29–43, 2003.
+GOODMAN, J.R.: ‘‘Using Cache Memory to Reduce Processor Memory Traffic,’’ Proc.
+
+10th Ann. Int’l Symp. on Computer Arch., ACM, pp. 124–131, 1983.
+GOODMAN, J.R.: ‘‘Cache Consistency and Sequential Consistency,’’ Tech. Rep. 61, IEEE
+
+Scalable Coherent Interface Working Group, IEEE, 1989.
+GOTH, G.: ‘‘IBM PC Retrospective: There Was Enough Right to Make It Work,’’ IEEE
+
+Computer, vol. 44, pp. 26–33, Aug. 2011.
+GROPP, W., LUSK, E., and SKJELLUM, A.: Using MPI: Portable Parallel Programming
+
+with the Message Passing Interface, Cambridge, MA: MIT Press, 1994.
+GUPTA, N., MANDAL, S., MALAVE, J., MANDAL, A., and MAHAPATRA, R.N.: ‘‘A Hard-
+
+ware Scheduler for Real Time Multiprocessor System on Chip,’’ Proc. 23rd Int’l Conf.
+on VLSI Design, IEEE, 2010.
+GURUMURTHI, S., SIVASUBRAMANIAM, A., KANDEMIR, M., and FRANKE, H.:
+
+‘‘Reducing Disk Power Consumption in Servers with DRPM,’’ IEEE Computer Magazine, vol. 36, pp. 59–66, Dec. 2003.
+HAGERSTEN, E., LANDIN, A., and HARIDI, S.: ‘‘DDM—A Cache-Only Memory Archi-
+
+tecture,’’ IEEE Computer Magazine, vol. 25, pp. 44–54, Sept. 1992.
+HAGHIGHIZADEH, F., ATTARZADEH, H., and SHARIFKHANI, M.: ‘‘A Compact 8-Bit
+
+AES Crypto-processor,’’ Proc. Second. Int’l Conf. on Computer and Network Tech.,
+IEEE, 2010.
+
+664
+
+BIBLIOGRAPHY
+
+CHAP. 9
+
+HAMMING, R.W.: ‘‘Error Detecting and Error Correcting Codes,’’ Bell Syst. Tech. J., vol.
+
+29, pp. 147–160, April 1950.
+HENKEL, J., HU, X.S., and BHATTACHARYYA, S.S.: ‘‘Taking on the Embedded System
+
+Challenge,’’ IEEE Computer Magazine, vol. 36, pp. 35–37, April 2003.
+HENNESSY, J.L.: ‘‘VLSI Processor Architecture,’’ IEEE Trans. on Computers, vol. C-33,
+
+pp. 1221–1246, Dec. 1984.
+HERRERO, E., GONZALEZ, J., and CANAL, R.: ‘‘Elastic Cooperative Caching: An
+
+Autonomous Dynamically Adaptive Memory Hierarchy for Chip Multiprocessors,’’
+Proc. 23rd Int’l Conf. on VLSI Design, IEEE, 2010.
+HOARE, C.A.R.: ‘‘Monitors: An Operating System Structuring Concept,’’ Commun. of the
+
+ACM, vol. 17, pp. 549–557, Oct. 1974; Erratum in Commun. of the ACM, vol. 18, p.
+95, Feb. 1975.
+HWU, W.-M.: ‘‘Introduction to Predicated Execution,’’ IEEE Computer Magazine, vol. 31,
+
+pp. 49–50, Jan. 1998.
+JIMENEZ, D.A.: ‘‘Fast Path-Based Neural Branch Prediction,’’ Proc. 36th Int’l Symp. on
+
+Microarchitecture, IEEE, pp. 243–252, 2003.
+JOHNSON, K.L., KAASHOEK, M.F., and WALLACH, D.A.: ‘‘CRL: High-Performance All-
+
+Software Distributed Shared Memory,’’ Proc. 15th Symp. on Operating Systems Principles, ACM, pp. 213–228, 1995.
+KAPASI, U.J., RIXNER, S., DALLY, W.J., KHAILANY, B., AHN, J.H., MATTSON, P., and
+OWENS, J.D.: ‘‘Programmable Stream Processors,’’ IEEE Computer Magazine, vol.
+
+36, pp. 54–62, Aug. 2003.
+KAUFMAN, C., PERLMAN, R., and SPECINER, M.: Network Security, 2nd ed., Upper Sad-
+
+dle River, NJ: Prentice Hall, 2002.
+KIM, N.S., AUSTIN, T., BLAAUW, D., MUDGE, T., FLAUTNER, K., HU, J.S., IRWIN, M.J.,
+KANDEMIR, M., and NARAYANAN, V.: ‘‘Leakage Current: Moore’s Law Meets Static
+
+Power,’’ IEEE Computer Magazine, vol. 36, 68–75, Dec. 2003.
+KNUTH, D.E.: The Art of Computer Programming: Fundamental Algorithms, 3rd ed.,
+
+Reading, MA: Addison-Wesley, 1997.
+KONTOTHANASSIS, L., HUNT, G., STETS, R., HARDAVELLAS, N., CIERNIAD, M.,
+PARTHASARATHY, S., MEIRA, W., DWARKADAS, S., and SCOTT, M.: ‘‘VM-Based
+
+Shared Memory on Low Latency Remote Memory Access Networks,’’ Proc. 24th Ann.
+Int’l Symp. on Computer Arch., ACM, pp. 157–169, 1997.
+LAMPORT, L.: ‘‘How to Make a Multiprocessor Computer That Correctly Executes Multi-
+
+process Programs,’’ IEEE Trans. on Computers, vol. C-28, pp. 690–691, Sept. 1979.
+LAROWE, R.P., and ELLIS, C.S.: ‘‘Experimental Comparison of Memory Management
+
+Policies for NUMA Multiprocessors,’’ ACM Trans. on Computer Systems, vol. 9, pp.
+319–363, Nov. 1991.
+LEE, J., KELEHER, P., and SUSSMAN, A.: ‘‘Supporting Computing Element Heterogeneity
+
+in P2P Grids,’’ Proc. IEEE Int’l Conf. on Cluster Computing, IEEE, pp. 150–158,

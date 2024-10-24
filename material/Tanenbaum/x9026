@@ -1,0 +1,100 @@
+To get around the problem of very wide buses, sometimes designers opt for a
+multiplexed bus. In this design, instead of the address and data lines being separate, there are, say, 32 lines for address and data together. At the start of a bus operation, the lines are used for the address. Later on, they are used for data. For a
+write to memory, for example, this means that the address lines must be set up and
+propagated to the memory before the data can be put on the bus. With separate
+lines, the address and data can be put on together. Multiplexing the lines reduces
+bus width (and cost) but results in a slower system. Bus designers have to carefully weigh all these options when making choices.
+
+3.4.4 Bus Clocking
+Buses can be divided into two distinct categories depending on their clocking.
+A synchronous bus has a line driven by a crystal oscillator. The signal on this line
+consists of a square wave with a frequency generally between 5 and 133 MHz. All
+bus activities take an integral number of these cycles, called bus cycles. The other
+kind of bus, the asynchronous bus, does not have a master clock. Bus cycles can
+be of any length required and need not be the same between all pairs of devices.
+Below we will examine each bus type.
+Synchronous Buses
+As an example of how a synchronous bus works, consider the timing of
+Fig. 3-38(a). In this example, we will use a 100-MHz clock, which gives a bus
+cycle of 10 nsec. While this may seem a bit slow compared to CPU speeds of 3
+
+192
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+GHz and more, few existing PC buses are much faster. For example, the popular
+PCI bus usually runs at either 33 or 66 MHz, and the upgraded (but now defunct)
+PCI-X bus ran at a speed of up to 133 MHz. The reasons current buses are slow
+were given above: technical design problems such as bus skew and the need for
+backward compatibility.
+In our example, we will further assume that reading from memory takes 15
+nsec from the time the address is stable. As we will see shortly, with these parameters, it will take three bus cycles to read a word. The first cycle starts at the rising
+edge of T 1 and the third one ends at the rising edge of T 4 , as shown in the figure.
+Note that none of the rising or falling edges has been drawn vertically, because no
+electrical signal can change its value in zero time. In this example we will assume
+that it takes 1 nsec for a signal to change. The clock, ADDRESS, DATA, MREQ, RD,
+and WAIT lines are all shown on the same time scale.
+The start of T 1 is defined by the rising edge of the clock. Partway through T 1
+the CPU puts the address of the word it wants on the address lines. Because the
+address is not a single value, like the clock, we cannot show it as a single line in
+the figure; instead, it is shown as two lines, with a crossing at the time that the address changes. Furthermore, the shading prior to the crossing indicates that the
+shaded value is not important. Using the same shading convention, we see that the
+contents of the data lines are not significant until well into T 3 .
+After the address lines have had a chance to settle down to their new values,
+MREQ and RD are asserted. The former indicates that memory (as opposed to an
+I/O device) is being accessed, and the latter is asserted for reads and negated for
+writes. Since the memory takes 15 nsec after the address is stable (partway into
+the first clock cycle), it cannot provide the requested data during T 2 . To tell the
+CPU not to expect it, the memory asserts the WAIT line at the start of T 2 . This action will insert wait states (extra bus cycles) until the memory is finished and
+negates WAIT. In our example, one wait state (T 2 ) has been inserted because the
+memory is too slow. At the start of T 3 , when it is sure it will have the data during
+the current cycle, the memory negates WAIT.
+During the first half of T 3 , the memory puts the data onto the data lines. At the
+falling edge of T 3 the CPU strobes (i.e., reads) the data lines, latching (i.e., storing)
+the value in an internal register. Having read the data, the CPU negates MREQ and
+RD. If need be, another memory cycle can begin at the next rising edge of the
+clock. This sequence can be repeatedly indefinitely.
+In the timing specification of Fig. 3-38(b), eight symbols that occur in the timing diagram are further clarified. T AD , for example, is the time interval between the
+rising edge of the T 1 clock and the address lines being set. According to the timing
+specification, T AD ≤ 4 nsec. This means that the CPU manufacturer guarantees that
+during any read cycle, the CPU will output the address to be read within 4 nsec of
+the midpoint of the rising edge of T 1 .
+The timing specifications also require that the data be available on the data
+lines at least T DS (2 nsec) before the falling edge of T 3 , to give it time to settle
+
+SEC. 3.4
+
+193
+
+CPU CHIPS AND BUSES
+Read cycle with 1 wait state
+T1
+
+Φ
+
+T2
+
+T3
+
+TAD
+
+ADDRESS
+
+Memory address to be read
+
+TDS
+DATA
+
+Data
+TM
+
+MREQ
+
+TMH
+
+TML
+TRH
+
+RD

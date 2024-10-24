@@ -1,0 +1,100 @@
+at full CPU speed. Next comes the cache memory, which is currently on the order
+of 32 KB to a few megabytes. Main memory is next, with sizes currently ranging
+from 1 GB for entry-level systems to hundreds of gigabytes at the high end. After
+that come solid-state and magnetic disks, the current workhorses for permanent
+storage. Finally, we have magnetic tape and optical disks for archival storage.
+
+Registers
+Cache
+
+Main memory
+
+Magnetic or solid state disk
+
+Tape
+
+Optical disk
+
+Figure 2-18. A five-level memory hierarchy.
+
+As we move down the hierarchy, three key parameters increase. First, the access time gets bigger. CPU registers can be accessed in a nanosecond or less.
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+87
+
+Cache memories take a small multiple of CPU registers. Main memory accesses
+are typically 10 nanoseconds. Now comes a big gap, as disk access times are at
+least 10 times slower for solid-state disks and hundreds of times slower for magnetic disks. Tape and optical disk access can be measured in seconds if the media
+have to be fetched and inserted into a drive.
+Second, the storage capacity increases as we go downward. CPU registers are
+good for perhaps 128 bytes, caches for tens of megabytes, main memories for a
+few gigabytes, solid-state disks for hundreds of gigabytes, and magnetic disks for
+terabytes. Tapes and optical disks are usually kept off-line, so their capacity is limited only by the owner’s budget.
+Third, the number of bits you get per dollar spent increases down the hierarchy. Although the actual prices change rapidly, main memory is measured in
+dollars/megabyte, solid-state disk in dollars/gigabyte, and magnetic disk and tape
+storage in pennies/gigabyte.
+We have already looked at registers, cache, and main memory. In the following sections we will look at magnetic and solid-state disks; after that, we will study
+optical ones. We will not study tapes because they are rarely used except for backup, and there is not a lot to say about them anyway.
+
+2.3.2 Magnetic Disks
+A magnetic disk consists of one or more aluminum platters with a magnetizable coating. Originally these platters were as much as 50 cm in diameter, but at
+present they are typically 3 to 9 cm, with disks for notebook computers already
+under 3 cm and still shrinking. A disk head containing an induction coil floats just
+over the surface, resting on a cushion of air. When a positive or negative current
+passes through the head, it magnetizes the surface just beneath the head, aligning
+the magnetic particles facing left or facing right, depending on the polarity of the
+drive current. When the head passes over a magnetized area, a positive or negative
+current is induced in the head, making it possible to read back the previously stored bits. Thus as the platter rotates under the head, a stream of bits can be written
+and later read back. The geometry of a disk track is shown in Fig. 2-19.
+The circular sequence of bits written as the disk makes a complete rotation is
+called a track. Each track is divided up into some number of fixed-length sectors,
+typically containing 512 data bytes, preceded by a preamble that allows the head
+to be synchronized before reading or writing. Following the data is an Error-Correcting Code (ECC), either a Hamming code or, more commonly, a code that can
+correct multiple errors called a Reed-Solomon code. Between consecutive sectors
+is a small intersector gap. Some manufacturers quote their disks’ capacities in
+unformatted state (as if each track contained only data), but a more honest measurement is the formatted capacity, which does not count the preambles, ECCs, and
+gaps as data. The formatted capacity is typically about 15 percent lower than the
+unformatted capacity.
+
+88
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Intersector gap
+or
+ect
+1s
+
+ta bits
+6 da
+409
+
+Dire
+c
+Preamb
+le
+
+Read/write
+head
+
+ble
+m
+ea
+Pr
+
+Track
+width is
+1–2 microns
+
+E
+C
+C
+
+tion
+
+of

@@ -1,0 +1,100 @@
+
+A
+
+B
+
+C
+
+Figure 3-11. An eight-input multiplexer circuit.
+
+Using the multiplexer, we can implement the majority function of Fig. 3-3(a),
+as shown in Fig. 3-12(b). For each combination of A, B, and C, one of the data
+input lines is selected. Each input is wired to either V cc (logical 1) or ground (logical 0). The algorithm for wiring the inputs is simple: input Di is the same as the
+value in row i of the truth table. In Fig. 3-3(a), rows 0, 1, 2, and 4 are 0, so the corresponding inputs are grounded; the remaining rows are 1, so they are wired to logical 1. In this manner any truth table of three variables can be implemented using
+the chip of Fig. 3-12(a).
+We just saw how a multiplexer chip can be used to select one of several inputs
+and how it can implement a truth table. Another of its many applications is as a
+
+SEC. 3.2
+
+161
+
+BASIC DIGITAL LOGIC CIRCUITS
+VCC
+
+D0
+
+D0
+
+D1
+
+D1
+
+D2
+
+D2
+
+D3
+
+F
+
+D4
+
+D3
+
+D5
+
+D5
+
+D6
+
+D6
+
+D7
+
+D7
+
+A B C
+(a)
+
+F
+
+D4
+
+A B C
+(b)
+
+Figure 3-12. (a) An eight-input multiplexer. (b) The same multiplexer wired to
+compute the majority function.
+
+parallel-to-serial data converter. By putting 8 bits of data on the input lines and
+then stepping the control lines sequentially from 000 to 111 (binary), the 8 bits are
+put onto the output line in series. A typical use for parallel-to-serial conversion is
+in a keyboard, where each keystroke implicitly defines a 7- or 8-bit number that
+must be output over a serial link, such as USB.
+The inverse of a multiplexer is a demultiplexer, which routes its single input
+signal to one of 2n outputs, depending on the values of the n control lines. If the
+binary value on the control lines is k, output k is selected.
+Decoders
+As a second example, we will now look at a circuit that takes an n-bit number
+as input and uses it to select (i.e., set to 1) exactly one of the 2n output lines. Such
+a circuit, illustrated for n = 3 in Fig. 3-13, is called a decoder.
+To see where a decoder might be useful, imagine a small memory consisting of
+eight chips, each containing 256 MB. Chip 0 has addresses 0 to 256 MB, chip 1
+has addresses 256 MB to 512 MB, and so on. When an address is presented to the
+memory, the high-order 3 bits are used to select one of the eight chips. Using the
+circuit of Fig. 3-13, these 3 bits are the three inputs, A, B, and C. Depending on
+the inputs, exactly one of the eight output lines, D0 , . . . , D7 , is 1; the rest are 0.
+Each output line enables one of the eight memory chips. Because only one output
+line is set to 1, only one chip is enabled.
+
+162
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+D0
+
+D1
+

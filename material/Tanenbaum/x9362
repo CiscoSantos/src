@@ -1,0 +1,100 @@
+-
+
+-
+
+Run until subroutine level minus 1
+
++
+
++
+
+Run until subroutine level plus 1
+
+/buf+6
+
+Display data segment on label+#
+
+d,!
+
+/buf+6d
+
+Display data segment on label+#
+
+R , CTRL L
+
+R
+
+Refresh windows
+
+q
+
+q
+
+Stop tracing, back to command shell
+
+/D+#
+/D+#
+
+Figure C-11. The tracer commands. Each command must be followed by a carriage return (the Enter key). An empty box indicates that just a carriage return is
+needed. Commands with no Address field listed above have no address. The #
+symbol represents an integer offset.
+
+The command /label is different for an instruction label and a data label. For a
+data label, a line in the bottom window is filled or replaced with a set of data starting with that label. For an instruction label, it is equivalent to the g command. The
+label may be followed by a plus sign and a number (indicated by # in Fig. C-11), to
+obtain an offset from the label.
+It is possible to set a breakpoint at an instruction. This is done with the command b, which can be optionally preceded by an instruction label, possibly with an
+offset. If a line with a breakpoint is encountered during execution, the tracer stops.
+To start again from a breakpoint, a return or run command is required. If the label
+and the number are omitted, then the breakpoint is set at the current line. The
+
+SEC. C.6
+
+THE TRACER
+
+725
+
+breakpoint can be cleared by a breakpoint clear command, c, which can be preceded by labels and numbers, like the command b. There is a run command, r, in
+which the tracer executes until either a breakpoint, an exit call, or the end of the
+commands is encountered.
+The tracer also keeps track of the subroutine level at which the program is running. This is shown in the window below the processor window and can also be
+seen through the indication numbers in the stack window. There are three commands that are based on these levels. The − command causes the tracer to run until
+the subroutine level is one less than the current level. What this command does is
+execute instructions until the current subroutine is finished. The converse is the +
+command, which runs the tracer until the next subroutine level is encountered. The
+= command runs until the same level is encountered, and can be used to execute a
+subroutine at the CALL command. If = is used, the details of the subroutine are
+not shown in the tracer window. There is a related command, n, which runs until
+the next line in the program is encountered. This command is especially useful
+when issued as a LOOP command; execution stops exactly when the bottom of the
+loop is executed.
+
+C.7 GETTING STARTED
+In this section, we will explain how to use the tools. First of all, it is necessary
+to locate the software for your platform. We have precompiled versions for
+Solaris, UNIX, for Linux and for Windows. The tools are located on the CD-ROM
+and on the Web at www.prenhall.com/tanenbaum. Once there, click on the Companion Web Site for this book and then click on the link in the left-hand menu.
+Unpack the selected zip file to a directory assembler. This directory and its subdirectories contain all the necessary material. On the CD-ROM, the main directories
+are Bigendnx, LtlendNx, and MSWindos, and in each there is a subdirectory
+assembler which contains the material. The three top-level directories are for BigEndian UNIX (e.g. Sun workstations), Little-Endian UNIX (e.g., Linux on PCs),
+and Windows systems, respectively.
+After unpacking or copying, the assembler directory should contain the following subdirectories and files: READ ME, bin, as src, trce src, examples, and exercise. The precompiled sources can be found in the bin directory but, for convenience, there is also a copy of the binaries in the examples directory.
+To get a quick preview of how the system works, go to the examples directory
+and type the command
+t88 HlloWrld
+
+This command corresponds to the first example in Sec. C.8.
+The source code for the assembler is in the directory as src. The source code
+files are in the language C, and the command make should recompile the sources.
+
+726
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+For POSIX-compliant platforms, there is a Makefile in the source directory which
+does the job. For Windows, there is a batch file make.bat. It may be necessary to
+move the executable files after compilation to a program directory, or to change the
+PATH variable to make the assembler as88 and the tracer t88 visible from the
+directories containing the assembly source codes. Alternatively, instead of typing

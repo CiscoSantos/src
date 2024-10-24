@@ -1,0 +1,100 @@
+only eight page frames, not all virtual pages can be in memory at once. The MMU
+makes this check by examining the present/absent bit in the page-table entry. In
+our example, the bit is 1, meaning the page is currently in memory.
+The next step is to take the page-frame value from the selected entry (6 in this
+case) and copy it into the upper 3 bits of the 15-bit output register. Three bits are
+needed because there are eight page frames in physical memory. In parallel with
+this operation, the low-order 12 bits of the virtual address (the page-offset field) are
+
+SEC. 6.1
+
+443
+
+VIRTUAL MEMORY
+Page
+
+Virtual addresses
+
+15
+
+61440 – 65535
+
+14
+
+57344 – 61439
+
+13
+
+53248 – 57343
+
+12
+
+49152 – 53247
+
+11
+
+45056 – 49151
+
+10
+
+40960 – 45055
+
+9
+
+36864 – 40959
+
+8
+
+Bottom 32K of
+main memory
+
+32768 – 36863
+
+Page
+frame
+
+Physical addresses
+
+7
+
+28672 – 32767
+
+7
+
+28672 – 32767
+
+6
+
+24576 – 28671
+
+6
+
+24576 – 28671
+
+5
+
+20480 – 24575
+
+5
+
+20480 – 24575
+
+4
+
+16384 – 20479
+
+4
+
+16384 – 20479
+
+3
+
+12288 – 16383
+
+3
+
+12288 – 16383
+
+2
+
+8192 – 12287

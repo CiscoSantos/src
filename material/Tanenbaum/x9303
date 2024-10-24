@@ -1,0 +1,100 @@
+The logic behind this decision lies in economics: commodity PCs are very
+cheap. High-end servers are not and large multiprocessors are even less so. Thus
+while a high-end server might have two or three times the performance of a
+midrange desktop PC, it will typically be 5–10 times the price, which is not cost
+effective.
+Of course, cheap PCs fail more often than top-of-the-line servers, but the latter
+fail, too, so the Google software had to be designed to work with failing hardware
+no matter what kind of equipment it was using. Once the fault-tolerance software
+was written, it did not really matter whether the failure rate was 0.5% per year or
+2% per year, failures had to be dealt with. Google’s experience is that about 2% of
+the PCs fail each year. More than half the failures are due to faulty disks, followed
+by power supplies and then RAM chips. After burn-in, CPUs never fail. Actually,
+the biggest source of crashes is not hardware at all; it is software. The first response to a crash is just to reboot, which often solves the problem (the electronic equivalent of the doctor saying: ‘‘Take two aspirins and go to bed.’’).
+A typical modern Google PC consists of a 2-GHz Intel processor, 4 GB of
+RAM, and a disk of around 2 TB, the kind of thing a grandmother might buy for
+checking her email occasionally. The only specialty item is an Ethernet chip. Not
+exactly state of the art, but very cheap. The PCs are housed in 1u-high cases
+(about 5 cm thick) and stacked 40 high in 19-inch racks, one stack in front and one
+stack in back for a total of 80 PCs per rack. The PCs in a rack are connected by
+switched Ethernet, with the switch inside the rack. The racks in a data center are
+also connected by switched Ethernet, with two redundant switches per data center
+used to survive switch failures.
+The layout of a typical Google data center is illustrated in Fig. 8-44. The incoming high-bandwidth OC-48 fiber is routed to each of two 128-port Ethernet
+switches. Similarly, the backup OC-12 fiber is also routed to each of the two
+switches. The incoming fibers use special input cards and do not occupy any of
+the 128 Ethernet ports.
+Each rack has four Ethernet links coming out of it, two to the left switch and
+two to the right switch. In this configuration, the system can survive the failure of
+either switch. Since each rack has four connections to the switch (two from the
+front 40 PCs and two from the back 40 PCs), it takes four link failures or two link
+failures and a switch failure to take a rack offline. With a pair of 128-port switches
+and four links from each rack, up to 64 racks can be supported. With 80 PCs per
+rack, a data center can have up to 5120 PCs. But, of course, racks do not have to
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+635
+
+hold exactly 80 PCs and switches can be larger or smaller than 128 ports; these are
+just typical values for a Google cluster.
+OC-12 Fiber
+
+OC-48 Fiber
+
+128-port Gigabit
+Ethernet switch
+
+128-port Gigabit
+Ethernet switch
+
+Two gigabit
+Ethernet links
+
+80-PC rack
+
+Figure 8-44. A typical Google cluster.
+
+Power density is also a key issue. A typical PC burns about 120 watts or about
+10 kW per rack. A rack needs about 3 m2 so that maintenance personnel can install and remove PCs and for the air conditioning to function. These parameters
+give a power density of over 3000 watts/m2 . Most data centers are designed for
+600–1200 watts/m2 , so special measures are required to cool the racks.
+Google has learned three key things about running massive Web servers that
+bear repeating.
+1. Components will fail so plan for it.
+2. Replicate everything for throughput and availability.
+3. Optimize price/performance.
+
+636
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+The first item says that you need to have fault-tolerant software. Even with the
+best of equipment, when you have a massive number of components, some will fail
+and the software has to be able to handle it. Whether you have one failure a week
+or two, the software has to be able to handle failures.
+The second item points out that both hardware and software have to be highly
+redundant. Doing so not only improves the fault-tolerance properties, but also the
+throughput. In the case of Google, the PCs, disks, cables, and switches are all
+replicated many times over. Furthermore, the index and the documents are broken
+into shards and the shards are heavily replicated in each data center and the data
+centers are themselves replicated.
+The third item is a consequence of the first two. If the system has been properly designed to deal with failures, buying expensive components such as RAIDs
+with SCSI disks is a mistake. Even they will fail, but spending 10 times as much to
+cut the failure rate in half is a bad idea. Better to buy 10 times as much hardware
+and deal with the failures when they occur. At the very least, having more hardware will give better performance when everything is working.
+For more information about Google, see Barroso et al. (2003), and Ghemawat
+et al. (2003).
+
+8.4.4 Communication Software for Multicomputers
+Programming a multicomputer requires special software, usually libraries, for
+handling interprocess communication and synchronization. In this section we will
+say a few words about this software. For the most part, the same software packages run on MPPs and clusters, so applications can be easily ported between platforms.
+Message-passing systems have two or more processes running independently
+of one another. For example, one process may be producing some data and one or
+more others may be consuming it. There is no guarantee that when the sender has
+more data the receiver(s) will be ready for it, as each one runs its own program.

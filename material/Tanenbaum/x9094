@@ -1,0 +1,100 @@
+Write C bus to register
+
+OPC
+
+C bus
+
+B bus
+
+H
+A bus
+C latch
+
+A latch
+
+ALU
+control
+
+B latch
+
+6
+ALU
+
+N
+Z
+
+Shifter
+
+Figure 4-31. The three-bus data path used in the Mic-3.
+
+registers, we will continue to assume that a memory operation takes one cycle. In
+practice, though, this may not be so easy to achieve.
+The second point deals with throughput rather than the speed of an individual
+instruction. In the Mic-2, during the first and third parts of each clock cycle the
+ALU is idle. By breaking the data path up into three pieces, we will be able to use
+the ALU on every cycle, getting three times as much work out of the machine.
+
+SEC. 4.4
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+297
+
+Let us now see how the Mic-3 data path works. Before starting, we need a
+notation for dealing with the latches. The obvious one is to call them A, B, and C
+and treat them like registers, keeping in mind the constraints of the data path. Figure 4-32 shows an example code sequence, the implementation of SWAP for the
+Mic-2.
+Label
+
+Operations
+
+Comments
+
+swap1
+swap2
+swap3
+swap4
+swap5
+swap6
+
+MAR = SP − 1; rd
+MAR = SP
+H = MDR; wr
+MDR = TOS
+MAR = SP − 1; wr
+TOS = H; goto (MBR1)
+
+Read 2nd word from stack; set MAR to SP
+Prepare to write new 2nd word
+Save new TOS; write 2nd word to stack
+Copy old TOS to MDR
+Write old TOS to 2nd place on stack
+Update TOS
+
+Figure 4-32. The Mic-2 code for SWAP.
+
+Now let us reimplement this sequence on the Mic-3. Remember that the data
+path now requires three cycles to operate: one to load A and B, one to perform the
+operation and load C, and one to write the results back to the registers. We will
+call each of these pieces a microstep.
+The implementation of SWAP for the Mic-3 is shown in Fig. 4-33. In cycle 1,
+we start on swap1 by copying SP to B. It does not matter what goes in A because
+to subtract 1 from B ENA is negated (see Fig. 4-2). For simplicity, we will not show
+assignments that are not used. In cycle 2 we do the subtraction. In cycle 3 the result is stored in MAR and the read operation is started at the end of cycle 3 (after
+MAR has been stored). Since memory reads now take one cycle, this one will not
+complete until the end of cycle 4, indicated by showing the assignment to MDR in
+cycle 4. The value in MDR may be read no earlier than cycle 5.
+Now let us go back to cycle 2. We can now begin breaking up swap2 into
+microsteps and starting them, too. In cycle 2, we can copy SP to B, then run it
+through the ALU in cycle 3 and finally store it in MAR in cycle 4. So far, so good.
+It should be clear that if we can keep going at this rate, starting a new microinstruction every cycle, we have tripled the speed of the machine. This gain comes from
+the fact that we can issue a new microinstruction on every clock cycle, and the
+Mic-3 has three times as many clock cycles per second as the Mic-2 has. In fact,
+we have built a pipelined CPU.
+Unfortunately, we hit a snag in cycle 3. We would like to start working on
+swap3, but the first thing it does is run MDR through the ALU, and MDR will not be
+available from memory until the start of cycle 5. The situation that a microstep
+cannot start because it is waiting for a result that a previous microstep has not yet
+produced is called a true dependence or a RAW dependence. Dependences are
+often referred to as hazards. RAW stands for Read After Write and indicates that
+a microstep wants to read a register that has not yet been written. The only sensible thing to do here is delay the start of swap3 until MDR is available, in cycle 5.

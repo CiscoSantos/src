@@ -1,0 +1,100 @@
+to convert decimal input to binary and then back to decimal for output. These instructions are used for doing arithmetic on the BCD numbers. They are heavily
+used by COBOL programs.
+The Boolean and shift/rotate instructions manipulate the bits in a word or byte
+in various ways. Several combinations are provided.
+The next two groups deal with testing and comparing, and then jumping based
+on the results. The results of test and compare instructions are stored in various
+bits of the EFLAGS register. Jxx stands for a set of instructions that conditionally
+jump, depending on the results of the previous comparison (i.e., bits in EFLAGS).
+The Core i7 has several instructions for loading, storing, moving, comparing,
+and scanning strings of characters or words. These instructions can be prefixed by
+a special byte called REP, which cause them to be repeated until a certain condition
+is met, such as ECX, which is decremented after each iteration, reaching 0. In this
+
+400
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+way, arbitrary blocks of data can be moved, compared, and so on. The next group
+manages the condition codes.
+The last group is a hodge-podge of instructions that do not fit in anywhere else.
+These include conversions, stack frame management, stopping the CPU, and I/O.
+The Core i7 has a number of prefixes, of which we have already mentioned
+one (REP). Each of these prefixes is a special byte that can precede most instructions, analogous to WIDE in IJVM. REP causes the instruction following it to be repeated until ECX hits 0, as mentioned above. REPZ and REPNZ repeatedly execute
+the following instruction until the Z condition code is set, or not set, respectively.
+LOCK reserves the bus for the entire instruction, to permit multiprocessor synchronization. Other prefixes are used to force an instruction to operate in 16-bit mode,
+or in 32-bit mode, which not only changes the length of the operands but also completely redefines the addressing modes. Finally, the Core i7 has a complex segmentation scheme with code, data, stack, and extra segments, a holdover from the
+8088. Prefixes are provided to force memory references to use specific segments,
+but these will not be of concern to us (fortunately).
+
+5.5.9 The OMAP4430 ARM CPU Instructions
+Nearly all of the user-mode integer ARM instructions that a compiler might
+generate are listed in Fig. 5-34. Floating-point instructions are not given here, nor
+are control instructions (e.g., cache management, system reset), instructions involving address spaces other than the user’s, or instruction extensions such as Thumb.
+The set is surprisingly small: the OMAP4430 ARM ISA really is a reduced instruction set computer.
+The LDR and STR instructions are straightforward, with versions for 1, 2, and 4
+bytes. When a number less than 32 bits is loaded into a (32-bit) register, the number can be either sign extended or zero extended. Instructions for both exist.
+The next group is for arithmetic, which can optionally set the processor status
+register’s condition code bits. On CISC machines, most instructions set the condition codes, but on a RISC machine that is undesirable because it restricts the compiler’s freedom to move instructions around when trying to schedule them to tolerate instruction delays. If the original instruction order is A ... B ... C with A setting
+the condition codes and B testing them, the compiler cannot insert C between A
+and B if C sets the condition codes. For this reason, two versions of many instructions are provided, with the compiler normally using the one that does not set the
+condition codes, unless it is planning to test them later. The programmer specifies
+the setting of the condition codes by adding an ‘‘S’’ to the end of the instruction
+opcode name, for example, ADDS. A bit in the instruction indicates to the processor
+that the condition codes should be set. Multiplication and multiply-accumulate are
+also supported.
+The shift group contains one left shift and two right shifts, each of which operate on 32-bit registers. The rotate right instruction does a circular rotation of bits
+
+SEC. 5.5
+
+401
+
+INSTRUCTION TYPES
+Loads
+
+LDRSB DST,ADDR
+LDRB DST,ADDR
+LDRSH DST,ADDR
+LDRH DST,ADDR
+LDR DST,ADDR
+LDM S1,REGLIST
+
+STRB DST,ADDR
+STRH DST,ADDR
+STR DST,ADDR
+STM SRC,REGLIST
+
+ADD DST,S1,S2IMM
+ADD DST,S1,S2IMM
+SUB DST,S1,S2IMM
+SUB DST,S1,S2IMM
+RSB DST,S1,S2IMM
+RSC DST,S1,S2IMM
+MUL DST,S1,S2
+MLA DST,S1,S2,S3
+UMULL D1,D2,S1,S2
+SMULL D1,D2,S1,S2
+UMLAL D1,D2,S1,S2
+SMLAL D1,D2,S1,S2
+CMP S1,S2IMM
+
+Shifts/rotates
+
+Logical shift left
+LSL DST,S1,S2IMM
+Load signed byte (8 bits)
+LSR DST,S1,S2IMM
+Logical shift right
+Load unsigned byte (8 bits)
+Arithmetic shift right
+Load signed halfwords (16 bits) ASR DST,S1,S2IMM
+Load unsigned halfwords (16 bits) ROR DSR,S1,S2IMM
+Rotate right
+Load word (32 bits)
+Boolean
+Load multiple words
+TST DST,S1,S2IMM
+Test bits
+Stores

@@ -1,0 +1,100 @@
+Early personal computers had a single external bus or system bus. It consisted
+of 50 to 100 parallel copper wires etched onto the motherboard, with connectors
+spaced at regular intervals for plugging in memory and I/O boards. Modern personal computers generally have a special-purpose bus between the CPU and memory and (at least) one other bus for the I/O devices. A minimal system, with one
+memory bus and one I/O bus, is illustrated in Fig. 3-35.
+CPU chip
+Buses
+Registers
+
+Memory bus
+
+Bus
+controller
+
+I/O bus
+
+ALU
+
+On-chip bus
+
+Memory
+
+Disk
+
+Network
+
+Printer
+
+Figure 3-35. A computer system with multiple buses.
+
+In the literature, buses are sometimes drawn as ‘‘fat’’ arrows, as in this figure.
+The distinction between a fat arrow and a single line with a diagonal line through it
+and a bit count next to it is subtle. When all the bits are of the same type, say, all
+address bits or all data bits, then the short-diagonal-line approach is commonly
+used. When address, data, and control lines are involved, a fat arrow is more common.
+While the designers of the CPU are free to use any kind of bus they want inside the chip, in order to make it possible for boards designed by third parties to
+attach to the system bus, there must be well-defined rules about how the external
+bus works, which all devices attached to it must obey. These rules are called the
+bus protocol. In addition, there must be mechanical and electrical specifications,
+so that third-party boards will fit in the card cage and have connectors that match
+those on the motherboard mechanically and in terms of voltages, timing, etc. Still
+other buses do not have mechanical specifications because they are designed to be
+used only within an integrated circuit, for example, to connect components together within a system-on-a-chip (SoC).
+A number of buses are in widespread use in the computer world. A few of the
+better-known ones, historical and current (with examples), are the Omnibus
+(PDP-8), Unibus (PDP-11), Multibus (8086), VME bus (physics lab equipment),
+IBM PC bus (PC/XT), ISA bus (PC/AT), EISA bus (80386), Microchannel (PS/2),
+Nubus (Macintosh), PCI bus (many PCs), SCSI bus (many PCs and workstations),
+
+SEC. 3.4
+
+CPU CHIPS AND BUSES
+
+189
+
+Universal Serial Bus (modern PCs), and FireWire (consumer electronics). The
+world would probably be a better place if all but one would suddenly vanish from
+the face of the earth (well, all right, how about all but two?). Unfortunately, standardization in this area seems very unlikely, as there is already too much invested
+in all these incompatible systems.
+As an aside, there is another interconnect, PCI Express, that is widely referred
+to as a bus but is not a bus at all. We will study it later in this chapter.
+Let us now begin our study of how buses work. Some devices that attach to a
+bus are active and can initiate bus transfers, whereas others are passive and wait for
+requests. The active ones are called masters; the passive ones are called slaves.
+When the CPU orders a disk controller to read or write a block, the CPU is acting
+as a master and the disk controller is acting as a slave. However, later on, the disk
+controller may act as a master when it commands the memory to accept the words
+it is reading from the disk drive. Several typical combinations of master and slave
+are listed in Fig. 3-36. Under no circumstances can memory ever be a master.
+Master
+
+Slave
+
+Example
+
+CPU
+
+Memory
+
+Fetching instructions and data
+
+CPU
+
+I/O device
+
+Initiating data transfer
+
+CPU
+
+Coprocessor
+
+CPU handing instruction off to coprocessor
+
+I/O device
+
+Memory
+
+DMA (Direct Memory Access)
+
+Coprocessor
+

@@ -1,0 +1,100 @@
+1
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+1
+
+0
+
+0
+
+1
+
+0
+
+−1
+
+A
+
+Figure 4-2. Useful combinations of ALU signals and the function performed.
+
+The ALU of Fig. 4-1 needs two data inputs: a left input (A) and a right input
+(B). Attached to the left input is a holding register, H. Attached to the right input
+is the B bus, which can be loaded from any one of nine sources, indicated by the
+nine gray arrows touching it. An alternative design, with two full buses, has a different set of trade-offs and will be discussed later in this chapter.
+
+SEC. 4.1
+
+AN EXAMPLE MICROARCHITECTURE
+
+247
+
+H can be loaded by choosing an ALU function that just passes the right input
+(from the B bus) through to the ALU output. One such function is adding the ALU
+inputs, only with ENA negated so the left input is forced to zero. Adding zero to
+the value on the B bus just yields the value on the B bus. This result can then be
+passed through the shifter unmodified and stored in H.
+In addition to the above functions, two other control lines can be used independently to control the output from the ALU. SLL8 (Shift Left Logical) shifts the
+contents left by 1 byte, filling the 8 least significant bits with zeros. SRA1 (Shift
+Right Arithmetic) shifts the contents right by 1 bit, leaving the most significant bit
+unchanged.
+It is explicitly possible to read and write the same register on one cycle. For
+example, it is allowed to put SP onto the B bus, disable the ALU’s left input,
+enable the INC signal, and store the result in SP, thus incrementing SP by 1 (see the
+eighth line in Fig. 4-2). How can a register be read and written on the same cycle
+without producing garbage? The solution is that reading and writing are actually
+performed at different times within the cycle. When a register is selected as the
+ALU’s right input, its value is put onto the B bus early in the cycle and kept there
+continuously throughout the entire cycle. The ALU then does its work, producing
+a result that passes through the shifter onto the C bus. Near the end of the cycle,
+when the ALU and shifter outputs are known to be stable, a clock signal triggers
+the store of the contents of the C bus into one or more of the registers. One of
+these registers may well be the one that supplied the B bus with its input. The precise timing of the data path makes it possible to read and write the same register on
+one cycle, as described below.
+
+Data Path Timing
+The timing of these events is shown in Fig. 4-3. Here a short pulse is produced
+at the start of each clock cycle. It can be derived from the main clock, as shown in
+Fig. 3-20(c). On the falling edge of the pulse, the bits that will drive all the gates
+are set up. This takes a finite and known time, Δw. Then the register needed on
+the B bus is selected and driven onto the B bus. It takes Δx before the value is stable. Then the ALU and shifter, which as combinational circuits have been running
+continuously, finally have valid data to operate on. After another Δy, the ALU and
+shifter outputs are stable. After an additional Δz, the results have propagated along
+the C bus to the registers, where they can be loaded on the rising edge of the next
+pulse. The load should be edge triggered and fast, so that even if some of the input
+registers are changed, the effects will not be felt on the C bus until long after the
+registers have been loaded. Also on the rising edge of the pulse, the register driving the B bus stops doing so, in preparation for the next cycle. MPC, MIR, and the
+memory are mentioned in the figure; their roles will be discussed shortly.
+It is important to realize that even though there are no storage elements in the
+data path, there is a finite propagation time through it. Changing the value on the
+
+248
+
+THE MICROARCHITECTURE LEVEL
+Registers loaded from
+C bus and memory on
+rising edge of clock
+
+Shifter
+output
+stable
+
+Cycle 1
+starts
+here
+
+Clock cycle 1
+
+Δw
+
+CHAP. 4

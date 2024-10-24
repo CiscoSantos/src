@@ -1,0 +1,100 @@
+
+A0
+A1
+A2
+A3
+A4
+A5
+A6
+A7
+A8
+A9
+A10
+A11
+A12
+
+128M × 4
+Memory
+chip
+(512 Mbit)
+
+D0
+D1
+D2
+D3
+
+RAS
+CAS
+Bank 0
+Bank 1
+
+CS WE OE
+
+CS WE OE
+
+(a)
+
+(b)
+
+Figure 3-31. Two ways of organizing a 512-Mbit memory chip.
+
+These examples demonstrate two separate and independent issues for memory-chip design. First is the output width (in bits): does the chip deliver 1, 4, 8, 16,
+or some other number of bits at once? Second, are all the address bits presented on
+separate pins at once or are the rows and columns presented sequentially as in the
+examples of Fig. 3-31? A memory-chip designer has to answer both questions before starting the chip design.
+
+3.3.6 RAMs and ROMs
+The memories we have studied so far can all be read and written. Such memories are called RAMs (Random Access Memories), which is a misnomer because
+all memory chips are randomly accessible, but the term is too well established to
+
+SEC. 3.3
+
+MEMORY
+
+181
+
+get rid of now. RAMs come in two varieties, static and dynamic. Static RAMs
+(SRAMs) are constructed internally using circuits similar to our basic D flip-flop.
+These memories have the property that their contents are retained as long as the
+power is kept on: seconds, minutes, hours, even days. Static RAMs are very fast.
+A typical access time is on the order of a nanosecond or less. For this reason,
+static RAMS are popular as cache memory.
+Dynamic RAMs (DRAMs), in contrast, do not use flip-flops. Instead, a dynamic RAM is an array of cells, each cell containing one transistor and a tiny
+capacitor. The capacitors can be charged or discharged, allowing 0s and 1s to be
+stored. Because the electric charge tends to leak out, each bit in a dynamic RAM
+must be refreshed (reloaded) every few milliseconds to prevent the data from leaking away. Because external logic must take care of the refreshing, dynamic RAMs
+require more complex interfacing than static ones, although in many applications
+this disadvantage is compensated for by their larger capacities.
+Since dynamic RAMs need only one transistor and one capacitor per bit (vs.
+six transistors per bit for the best static RAM), dynamic RAMs have a very high
+density (many bits per chip). For this reason, main memories are nearly always
+built out of dynamic RAMs. However, this large capacity has a price: dynamic
+RAMs are slow (tens of nanoseconds). Thus, the combination of a static RAM
+cache and a dynamic RAM main memory attempts to combine the good properties
+of each.
+Several types of dynamic RAM chips exist. The oldest type still around (in
+elderly computers) is FPM (Fast Page Mode) DRAM. Internally it is organized
+as a matrix of bits and it works by having the hardware present a row address and
+then step through the column addresses, as we described with RAS and CAS in the
+context of Fig. 3-30. Explicit signals tell the memory when it is time to respond,
+so the memory runs asynchronously from the main system clock.
+FPM DRAM was replaced with EDO (Extended Data Output) DRAM,
+which allows a second memory reference to begin before the previous memory reference has been completed. This simple pipelining did not make a single memory
+reference go faster but did improve the memory bandwidth, giving more words per
+second.
+FPM and EDO worked reasonably well when memory chips had cycle times of
+12 nsec and slower. When processors got so fast that faster memories were really
+needed, FPM and EDO were replaced by SDRAM (Synchronous DRAM), which
+is a hybrid of static and dynamic RAM and is driven by the main system clock.
+The big advantage of SDRAM is that the clock eliminates the need for control signals to tell the memory chip when to respond. Instead, the CPU tells the memory
+how many cycles it should run, then starts it. On each subsequent cycle, the memory outputs 4, 8, or 16 bits, depending on how many output lines it has. Eliminating the need for control signals increases the data rate between CPU and memory.
+The next improvement over SDRAM was DDR (Double Data Rate) SDRAM.
+With this kind of memory, the memory chip produces output on both the rising
+
+182
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+edge of the clock and the falling edge, doubling the data rate. Thus, an 8-bit-wide

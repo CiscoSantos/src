@@ -1,0 +1,100 @@
+
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+hw
+> H e l l o World\n
+hw + 0 = 0 0 0 0 : 48 65 6c 6c 6f 20 57 6f H e l l o
+
+World
+
+25928
+
+(b)
+
+Figure C-1. (a) An assembly language program. (b) The corresponding tracer
+display.
+
+Let us now briefly examine the seven windows of Fig. C-1(b). On the top are
+three windows, two larger ones and a smaller one in the middle. The top left
+
+694
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+window shows the contents of the processor, consisting of the current values of the
+segment registers, CS, DS, SS, and ES, the arithmetic registers, AH, AL, AX, and others.
+The middle window in the top row contains the stack, an area of memory used
+for temporary values.
+The right-hand window in the top row contains a fragment of the assembly language program, with the arrow showing which instruction is currently being
+executed. As the program runs, the current instruction changes and the arrow
+moves to point to it. The strength of the tracer is that by hitting the return key
+(labeled Enter on PC keyboards), one instruction is executed and all the windows
+are updated, making it possible to run the program in slow motion.
+Below the left window is a window that contains the subroutine call stack, here
+empty. Below it are commands to the tracer itself. To the right of these two windows is a window for input, output, and error messages.
+Below these windows is a window that shows a portion of memory. These
+windows will be discussed in more detail later, but the basic idea should be clear:
+the tracer shows the source program, the machine registers, and quite a bit of information about the state of the program being executed. As each instruction is
+executed the information is updated, allowing the user to see in great detail what
+the program is doing.
+
+C.2 THE 8088 PROCESSOR
+Every processor, including the 8088, has an internal state, where it keeps certain crucial information. For this purpose, the processor has a set of registers
+where this information can be stored and processed. Probably the most important
+of these is the PC (program counter), which contains the memory location, that is,
+the address, of the next instruction to be executed. This register is also called IP
+(Instruction Pointer). This instruction is located in a part of the main memory,
+called the code segment. The main memory on the 8088 may be up to slightly
+more the 1 MB in size, but the current code segment is only 64 KB. The CS register in Fig. C-1 tells where the 64-KB code segment begins within the 1-MB memory. A new code segment can be activated by simply changing the value of the CS
+register. Similarly, there is also a 64-KB data segment, which tells where the data
+begins. In Fig. C-1 its origin is given by the DS register, which can also be
+changed as needed to access data outside the current data segment. The CS and DS
+registers are needed because the 8088 has 16-bit registers, so they cannot directly
+hold the 20-bit addresses needed to reference the entire 1-MB memory. This is
+why the code and data segment registers were introduced.
+The other registers contain data or pointers to data in the main memory. In
+assembly language programs, these registers can be directly accessed. Apart from
+
+SEC. C.2
+
+THE 8088 PROCESSOR
+
+695
+
+these registers, the processor also contains all the necessary equipment to perform
+the instructions, but these parts are available to the programmer only through the
+instructions.
+
+C.2.1 The Processor Cycle
+The operation of the 8088 (and all other computers) consists of executing
+instructions, one after another. The execution of a single instruction can be broken
+down into the following steps:
+1. Fetch the instruction from memory from the code segment using PC.
+2. Increment the program counter.
+3. Decode the fetched instruction.
+4. Fetch the necessary data from memory and/or processor registers.
+5. Perform the instruction.
+6. Store the results of the instruction in memory and/or registers.
+7. Go back to step 1 to start the next instruction.
+The execution of an instruction is somewhat like running a very small program. In
+fact, some machines really do have a little program, called a microprogram, to
+execute their instructions. Microprograms are described in detail in Chap. 4.
+From the point of view of an assembly programmer, the 8088 has a set of 14
+registers. These registers are in some sense the scratch pad where the instructions
+operate and are in constant use, although the results stored in them are very
+volatile. Figure C-2 gives an overview of these 14 registers. It is clear that this figure and the register window of the tracer of Fig. C-1 are very similar because they
+represent the same information.
+The 8088 registers are 16 bits wide. No two registers are completely functionally equivalent, but some of them share certain features, so they are subdivided into
+groups in Fig. C-2. We will now discuss the different groups.
+
+C.2.2 The General Registers

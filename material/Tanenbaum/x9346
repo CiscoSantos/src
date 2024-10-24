@@ -1,0 +1,100 @@
+
+Data segment addressing
+Direct address
+Register indirect
+Register displacement
+Register with index
+Register index displacement
+
+Address follows opcode
+Address in register
+Address is register+displ.
+Address is BX + SI/DI
+BX + SI DI + displacement
+
+(#)
+(SI), (DI), (BX)
+#(SI), #(DI), #(BX)
+(BX)(SI), (BX)(DI)
+#(BX)(SI), #(BX)(DI)
+
+Stack segment address
+Base Pointer indirect
+Base pointer displacement
+Base Pointer with index
+Base pointer index displ.
+
+Address in register
+Address is BP + displ.
+Address is BP + SI/DI
+BP+SI/DI + displacement
+
+(BP)
+#(BP)
+(BP)(SI), (BP)(DI)
+#(BP)(SI), #(BP)(DI)
+
+Immediate data
+Immediate byte/word
+
+Data part of instruction
+
+#
+
+Implied address
+Push/pop instruction
+Load/store flags
+Translate XLAT
+Repeated string instructions
+In / out instructions
+Convert byte, word
+
+Address indirect ( SP )
+status flag register
+AL, BX
+(SI), (DI), (CX)
+AX, AL
+AL, AX, DX
+
+PUSH, POP, PUSHF, POPF
+LAHF, STC, CLC, CMC
+XLAT
+MOVS, CMPS, SCAS
+IN #, OUT #
+CBW,CWD
+
+Figure C-3. Operand addressing modes. The symbol # indicates a numerical value or label.
+
+segment. It is also possible to put a constant in front of the register, in which case
+the address is found by adding the register to the constant. This type of addressing,
+called register displacement, is convenient for arrays. If, for example, SI contains
+5, then the fifth character of the string at the label FORMAT can be loaded in AL by
+MOVB AL,FORMAT(SI).
+
+The entire string can be scanned by incrementing or decrementing the register in
+each step. When word operands are used, the register should be changed by two
+each time.
+It is also possible to put the base (i.e., lowest numerical address) of the array in
+the BX register, and keep the SI or DI register for counting. This is called register
+with index addressing. For example:
+PUSH (BX)(DI)
+
+fetches the contents of the data segment location whose address is given by the
+
+704
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+sum of the BX and DI registers. This value is then pushed onto the stack. The last
+two types of addresses can be combined to get register with index and displacement addressing, as in
+NOT 20(BX)(DI)
+
+which complements the memory word at BX + DI + 20 and BX + DI + 21.
+All the indirect addressing modes in the data segment also exist for the stack
+segment, in which case the base pointer BP is used instead of the base register BX.
+In this way (BP) is the only register indirect stack addressing mode, but more
+involved modes also exist, up to base pointer indirect with index and displacement
+−1(BP)(SI). These modes are valuable for addressing local variables and function
+parameters, which are stored in stack addresses in subroutines. This arrangement

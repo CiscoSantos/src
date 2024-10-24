@@ -1,0 +1,100 @@
+when depressed far enough. A small spot of conductive material inside the dome
+closes the circuit. Some keyboards have a magnet under each key that passes
+through a coil when struck, thus inducing a current that can be detected. Various
+other methods, both mechanical and electromagnetic, are also in use.
+On personal computers, when a key is depressed, an interrupt is generated and
+the keyboard interrupt handler (a piece of software that is part of the operating system) is started. The interrupt handler reads a hardware register inside the keyboard
+controller to get the number of the key (1 through 102) that was just depressed.
+When a key is released, a second interrupt is caused. Thus if a user depresses the
+SHIFT key, then depresses and releases the M key, then releases the SHIFT key,
+the operating system can see that the user wants an uppercase ‘‘M’’ rather than a
+lowercase ‘‘m.’’ Handling of multikey sequences involving SHIFT, CTRL, and
+ALT is done entirely in software (including the infamous CTRL-ALT-DEL key sequence that is used to reboot PCs).
+Touch Screens
+While keyboards are in no danger of going the way of the manual typewriter,
+there is a new kid on the block when it comes to computer input: the touch screen.
+While these devices only became mass-market items with the introduction of
+Apple’s iPhone in 2007, they go back much further. The first touch screen was developed at the Royal Radar Establishment in Malvern, U.K. in 1965. Even the
+much-heralded pinching capability of the iPhone dates back to work at the University of Toronto in 1982. Since then, many different technologies have been developed and marketed.
+
+114
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Touch devices fall into two categories: opaque and transparent. A typical
+opaque touch device is the touchpad on a notebook computer. A typical transparent device is the screen of a smart phone or tablet. We will only consider the latter
+here. They are usually called touch screens. The major types of touch screens are
+infrared, resistive, and capacitive.
+Infrared screens have infrared transmitters, such as infrared light emitting
+diodes or lasers on (for example) the left and top edges of the bezel around the
+screen and detectors on the right and bottom edges. When a finger, stylus, or any
+opaque object blocks one or more beams, the corresponding detector senses the
+drop in signal and the hardware of the device can tell the operating system which
+beams have been blocked, allowing it to compute the (x, y) coordinates of the finger or stylus. While these devices have a long history and are still in use in kiosks
+and other applications, they are not used for mobile devices.
+Another old technology consists of resistive touch screens. These consist of
+two layers, the top one of which is flexible. It contains a large number of horizontal
+wires. The one under it contains vertical wires. When a finger or other object
+depresses a point on the screen, one or more of the upper wires comes in contact
+with (or close to) the perpendicular wires in the lower layer. The electronics of the
+device make it possible to read out which area has been depressed. These screens
+can be built very inexpensively and are widely used in price-sensitive applications.
+Both of these technologies are fine when the screen is pressed by one finger
+but have a problem when two fingers are used. To describe the problem, we will
+use the terminology of the infrared touch screen but the resistive one has the same
+problem. Imagine that the two fingers are at (3, 3) and (8, 8). As a result, the x = 3
+and x = 8 vertical beams are interrupted as are the y = 3 and y = 8 horizontal
+beams. Now consider a different scenario with the fingers at (3, 8) and (8, 3),
+which are the opposite corners of the rectangle whose corners are (3, 3), (8, 3), (8,
+8), and (3, 8). Precisely the same beams are blocked, so the software has no way of
+telling which of the two scenarios holds. This problem is called ghosting.
+To be able to detect multiple fingers at the same time—a property required for
+pinching and expanding gestures—a new technology was needed. The one used on
+most smart phones and tablets (but not on digital cameras and other devices) is the
+projected capacitive touch screen. There are various types but the most common
+one is the mutual capacitance type. All touch screens that can detect two or more
+points of contact at the same time are known as multitouch screens. Let us now
+briefly see how they work.
+For readers who are a bit rusty on their high-school physics, a capacitor is a
+device that can store electric charge. A simple one has two conductors separated by
+an insulator. In modern touch screens, a grid-like pattern of thin ‘‘wires’’ running
+vertically is separated from a horizontal grid by a thin insulating layer. When a finger touches the screen, it changes the capacitance at all the intersections touched
+(possibly far apart). This change can be measured. As a demonstration that a modern touch screen is not like the older infrared and resistive screens, try touching
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+115
+
+one with a pen, pencil, paper clip, or gloved finger and you will see that nothing
+happens. The human body is good at storing electric charge, as anyone who has
+shuffled across a rug on a cold, dry day and then touched a metal doorknob can
+painfully testify. Plastic, wooden, and metal instruments are not nearly as good as
+people in terms of their capacitance.
+The ‘‘wires’’ in a touch screen are not the usual copper wires found in normal
+electrical devices since they would block the light from the screen. Instead they
+are thin (typically 50 micron) strips of transparent, conducting indium tin oxide
+bonded to opposite sides of a thin glass plate, which together form the capacitors.
+In some newer designs, the insulating glass plate is replaced by a thin layer of silicon dioxide (sand!), with the three layers sputtered (sprayed, atom by atom) onto
+some substrate. Either way, the capacitors are protected from dirt and scratching by
+a glass plate placed above, to form the surface of the screen to be touched. The
+thinner the upper glass plate, the more sensitive the performance but the more fragile the device is.
+In operation, voltages are applied alternately to the horizontal and vertical
+‘‘wires’’ while the voltage values, which are affected by the capacitance of each
+intersection, are read off the other ones. This operation is repeated many times per
+second with the coordinates touched fed to the device driver as a stream of (x, y)
+pairs. Further processing, such as determining whether pointing, pinching, expanding, or swiping is taking place is done by the operating system. If you use all
+10 fingers, and bring a friend to add some more, the operating system will have its
+hands full, but the multitouch hardware will be up to the job.
+Flat Panel Displays
+The first computer monitors used cathode ray tubes (CRTs), just like old television sets. They were far too bulky and heavy to be used in notebook computers,
+so a more compact display technology had to be developed for their screens. The
+development of flat panel displays provided the compact form factor necessary for
+notebooks, and these devices also used less power. Today the size and power benefits of the flat panel display have all but eliminated the use of CRT monitors.
+The most common flat panel display technology is the LCD (Liquid Crystal
+Display). It is highly complex, has many variations, and is changing rapidly, so
+this description will, of necessity, be brief and greatly simplified.
+Liquid crystals are viscous organic molecules that flow like a liquid but also

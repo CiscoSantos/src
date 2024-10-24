@@ -1,0 +1,100 @@
+PVM (see Parallel Virtual Machine)
+
+Q
+Queue management, 581
+Queueing unit, 300
+
+R
+Race condition, 473–478
+Radio frequency identification, 31–33
+Radix, 671
+Radix number systems, 671–673
+
+765
+
+INDEX
+RAID (see Redundant Array of Inexpensive Disks)
+RAM (see Random Access Memory)
+Random access memory, 73–85, 180–183
+DDR, 181
+dynamic RAM, 181
+SDRAM, 181
+Ranging, 134
+RAW dependence, 297
+Read only memory, 182
+Read/write pointer, 714
+Real mode, 352
+Recursion, 392
+Recursive procedure, 406
+Red book, 100
+Red Storm, 626–631
+Red Storm vs. BlueGene/P, 629–631
+Reduced instruction set computer, 62
+design principles, 63–65
+vs. CISC
+Redundant array of inexpensive disks, 94–97
+Reed-Solomon code, 87
+Refresh, memory, 181
+Register, 5, 174, 694
+PSW, 350
+Register addressing, 372
+Register displacement, 703
+Register indirect addressing, 373–374, 702
+Register renaming, 315–320
+Register with index, 703
+Register with index and displacement, 704
+Registers, 349–351
+flags, 350
+Relative error, 683
+Relative path, 494
+Release consistency, 597–598
+Relocation constant, 541
+Relocation problem, 539
+Reorder buffer, Core i7, 327
+Replicated worker model, 644
+Reserved page, 490
+Resource layer, 653
+Retirement unit, Core i7, 328
+Reverse Polish notation, 376–379
+RFID (see Radio Frequency IDentification)
+Right-justified alignment, 387
+Ring network, 569, 620
+RISC (see Reduced Instruction Set Computer)
+RISC design principles, 63–65
+RISC vs. CISC, 62–63
+ROB (see ReOrder Buffer)
+
+ROM (see Read Only Memory)
+Root directory, 494
+Root hub, 229
+Rotational latency, 89
+Rounding, 683
+Route lookup, 581
+Router, 575
+
+S
+Sandy Bridge, 323–329
+Saturated arithmetic, 559
+Scalable, 650
+Scalable design, 589
+Scale, index, base, byte 368, 383
+Scheduler, Core i7, 327
+Scheduling, multicomputer, 639–640
+Scoreboard, 316
+SCSI (see Small Computer System Interface)
+SCSI disk, 92
+SDRAM (see Synchronous DRAM)
+Seastar, 627
+Second pass, assembler, 716
+Second-generation computers, 19–21
+Secondary memory, 86–108
+Sector, 87
+Security descriptor, 501
+Security ID, 501
+Seek, disk, 89
+Segment, 450, 699
+8088, 700
+Segment override, 715
+Segment register group, 699
+Segmentation, 449–455
+implementation, 452–455

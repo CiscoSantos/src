@@ -1,0 +1,100 @@
+; set new frame pointer above ESP
+; if (n == 1)
+; branch if n is not 1
+; printf(" ...", i, j);
+; note that parameters i, j and the format
+; string are pushed onto the stack
+; in reverse order. This is the C calling convention
+; offset flat means the address of format
+; call printf
+; remove params from the stack
+; we are finished
+; start k = 6 − i − j
+; EAX = 6 − i
+; EAX = 6 − i − j
+; k = EAX
+; start towers(n − 1, i, k)
+; EAX = i
+; push i
+; EAX = n
+; EAX = n − 1
+; push n − 1
+; call towers(n − 1, i, 6 − i − j)
+; remove params from the stack
+; start towers(1, i, j)
+; push j
+; EAX = i
+; push i
+; push 1
+; call towers(1, i, j)
+; remove params from the stack
+; start towers(n − 1, 6 − i − j, i)
+; push i
+; EAX = k
+; push k
+; EAX = n
+; EAX = n−1
+; push n − 1
+; call towers(n − 1, 6 − i − j, i)
+; adjust stack pointer
+; prepare to exit
+; return to the called
+; format string
+
+Figure 5-44. The Towers of Hanoi for the Core i7.
+
+420
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+define a few symbols in the beginning to clean it up. To make this work, the program has to be run through a program called cpp, the C preprocessor, before
+assembling it. Also we have used lowercase letters here because the OMAP4430
+ARM assembler insists on them (in case any readers wish to type the program in).
+Algorithmically, the OMAP4430 ARM version is identical to the Core i7 version. Both test n to start with, branching to the else clause if n > 1. The main
+complexity of the ARM version is due to some properties of the ISA.
+To start with, the OMAP4430 ARM has to pass the address of the format string
+to printf, but the machine cannot just move the address to the register that holds the
+outgoing parameter because there is no way to put a 32-bit constant in a register in
+one instruction. It takes two instructions to do this, MOVW and MOVT.
+The next thing to notice is that the stack adjustments are automatically handled
+by the PUSH and POP instructions at the beginning and end of functions. These instructions also handle the saving and restoring of the return address, by saving the
+LR register on entry and restoring the PC on function exit.
+
+5.8 THE IA-64 ARCHITECTURE AND THE ITANIUM 2
+Around year 2000, some engineers inside Intel felt the company was getting to
+the point where it had just about squeezed every last drop of juice out of the IA-32
+line of processors. New models were still seeing benefits from advances in manufacturing technology, which means smaller transistors (hence faster clock speeds).
+However, finding new tricks to speed up the implementation even more was getting
+harder and harder as the constraints imposed by the IA-32 ISA were looming larger all the time.
+Some engineers felt that the only real solution was to abandon the IA-32 as the
+main line of development and go to a completely new ISA. This is, in fact, what
+Intel started working toward. In fact, it had plans for two new architectures. The
+EMT-64 is a wider version of the traditional Pentium ISA, with 64-bit registers and
+a 64-bit address space. This new ISA solves the address-space problem but still
+has all the implementation complexities of its predecessors. It can best be thought
+of as a wider Pentium.
+The other new architecture, which was developed jointly by Intel and Hewlett
+Packard, was named the IA-64. It is a full 64-bit machine from beginning to end,
+not an extension of an existing 32-bit machine. Furthermore, it is a radical departure from the IA-32 architecture in many ways. The initial market was for highend servers, but Intel had hoped it would catch on in the desktop world eventually.
+That did not happen. Bad as it was, the customers refused to abandon the IA-32.
+Nevertheless, the architecture is so radically different from anything we have studied so far that it is worth examining just for that reason. The first implementation
+of the IA-64 architecture is the Itanium series. In the remainder of this section we
+will study the IA-64 architecture and the Itanium 2 CPU that implements it.
+
+SEC. 5.8
+
+THE IA-64 ARCHITECTURE AND THE ITANIUM 2
+
+#define Param0
+#define Param1
+#define Param2
+#define FormatPtr
+#define k
+#define n minus 1
+.text
+towers: push {r3, r4, r5, r6, r7, lr}
+mov r4, Param1
+mov r6, Param2
+cmp Param0, #1

@@ -1,0 +1,100 @@
+The stack pointer SP holds the current address in data memory where PUSH
+and POP instructions will access their data, similar to the similarly named instruction in the Java JVM of Chap. 4. The stack pointer is located in I/O memory at address 80. A single 8-bit memory byte is too small to address 1024 bytes of data
+memory, so the stack pointer is composed of two consecutive locations in memory,
+forming a 16-bit address.
+
+5.2 DATA TYPES
+All computers need data. In fact, for many computer systems, the whole purpose is to process financial, commercial, scientific, engineering, or other data. The
+data have to be represented in some specific form inside the computer. At the ISA
+level, a variety of different data types are used. These will be explained below.
+A key issue is whether there is hardware support for a particular data type.
+Hardware support means that one or more instructions expect data in a particular
+format, and the user is not free to pick a different format. For example, accountants have the peculiar habit of writing negative numbers with the minus sign to the
+right of the number rather than to the left, where computer scientists put it. Suppose that in an effort to impress his boss, the head of the computer center at an accounting firm changed all the numbers in all the computers to use the rightmost bit
+(instead of the leftmost bit) as the sign bit. This would no doubt make a big
+impression on the boss—because all the software would instantly cease to function
+correctly. The hardware expects a certain format for integers and does not work
+properly when given anything else.
+Now consider another accounting firm, this one just having gotten a contract to
+verify the federal debt (how much the U.S. government owes everyone). Using
+32-bit arithmetic would not work here because the numbers involved are larger
+than 232 (about 4 billion). One solution is to use two 32-bit integers to represent
+each number, giving 64 bits in all. If the machine does not support double-precision numbers, all arithmetic on them will have to be done in software, but the two
+parts can be in either order since the hardware does not care. This is an example of
+a data type without hardware support and thus without a required hardware representation. In the following sections we will look at data types that are supported by
+the hardware, and thus for which specific formats are required.
+
+5.2.1 Numeric Data Types
+Data types can be divided into two categories: numeric and nonnumeric. Chief
+among the numeric data types are the integers. They come in many lengths, typically 8, 16, 32, and 64 bits. Integers count things (e.g., the number of screwdrivers
+
+SEC. 5.2
+
+DATA TYPES
+
+359
+
+a hardware store has in stock), identify things (e.g., bank account numbers), and
+much more. Most modern computers store integers in two’s complement binary
+notation, although other systems have also been used in the past. Binary numbers
+are discussed in Appendix A.
+Some computers support unsigned as well as signed integers. For an unsigned
+integer, there is no sign bit and all the bits contain data. This data type has the advantage of an extra bit, so for example, a 32-bit word can hold a single unsigned
+integer in the range from 0 to 232 − 1, inclusive. In contrast, a two’s complement
+signed 32-bit integer can handle only numbers up to 231 − 1, but, of course, it can
+also handle negative numbers.
+For numbers that cannot be expressed as an integer, such as 3.5, floating-point
+numbers are used. These are discussed in Appendix B. They have lengths of 32,
+64, or 128 bits. Most computers have instructions for doing floating-point arithmetic. Many computers have separate registers for holding integer operands and
+for holding floating-point operands.
+Some programming languages, notably COBOL, allow decimal numbers as a
+data type. Machines that wish to be COBOL-friendly often support decimal numbers in hardware, typically by encoding a decimal digit in 4 bits and then packing
+two decimal digits per byte (binary code decimal format). However, binary arithmetic does not work correctly on packed decimal numbers, so special decimalarithmetic-correction instructions are needed. These instructions need to know the
+carry out of bit 3. This is why the condition code often holds an auxiliary carry bit.
+As an aside, the infamous Y2K (Year 2000) problem was caused by COBOL programmers who decided that they could represent the year in two decimal digits (8
+bits) rather than four decimal digits (or an 8-bit binary number), which can hold
+even more values (256) than two decimal digits (100). Some optimization!
+
+5.2.2 Nonnumeric Data Types
+Although most early computers earned their living crunching numbers, modern
+computers are often used for nonnumerical applications, such as email, surfing the
+Web, digital photography, and multimedia creation and playback. For these applications, other data types are needed and are frequently supported by ISA-level instructions. Characters are clearly important here, although not every computer provides hardware support for them. The most common character codes are ASCII
+and Unicode. These support 7-bit characters and 16-bit characters, respectively.
+Both were discussed in Chap. 2.
+It is not uncommon for the ISA level to have special instructions intended for
+handling character strings, that is, consecutive runs of characters. These strings are
+sometimes delimited by a special character at the end. Alternatively a string-length
+field can be used to keep track of the end. The instructions can perform copy,
+search, edit, and other functions on the strings.
+
+360
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Boolean values are also important. A Boolean value can take on one of two
+values: true or false. In theory, a single bit can represent a Boolean, with 0 as false
+and 1 as true (or vice versa). In practice, a byte or word is used per Boolean value
+because individual bits in a byte do not have their own addresses and thus are hard
+to access. A common system uses the convention that 0 means false and everything else means true.
+The one situation in which a Boolean value is normally represented by 1 bit is
+when there is an entire array of them, so a 32-bit word can hold 32 Boolean values.
+Such a data structure is called a bit map and occurs in many contexts. For example, a bit map can be used to keep track of free blocks on a disk. If the disk has
+n blocks, then the bit map has n bits.
+Our last data type is the pointer, which is just a machine address. We have already seen pointers repeatedly. In the Mic-x machines, SP, PC, LV, and CPP are all
+examples of pointers. Accessing a variable at a fixed distance from a pointer,
+which is the way ILOAD works, is extremely common on all machines. While
+pointers are useful, they are also the source of a vast number of programming
+errors, often with very serious consequences. They must be used with great care.
+
+5.2.3 Data Types on the Core i7
+The Core i7 supports signed two’s complement integers, unsigned integers, binary coded decimal numbers, and IEEE 754 floating-point numbers, as listed in
+Fig. 5-6. Due to its origins as a humble 8-bit/16-bit machine, it handles integers of
+these lengths as well as 32-bits, with numerous instructions for doing arithmetic,
+Boolean operations, and comparisons on them. The processor can optionally be run
+in 64-bit mode which also supports 64-bit registers and operations. Operands do
+not have to be aligned in memory, but better performance is achieved if word addresses are multiples of 4 bytes.
+8 Bits
+
+16 Bits

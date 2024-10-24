@@ -1,0 +1,100 @@
+1.3.8 Mainframes
+Now we come to the mainframes: room-sized computers that hark back to the
+1960s. These machines are the direct descendants of IBM 360 mainframes acquired decades ago. For the most part, they are not much faster than powerful servers, but they always have more I/O capacity and are often equipped with vast disk
+farms, often holding thousands of gigabytes of data. While expensive, they are
+often kept running due to the immense investment in software, data, operating procedures, and personnel that they represent. Many companies find it cheaper to just
+
+SEC. 1.3
+
+THE COMPUTER ZOO
+
+39
+
+pay a few million dollars once in a while for a new one, than to even contemplate
+the effort required to reprogram all their applications for smaller machines.
+It is this class of computer that led to the now-infamous Year 2000 problem,
+which was caused by (mostly COBOL) programmers in the 1960s and 1970s
+representing the year as two decimal digits (in order to save memory). They never
+envisioned their software lasting three or four decades. While the predicted disaster never occurred due to a huge amount of work put into fixing the problem, many
+companies have repeated the same mistake by simply adding two more digits to the
+year. The authors hereby predict the end of civilization at midnight on Dec. 31,
+9999, when 8000 years worth of old COBOL programs crash simultaneously.
+In addition to their use for running 40-year-old legacy software, the Internet
+has breathed new life into mainframes. They have found a new niche as powerful
+Internet servers, for example, by handling massive numbers of e-commerce
+transactions per second, particularly in businesses with huge databases.
+Up until recently, there was another category of computers even more powerful
+than mainframes: supercomputers. They had enormously fast CPUs, many gigabytes of main memory, and very fast disks and networks. They were used for massive scientific and engineering calculations such as simulating colliding galaxies,
+synthesizing new medicines, or modeling the flow of air around an airplane wing.
+However, in recent years, data centers constructed from commodity components
+have come to offer as much computing power at much lower prices, and the true
+supercomputers are now a dying breed.
+
+1.4 EXAMPLE COMPUTER FAMILIES
+In this book we will focus on three popular instruction set architectures (ISAs):
+x86, ARM and AVR. The x86 architecture is found in nearly all personal computers (including Windows and Linux PCs and Macs) and server systems. Personal
+computers are of interest because every reader has undoubtedly used one. Servers
+are of interest because they run all the services on the Internet. The ARM architecture dominates the mobile market. For example, most smartphones and tablet computers are based on ARM processors. Finally, the AVR architecture is found in
+very low-cost microcontrollers found in many embedded computing applications.
+Embedded computers are invisible to their users but control cars, televisions,
+microwave ovens, washing machines, and practically every other electrical device
+costing more than $50. In this section, we will briefly introduce the three instruction set architectures that will be used as examples in the rest of the book.
+
+1.4.1 Introduction to the x86 Architecture
+In 1968, Robert Noyce, inventor of the silicon integrated circuit; Gordon
+Moore, of Moore’s law fame; and Arthur Rock, a San Francisco venture capitalist,
+formed the Intel Corporation to make memory chips. In its first year of operation,
+
+40
+
+INTRODUCTION
+
+CHAP. 1
+
+Intel sold only $3000 worth of chips, but business has picked up since then (Intel is
+now the world’s largest CPU chip manufacturer).
+In the late 1960s, calculators were large electromechanical machines the size
+of a modern laser printer and weighing 20 kg. In Sept. 1969, a Japanese company,
+Busicom, approached Intel with a request that it manufacture 12 custom chips for a
+proposed electronic calculator. The Intel engineer assigned to this project, Ted
+Hoff, looked at the plan and realized that he could put a 4-bit general-purpose CPU
+on a single chip that would do the same thing and be simpler and cheaper as well.
+Thus, in 1970, the first single-chip CPU, the 2300-transistor 4004, was born (Faggin et al., 1996).
+It is worth noting that neither Intel nor Busicom had any idea what they had
+just done. When Intel decided that it might be worth a try to use the 4004 in other
+projects, it offered to buy back all the rights to the new chip from Busicom by returning the $60,000 Busicom had paid Intel to develop it. Intel’s offer was quickly
+accepted, at which point it began working on an 8-bit version of the chip, the 8008,
+introduced in 1972. The Intel family, starting with the 4004 and 8008, is shown in
+Fig. 1-11, giving the introduction date, clock rate, transistor count, and memory.
+Chip
+
+Date
+
+MHz
+
+Trans. Memory
+
+Notes
+
+4004
+
+4/1971
+
+0.108
+
+2300
+
+640
+
+First microprocessor on a chip
+
+8008
+
+4/1972
+
+0.108
+
+3500
+
+16 KB
+

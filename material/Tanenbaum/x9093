@@ -1,0 +1,100 @@
+goto (MBR1)
+MAR = CPP + MBR2U; rd
+OPC = PC
+PC = MDR
+TOS = SP − MBR2U
+TOS = MAR = H = TOS + 1
+MDR = SP + MBR2U + 1; wr
+MAR = SP = MDR
+MDR = OPC; wr
+MAR = SP = SP + 1
+MDR = LV; wr
+LV = TOS; goto (MBR1)
+MAR = SP = LV; rd
+LV = MAR = MDR; rd
+MAR = LV + 1
+PC = MDR; rd
+MAR = SP
+LV = MDR
+MDR = TOS; wr; goto (MBR1)
+
+295
+
+Comments
+Read in next-to-top word of stack
+Save TOS in OPC temporarily
+Put new top of stack in TOS
+Branch on Z bit
+Read in next-to-top word of stack
+Set MAR to read in new top-of-stack
+Copy second stack word to H
+Save TOS in OPC temporarily
+Put new top of stack in TOS
+If top 2 words are equal, goto T, else goto F
+Same as goto1
+Touch bytes in MBR2 to discard
+Put address of method pointer in MAR
+Save Return PC in OPC
+Set PC to 1st byte of method code.
+TOS = address of OBJREF − 1
+TOS = address of OBJREF
+Overwrite OBJREF with link pointer
+Set SP, MAR to location to hold old PC
+Prepare to save old PC
+Inc. SP to point to location to hold old LV
+Save old LV
+Set LV to point to zeroth parameter.
+Reset SP, MAR to read Link ptr
+Wait for link ptr
+Set LV, MAR to link ptr; read old PC
+Set MAR to point to old LV; read old LV
+Restore PC
+Restore LV
+Save return value on original top of stack
+
+Figure 4-30. The microprogram for the Mic-2 (part 2 of 2).
+
+Are we crazy? (Hint: No.) The point of inserting the latches is twofold:
+1. We can speed up the clock because the maximum delay is now shorter.
+2. We can use all parts of the data path during every cycle.
+By breaking up the data path into three parts, we reduce the maximum delay
+with the result that the clock frequency can be higher. Let us suppose that by
+breaking the data path cycle into three time intervals, each one is about 1/3 as long
+as the original, so we can triple the clock speed. (This is not totally realistic, since
+we have also added two more registers into the data path, but as a first approximation it will do.)
+Because we have been assuming that all memory reads and writes can be satisfied out of the level 1 cache, and this cache is made out of the same material as the
+
+296
+
+THE MICROARCHITECTURE LEVEL
+Memory
+control
+registers
+
+MAR
+To
+and
+from
+main
+memory
+
+CHAP. 4
+
+MDR
+PC
+Instruction
+fetch unit
+(IFU)
+
+MBR1
+MBR2
+SP
+LV
+
+Control signals
+CPP
+
+Enable onto B bus
+
+TOS
+

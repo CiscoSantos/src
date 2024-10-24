@@ -1,0 +1,100 @@
+
+Prediction
+Branch
+bits
+address/tag
+
+6
+5
+4
+3
+2
+1
+0
+(a)
+
+Valid
+Slot
+
+Prediction
+bits
+Branch
+Target
+address/tag
+address
+
+6
+5
+4
+3
+2
+1
+0
+(b)
+
+(c)
+
+Figure 4-41. (a) A 1-bit branch history. (b) A 2-bit branch history. (c) A mapping between branch instruction address and target address.
+
+00. With a direct-mapped history table containing 2n entries, the low-order n + 2
+bits of a branch instruction target address can be extracted and shifted right 2 bits.
+This n-bit number can be used as an index into the history table where a check is
+made to see if the address stored there matches the address of the branch. As with
+a cache, there is no need to store the low-order n + 2 bits, so they can be omitted
+(i.e., just the upper address bits—the tag—are stored). If there is a hit, the prediction bit is used to predict the branch. If the wrong tag is present or the entry is
+invalid, a miss occurs, just as with a cache. In this case, the forward/backward
+branch rule can be used.
+If the branch history table has, say, 4096 entries, then branches at addresses 0,
+16384, 32768, ... will conflict, analogous to the same problem with a cache. The
+same solution is possible: a two-way, four-way, or n-way associative entry. As
+with a cache, the limiting case is a single n-way associative entry, which requires
+full associativity of lookup.
+Given a large enough table size and enough associativity, this scheme works
+well in most situations. However, one systematic problem always occurs. When a
+loop is finally exited, the branch at the end will be mispredicted, and worse yet, the
+misprediction will change the bit in the history table to indicate a future prediction
+of ‘‘no branch.’’ The next time the loop is entered, the branch at the end of the first
+iteration will be predicted wrong. If the loop is inside an outer loop, or in a frequently called procedure, this error can occur often.
+To eliminate this misprediction, we can give the table entry a second chance.
+With this method, the prediction is changed only after two consecutive incorrect
+predictions. This approach requires having two prediction bits in the history table,
+one for what the branch is ‘‘supposed’’ to do, and one for what it did last time, as
+shown in Fig. 4-41(b).
+A slightly different way of looking at this algorithm is to see it as a finite-state
+machine with four states, as depicted in Fig. 4-42. After a series of consecutive
+successful ‘‘no branch’’ predictions, the FSM will be in state 00 and will predict
+
+314
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+‘‘no branch’’ next time. If that prediction is wrong, it will move to state 01, but
+predict ‘‘no branch’’ next time as well. Only if this prediction is wrong will it now
+move to state 11 and predict branches all the time. In effect, the leftmost bit of the
+state is the prediction and the rightmost bit is what the branch did last time. While
+this design uses only 2 bits of history, a design that keeps track of 4 or 8 bits of history is also possible.
+Branch
+
+No branch
+
+00
+Predict
+no branch
+
+Branch
+
+No
+branch
+
+Branch
+
+01
+
+10
+
+Predict
+no branch
+one more
+time

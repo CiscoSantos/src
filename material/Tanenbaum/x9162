@@ -1,0 +1,100 @@
+TEQ DST,S1,S2IMM
+Test equivalence
+AND DST,S1,S2IMM
+Boolean AND
+Store byte (8 bits)
+Store halfword (16 bits)
+EOR DST,S1,S2IMM
+Boolean Exclusive-OR
+ORR DST,S1,S2IMM
+Boolean OR
+Store word (32 bits)
+Bit clear
+Store multiple words
+BIC DST,S1,S2IMM
+Arithmetic
+Add
+Add with carry
+Subtract
+Subtract with carry
+Reverse subtract
+Reverse subtract with carry
+Multiply
+Multiple and accumulate
+Unsigned long multiple
+Signed long multiple
+Unsigned long MLA
+Signed long MLA
+Compare and set PSR
+
+S1 = source register
+S2IMM = source register or immediate
+S3 = source register (when 3 are used)
+DST = destination register
+D1 = destination register (1 of 2)
+D2 = destination register (2 of 2)
+
+Bcc IMM
+BLcc IMM
+BLcc S1
+
+Transfer of control
+Branch to PC+IMM
+Branch with link to PC+IMM
+Branch with link to reg add
+
+Miscellaneous
+MOV DST,S1
+Move register
+MOVT DST,IMM
+Move imm to upper bits
+MVN DST,S1
+NOT register
+MRS DST,PSR
+Read PSR
+MSR PSR,S1
+Write PSR
+SWP DST,S1,ADDR
+Swap reg/mem word
+SWPB DST,S1,ADDR
+Swap reg/mem byte
+SWI IMM
+Software interrupt
+ADDR = memory address
+IMM = immediate value
+REGLIST = list of registers
+PSR = processor status register
+cc = branch condition
+
+Figure 5-34. The primary OMAP4430 ARM CPU integer instructions.
+
+within the register, such that bits that rotate off the least significant bit reappear as
+the most significant bit. The shifts are mostly used for bit manipulation. Rotates
+are useful for cryptographic and image-processing operations. Most CISC machines have a vast number of shift and rotate instructions, nearly all of them totally
+useless. Few compiler writers will spend restless nights mourning their absence.
+The Boolean instruction group is analogous to the arithmetic one. It includes
+AND, EOR, ORR, TST, TEQ, and BIC. The latter three are of questionable value, but
+they can be done in one cycle and require almost no additional hardware so they
+got thrown in. Even RISC machine designers sometimes succumb to temptation.
+The next instruction group contains the control transfers. Bcc represents a set
+of instructions that branch on the various conditions. BLcc is similar in that it
+
+402
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+branches on various conditions, but it also deposits the address of the next instruction in the link register (R14). This instruction is useful to implement procedure
+calls. Unlike all other RISC architectures, there is no explicit branch to register address instruction. This instruction can be easily synthesized by using a MOV instruction with the destination set to the program counter (R15).
+Two ways are provided for calling procedures. The first BLcc instruction uses
+the ‘‘Branch’’ format of Fig. 5-14 with a 24-bit PC-relative word offset. This value
+is enough to reach any instruction within 32 megabytes of the called in either direction. The second BLcc instruction jumps to the address in the specified register.
+This can be used to implement dynamically bound procedure calls (e.g., C++ virtual functions) or calls beyond the reach of 32 megabytes.
+The last group contains some leftovers. MOVT is needed because there is no
+way to get a 32-bit immediate operand into a register. The way it is done is to use
+MOVT to set bits 16 through 31 and then have the next instruction supply the remaining bits using the immediate format. The MRS and MSR instructions allow
+reading and writing of the processor status word (PSR). The SWP instructions perform atomic swaps between a register and a memory location. These instruction
+implement the multiprocessor synchronization primitives that we will learn about
+in Chap. 8. Finally, the SWI instruction initiates a software interrupt, which is an
+overly fancy way of saying that it initiates a system call.

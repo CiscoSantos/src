@@ -1,0 +1,100 @@
+the internal representation of the macro definition of CHANGE with semicolon as
+‘‘carriage return’’ and ampersand as the formal parameter symbol might be:
+MOV EAX,&P1; MOV EBX,&P2; MOV &P2,EAX; MOV &P1,EBX;
+
+Within the macro definition table the macro body is simply a character string.
+
+SEC. 7.2
+
+MACROS
+
+529
+
+During pass one of the assembly, opcodes are looked up and macros expanded.
+Whenever a macro definition is encountered, it is stored in the macro table. When
+a macro is called, the assembler temporarily stops reading input from the input device and starts reading from the stored macro body instead. Formal parameters
+extracted from the stored macro body are replaced by the actual parameters provided in the call. The presence of an ampersand in front of the formal parameters
+makes it easy for the assembler to recognize them.
+
+7.3 THE ASSEMBLY PROCESS
+In the following sections we will briefly describe how an assembler works.
+Although each machine has a different assembly language, the assembly process is
+sufficiently similar on different machines that it is possible to describe it in general.
+
+7.3.1 Two-Pass Assemblers
+Because an assembly language program consists of a series of one-line statements, it might at first seem natural to have an assembler that read one statement,
+then translated it to machine language, and finally output the generated machine
+language onto a file, along with the corresponding piece of the listing, if any, onto
+another file. This process would then be repeated until the whole program had
+been translated. Unfortunately, this strategy does not work.
+Consider the situation where the first statement is a branch to L. The assembler cannot assemble this statement until it knows the address of statement L.
+Statement L may be near the end of the program, making it impossible for the
+assembler to find the address without first reading almost the entire program. This
+difficulty is called the forward reference problem, because a symbol, L, has been
+used before it has been defined; that is, a reference has been made to a symbol
+whose definition will only occur later.
+Forward references can be handled in two ways. First, the assembler may in
+fact read the source program twice. Each reading of the source program is called a
+pass; any translator that reads the input program twice is called a two-pass translator. On pass one, the definitions of symbols, including statement labels, are collected and stored in a table. By the time the second pass begins, the values of all
+symbols are known; thus no forward reference remains and each statement can be
+read, assembled, and output. Although this approach requires an extra pass over
+the input, it is conceptually simple.
+The second approach consists of reading the assembly program once, converting it to an intermediate form, and storing this intermediate form in a table in
+memory. Then a second pass is made over the table instead of over the source program. If there is enough memory (or virtual memory), this approach saves I/O
+time. If a listing is to be produced, then the entire source statement, including all
+
+530
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+the comments, has to be saved. If no listing is needed, then the intermediate form
+can be reduced to the bare essentials.
+Either way, another task of pass one is to save all macro definitions and expand
+the calls as they are encountered. Thus defining the symbols and expanding the
+macros are generally combined into one pass.
+
+7.3.2 Pass One
+The principal function of pass one is to build up a table called the symbol table, containing the values of all symbols. A symbol is either a label or a value that
+is assigned a symbolic name by means of a pseudoinstruction such as
+BUFSIZE EQU 8192
+
+In assigning a value to a symbol in the label field of an instruction, the assembler must know what address that instruction will have during execution of the program. To keep track of the execution-time address of the instruction being assembled, the assembler maintains a variable during assembly, known as the ILC
+(Instruction Location Counter). This variable is set to 0 at the beginning of pass
+one and incremented by the instruction length for each instruction processed, as
+shown in Fig. 7-6. This example is for the x86.
+Label
+MARIA:
+ROBERTA:
+
+MARILYN:
+STEPHANY:
+
+Opcode
+MOV
+MOV
+MOV
+IMUL
+IMUL
+IMUL
+ADD
+ADD
+JMP
+
+Operands
+EAX, I
+EBX, J
+ECX, K
+EAX, EAX
+EBX, EBX
+ECX, ECX
+EAX, EBX
+EAX, ECX
+DONE
+
+Comments
+
+Length
+
+ILC

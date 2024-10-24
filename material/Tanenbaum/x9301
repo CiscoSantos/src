@@ -1,0 +1,100 @@
+The two machines were built in the same time frame, so their differences are
+due not to technology but to designers’ different visions and to some extent to the
+differences between the builders, IBM and Cray. BlueGene/P was designed from
+the beginning as a commercial machine, which IBM hopes to sell in large numbers
+to biotech, pharmaceutical, and other companies. Red Storm was built on special
+contract with Sandia, although Cray plans to make a smaller version for sale, too.
+IBM’s vision is clear: combine existing cores to produce a custom chip that
+can be mass produced cheaply, run it at a low speed, and hook together a very large
+number of them using a modest-speed communication network. Sandia’s vision is
+equally clear, but different: use a powerful off-the-shelf 64-bit CPU, design a very
+fast custom router chip, and throw in a lot of memory to produce a far more powerful node than BlueGene/P so fewer will be needed and communication between
+them will be faster.
+These decisions had consequences for the packaging. Because IBM built a
+custom chip combining the processor and router, it achieved a higher packing density: 4096 CPUs/cabinet. Because Sandia went for an unmodified off-the-shelf
+CPU chip and 2–4 GB of RAM per node, it could get only 192 compute processors
+in a cabinet. Consequently, Red Storm takes up more floor space and consumes
+more power than BlueGene/P.
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+631
+
+In the exotic world of national laboratory computing, the bottom line is performance. In this respect, BlueGene/P wins, 1000 TF/sec to 124 TF/sec, but Red
+Storm was designed to be expandable, so by throwing more Opterons at the problem, Sandia could probably up its performance significantly. IBM could respond
+by cranking the clock up a bit (850 MHz is not really pushing the state-of-the-art
+very hard). In short, MPP supercomputers have not even come close to any physical limits yet and will continue growing for years to come.
+
+8.4.3 Cluster Computing
+The other style of multicomputer is the cluster computer (Anderson et al.,
+1995, and Martin et al., 1997). It typically consists of hundreds or thousands of
+PCs or workstations connected by a commercially available network board. The
+difference between an MPP and a cluster is analogous to the difference between a
+mainframe and a PC. Both have a CPU, both have RAM, both have disks, both
+have an operating system, and so on. The mainframe just has faster ones (except
+maybe the operating system). Yet qualitatively they feel different and are used and
+managed differently. This same difference holds for MPPs vs. clusters.
+Historically, the key element that made MPPs special was their high-speed
+interconnect, but the recent arrival of commercial, off-the-shelf, high-speed
+interconnects has begun to close the gap. All in all, clusters are likely to drive
+MPPs into ever tinier niches, just as PCs have turned mainframes into esoteric specialty items. The main niche for MPPs is high-budget supercomputers, where peak
+performance is everything and if you have to ask the price you cannot afford one.
+While many kinds of clusters exist, two species dominate: centralized and
+decentralized. A centralized cluster is a cluster of workstations or PCs mounted in
+a big rack in a single room. Sometimes they are packaged in a much more compact way than usual to reduce physical size and cable length. Typically, the machines are homogeneous and have no peripherals other than network cards and
+possibly disks. Gordon Bell, the designer of the PDP-11 and VAX, has called such
+machines headless workstations (because they have no owners). We were
+tempted to call them headless COWs, but feared such a term would gore too many
+holy cows, so we refrained.
+Decentralized clusters consist of the workstations or PCs spread around a
+building or campus. Most of them are idle many hours a day, especially at night.
+Usually, these are connected by a LAN. Typically, they are heterogeneous and
+have a full complement of peripherals, although having a cluster with 1024 mice is
+really not much better than a cluster with 0 mice. Most importantly, many of them
+have owners who have emotional attachments to their machines and tend to frown
+upon some astronomer trying to simulate the big bang on theirs. Using idle
+workstations to form a cluster invariably means having some way to migrate jobs
+off machines when their owners want to reclaim them. Job migration is possible
+but adds software complexity.
+
+632
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Clusters are often smallish affairs, ranging from a dozen to perhaps 500 PCs.
+However, it is also possible to build very large ones from off-the-shelf PCs.
+Google has done this in an interesting way that we will now look at.
+Google
+Google is a popular search engine for finding information on the Internet.
+While its popularity is due, in part, to its simple interface and fast response time,
+its design is anything but simple. From Google’s point of view, the problem is that
+it has to find, index, and store the entire World Wide Web (an estimated 40 billion
+pages), be able to search the whole thing in under 0.5 sec, and handle tens of thousands of queries/sec coming from all over the world 24 hours a day. In addition, it
+must never go down, not even in the face of earthquakes, electrical power failures,
+telecom outages, hardware failures and software bugs. And, of course, it has to do
+all of this as cheaply as possible. Building a Google clone is definitely not an exercise for the reader.
+How does Google do it? To start with, Google operates multiple data centers
+around the world. Not only does this approach provide backups in case one of
+them is swallowed by an earthquake, but when www.google.com is looked up, the
+sender’s IP address is inspected and the address of the nearest data center is supplied. The browser then sends the query there.
+Each data center has at least one OC-48 (2.488-Gbps) fiber-optics connection
+to the Internet, on which it receives queries and sends answers, as well as an
+OC-12 (622-Mbps) backup connection from a different telecom provider, in case
+the primary ones go down. Uninterruptable power supplies and emergency diesel
+generators are available at all data centers to keep the show going during power
+failures. Consequently, during a major natural disaster, performance will suffer,
+but Google will keep running.
+To get a better understanding of why Google chose the architecture it did, it is
+useful to briefly describe how a query is processed once it hits its designated data
+center. After arriving at the data center (step 1 in Fig. 8-43), the load balancer
+routes the query to one of the many query handlers (2), and to the spelling checker
+(3) and ad server (4) in parallel. Then the search words are looked up on the index
+servers (5) in parallel. These servers contain an entry for each word on the Web.
+Each entry lists all the documents (Web pages, PDF files, PowerPoint presentations, etc.) containing the word, sorted in page-rank order. Page rank is determined by a complicated (and secret) formula, but the number of links to a page and
+their own ranks play a large role.
+To get higher performance, the index is divided into pieces called shards that
+can be searched in parallel. Conceptually, at least, shard 1 contains all the words in

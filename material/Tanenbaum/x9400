@@ -1,0 +1,100 @@
+Windows 7 virtual memory, 490–492
+Windows drivers, 487
+Windows new technology, 486
+Windows NT (see Windows New Technology)
+Wired-OR, 189
+Word, 75
+Word instruction,, 701
+Word register, 701
+Working directory, 494
+Working-set model, 443–446
+Wozniak, Steve, 24
+Write allocation, 310
+Write back cache, 310
+
+INDEX
+Write deferred cache, 310
+Write through cache, 310, 599
+Write-allocate policy, 600
+Write-back protocol, 601
+Write-once protocol, 601
+
+X
+X Windows, 485
+x86, 25, 39–45, 347
+x86 architecture, 39
+XC2064, 14
+Xeon, 43
+
+Y
+Y2K problem, 39, 359
+Yellow book, 101
+
+Z
+Z1, 14
+Zeroth-generation computers, 13–16
+Zilog Z8000, 61
+Zuse, Konrad, 15–16
+Zuse Z1, 14
+
+769
+
+This page intentionally left blank
+
+Also by Andrew S. Tanenbaum and David J. Wetherall
+
+Computer Networks, 5th ed.
+This widely read classic, with a fifth edition co-authored with David Wetherall, provides the
+ideal introduction to today’s and tomorrow’s networks. It explains in detail how modern networks are
+structured. Starting with the physical layer and working up to the application layer, the book covers a
+vast number of important topics, including wireless communication, fiber optics, data link protocols,
+Ethernet, routing algorithms, network performance, security, DNS, electronic mail, the World Wide
+Web, and multimedia. The book has especially thorough coverage of TCP/IP and the Internet.
+
+Also by Andrew S. Tanenbaum
+
+Modern Operating Systems, 3rd ed.
+This worldwide best-seller incorporates the latest developments in operating systems. The book
+starts with chapters on the principles, including processes, memory management, file systems, I/O,
+and so on. Then it goes into three chapter-long case studies: Linux, Windows, and Symbian. Tanenbaum’s experience as the designer of three operating systems (Amoeba, Globe, and MINIX) gives
+him a background few other authors can match, so the final chapter distills his long experience into
+advice for operating system designers.
+
+Also by Andrew S. Tanenbaum and Albert S. Woodhull
+
+Operating Systems: Design and Implementation, 3rd ed.
+All other textbooks on operating systems are long on theory and short on practice. This one is
+different. In addition to the usual material on processes, memory management, file systems, I/O, and
+so on, it contains a CD-ROM with the source code (in C) of a small, but complete, POSIX-conformant operating system called MINIX 3 (see www.minix3.org). All the principles are illustrated by
+showing how they apply to MINIX 3. The reader can also compile, test, and experiment with MINIX
+3, leading to in-depth knowledge of how an operating system really works.
+
+Also by Andrew S. Tanenbaum and Maarten van Steen
+
+Distributed Systems: Principles and Paradigms, 2nd ed.
+Distributed systems are becoming ever-more important in the world and this book explains their
+principles and illustrates them with numerous examples. Among the topics covered are architectures,
+processes, communication, naming, synchronization, consistency, fault tolerance, and security. Examples are taken from distributed object-based, file, Web-based, and coordination-based systems.
+
+CREDITS
+
+p 8, "Hardware is just petrified software." © 2012 Karen Panetta. Reprinted by permission.
+p 29, "Software is a gas. It expands to fill the container holding it.". “The Next Fifty Years
+of Software”, talk prepared for ACM 97 by Nathan Myhrvold, 4/7/97. © 1997 Nathan
+Myhrvold. Reprinted by permission.
+Figures 3-47, 3-48 © 2012 Texas Instruments. Reprinted courtesy of Texas Instruments.
+Figures 3-49, Fig 3-50, 3-52, 4-50, 5-15 © 2012 Atmel Corporation. Reprinted by permission.
+Figure 5-14 © ARM Ltd. Reprinted by permission.
+
+775
+
+ABOUT THE AUTHORS
+Andrew S. Tanenbaum has an S.B. degree from M.I.T. and a Ph.D. from the University of California at Berkeley. He is currently a Professor of Computer Science at the Vrije
+Universiteit where he has taught operating systems, networks, and related topics for over 30
+years. His current research is on highly reliable operating systems although he has worked
+on compilers, distributed systems, security, and other topics over the years. These research
+projects have led to over 150 refereed papers in journals and conferences.
+Prof. Tanenbaum has also (co)authored five books which have now appeared in 19 editions. The books have been translated into 21 languages, ranging from Basque to Thai and
+are used at universities all over the world. In all, there are 159 versions (language/edition
+combinations). See at www.cs.vu.nl/~ast/book covers for images of them.
+Prof. Tanenbaum has also produced a considerable volume of software, including the

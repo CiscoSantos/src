@@ -1,0 +1,100 @@
+
+Final
+Goto
+Queueing unit
+
+2
+
+From
+memory
+
+3
+
+Micro-operation ROM
+IADD
+ISUB
+ILOAD
+IFLT
+
+Instruction
+fetch unit
+Decoding unit
+
+Queue
+of pending
+micro-ops
+To/from
+memory
+Drives stage 4
+
+ALU
+
+C
+
+M A B
+
+MIR1
+
+Drives stage 5
+
+ALU
+
+C
+
+M A B
+
+MIR2
+
+Drives stage 6
+
+ALU
+
+C
+
+M A B
+
+MIR3
+
+Drives stage 7
+
+ALU
+
+C
+
+M A B
+
+MIR4
+
+4
+Registers
+
+7
+
+6
+C
+
+A
+
+B
+
+ALU
+
+5
+
+Shifter
+
+Figure 4-35. The main components of the Mic-4.
+
+The micro-operations are similar to the microinstructions of Fig. 4-5 except
+that the NEXT ADDRESS and JAM fields are absent and a new encoded field is needed to specify the A bus input. Two new bits are also provided: Final and Goto.
+The Final bit is set on the last micro-operation of each IJVM micro-operation sequence to mark it. The Goto bit is set to mark micro-operations that are conditional microbranches. They have a different format from the normal micro-operations, consisting of the JAM bits and an index into the micro-operation ROM.
+Microinstructions that previously did something with the data path and also performed a conditional microbranch (e.g., iflt4) now have to be split up into two
+micro-operations.
+The queueing unit works as follows. It receives a micro-operation ROM index
+from the decoding unit. It then looks up the micro-operation and copies it into an
+internal queue. Then it copies the following micro-operation into the queue as
+well, and the one after it too. It keeps going until it hits one with the Final bit on.
+It copies that one, too, and stops. Assuming that it has not hit a micro-operation
+
+302
+

@@ -1,0 +1,100 @@
+TX-2, 19
+
+U
+U pipeline, 68
+UART (see Universal Asynchronous
+Receiver Transmitter)
+Ubiquitous computing, 28
+UCS (see Universal Character Set)
+UCS transformation format, 141
+UHCI (see Universal Host Controller Interface)
+UMA (see Uniform Memory Access computer)
+UMA (see Uniform Memory Access computer)
+Unicode, 138–141
+Unified cache, 84
+Uniform memory access computer, 592
+
+768
+
+INDEX
+
+Universal asynchronous receiver transmitter, 232
+Universal character set, 141
+Universal host controller interface, 231
+Universal serial bus, 228–232
+USB 2.0, 231
+USB 3.0, 231
+Universal synchronous asynchronous
+receiver transmitter, 232
+UNIX, 482–485
+virtual memory, 488–489
+UNIX I/O, 492–498
+UNIX process management, 503–506
+Update strategy, cache, 600
+USART (see Universal Synchronous
+Asynchronous Receiver Transmitter)
+USB 2.0, 231
+USB 3.0, 231
+User mode, 347
+UTF-8, 141–142
+
+V
+V pipeline, 68
+Vacuum tube computers, 16–19
+Vampire tap, 575
+VAX, 14, 61
+VCI (see Virtual Component Interconnect)
+Vector processor, 71
+Vector register, 71
+Very large scale integration, 23
+Very long instruction word, 555
+VFP, 331
+Video RAM, 117–118
+Virtual 8086 mode, 352
+Virtual address space, 440
+Virtual circuit, 227
+Virtual component interconnect, 574
+Virtual cut through network, 625
+Virtual machine, 3, 463–464
+Virtual memory, 438–462
+ARM, 460–462
+compared to caching, 462
+Core i7, 455–460
+UNIX, 488–489
+Windows 7, 490–492
+Virtual organization, 652
+Virtual register, 258
+
+Virtual topology, 638
+Virtual-machine control structure, 464
+Virtualization, 464
+hardware, 463–464
+Virtuous circle, 29
+VLIW (see Very Long Instruction Word)
+VLSI (see Very Large Scale Integration)
+VMCS (see Virtual-Machine Control Structure)
+Volume table of contents, 105
+Von Neumann, 18–19
+Von Neumann machine, 18–19
+VTOC (see Volume Table Of Contents)
+
+W
+Wait state, 192
+WAN (see Wide Area Network)
+WAR dependence, 318
+Watson, Thomas, 19
+WAW dependence, 318
+Wax printer, 127
+Weak consistency, 596–597
+Wear leveling, 99
+Weiser, Mark, 28
+Weizac, 17
+Whirlwind I, 14
+Wide-area network, 575
+Wiimote controller, 120–122
+Wilkes, Maurice, 60
+Win32 API, 487
+Winchester disk, 88
+Windows 7, 485–488
+Windows 7 I/O, 498–503
+Windows 7 process management, 506–509

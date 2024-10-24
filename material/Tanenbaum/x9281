@@ -1,0 +1,100 @@
+delaying instructions as often in order to maintain consistency.
+
+598
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Memory consistency is not a done deal. Researchers are still proposing new
+models (Naeem et al., 2011, Sorin et al., 2011, and Tu et al., 2010).
+
+8.3.3 UMA Symmetric Multiprocessor Architectures
+The simplest multiprocessors are based on a single bus, as illustrated in
+Fig. 8-26(a). Two or more CPUs and one or more memory modules all use the
+same bus for communication. When a CPU wants to read a memory word, it first
+checks to see whether the bus is busy. If the bus is idle, the CPU puts the address
+of the word it wants on the bus, asserts a few control signals, and waits until the
+memory puts the desired word on the bus.
+
+CPU
+
+CPU
+
+M
+
+Shared
+memory
+
+Private memory
+
+Shared memory
+CPU
+
+CPU
+
+M
+
+CPU
+
+CPU
+
+M
+
+Cache
+Bus
+(a)
+
+(b)
+
+(c)
+
+Figure 8-26. Three bus-based multiprocessors. (a) Without caching. (b) With
+caching. (c) With caching and private memories.
+
+If the bus is busy when a CPU wants to read or write memory, the CPU just
+waits until the bus becomes idle. Herein lies the problem with this design. With
+two or three CPUs, contention for the bus will be manageable; with 32 or 64 it will
+be unbearable. The system will be totally limited by the bandwidth of the bus, and
+most of the CPUs will be idle most of the time.
+The solution is to add a cache to each CPU, as depicted in Fig. 8-26(b). The
+cache can be inside the CPU chip, next to the CPU chip, on the processor board, or
+some combination of all three. Since many reads can now be satisfied out of the
+local cache, there will be much less bus traffic, and the system can support more
+CPUs. Thus caching is a big win here. However, as we shall see in a moment,
+keeping the caches consistent with one another is not trivial.
+Yet another possibility is the design of Fig. 8-26(c), in which each CPU has not
+only a cache but also a local, private memory which it accesses over a dedicated
+(private) bus. To use this configuration optimally, the compiler should place all the
+program text, strings, constants and other read-only data, stacks, and local variables in the private memories. The shared memory is then used only for writable
+shared variables. In most cases, this careful placement will greatly reduce bus traffic, but it does require active cooperation from the compiler.
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+599
+
+Snooping Caches
+While the performance arguments given above are certainly true, we have
+glossed a bit too quickly over a fundamental problem. Suppose that memory is sequentially consistent. What happens if CPU 1 has a line in its cache, and then
+CPU 2 tries to read a word in the same cache line? In the absence of any special
+rules, it, too, would get a copy in its cache. In principle, having the same line
+cached twice is acceptable. Now suppose that CPU 1 modifies the line and then,
+immediately thereafter, CPU 2 reads its copy of the line from its cache. It will get
+stale data, thus violating the contract between the software and memory. The program running on CPU 2 will not be happy.
+This problem, known in the literature as the cache coherence or cache consistency problem, is extremely serious. Without a solution, caching cannot be used,
+and bus-oriented multiprocessors would be limited to two or three CPUs. As a
+consequence of its importance, many solutions have been proposed over the years
+(e.g., Goodman, 1983, and Papamarcos and Patel, 1984). Although all these caching algorithms, called cache coherence protocols, differ in the details, all of them
+prevent different versions of the same cache line from appearing simultaneously in
+two or more caches.
+In all solutions, the cache controller is specially designed to allow it to eavesdrop on the bus, monitoring all bus requests from other CPUs and caches and taking action in certain cases. These devices are called snooping caches or sometimes snoopy caches because they ‘‘snoop’’ on the bus. The set of rules implemented by the caches, CPUs, and memory for preventing different versions of the
+data from appearing in multiple caches forms the cache coherence protocol. The
+unit of transfer and storage for a cache is called a cache line and is typically 32 or
+64 bytes.
+The simplest cache coherence protocol is called write through. It can best be
+understood by distinguishing the four cases shown in Fig. 8-27. When a CPU tries
+to read a word that is not in its cache (i.e., a read miss), its cache controller loads
+the line containing that word into the cache. The line is supplied by the memory,
+which in this protocol is always up to date. Subsequent reads (i.e., read hits) can

@@ -1,0 +1,100 @@
+CALL ADDR
+
+Call procedure at ADDR
+
+XCHG DS1,DS2
+
+Exchange DS1 and DS2
+
+RET
+
+Return from procedure
+
+LEA DST,SRC
+
+Load effective addr of SRC into DST
+
+IRET
+
+Return from interrupt
+
+CMOVcc DST,SRC
+
+Conditional move
+
+LOOPxx
+
+Loop until condition met
+
+INT n
+
+Initiate a software interrupt
+
+INTO
+
+Interrupt if overflow bit is set
+
+Arithmetic
+ADD DST,SRC
+
+Add SRC to DST
+
+SUB DST,SRC
+
+Subtract SRC from DST
+
+MUL SRC
+
+Multiply EAX by SRC (unsigned)
+
+LODS
+
+Load string
+
+IMUL SRC
+
+Multiply EAX by SRC (signed)
+
+STOS
+
+Store string
+
+DIV SRC
+
+Divide EDX:EAX by SRC (unsigned)
+
+MOVS
+
+Move string
+
+IDIV SRC
+
+Divide EDX:EAX by SRC (signed)
+
+CMPS
+
+Compare two strings
+
+ADC DST,SRC
+
+Add SRC to DST, then add carry bit
+
+SCAS
+
+Scan Strings
+
+Strings
+
+SBB DST,SRC
+
+Subtract SRC & carry from DST
+
+INC DST
+
+Add 1 to DST
+
+DEC DST
+
+Subtract 1 from DST
+
+STC

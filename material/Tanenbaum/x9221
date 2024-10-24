@@ -1,0 +1,100 @@
+each disk are located either in numerical sequence at the beginning of the disk or,
+if the disk is split up into groups of cylinders, at the start of a cylinder group.
+Thus, given an i-node number, the UNIX system can locate the i-node by simply
+calculating its disk address.
+A directory entry consists of two parts: a file name and an i-node number.
+When a program executes
+open(′′foo.c′′, 0)
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+497
+
+the system searches the working directory for the file name, ‘‘foo.c’’, in order to
+locate its i-node number. Having found the i-node number, it can then read in the
+i-node, which tells it all about the file.
+When a longer path name is specified, the basic steps outlined above are repeated several times until the full path has been parsed. For example, to locate the
+i-node number for /usr/ast/data, the system first searches the root directory for an
+entry usr. Having found the i-node for usr, it can read that file (a directory is a file
+in UNIX). In this file it looks for an entry ast, thus locating the i-node number for
+the file /usr/ast. By reading /usr/ast, the system can then find the entry for data,
+and thus the i-node number for /usr/ast/data. Given the i-node number for the file,
+it can then find out everything about the file from the i-node.
+The format, contents, and layout of an i-node vary somewhat from system to
+system (especially when networking is in use), but the following items are typically found in each i-node.
+1. The file type, the 9 RWX protection bits, and a few other bits.
+2. The number of links to the file (number of directory entries for it).
+3. The owner’s identity.
+4. The owner’s group.
+5. The file length in bytes.
+6. Thirteen disk addresses.
+7. The time the file was last read.
+8. The time the file was last written.
+9. The time the i-node was last changed.
+The file type distinguishes ordinary files, directories, and two kinds of special files,
+for block-structured and unstructured I/O devices, respectively. The number of
+links and the owner identification have already been discussed. The file length is
+an integer giving the highest byte that has a value. It is perfectly legal to create a
+file, do an lseek to position 1,000,000, and write 1 byte, which yields a file of
+length 1,000,001. The file would not, however, require storage for all the ‘‘missing’’ bytes.
+The first 10 disk addresses point to data blocks. With a block size of 1024
+bytes, files up to 10,240 bytes can be handled this way. Address 11 points to a disk
+block, called an indirect block, which contains more disk addresses. With a
+1024-byte block and 32-bit disk addresses, the indirect block would contain 256
+disk addresses. Files up to 10,240 + 256 × 1024 = 272,384 bytes are handled this
+way. For still larger files, address 12 points to a block containing the addresses of
+256 indirect blocks, which takes care of files up to 272,384 + 256 × 256 × 1024 =
+67,381,248 bytes. If this double indirect block scheme is still too small, disk ad-
+
+498
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+dress 13 is used to point to a triple indirect block containing the addresses of 256
+double indirect blocks. Using the direct, single, double, and triple indirect addresses, up to 16,843,018 blocks can be addressed, giving a theoretical maximum
+file size of 17,247,250,432 bytes. If disk addresses are 64 bits instead of 32, and
+disk blocks are 4 KB, then files can be really, really, really big. Free disk blocks
+are kept on a linked list. When a new block is needed, the next block is plucked
+from the list. As a result, the blocks of each file are scattered around the disk.
+In order to make disk I/O more efficient, when a file is opened, its i-node is
+copied to a table in main memory and is kept there for handy reference as long as
+the file remains open. In addition, a pool of recently referenced disk blocks is
+maintained in memory. Because most files are read sequentially, it often happens
+that a file reference requires the same disk block as the previous reference. To
+strengthen this effect, the system also tries to read the next block in a file, before it
+is referenced, in order to speed up processing. All this optimization is hidden from
+the user; when a user issues a read call, the program is suspended until the requested data are available in the buffer.
+With this background information, we can now take a look to see how file I/O
+works. Open causes the system to search the directories for the specified path. If
+the search is successful, the i-node is read into an internal table. Reads and writes
+require the system to compute the block number from the current file position.
+The disk addresses of the first 10 blocks are always in main memory (in the inode); higher-numbered blocks require one or more indirect blocks to be read first.
+Lseek just changes the current position pointer without doing any I/O.
+Link and unlink are also simple to understand now. Link looks up its first argument to find the i-node number. Then it creates a directory entry for the second
+argument, putting the i-node number of the first file in that entry. Finally, it increases the link count in the i-node by one. Unlink removes a directory entry and
+decrements the link count in the i-node. If it is zero, the file is removed and all the
+blocks are put back on the free list.
+Windows 7 I/O
+Windows 7 supports several file systems, the most important of which are
+NTFS (NT File System) and the FAT (File Allocation Table) file system. The
+former is a new file system developed specifically for NT; the latter is the old MSDOS file system, which was also used on Windows 95/98 (albeit with support for
+longer file names). Since the FAT file system is basically obsolete except for USB
+sticks and memory cards for cameras, we will study NTFS below.
+File names in NTFS can be up to 255 characters long. File names are in Unicode, allowing people in countries not using the Latin alphabet (e.g., Japan, India,
+and Israel) to write file names in their native language. (In fact, Windows 7 uses
+Unicode throughout internally; versions starting with Windows 2000 have a single
+binary that can be used in any country and still use the local language because all
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+499
+
+the menus, error messages, etc., are kept in country-dependent configuration files.)
+NTFS fully supports case-sensitive names (so foo is different from FOO). The
+Win32 API does not fully support case sensitivity for file names and not at all for

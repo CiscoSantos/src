@@ -1,0 +1,100 @@
+
+2K block of
+user data
+
+Figure 2-25. Recording structure of a Compact Disc or CD-ROM.
+
+the same linear velocity at the head. A constant-linear-velocity drive is quite different than a magnetic-disk drive, which operates at a constant angular velocity, independent of where the head is currently positioned. Also, 530 RPM is a far cry
+from the 3600 to 7200 RPM that most magnetic disks whirl at.
+In 1984, Philips and Sony realized the potential for using CDs to store computer data, so they published the Yellow Book defining a precise standard for what
+are now called CD-ROMs (Compact Disc-Read Only Memory). To piggyback
+on the by-then already substantial audio CD market, CD-ROMs were to be the
+same physical size as audio CDs, mechanically and optically compatible with
+them, and produced using the same polycarbonate injection molding machines.
+The consequences of this decision were that slow variable-speed motors were required, but also that the manufacturing cost of a CD-ROM would be well under
+one dollar in moderate volume.
+What the Yellow Book defined was the formatting of the computer data. It
+also improved the error-correcting abilities of the system, an essential step because
+although music lovers do not mind losing a bit here and there, computer lovers
+tend to be Very Picky about that. The basic format of a CD-ROM consists of encoding every byte in a 14-bit symbol. As we saw above, 14 bits is enough to Hamming encode an 8-bit byte with 2 bits left over. In fact, a more powerful encoding
+system is used. The 14-to-8 mapping for reading is done in hardware by table
+lookup.
+At the next level up, a group of 42 consecutive symbols forms a 588-bit frame.
+Each frame holds 192 data bits (24 bytes). The remaining 396 bits are for error
+correction and control. This scheme is identical for audio CDs and CD-ROMs.
+
+102
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+What the Yellow Book adds is the grouping of 98 frames into a CD-ROM sector, as shown in Fig. 2-26. Every CD-ROM sector begins with a 16-byte preamble, the first 12 of which are 00FFFFFFFFFFFFFFFFFFFF00 (hexadecimal), to
+allow the player to recognize the start of a CD-ROM sector. The next 3 bytes contain the sector number, needed because seeking on a CD-ROM with its single data
+spiral is much more difficult than on a magnetic disk with its uniform concentric
+tracks. To seek, the software in the drive calculates approximately where to go,
+moves the head there, and then starts hunting around for a preamble to see how
+good its guess was. The last byte of the preamble is the mode.
+
+…
+
+Symbols of
+14 bits each
+
+42 Symbols make 1 frame
+Frames of 588 bits,
+each containing
+24 data bytes
+
+…
+Preamble
+
+Bytes 16
+
+98 Frames make 1 sector
+Data
+
+ECC
+
+2048
+
+288
+
+Mode 1
+sector
+(2352 bytes)
+
+Figure 2-26. Logical data layout on a CD-ROM.
+
+The Yellow Book defines two modes. Mode 1 uses the layout of Fig. 2-26,
+with a 16-byte preamble, 2048 data bytes, and a 288-byte error-correcting code (a
+cross-interleaved Reed-Solomon code). Mode 2 combines the data and ECC fields
+into a 2336-byte data field for those applications that do not need (or cannot afford
+the time to perform) error correction, such as audio and video. Note that to provide excellent reliability, three separate error-correcting schemes are used: within a
+symbol, within a frame, and within a CD-ROM sector. Single-bit errors are corrected at the lowest level, short burst errors are corrected at the frame level, and
+any residual errors are caught at the sector level. The price paid for this reliability
+is that it takes 98 frames of 588 bits (7203 bytes) to carry a single 2048-byte payload, an efficiency of only 28 percent.
+Single-speed CD-ROM drives operate at 75 sectors/sec, which gives a data rate
+of 153,600 bytes/sec in mode 1 and 175,200 bytes/sec in mode 2. Double-speed
+drives are twice as fast, and so on up to the highest speed. A standard audio CD
+has room for 74 minutes of music, which, if used for mode 1 data, gives a capacity
+of 681,984,000 bytes. This figure is usually reported as 650 MB because 1 MB is
+220 bytes (1,048,576 bytes), not 1,000,000 bytes.
+As usual, whenever a new technology comes out, some people try to push the
+envelope. When designing the CD-ROM, Philips and Sony were cautious and had
+the writing process stop well before the outer edge of the disc was reached. It did
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+103
+
+not take long before some drive manufacturers allowed their drives to go beyond
+the official limit and come perilously close to the physical edge of the medium,
+giving about 700 MB instead of 650 MB. But as the technology improved and the
+blank discs were manufactured to a higher standard, 703.12 MB (360,000
+2048-byte sectors instead of 333,000 sectors) became the new norm.
+Note that even a 32x CD-ROM drive (4,915,200 bytes/sec) is no match for a
+fast SCSI-2 magnetic-disk drive at 10 MB/sec. When you realize that the seek
+time is often several hundred milliseconds, it should be clear that CD-ROM drives

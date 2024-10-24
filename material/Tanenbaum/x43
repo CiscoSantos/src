@@ -1,0 +1,100 @@
+32-bit word
+
+32-bit word
+
+(a)
+
+(b)
+
+Figure 2-11. (a) Big endian memory. (b) Little endian memory.
+
+name) and two integers (age and department number). The string is terminated
+with 1 or more 0 bytes to fill out a word. The big endian representation is shown
+in Fig. 2-12(a); the little endian representation is shown in Fig. 2-12(b) for Jim
+Smith, age 21, department 260 (1 × 256 + 4 = 260).
+
+Big endian
+0
+
+Little endian
+
+J
+
+I
+
+4
+
+S
+
+M
+
+I
+
+T
+
+8
+
+H
+
+0
+
+0
+
+0
+
+12
+
+0
+
+0
+
+16
+
+0
+
+0
+
+M
+
+J
+
+0
+
+M
+
+S
+
+4
+
+0
+
+H
+
+8
+
+0
+
+0 21
+
+0
+
+1
+
+M
+
+I
+
+T
+
+I
+
+0
+
+0
+
+0 21
+
+0
+
+1
+

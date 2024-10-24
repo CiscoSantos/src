@@ -1,0 +1,100 @@
+210
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+Despite its bent for joule-frugal operation, the ARM A9 cores utilize a very capable microarchitecture. They can decode and execute up to two instructions each
+cycle. As we will learn in Chap. 4, this execution rate represents the maximum
+throughput of the microarchitecture. But do not expect it to execute this many instructions each cycle. Rather, think of this rate as the manufacturer’s guaranteed
+maximum performance, a level that the processor will never exceed, no matter
+what. In many cycles, fewer than two instructions will execute due to the myriad of
+‘‘hazards’’ that can stall instructions, leading to lower execution throughput. To address many of these throughput limiters, the ARM A9 incorporates a powerful
+branch predictor, out-of-order instruction scheduling, and a highly optimized memory system.
+The OMAP4430’s memory system has two main internal L1 caches for each
+ARM A9 processor: a 32-KB cache for instructions and a 32-KB cache for data.
+Like the Core i7, it also uses an on-chip level 2 (L2) cache, but unlike the Core i7,
+it is a relatively tiny 1 MB in size, and it is shared by both ARM A9 cores. The
+caches are fed with dual LPDDR2 low-power DRAM channels. LPDDR2 is
+derived from the DDR2 memory interface standard, but changed to require fewer
+wires and to operate at more power-efficient voltages. Additionally, the memory
+controller incorporates a number of memory-access optimizations, such as tiled
+memory prefetching and in-memory rotation support.
+While we will discuss caching in detail in Chap. 4, a few words about it here
+will be useful. All of main memory is divided up into cache lines (blocks) of 32
+bytes. The 1024 most heavily used instruction lines and the 1024 most heavily
+used data lines are in the level 1 cache. Cache lines that are heavily used but which
+do not fit in the level 1 cache are kept in the level 2 cache. This cache contains
+both data lines and instruction lines from both ARM A9 CPUs mixed at random.
+The level 2 cache contains the most recently touched 32,768 lines in main memory.
+On a level 1 cache miss, the CPU sends the identifier of the line it is looking
+for (Tag address) to the level 2 cache. The reply (Tag data) provides the information for the CPU to tell whether the line is in the level 2 cache, and if so, what
+state it is in. If the line is cached there, the CPU goes and gets it. Getting a value
+out of the level 2 cache takes 19 cycles. This is a long time to wait for data, so
+clever programmers will optimize their programs to use less data, making it more
+likely to find data in the fast level 1 cache.
+If the cache line is not in the level 2 cache, it must be fetched from main memory via the LPDDR2 memory interface. The OMAP4430 LPDDR2 interface is
+implemented on-chip such that LPDDR2 DRAM can be connected directly to the
+OMAP4430. To access memory, the CPU must first send the upper portion of the
+DRAM address to the DRAM chip, using the 13 address lines. This operation, called an ACTIVATE, loads an entire row of memory within the DRAM into a row
+buffer. Subsequently, the CPU can issue multiple READ or WRITE commands, sending the remainder of the address on the same 13 address lines, and sending (or receiving) the data for the operation on the 32 data lines.
+
+SEC. 3.5
+
+EXAMPLE CPU CHIPS
+
+211
+
+While waiting for the results, the CPU may well be able to continue with other
+work. For example, a cache miss while prefetching an instruction does not inhibit
+the execution of one or more instructions already fetched, each of which may refer
+to data not in any cache. Thus, multiple transactions on the two LPDDR2 interfaces may be outstanding at once, even for the same processor. It is up to the
+memory controller to keep track of all this and to make actual memory requests in
+the most efficient order.
+When data finally arrives from the memory, it can come in 4 bytes at a time. A
+memory operation may utilize a burst mode read or write, which will allow multiple contiguous addresses within the same DRAM row to be read or written. This
+mode is particularly efficient for reading or writing cache blocks. Just for the
+record, the description of the OMAP4430 given above, like that of the Core i7 before it, has been highly simplified, but the essence of its operation has been described.
+The OMAP4430 comes in a 547-pin ball grid array (PBGA), as shown in
+Fig. 3-48. A ball grid array is similar to a land grid array except that the connections on the chip are small metal balls, rather than the square pads used in the
+LGA. The two packages are not compatible, providing further evidence that you
+cannot stick a square peg into a round hole. The OMAP4430’s package consists of
+a rectangular array of 28 × 26 balls, with two inner rings of balls missing, plus two
+asymmetric half rows and columns of balls missing to prevent the chip from being
+inserted incorrectly in the BGA socket.
+
+Figure 3-48. The OMAP4430 system-on-a-chip pinout.
+
+It is difficult to compare a CISC chip (like the Core i7) and a RISC chip (like
+the OMAP4430) based on clock speed alone. For example, the two ARM A9 cores
+in the OMAP4430 have a peak execution speed of four instructions per clock
+cycle, giving it almost the same execution rate as that of the Core i7’s 4-wide
+superscalar processors. The Core i7 achieves faster program execution, however,
+since it has up to six processors running with a clock speed 3.5 times faster (3.5
+GHz) than the OMAP4430. The OMAP4430 may seem like a turtle running next
+
+212
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+to the Core i7 rabbit, but the turtle uses much less power, and the turtle may finish
+first, especially if the rabbit’s battery is not very big.
+
+3.5.3 The Atmel ATmega168 Microcontroller
+Both the Core i7 and the OMAP4430 are examples of high-performance computing platforms designed for building highly capable computing devices, with the
+Core i7 focusing on desktop applications while the OMAP4430 focuses on mobile
+applications. When many people think about computers, systems like these come
+to mind. However, another whole world of computers exists that is actually far
+more pervasive: embedded systems. In this section we will take a brief look at that
+world.
+It is probably only a slight exaggeration to say that every electrical device costing more than $100 has a computer in it. Certainly televisions, cell phones, electronic personal organizers, microwave ovens, camcorders, VCRs, laser printers,
+burglar alarms, hearing aids, electronic games, and other devices too numerous to
+mention are all computer controlled these days. The computers inside these things
+tend to be optimized for low price rather than for high performance, which leads to
+different trade-offs than the high-end CPUs we have been studying so far.
+PC6
+PD0
+PD1
+PD2

@@ -1,0 +1,100 @@
+Operating system
+
+Level 2
+
+Instruction set architecture level
+Microprogram or hardware
+
+Level 1
+
+Microarchitecture level
+
+Figure 6-1. Positioning of the operating system machine level.
+
+instruction step by step. However, when a program executes an ISA-level instruction, it is carried out directly by the underlying microarchitecture level, without
+any assistance from the operating system.
+In this book we can provide only the briefest of introductions to the subject of
+operating systems. We will focus on three topics of importance. The first is virtual
+memory, a technique provided by many modern operating systems to make the machine appear to have more memory than it in reality has. The second is file I/O, a
+higher-level concept than the I/O instructions that we studied in the preceding
+chapter. The third topic is parallel processing—how multiple processes can execute, communicate, and synchronize. The concept of a process is an important
+one, and we will describe it in detail later in this chapter. For the time being, a
+process can be thought of as a running program together with all its state information (memory, registers, program counter, I/O status, and so on). After discussing these principles in general, we will show how they apply to the operating
+systems of two of our example machines, the Core i7 (running Windows 7) and the
+OMAP4430 ARM CPU (running Linux). Since the ATmega168 microcontroller is
+normally used for embedded systems, it does not have an operating system.
+
+6.1 VIRTUAL MEMORY
+In the early days of computers, memories were small and expensive. The IBM
+650, the leading scientific computer of its day (late 1950s), had only 2000 words of
+memory. One of the first ALGOL 60 compilers was written for a computer with
+only 1024 words of memory. An early timesharing system ran quite well on a
+PDP-1 with a total memory size of only 4096 18-bit words for the operating system and user programs combined. In those days the programmer spent a lot of
+time trying to squeeze programs into the tiny memory. Often it was necessary to
+use an algorithm that ran a great deal slower than another, better algorithm simply
+because the better algorithm was too big—that is, a program using the better algorithm could not be squeezed into the computer’s memory.
+
+SEC. 6.1
+
+VIRTUAL MEMORY
+
+439
+
+The traditional solution to this problem was the use of secondary memory,
+such as disk. The programmer divided the program up into a number of pieces,
+called overlays, each of which could fit in the memory. To run the program, the
+first overlay was brought in and it ran for a while. When it finished, it read in the
+next overlay and called it, and so on. The programmer was responsible for breaking the program into overlays, deciding where in the secondary memory each overlay was to be kept, arranging for the transport of overlays between main memory
+and secondary memory, and in general managing the whole overlay process without any help from the computer.
+Although widely used for many years, this technique involved much work in
+connection with overlay management. In 1961 a group of researchers in Manchester, England, proposed a method for performing the overlay process automatically, without the programmer even knowing that it was happening (Fotheringham, 1961). This method, now called virtual memory, had the obvious advantage
+of freeing the programmer from a lot of annoying bookkeeping. It was first used
+on a number of computers during the 1960s, associated mostly with research
+projects in computer systems design. By the early 1970s virtual memory had become available on most computers. Now even single-chip computers, including
+the Core i7 and OMAP4430 ARM CPU, have highly sophisticated virtual memory
+systems. We will look at these later in this chapter.
+
+6.1.1 Paging
+The idea put forth by the Manchester group was to separate the concepts of address space and memory locations. Consider, as an example, a typical computer of
+that era, which might have had a 16-bit address field in its instructions and 4096
+words of memory. A program on this computer could address 65536 words of
+memory. The reason is that 65536 (216 ) 16-bit addresses exist, each corresponding
+to a different memory word. Please note that the number of addressable words depends only on the number of bits in an address and is in no way related to the number of memory words actually available. The address space for this computer
+consists of the numbers 0, 1, 2, ..., 65535, because that is the set of possible addresses. The computer, however, may well have had fewer than 65535 words of
+memory.
+Before virtual memory was invented, people would have made a distinction between the addresses below 4096 and those equal to or above 4096. Although
+rarely stated in so many words, these two parts were regarded as the useful address
+space and the useless address space, respectively (the addresses above 4095 being
+useless because they did not correspond to actual memory addresses). People did
+not make a distinction between address space and memory locations, because the
+hardware enforced a one-to-one correspondence between them.
+The idea of separating the address space and the memory locations is as follows. At any instant of time, 4096 words of memory can be directly accessed, but
+
+440
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+they need not correspond to memory locations 0 to 4095. We could, for example,
+‘‘tell’’ the computer that henceforth whenever address 4096 is referenced, the
+memory word at address 0 is to be used. Whenever address 4097 is referenced, the
+memory word at address 1 is to be used; whenever address 8191 is referenced, the
+memory word at address 4095 is to be used, and so forth. In other words, we have
+defined a mapping from the address space onto the actual memory locations, as
+shown in Fig. 6-2.
+Address space
+Address
+
+8191
+4096
+
+Mapping
+
+4K Main
+memory
+
+0
+
+4095
+0

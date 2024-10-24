@@ -1,0 +1,100 @@
+be checked for duplicate entries, which can be removed.
+
+7.3.3 Pass Two
+The function of pass two is to generate the object program and possibly print
+the assembly listing. In addition, pass two must output certain information needed
+by the linker for linking up procedures assembled at different times into a single
+executable file. Figure 7-10 shows a sketch of a procedure for pass two.
+public static void pass two( ) {
+// This procedure is an outline of pass two of a simple assembler.
+// flag that stops pass two
+boolean more input = true;
+String line, opcode;
+// fields of the instruction
+// misc. variables
+int location counter, length, type;
+// signals end of input
+final int END STATEMENT = −2;
+// max bytes of code per instruction
+final int MAX CODE = 16;
+// holds generated code per instruction
+byte code[ ] = new byte[MAX CODE];
+location counter = 0;
+
+// assemble first instruction at 0
+
+while (more input) {
+type = read type( );
+opcode = read opcode( );
+length = read length( );
+line = read line( );
+
+// more input set to false by END
+// get type field of next line
+// get opcode field of next line
+// get length field of next line
+// get the actual line of input
+
+if (type != 0) {
+// type 0 is for comment lines
+switch(type) {
+// generate the output code
+case 1: eval type1(opcode, length, line, code); break;
+case 2: eval type2(opcode, length, line, code); break;
+// other cases here
+}
+}
+// write the binary code
+write output(code);
+// print one line on the listing
+write listing(code, line);
+// update loc ctr
+location counter = location counter + length;
+// are we done with input?
+if (type == END STATEMENT) {
+// if so, perform housekeeping tasks
+more input = false;
+// odds and ends
+finish up( );
+}
+}
+}
+Figure 7-10. Pass two of a simple assembler.
+
+The operation of pass two is more-or-less similar to that of pass one: it reads
+the lines one at a time and processes them one at a time. Since we have written the
+type, opcode, and length at the start of each line (on the temporary file), all of these
+
+SEC. 7.3
+
+THE ASSEMBLY PROCESS
+
+535
+
+are read in to save some parsing. The main work of the code generation is done by
+the procedures eval type1, eval type2, and so on. Each one handles a particular
+pattern, such as an opcode and two register operands. It generates the binary code
+for the instruction and returns it in code. Then it is written out. More likely,
+write output just buffers the accumulated binary code and writes the file to disk in
+large chunks to reduce disk traffic.
+The original source statement and the object code generated from it (in hexadecimal) can then be printed or put into a buffer for later printing. After the ILC
+has been adjusted, the next statement is fetched.
+Up until now it has been assumed that the source program does not contain any
+errors. Anyone who has ever written a program, in any language, knows how realistic that assumption is. Some of the common errors are as follows:
+1. A symbol has been used but not defined.
+2. A symbol has been defined more than once.
+3. The name in the opcode field is not a legal opcode.
+4. An opcode is not supplied with enough operands.
+5. An opcode is supplied with too many operands.
+6. A number contains an invalid character like 143G6.
+7. Illegal register use (e.g., a branch to a register).
+8. The END statement is missing.
+Programmers are quite ingenious at thinking up new kinds of errors to make.
+Undefined symbol errors are frequently caused by typing errors, so a clever assembler could try to figure out which of the defined symbols most resembles the undefined one and use that instead. Little can be done about correcting most other errors. The best thing for the assembler to do with an errant statement is to print an
+error message and try to continue assembly.
+
+7.3.4 The Symbol Table
+During pass one of the assembly process, the assembler accumulates information about symbols and their values that must be stored in the symbol table for
+lookup during pass two. Several different ways are available for organizing the
+symbol table. We will briefly describe some of them below. All of them attempt
+to simulate an associative memory, which conceptually is a set of (symbol, value)

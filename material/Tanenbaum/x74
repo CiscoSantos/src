@@ -1,0 +1,100 @@
+
+Upstream
+data
+
+0
+
+TV FM
+
+550
+TV
+
+750 MHz
+Downstream data
+
+Downstream frequencies
+
+Figure 2-41. Frequency allocation in a typical cable TV system used for Internet
+access.
+
+Note that since the television signals are all downstream, it is possible to use
+upstream amplifiers that work only in the 5–42 MHz region and downstream
+amplifiers that work only at 54 MHz and up, as shown in the figure. Thus, we get
+an asymmetry in the upstream and downstream bandwidths because more spectrum
+is available above television than below it. On the other hand, most of the traffic is
+likely to be downstream, so cable operators are not unhappy with this fact of life.
+As we saw earlier, telephone companies usually offer an asymmetric DSL service,
+even though they have no technical reason for doing so.
+Internet access requires a cable modem, a device that has two interfaces on it:
+one to the computer and one to the cable network. The computer-to-cable-modem
+interface is straightforward. It is normally Ethernet, just as with ADSL. In the future, the entire modem might be a small card plugged into the computer, just as
+with the old telephone modems.
+The other end is more complicated. A large part of the cable standard deals
+with radio engineering, a subject far beyond the scope of this book. The only part
+worth mentioning here is that cable modems, like ADSL modems, are always on.
+They make a connection when turned on and maintain that connection as long as
+they are powered up because cable operators do not charge for connect time.
+To better understand how they work, let us see what happens when a cable
+modem is plugged in and powered up. The modem scans the downstream channels
+looking for a special packet periodically put out by the headend to provide system
+parameters to modems that have just come online. Upon finding this packet, the
+new modem announces its presence on one of the upstream channels. The headend
+responds by assigning the modem to its upstream and downstream channels.
+These assignments can be changed later if the headend deems it necessary to balance the load.
+The modem then determines its distance from the headend by sending it a special packet and seeing how long it takes to get the response. This process is called
+
+134
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+ranging. It is important for the modem to know its distance to accommodate the
+way the upstream channels operate and to get the timing right. The channels are
+divided in time in minislots. Each upstream packet must fit in one or more consecutive minislots. The headend announces the start of a new round of minislots
+periodically, but the starting gun is not heard at all modems simultaneously due to
+the propagation time down the cable. By knowing how far it is from the headend,
+each modem can compute how long ago the first minislot really started. Minislot
+length is network dependent. A typical payload is 8 bytes.
+During initialization, the headend also assigns each modem to a minislot to use
+for requesting upstream bandwidth. As a rule, multiple modems will be assigned
+the same minislot, which leads to contention. When a computer wants to send a
+packet, it transfers the packet to the modem, which then requests the necessary
+number of minislots for it. If the request is accepted, the headend puts an acknowledgement on the downstream channel telling the modem which minislots have
+been reserved for its packet. The packet is then sent, starting in the minislot allocated to it. Additional packets can be requested using a field in the header.
+On the other hand, if there is contention for the request minislot, there will be
+no acknowledgement and the modem just waits a random time and tries again.
+After each successive failure, the randomization time is doubled to spread out the
+load when there is heavy traffic.
+The downstream channels are managed differently from the upstream channels. For one thing, there is only one sender (the headend) so there is no contention and no need for minislots, which is actually just time-division statistical
+multiplexing. For another, the traffic downstream is usually much larger than
+upstream, so a fixed packet size of 204 bytes is used. Part of that is a ReedSolomon error-correcting code and some other overhead, leaving a user payload of
+184 bytes. These numbers were chosen for compatibility with digital television
+using MPEG-2, so the TV and downstream data channels are formatted the same
+way. Logically, the connections are as depicted in Fig. 2-42.
+Getting back to modem initialization, once the modem has completed ranging
+and gotten its upstream channel, downstream channel, and minislot assignments, it
+is free to start sending packets. These packets go to the headend, which relays
+them over a dedicated channel to the cable company’s main office and then to the
+ISP (which may be the cable company itself). The first packet is one to the ISP requesting a network address (technically, an IP address), which is dynamically assigned. It also requests and gets an accurate time of day.
+The next step involves security. Since cable is a shared medium, anybody who
+wants to go to the trouble to do so can read all the traffic zipping past him. To prevent everyone from snooping on their neighbors (literally), all traffic is encrypted
+in both directions. Part of the initialization procedure involves establishing encryption keys. At first one might think that having two strangers, the headend and
+the modem, establish a secret key in broad daylight with thousands of people
+watching would be impossible to accomplish. Turns out it is not, but the technique
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+135
+
+Figure 2-42. Typical details of the upstream and downstream channels in North
+America. QAM-64 (Quadrature Amplitude Modulation) allows 6 bits/Hz but
+works only at high frequencies. QPSK (Quadrature Phase Shift Keying) works at
+low frequencies but allows only 2 bits/Hz.
+
+used (the Diffie-Hellman algorithm) is beyond the scope of this book. See Kaufman et al. (2002) for a discussion of it.
+Finally, the modem has to log in and provide its unique identifier over the
+secure channel. At this point the initialization is complete. The user can now log
+in to the ISP and get to work.

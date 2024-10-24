@@ -1,0 +1,100 @@
+stored as a
+character
+string
+
+CALL AIR
+CALL WATER
+
+CHAP. 7
+
+Invalid address
+CALL EARTH
+
+A A
+
+T
+
+E R
+
+CALL WATER
+
+(a)
+A procedure segment
+
+rect
+Indi ssing
+re
+d
+d
+a
+
+CALL EARTH
+
+The linkage segment
+Address of earth
+E A R T H
+To earth
+Invalid address
+A I R
+
+CALL FIRE
+CALL AIR
+
+F
+
+CALL WATER
+
+Invalid address
+I R E
+Invalid address
+
+CALL EARTH
+
+W A
+
+T
+
+E R
+
+CALL WATER
+
+(b)
+
+Figure 7-17. Dynamic linking. (a) Before EARTH is called. (b) After EARTH
+has been called and linked.
+
+When a procedure in a different segment is called, the attempt to address the
+invalid word indirectly causes a trap to the dynamic linker. The linker then finds
+the character string in the word following the invalid address and searches the
+user’s file directory for a compiled procedure with this name. That procedure is
+then assigned a virtual address, usually in its own private segment, and this virtual
+address overwrites the invalid address in the linkage segment, as indicated in
+Fig. 7-17(b). Next, the instruction causing the linkage fault is re-executed, allowing the program to continue from the place it was before the trap.
+
+SEC. 7.4
+
+547
+
+LINKING AND LOADING
+
+All subsequent references to that procedure will be executed without causing a
+linkage fault, for the indirect word now contains a valid virtual address. Consequently, the dynamic linker is invoked only the first time a procedure is called.
+Dynamic Linking in Windows
+All versions of the Windows operating system support dynamic linking and
+rely heavily on it. Dynamic linking uses a special file format called a DLL
+(Dynamic Link Library). DLLs can contain procedures, data, or both. They are
+commonly used to allow two or more processes to share library procedures or data.
+Many DLLs have extension .dll, but other extensions are also in use, including .drv
+(for driver libraries) and .fon (for font libraries).
+The most common form of a DLL is a library consisting of a collection of procedures that can be loaded into memory and accessed by multiple processes at the
+same time. Figure 7-18 illustrates two processes sharing a DLL file that contains
+four procedures, A, B, C, and D. Program 1 uses procedure A; program 2 uses procedure C, although they could equally well have used the same procedure.
+User process 1
+
+User process 2
+
+DLL
+Header
+A
+B
+C

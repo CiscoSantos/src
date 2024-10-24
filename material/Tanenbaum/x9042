@@ -1,0 +1,100 @@
+
+Figure 3-51. Architecture of an early Pentium system. The thicker buses have
+more bandwidth than the thinner ones but the figure is not to scale.
+
+Two key components in this architecture are the two bridge chips (which Intel
+manufactures—hence its interest in this whole project). The PCI bridge connects
+the CPU, memory, and PCI bus. The ISA bridge connects the PCI bus to the ISA
+bus and also supports one or two IDE disks. Nearly all PC systems using this architecture would have one or more free PCI slots for adding new high-speed
+peripherals, and one or more ISA slots for adding low-speed peripherals.
+
+SEC. 3.6
+
+EXAMPLE BUSES
+
+217
+
+The big advantage of the design of Fig. 3-51 is that the CPU has an extremely
+high bandwidth to memory using a proprietary memory bus; the PCI bus offers
+high bandwidth for fast peripherals such as SCSI disks, graphics adaptors, etc.; and
+old ISA cards can still be used. The USB box in the figure refers to the Universal
+Serial Bus, which will be discussed later in this chapter.
+It would have been nice had there been only one kind of PCI card. Unfortunately, such is not the case. Options are provided for voltage, width, and timing.
+Older computers often use 5 volts and newer ones tend to use 3.3 volts, so the PCI
+bus supports both. The connectors are the same except for two bits of plastic that
+are there to prevent people from inserting a 5-volt card in a 3.3-volt PCI bus or vice
+versa. Fortunately, universal cards exist that support both voltages and can plug
+into either kind of slot. In addition to the voltage option, cards come in 32-bit and
+64-bit versions. The 32-bit cards have 120 pins; the 64-bit cards have the same
+120 pins plus an additional 64. A PCI bus system that supports 64-bit cards can
+also take 32-bit cards, but the reverse is not true. Finally, PCI buses and cards can
+run at either 33 or 66 MHz. The choice is made by having one pin wired either to
+the power supply or to ground. The connectors are identical for both speeds.
+By the late 1990s, pretty much everyone agreed that the ISA bus was dead, so
+new designs excluded it. By then, however, monitor resolution had increased in
+some cases to 1600 × 1200 and the demand for full-screen full motion video had
+also increased, especially in the context of highly interactive games, so Intel added
+yet another bus just to drive the graphics card. This bus was called the AGP bus
+(Accelerated Graphics Port bus). The initial version, AGP 1.0, ran at 264
+MB/sec, which was defined as 1x. While slower than the PCI bus, it was dedicated
+to driving the graphics card. Over the years, newer versions came out, with AGP
+3.0 running at 2.1 GB/sec (8x). Today, even the high-performance AGP 3.0 bus
+has been usurped by even faster upstarts, in particular, the PCI Express bus, which
+can pump an amazing 16 GB/sec of data over high-speed serial bus links. A modern Core i7 system is illustrated in Fig. 3-52.
+In a modern Core i7 based system, a number of interfaces have been integrated
+directly into the CPU chip. The two DDR3 memory channels, running at 1333
+transactions/sec, connect to main memory and provide an aggregate bandwidth of
+10 GB/sec per channel. Also integrated into the CPU is a 16-lane PCI Express
+channel, which optimally can be configured into a single 16-bit PCI Express bus or
+dual independent 8-bit PCI Express buses. The 16 lanes together provide a bandwidth of 16 GB/sec to I/O devices.
+The CPU connects to the primary bridge chip, the P67, via the 20-Gb/sec (2.5
+GB/sec) serial direct media interface (DMI). The P67 provides interfaces to a number of modern high-performance I/O interfaces. Eight additional PCI Express lanes
+are provided, plus SATA disk interfaces. The P67 also implements 14 USB 2.0 interfaces, 10G Ethernet and an audio interface.
+The ICH10 chip provides legacy interface support for old devices. It is connected to the P67 via a slower DMI interface. The ICH10 implements the PCI bus,
+
+218
+
+THE DIGITAL LOGIC LEVEL
+
+PCI Express 2.0
+Graphics
+
+16 lanes
+16 GB/s
+
+DDR3
+1333 MHz
+
+or
+PCI Express 2.0
+Graphics (optional)
+PCI Express 2.0
+Graphics (optional)
+
+CHAP. 3
+
+8 lanes
+
+Intel
+Core i7
+
+DDR3
+1333 MHz
+
+8 GB/s
+8 lanes
+8 GB/s
+DMI
+20 Gb/s
+
+Intel High
+Definition Audio
+14 Hi-Speed USB 2.0 Ports;
+Dual EHCI; USB Port Disable
+
+480
+Mb/s
+each
+
+Intel P67
+Express

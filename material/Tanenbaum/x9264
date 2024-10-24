@@ -1,0 +1,100 @@
+monitor usage. In addition, situations can arise in which programs work much
+worse with multithreading than without it. For example, imagine two threads that
+each need 3/4 of the cache to function well. Run separately, each one works fine
+and has few (expensive) cache misses. Run together, each one has numerous cache
+misses and the net result may be far worse than without multithreading.
+
+568
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+More information about multithreading and its implementation inside Intel
+processors is given in Gerber and Binstock (2004) and Gepner et al. (2011).
+
+8.1.3 Single-Chip Multiprocessors
+While multithreading provides significant performance gains at modest cost,
+for some applications a much larger performance gain is needed. To get this gain,
+multiprocessor chips are being developed. Two areas where these chips, which
+contain two or more CPUs, are of interest are high-end servers and in consumer
+electronics. We will now briefly touch on each of them.
+Homogeneous Multiprocessors on a Chip
+With advances in VLSI technology, it is now possible to put two or more powerful CPUs on a single chip. Since these CPUs often share the same level 2 cache
+and main memory, they qualify as a multiprocessor, as discussed in Chap. 2. A
+typical application area is a large Web server farm consisting of many servers. By
+putting two CPUs in the same box, sharing not only memory but also disks and
+network interfaces, the performance of the server can often be doubled without
+doubling the cost (because even at twice the price, the CPU chip is only a fraction
+of the total system cost).
+For small-scale single-chip multiprocessors, two designs are prevalent. In the
+first one, shown in Fig. 8-10(a), there is really only one chip, but it has a second
+pipeline, potentially doubling the instruction execution rate. In the second one,
+shown in Fig. 8-10(b), there are separate cores on the chip, each containing a full
+CPU. A core is a large circuit, such as a CPU, I/O controller, or cache, that can be
+placed on a chip in a modular way, usually next to other cores.
+Pipeline
+
+CPU
+
+Pipeline
+
+CPU
+
+Cache memory
+
+Cache memory
+
+(a)
+
+(b)
+
+Figure 8-10. Single-chip multiprocessors. (a) A dual-pipeline chip. (b) A chip
+with two cores.
+
+The former design allows resources, such as functional units, to be shared between the processors, thus allowing one CPU to use resources the other does not
+
+SEC. 8.1
+
+569
+
+ON-CHIP PARALELLISM
+
+need. On the other hand, this approach requires redesigning the chip and it does
+not scale well much above two CPUs. In contrast, just putting two or more CPU
+cores on the same chip is relatively easy to do.
+We will discuss multiprocessors later in the chapter. While that discussion is
+somewhat focused on multiprocessors built from single-CPU chips, much of it
+applies to multi-CPU chips as well.
+The Core i7 Single-Chip Multiprocessor
+The Core i7 CPU is a single-chip multiprocessor that is manufactured with
+four or more cores on a single silicon die. The high-level organization of a Core i7
+processor is illustrated in Fig. 8-11.
+IA-32
+CPU + L1
+
+IA-32
+CPU + L1
+
+IA-32
+CPU + L1
+
+IA-32
+CPU + L1
+
+L2 cache
+
+L2 cache
+
+L2 cache
+
+L2 cache
+
+Ring network
+
+L3 shared cache
+
+Figure 8-11. Single-chip multiprocessor architecture of the Core i7.
+
+Each processor in the Core i7 has its own private L1 instruction and data caches,
+plus its own private L2 unified cache. The processors are connected to the private

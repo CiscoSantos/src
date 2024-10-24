@@ -1,0 +1,100 @@
+C
+(A AND B) OR C
+
+The AND operation tends to remove 1s, because there are never more 1s in the
+result than in either of the operands. The OR operation tends to insert 1s, because
+there are always at least as many 1s in the result as in the operand with the most 1s.
+EXCLUSIVE OR, on the other hand, is symmetric, tending, on the average, neither to
+insert nor remove 1s. This symmetry with respect to 1s and 0s is occasionally useful, for example, in generating random numbers.
+Most computers today also support a set of floating-point instructions, roughly
+corresponding to the integer arithmetic operations. Most machines provide at least
+two lengths of floating-point numbers, the shorter ones for speed and the longer
+ones for occasions when many digits of accuracy are needed. While there are lots
+of possible variations for floating-point formats, a single standard has now been almost universally adopted: IEEE 754. Floating-point numbers and IEEE 754 are
+discussed in Appendix B.
+
+5.5.3 Monadic Operations
+Monadic operations have one operand and produce one result. Because one
+fewer address has to be specified than with dyadic operations, the instructions are
+sometimes shorter, though often other information must be specified.
+Instructions to shift or rotate the contents of a word or byte are quite useful and
+are often provided in several variations. Shifts are operations in which the bits are
+moved to the left or right, with bits shifted off the end of the word being lost. Rotates are shifts in which bits pushed off one end reappear on the other end. The
+difference between a shift and a rotate is illustrated below.
+00000000 00000000 00000000 01110011 A
+00000000 00000000 00000000 00011100 A shifted right 2 bits
+11000000 00000000 00000000 00011100 A rotated right 2 bits
+Both left and right shifts and rotates are useful. If an n-bit word is left rotated k
+bits, the result is the same as if it had been right rotated n − k bits.
+Right shifts are often performed with sign extension. This means that positions vacated on the left end of the word are filled up with the original sign bit, 0 or
+1. It is as though the sign bit were dragged along to the right. Among other things,
+
+SEC. 5.5
+
+INSTRUCTION TYPES
+
+389
+
+it means that a negative number will remain negative. This situation is illustrated
+below for 2-bit right shifts.
+11111111 11111111 11111111 11110000 A
+00111111 11111111 11111111 11111100 A shifted without sign extension
+11111111 11111111 11111111 11111100 A shifted with sign extension
+An important use of shifting is multiplication and division by powers of 2. If a
+positive integer is left shifted k bits, the result, barring overflow, is the original
+number multiplied by 2k . If a positive integer is right shifted k bits, the result is the
+original number divided by 2k .
+Shifting can be used to speed up certain arithmetic operations. Consider, for
+example, computing 18 × n for some positive integer n. Because 18 × n =
+16 × n + 2 × n, 16 × n can be obtained by shifting a copy of n 4 bits to the left.
+2 × n can be obtained by shifting n 1 bit to the left. The sum of these two numbers
+is 18 × n. The multiplication has been accomplished by a move, two shifts, and an
+addition, which is often faster than a multiplication. Of course, the compiler can
+use this trick only when one factor is a constant.
+Shifting negative numbers, even with sign extension, gives quite different results, however. Consider, for example, the ones’ complement number, −1. Shifted
+1 bit to the left it yields −3. Another 1-bit shift to the left yields −7:
+11111111 11111111 11111111 11111110 −1 in ones’ complement
+11111111 11111111 11111111 11111100 −1 shifted left 1 bit = −3
+11111111 11111111 11111111 11111000 −1 shifted left 2 bits = −7
+Left shifting ones’ complement negative numbers does not multiply by 2. Right
+shifting does simulate division correctly, however.
+Now consider a two’s complement representation of −1. When right shifted 6
+bits with sign extension, it yields −1, which is incorrect because the integral part of
+−1/64 is 0:
+11111111 11111111 11111111 11111111 −1 in two’s complement
+11111111 11111111 11111111 11111111 −1 shifted right 6 bits = −1
+In general, right shifting introduces errors because it truncates down (toward the
+more negative integer), which is incorrect for integer arithmetic on negative numbers. Left shifting does, however, simulate multiplication by 2.
+Rotate operations are useful for packing and unpacking bit sequences from
+words. If it is desired to test all the bits in a word, rotating the word 1 bit at a time
+either way successively puts each bit in the sign bit, where it can be easily tested,
+and also restores the word to its original value when all bits have been tested. Rotate operations are more pure than shift operations because no information is lost:
+an arbitrary rotate operation can be negated with another rotate operation.
+Certain dyadic operations occur so frequently with particular operands that
+ISAs sometimes have monadic instructions to accomplish them quickly. Moving
+
+390
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+zero to a memory word or register is extremely common when initializing a calculation. Moving zero is, of course, a special case of the general move data instructions. For efficiency, a CLR operation, with only one address, the location to be
+cleared (i.e., set to zero), is often provided.
+Adding 1 to a word is also commonly used for counting. A monadic form of
+the ADD instruction is the INC operation, which adds 1. The NEG operation is another example. Negating X is really computing 0 − X, a dyadic subtraction, but
+again, because of its frequent use, a separate NEG instruction is sometimes provided. It is important to note here the difference between the arithmetic operation
+NEG and the logical operation NOT. The NEG operation produces the additive
+inverse of a number (the number which when added to the original gives 0). The
+NOT operation simply inverts all the individual bits in the word. The operations are
+very similar, and in fact, for a system using ones’ complement representation, they
+are identical. (In twos’ complement arithmetic, the NEG instruction is carried out
+by first inverting all the individual bits, then adding 1.)
+Dyadic and monadic instructions are often grouped together by their use, rather than by the number of operands they require. One group includes the arithmetic
+operations, including negation. The other group includes logical operations and
+shifting, since these two categories are most often used together to accomplish data
+extraction.
+
+5.5.4 Comparisons and Conditional Branches
+Nearly all programs need the ability to test their data and alter the sequence of
+instructions to be executed based on the results. A simple example is the squareroot function, √

@@ -1,0 +1,100 @@
+the instructions enter the Re (Rename) stage where the registers accessed are
+renamed to eliminate WAR and WAW hazards during out-of-order execution. This
+stage contains the rename table which records which physical register currently
+holds all architectural registers. Using this table, any input register can be easily
+renamed. The output register must be given a new physical register, which is taken
+from a pool of unused physical registers. The assigned physical register will be in
+use by the instruction until it retires.
+Next, instructions enter the Iss (Instruction Issue) stage, where they are
+dropped into the instruction issue queue. The issue queue watches for instructions
+whose inputs are all ready. When ready, their register inputs are acquired (from the
+physical register file or the bypass bus), and then the instruction is sent to the execution stages. Like the Core i7, the Cortex A9 potentially issues instructions out
+of program order. Up to four instructions can be issued each cycle. The choice of
+instructions is constrained by the functional units available.
+The Ex (Execute) stages are where instructions are actually executed. Most
+arithmetic, Boolean, and shift instructions use the integer ALUs and complete in
+one cycle. Loads and stores take two cycles (if they hit in the L1 cache), and multiplies take three cycles. The Ex stages contain multiple functional units, which are:
+1. Integer ALU 1.
+2. Integer ALU 2.
+3. Multiply unit.
+4. Floating-point and SIMD vector ALU (optional with VFP and NEON
+support).
+5. Load and store unit.
+Conditional branch instructions are also processed in the first Ex stage and their direction (branch/no branch) is determined. In the event of a misprediction, a signal
+is sent back to the Fe1 stage and the pipeline voided.
+
+SEC. 4.6
+
+333
+
+EXAMPLES OF THE MICROARCHITECTURE LEVEL
+
+Stage
+Level 1
+inst cache
+
+Fe1
+Fe2
+
+Branch
+predictor
+
+Fast-loop
+look-aside
+
+Instruction issue unit
+
+Instruction
+queue
+
+Fe3
+
+Id1
+Instruction
+decoding
+Id2
+
+Re
+
+Instruction renaming
+
+Iss
+
+Ex1
+
+Ex2
+
+Instruction issue queue
+
+ALU 1
+
+ALU 2
+
+Load-store unit
+
+Mult
+
+FPU/
+NEON
+
+Level 1
+data cache
+Level 2
+unified
+cache
+
+Ex3
+
+…
+WB
+
+Retirement
+
+Figure 4-49. A simplified representation of the OMAP4430’s Cortex A9 pipeline.
+
+After completing execution, instructions enter the WB (WriteBack) stage
+where each instruction updates the physical register file immediately. Potentially
+later, when the instruction is the oldest one in flight, it will write its register result
+to the architectural register file. If a trap or interrupt occurs, it is these values, not
+those in the physical registers, that are made visible. The act of storing the register
+in the architectural file is equivalent to retirement in the Core i7. In addition, in the

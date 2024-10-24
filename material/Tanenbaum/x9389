@@ -1,0 +1,100 @@
+pigment-based, 126
+solid, 126
+Inkjet printer, 125–126
+Input/output, 108–142
+Input/output device,
+color printer, 124–125
+digital camera, 135–137
+flat panel display, 115–118
+game controller, 120–122
+inkjet printer, 125–126
+keyboard, 113
+laser printer, 122–124
+mice, 118–120
+modem, 127–129
+specialty printers, 126–127
+telecommunication equipment, 127–132
+touch screen, 113–115
+
+758
+Input/output instructions, 394–397
+Instruction,
+ARM 400–402
+ATmega168, 402
+comparison, 390–392
+conditional branch, 390–392
+Core i7, 397–400
+data movement, 386–387
+dyadic, 387–388
+input/output, 394–397
+ISA level, 351
+loop control, 393–394
+monadic, 388–390
+predicated, 370
+procedure call, 392–393
+Instruction execution, 58–62
+Instruction fetch unit, 288–291
+Instruction format, 362–371
+ARM, 368–370
+ATmega168, 370–371
+Core i7, 367–368
+design criteria, 362–365
+Instruction group, Itanium 2, 424
+Instruction issue unit, OMAP4430, 330
+Instruction location counter, 530
+Instruction pointer, 694, 698
+Instruction register, 56
+Instruction scheduling, Itanium 2, 424
+Instruction set, 8088, 705–715
+Instruction set architecture, 691
+Instruction set architecture level, 343–430
+Instruction types, 386–403
+Instruction-level parallelism, 65–69, 555–561
+Instructions,
+ARM, 400–402
+ATmega168, 403
+Core i7, 397–400
+Integer JVM, 258–267
+compiling Java to, 265–267
+implementation, 267–282
+instruction set, 262–265
+memory model, 260–261
+stack, 258–260
+Integrated circuit, 158–159
+Integrated drive electronics, 91
+Intel 386, 14
+Intel 4004, 40
+Intel 80286, 41
+Intel 80386, 41
+Intel 80486, 41
+
+INDEX
+Intel 8080, 14
+Intel 8086, 41
+Intel 8088, 694–704
+addressing, 699–704
+example programs, 726–745
+far jump, 709
+near jump, 709
+segments, 700
+Intel 8088 instruction set, 705–715
+Intel Core i7 (see Core i7)
+Intel Xeon, 43
+Interconnection network, 617–621
+bisection bandwidth, 618
+topology, 618
+Interfacing, 232–236
+Interleaved memory, 606
+Internal fragmentation, 448
+Internet over cable, 132–135
+Internet protocol, 576
+Internet service provider, 576
+Interpretation, 2
+Interpreter, 2, 58–59, 693
+Interrupt, 109, 414–417
+imprecise, 318
+precise, 318
+transparent, 415
+Interrupt handler, 109
+Interrupt vector, 200, 414
+Intersector gap, 87

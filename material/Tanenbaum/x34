@@ -1,0 +1,100 @@
+merits. In this section we will look at instruction-level parallelism; in the next one,
+we will look at processor-level parallelism.
+Pipelining
+It has been known for years that the actual fetching of instructions from memory is a major bottleneck in instruction execution speed. To alleviate this problem,
+computers going back at least as far as the IBM Stretch (1959) have had the ability
+to fetch instructions from memory in advance, so they would be there when they
+were needed. These instructions were stored in a special set of registers called the
+prefetch buffer. This way, when an instruction was needed, it could usually be
+taken from the prefetch buffer rather than waiting for a memory read to complete.
+In effect, prefetching divides instruction execution into two parts: fetching and
+actual execution. The concept of a pipeline carries this strategy much further. Instead of being divided into only two parts, instruction execution is often divided
+into many (often a dozen or more) parts, each one handled by a dedicated piece of
+hardware, all of which can run in parallel.
+Figure 2-4(a) illustrates a pipeline with five units, also called stages. Stage 1
+fetches the instruction from memory and places it in a buffer until it is needed.
+Stage 2 decodes the instruction, determining its type and what operands it needs.
+
+66
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Stage 3 locates and fetches the operands, either from registers or from memory.
+Stage 4 actually does the work of carrying out the instruction, typically by running
+the operands through the data path of Fig. 2-2. Finally, stage 5 writes the result
+back to the proper register.
+S1
+
+S2
+
+S3
+
+S4
+
+S5
+
+Instruction
+fetch
+unit
+
+Instruction
+decode
+unit
+
+Operand
+fetch
+unit
+
+Instruction
+execution
+unit
+
+Write
+back
+unit
+
+(a)
+S1:
+
+1
+
+S2:
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+1
+
+2
+

@@ -1,0 +1,100 @@
+D Q
+
+D Q
+
+D Q
+
+CK
+
+CK
+
+CK
+
+D Q
+
+D Q
+
+D Q
+
+CK
+
+CK
+
+CK
+
+Word 0
+
+Word 1
+
+Word 2
+
+Word 3
+
+CS • RD
+
+CS
+O2
+
+RD
+
+O1
+Oo
+OE
+
+Output enable = CS • RD • OE
+
+Figure 3-28. Logic diagram for a 4 × 3 memory. Each row is one of the four
+3-bit words. A read or write operation always reads or writes a complete word.
+
+enabling one of the four write gates, depending on which word select line is high.
+The output of the write gate drives all the CK signals for the selected word, loading
+the input data into the flip-flops for that word. A write is done only if CS is high
+and RD is low, and even then only the word selected by A0 and A1 is written; the
+other words are not changed at all.
+
+SEC. 3.3
+
+177
+
+MEMORY
+
+Read is similar to write. The address decoding is exactly the same as for write.
+But now the CS ⋅ RD line is low, so all the write gates are disabled and none of the
+flip-flops is modified. Instead, the word select line that is chosen enables the AND
+gates tied to the Q bits of the selected word. Thus, the selected word outputs its
+data into the four-input OR gates at the bottom of the figure, while the other three
+words output 0s. Consequently, the output of the OR gates is identical to the value
+stored in the word selected. The three words not selected make no contribution to
+the output.
+Although we could have designed a circuit in which the three OR gates were
+just fed into the three output data lines, doing so sometimes causes problems. In
+particular, we have shown the data input lines and the data output lines as being
+different, but in actual memories the same lines are used. If we had tied the OR
+gates to the data output lines, the chip would try to output data, that is, force each
+line to a specific value, even on writes, thus interfering with the input data. For
+this reason, it is desirable to have a way to connect the OR gates to the data output
+lines on reads but disconnect them completely on writes. What we need is an electronic switch that can make or break a connection in a fraction of a nanosecond.
+Fortunately, such switches exist. Figure 3-29(a) shows the symbol for what is
+called a noninverting buffer. It has a data input, a data output, and a control
+input. When the control input is high, the buffer acts like a wire, as shown in
+Fig. 3-29(b). When the control input is low, the buffer acts like an open circuit, as
+shown in Fig. 3-29(c); it is as though someone detached the data output from the
+rest of the circuit with a wirecutter. However, in contrast to the wirecutter analogy
+the connection can be subsequently restored in a fraction of a nanosecond by just
+making the control signal high again.
+Data
+in
+
+Data
+out
+
+Control
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+Figure 3-29. (a) A noninverting buffer. (b) Effect of (a) when control is high.

@@ -1,0 +1,100 @@
+Windows 7. Each disk is statically divided up into self-contained volumes, which
+are the same as disk partitions in UNIX. Each volume contains bit maps, files,
+
+502
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+directories, and other data structures for managing its information. Each volume is
+organized as a linear sequence of clusters, with the cluster size being fixed for
+each volume and ranging from 512 bytes to 64 KB, depending on the volume size.
+Clusters are referred to by their offset from the start of the volume using 64-bit
+numbers.
+The main data structure in each volume is the MFT (Master File Table),
+which has an entry for each file and directory in the volume. These entries are
+analogous to the i-nodes in UNIX. The MFT is itself a file, and as such can be
+placed anywhere within the volume. This property is useful in case there are
+defective disk blocks at the beginning of the volume where the MFT would normally be stored. UNIX systems normally store certain key information at the start
+of each volume and in the (extremely unlikely) case that one of these blocks is
+irreparably damaged, the entire volume has to be repositioned.
+The MFT is shown in Fig. 6-42. It begins with a header containing information about the volume, such as (pointers to) the root directory, the boot file, the
+bad-block file, the free-list administration, etc. After that comes an entry per file
+or directory, 1 KB except when the cluster size is 2 KB or more. Each entry contains all the metadata (administrative information) about the file or directory. Several formats are allowed, one of which is shown in Fig. 6-42.
+
+Standard
+MS-DOS
+information File name name Security
+
+Data
+
+MFT entry for one file
+MFT
+header
+
+Master
+file
+table
+
+Figure 6-42. The Windows 7 master file table.
+
+The standard information field contains information such as the time stamps
+needed by POSIX, the hard link count, the read-only and archive bits, etc. It is a
+fixed-length field and always present. The file name is of variable length, up to
+255 Unicode characters. In order to make such files accessible to old 16-bit programs, files can also have a MS-DOS name, which consists of eight alphanumeric
+characters optionally followed by a dot and an extension of no more than three
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+503
+
+alphanumeric characters. If the actual file name conforms to the MS-DOS 8+3 naming rule, a secondary MS-DOS name is not used.
+Next comes the security information. In versions up to and including Windows NT 4.0, the security field contained the actual security descriptor. Starting
+with Windows 2000, all the security information was centralized in a single file,
+with the security field simply pointing to the relevant part of this file.
+For small files, the file data itself is actually contained in the MFT entry, saving a disk access to fetch it. This idea is called an immediate file (Mullender and
+Tanenbaum, 1984). For somewhat larger files, this field contains pointers to the
+clusters containing the data, or more commonly, runs of consecutive clusters so a
+single cluster number and a length can represent an arbitrary amount of file data.
+If a single MFT entry is insufficiently large to hold whatever information it is supposed to hold, one or more additional entries can be chained to it.
+The maximum file size is 264 bytes. To get an idea of how big a 264 -byte (i.e.,
+67
+2 -bit) file is, imagine that it were written out in binary, with each 0 or 1 occupying 1 mm of space. The 267 -mm listing would be 15 light-years long, reaching far
+beyond the solar system, to Alpha Centauri and back.
+The NTFS file system has many other interesting properties including support
+for multiple data streams for each file, encryption, data compression, and fault tolerance using atomic transactions. Additional information about it can be found in
+Russinovich and Solomon (2005).
+
+6.5.4 Examples of Process Management
+Both UNIX and Windows 7 allow a job to be split up into multiple processes
+that can run in (pseudo)parallel and communicate with each other, in the style of
+the producer-consumer example discussed earlier. In this section we will discuss
+how processes are managed in both systems. Both systems also support parallelism within a single process using threads, so that will also be discussed.
+UNIX Process Management
+At any time, a UNIX process can create a subprocess that is an exact replica of
+itself by executing the fork system call. The original process is called the parent
+and the new one the child. Right after the fork, the two processes are identical and
+even share the same file descriptors. Thereafter, each one goes its own way and
+does whatever it wants to, independent of the other one.
+In many cases, the child process juggles the file descriptors in certain ways and
+then executes the exec system call, which replaces its program and data with the
+program and data found in an executable file specified as parameter to the exec
+call. For example, when a user types a command xyz at a terminal, the command
+interpreter (shell) executes fork to create a child process. This child process then
+executes exec to run the xyz program.
+
+504
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+The two processes run in parallel (with or without exec), unless the parent
+wishes to wait for the child to terminate before continuing. If the parent wishes to
+wait, it executes either the wait or waitpid system call, which causes it to be suspended until the child finishes by executing exit. After the child finishes, the parent continues.
+Processes can execute fork as often as they want, giving rise to a tree of processes. In Fig. 6-43, for example, process A has executed fork twice, creating two
+children, B and C. Then B also executed fork twice, and C executed it once, giving
+the final tree of six processes.

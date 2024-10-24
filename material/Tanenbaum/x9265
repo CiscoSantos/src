@@ -1,0 +1,100 @@
+caches with dedicated point-to-point connections. The next level of the memory
+hierarchy is the shared and unified L3 data cache.
+The L2 caches connect to the L3 shared cache using a ring network. When a
+communication request enters the ring network, it is forwarded to the next node on
+the network, where it is checked to see if it has reached its destination node. This
+process continues from node to node on the ring until the destination node is found
+or the request arrives at its source again (in which case the destination does not
+exist). The advantage of a ring network is it is a cheap way to get high bandwidth,
+at the cost of increased latency as requests hop from node to node. The Core i7
+ring network serves two primary purposes. First, it provides a way to move memory and I/O requests between the caches and processors. Second, it implements the
+checks necessary to ensure that each processor is always seeing a coherent view of
+memory. We will learn more about these coherence checks later in this chapter.
+
+570
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Heterogeneous Multiprocessors on a Chip
+A completely different application area calling for single-chip multiprocessors
+is embedded systems, especially in audiovisual consumer electronics, such as television sets, DVD players, camcorders, game consoles, cell phones, and so on.
+These systems have demanding performance requirements and tight constraints.
+Although these devices look different, more and more of them are simply small
+computers, with one or more CPUs, memories, I/O controllers, and some custom
+I/O devices. A cell phone, for example, is merely a PC with a CPU, memory,
+dwarf keyboard, microphone, loudspeaker, and a wireless network connection in a
+small package.
+Consider, as an example, a portable DVD player. The computer inside has to
+handle the following functions:
+1. Control of a cheap, unreliable servomechanism for head tracking.
+2. Analog-to-digital conversion.
+3. Error correction.
+4. Decryption and digital rights management.
+5. MPEG-2 video decompression.
+6. Audio decompression.
+7. Encoding the output for NTSC, PAL, or SECAM television sets.
+This work must be done subject to stringent real-time, quality-of-service, energy,
+heat-dissipation, size, weight, and price constraints.
+CD, DVD, and Blu-ray disks contain a long spiral containing the information,
+as illustrated in Fig. 2-25 (for a CD). In this section we will discuss DVDs since
+they are still more common than Blu-ray disks, but Blu-ray disks are very similar
+to DVDs except they use MPEG-4 instead of MPEG-2 for encoding. With all optical media, the read head must accurately track the spiral as the disk rotates. The
+price is kept low by using a relatively simple mechanical design and tight control
+over the head position in software. The signal coming off the head is an analog
+signal, which must be converted to digital form before being processed. After it
+has been digitized, heavy error correction is required because DVDs are pressed
+and contain many errors, which must corrected in software. The video is compressed using the MPEG-2 international standard, which requires complex
+(Fourier-transform-like) computations for decompression. Audio is compressed
+using a psycho-acoustic model, which also requires sophisticated calculations for
+decompression. Finally, audio and video have to be rendered in a suitable form for
+output to NTSC, PAL, or SECAM television sets, depending on the country to
+which the DVD player is shipped. It should come as no surprise that doing all this
+work in real time in software on a cheap general-purpose CPU is not possible.
+
+SEC. 8.1
+
+571
+
+ON-CHIP PARALELLISM
+
+What is needed is a heterogeneous multiprocessor containing multiple cores, each
+specialized for one particular task. An example DVD player is given in Fig. 8-12.
+
+MPEG video decoder
+Control processor
+
+Heterogeneous
+multiprocessor chip
+with six cores
+
+NTSC/PAL/SECAM
+composite video
+Audio
+encoder
+decoder
+Disk controller
+Cache
+Memory
+
+Bus
+
+Figure 8-12. The logical structure of a simple DVD player contains a heterogeneous multiprocessor containing multiple cores for different functions.
+
+The functions of the cores in Fig. 8-12 are all different, with each being carefully designed to be extremely good at what it does for the lowest possible price.
+For example, DVD video is compressed using a scheme known as MPEG-2 (after
+the Motion Picture Experts Group that invented it). It consists of dividing each
+frame up into blocks of pixels and doing a complex transformation on each one. A
+frame can consist entirely of transformed blocks or it can specify that a certain
+block is the same as one found in the previous frame but located at an offset of
+(Δx, Δy) from its current position except with a couple of pixels changed. Doing
+this calculation in software is extremely slow, but it is possible to build an MPEG-2
+decoding engine that can do it in hardware quite rapidly. Similarly, audio decoding
+and reencoding the composite audio-video signal to conform to one of the world’s
+television standards can be done better by dedicated hardware processors. These
+observations quickly lead to heterogeneous multiprocessor chips containing multiple cores specifically designed for audio-visual applications. However, because the
+control processor is a general-purpose programmable CPU, the multiprocessor
+chip can also be used in other, similar applications, such as a DVD recorder.
+Another device requiring a heterogeneous multiprocessor is the engine inside
+an advanced cell phone. Current phones sometimes have still cameras, video cameras, game machines, web browsers, email readers, and digital satellite radio receivers, using either cell-phone technology (CDMA or GSM, depending on the

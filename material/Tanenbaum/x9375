@@ -1,0 +1,100 @@
+CMP AX,5
+JL 8f
+CMPB AL,’0’
+JL 1b
+CMPB AL,’9’
+JLE 2f
+MOVB AL,’9’+1
+2: MOV BX,AX
+AND BX,0Xf
+SAL BX,1
+CALL tbl(BX)
+JMP 1b
+8: PUSH 0
+PUSH EXIT
+SYS
+
+741
+
+EXAMPLES
+
+! 1
+! 2
+! 3
+! 4
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 12
+! 13
+! 14
+! 15
+! 16
+! 17
+! 18
+! 19
+! 20
+! 21
+! 22
+! 23
+! 24
+
+rout0: MOV AX,mes0
+JMP 9f
+rout1: MOV AX,mes1
+JMP 9f
+rout2: MOV AX,mes2
+JMP 9f
+rout3: MOV AX,mes3
+JMP 9f
+rout4: MOV AX,mes4
+JMP 9f
+rout5: MOV AX,mes5
+JMP 9f
+rout6: MOV AX,mes6
+JMP 9f
+rout7: MOV AX,mes7
+JMP 9f
+rout8: MOV AX,mes8
+JMP 9f
+erout: MOV AX,emes
+9:
+PUSH AX
+PUSH PRINTF
+SYS
+ADD SP,4
+RET
+
+.SECT .DATA
+tbl: .WORD rout0,rout1,rout2,rout3,rout4,rout5,rout6,rout7,rout8,rout8,erout
+mes0: .ASCIZ "This is a zero.\n"
+mes1: .ASCIZ "How about a one.\n"
+mes2: .ASCIZ "You asked for a two.\n"
+mes3: .ASCIZ "The digit was a three.\n"
+mes4: .ASCIZ "You typed a four.\n"
+mes5: .ASCIZ "You preferred a five.\n"
+mes6: .ASCIZ "A six was encountered.\n"
+mes7: .ASCIZ "This is number seven.\n"
+mes8: .ASCIZ "This digit is not accepted as an octal.\n"
+emes: .ASCIZ "This is not a digit. Try again.\n"
+strt: .ASCIZ "Type an octal digit with a return. Stop on end of file.\n"
+
+! 25
+! 26
+! 27
+! 28
+! 29
+! 30
+! 31
+! 32
+! 33
+! 34
+! 35
+! 36
+! 37
+! 38
+! 39

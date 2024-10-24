@@ -1,0 +1,100 @@
+PAR
+
+1
+
+×
+
+Address or data parity bit
+
+C/BE
+
+4
+
+×
+
+Bus command/bit map for bytes enabled
+
+FRAME#
+
+1
+
+×
+
+Indicates that AD and C/BE are asserted
+
+IRDY#
+
+1
+
+×
+
+Read: master will accept; write: data present
+
+IDSEL
+
+1
+
+×
+
+DEVSEL#
+
+1
+
+×
+
+Slave has decoded its address and is listening
+
+TRDY#
+
+1
+
+×
+
+Read: data present; write: slave will accept
+
+STOP#
+
+1
+
+×
+
+Slave wants to stop transaction immediately
+
+PERR#
+
+1
+
+Data parity error detected by receiver
+
+SERR#
+
+1
+
+Address parity error or system error detected
+
+REQ#
+
+1
+
+Bus arbitration: request for bus ownership
+
+GNT#
+
+1
+
+Bus arbitration: grant of bus ownership
+
+RST#
+
+1
+
+Reset the system and all devices
+(a)
+
+Signal
+
+Lines
+
+Master
+
+REQ64#

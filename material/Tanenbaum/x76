@@ -1,0 +1,100 @@
+extremely powerful embedded system, often rivaling a desktop computer of only a
+few years earlier.
+
+2.4.8 Character Codes
+Each computer has a set of characters that it uses. As a bare minimum, this set
+includes the 26 uppercase letters, the 26 lowercase letters, the digits 0 through 9,
+and a set of special symbols, such as space, period, minus sign, comma, and carriage return.
+In order to transfer these characters into the computer, each one is assigned a
+number: for example, a = 1, b = 2, ..., z = 26, + = 27, − = 28. The mapping of
+characters onto integers is called a character code. It is essential that communicating computers use the same code or they will not be able to understand one another. For this reason, standards have been developed. Below we will examine
+three of the most important ones.
+
+138
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+ASCII
+One widely used code is called ASCII (American Standard Code for Information Interchange). Each ASCII character has 7 bits, allowing for 128 characters in all. However, because computers are byte oriented, each ASCII character is
+normally stored in a separate byte. Figure 2-44 shows the ASCII code. Codes 0 to
+1F (hexadecimal) are control characters and do not print. Codes from 128 to 255
+are not part of ASCII, but the IBM PC defined them to be special characters like
+smiley faces and most computers still support them.
+Many of the ASCII control characters are intended for data transmission. For
+example, a message might consist of an SOH (Start of Header) character, a header,
+an STX (Start of Text) character, the text itself, an ETX (End of Text) character,
+and then an EOT (End of Transmission) character. In practice, however, the messages sent over telephone lines and networks are formatted quite differently, so the
+ASCII transmission control characters are not used much any more.
+The ASCII printing characters are straightforward. They include the upperand lowercase letters, digits, punctuation marks, and a few math symbols.
+Unicode
+The computer industry grew up mostly in the U.S., which led to the ASCII
+character set. ASCII is fine for English but less fine for other languages. French
+needs accents (e.g., syste`me); German needs diacritical marks (e.g., f¨ur), and so on.
+Some European languages have a few letters not found in ASCII, such as the German ß and the Danish o/. Some languages have entirely different alphabets (e.g.,
+Russian and Arabic), and a few languages have no alphabet at all (e.g., Chinese).
+As computers spread to the four corners of the globe and software vendors want to
+sell products in countries where most users do not speak English, a different character set is needed.
+The first attempt at extending ASCII was IS 646, which added another 128
+characters to ASCII, making it an 8-bit code called Latin-1. The additional characters were mostly Latin letters with accents and diacritical marks. The next attempt was IS 8859, which introduced the concept of a code page, a set of 256
+characters for a particular language or group of languages. IS 8859-1 is Latin-1.
+IS 8859-2 handles the Latin-based Slavic languages (e.g., Czech, Polish, and Hungarian). IS 8859-3 contains the characters needed for Turkish, Maltese, Esperanto,
+and Galician, and so on. The trouble with the code-page approach is that the software has to keep track of which page it is currently on, it is impossible to mix languages over pages, and the scheme does not cover Japanese and Chinese at all.
+A group of computer companies decided to solve this problem by forming a
+consortium to create a new system, called Unicode, and getting it proclaimed an
+International Standard (IS 10646). Unicode is now supported by programming
+languages (e.g., Java), operating systems (e.g., Windows), and many applications.
+
+SEC. 2.4
+
+139
+
+INPUT/OUTPUT
+
+Hex
+
+Name
+
+Meaning
+
+Hex
+
+Name
+
+Meaning
+
+0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+A
+B
+C
+D
+E
+F
+
+NUL
+SOH
+STX
+ETX
+EOT
+ENQ
+ACK
+BEL
+BS
+HT
+LF
+VT
+FF
+CR
+SO
+SI
+

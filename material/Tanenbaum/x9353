@@ -1,0 +1,100 @@
+THAN and LESS THAN should be used. If they are unsigned, the ones using ABOVE
+and BELOW should be used.
+
+C.4.5 Subroutine Calls
+The 8088 has an instruction used to call procedures, usually known in assembly language as subroutines. In the same way as in the jump instructions, there
+exist near call instructions and far call instructions. In the interpreter, only the
+
+SEC. C.4
+
+THE 8088 INSTRUCTION SET
+
+Instruction
+
+Description
+
+JNA, JBE
+
+Below or equal
+
+CF=1 or ZF=1
+
+JNB, JAE, JNC
+
+Not below
+
+CF=0
+
+JE, JZ
+
+Zero, equal
+
+ZF=1
+
+JNLE, JG
+
+Greater than
+
+SF=OF and ZF=0
+
+JGE, JNL
+
+Greater equal
+
+SF=OF
+
+JO
+
+Overflow
+
+OF=1
+
+JS
+
+Sign negative
+
+SF=1
+
+JCXZ
+
+CX is zero
+
+CX=0
+
+JB, JNAE, JC
+
+Below
+
+CF=1
+
+JNBE, JA
+
+Above
+
+CF=0&ZF=0
+
+JNE, JNZ
+
+Nonzero, nonequal
+
+ZF=0
+
+JL, JNGE
+
+Less than
+
+SF≠OF
+
+JLE, JNG
+
+Less or equal
+
+SF≠OF or ZF=1
+
+JNO
+
+Nonoverflow
+
+OF=0
+
+JNS

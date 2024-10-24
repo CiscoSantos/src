@@ -1,0 +1,100 @@
+not even if there were a way to specify this, since the CPU cannot initiate three
+floating-point instructions simultaneously. The allowed combinations are the ones
+that are actually feasible.
+
+5.8.5 Reducing Conditional Branches: Predication
+Another important feature of the IA-64 is the new way it deals with conditional
+branches. If there were a way to get rid of most of them, CPUs could be made
+much simpler and faster. At first thought it might seem that getting rid of conditional branches would be impossible because programs are full of if statements.
+However, IA-64 uses a technique called predication that can greatly reduce their
+number (August et al., 1998, and Hwu, 1998). We will now briefly describe it.
+In traditional architectures, all instructions are unconditional in the sense that
+when the CPU hits an instruction, it just carries the instruction out. There is no internal debate of the form: ‘‘To do or not to do, that is the question.’’ In contrast, in
+a predicated architecture, instructions contain conditions (predicates) telling when
+they should be executed and when not. This paradigm shift from unconditional instructions to predicated instructions is what allows us to get rid of (many) conditional branches. Instead of having to make a choice between one sequence of
+unconditional instructions or another sequence of unconditional instructions, all
+the instructions are merged into a single sequence of predicated instructions, using
+different predicates for different instructions.
+
+SEC. 5.8
+
+427
+
+THE IA-64 ARCHITECTURE AND THE ITANIUM 2
+
+In order to see how predication works, let us start with the simple example of
+Fig. 5-48, which shows conditional execution, a precursor to predication. In
+Fig. 5-48(a) we see an if statement. In Fig. 5-48(b) we see its translation into three
+instructions: a comparison, a conditional branch, and a move instruction.
+if (R1 == 0)
+R2 = R3;
+
+CMP R1,0
+BNE L1
+MOV R2,R3
+
+CMOVZ R2,R3,R1
+
+L1:
+(a)
+
+(b)
+
+(c)
+
+Figure 5-48. (a) An if statement. (b) Generic assembly code for (a). (c) A conditional instruction.
+
+In Fig. 5-48(c) we get rid of the conditional branch by using a new instruction,
+see if the third reg-
+
+CMOVZ, which is a conditional move. What it does is check to
+ister, R1, is 0. If so, it copies R3 to R2. If not, it does nothing.
+
+Once we have an instruction that can copy data when some register is 0, it is a
+small step to an instruction that can copy data when some register is not 0, say
+CMOVN. With both of these instructions available, we are on our way to full conditional execution. Imagine an if statement with several assignments in the then part
+and several other assignments in the else part. The whole statement can be translated into code to set some register to 0 if the condition is false and to another
+value if it is true. Following the register setup, the then part assignments can be
+compiled into a sequence of CMOVN instructions and the else part assignments into
+a sequence of CMOVZ instructions.
+All of these instructions, the register setup, the CMOVNs, and the CMOVZs form
+a single basic block with no conditional branch. The instructions can even be
+reordered, either by the compiler (including hoisting the assignments before the
+test) or during execution. The only catch is that the condition has to be known by
+the time the conditional instructions have to be retired (near the end of the
+pipeline). A simple example showing a then part and an else part is given in
+Fig. 5-49.
+Although we have shown here only very simple conditional instructions (taken
+from the IA-32 ISA, actually), on the IA-64 all instructions are predicated. What
+this means is that the execution of every instruction can be made conditional. The
+extra 6-bit field referred to earlier selects one of 64 1-bit predicate registers. Thus
+an if statement will be compiled into code that sets one of the predicate registers to
+1 if the condition is true and to 0 if it is false. Simultaneously and automatically, it
+sets another predicate register to the inverse value. Using predication, the machine
+instructions forming the then and else clauses will be merged into a single stream
+of instructions, the former ones using the predicate and the latter ones using its
+inverse. When control passes there, only one set of instructions will be executed.
+
+428
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+if (R1 == 0) {
+R2 = R3;
+R4 = R5;
+} else {
+R6 = R7;
+R8 = R9;
+}
+(a)
+
+CMP R1,0
+BNE L1
+MOV R2,R3
+MOV R4.R5
+BR L2
+L1: MOV R6,R7
+MOV R8,R9
+L2:
+(b)
+
+CHAP. 5

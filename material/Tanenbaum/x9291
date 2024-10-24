@@ -1,0 +1,100 @@
+
+Expander
+board
+
+18 x 18 Response
+crossbar switch
+
+Centerplane
+
+Directory domain
+
+18 x 18 Address
+crossbar switch
+
+Level 0
+
+M
+
+Figure 8-35. The Sun Fire E25K uses a four-level interconnect. Dashed lines
+are address paths. Solid lines are data paths.
+
+Data transfers use a four-level interconnect as depicted in Fig. 8-35. This design was chosen for high performance. At level 0, pairs of CPU chips and memories are connected by a small crossbar switch that also has a connection to level 1.
+The two groups of CPU-memory pairs are connected by a second crossbar switch
+at level 1. The crossbar switches are custom ASICs. For all of them, all the inputs
+are available on both the rows and the columns, although not all combinations are
+used (or even make sense). All the switching logic on the boards is built from
+3 × 3 crossbars.
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+613
+
+Each boardset consists of three boards: the CPU-memory board, the I/O board,
+and the expander board, which connects the other two. The level 2 interconnect is
+another 3 × 3 crossbar switch (on the expander board) that joins the actual memory
+to the I/O ports (which are memory mapped on all UltraSPARCs). All data transfers to or from the boardset, whether to memory or to an I/O port, pass through the
+level 2 switch. Finally, data that have to be transferred to or from a remote board
+pass through an 18 × 18 data crossbar switch at level 3. Data transfers are done 32
+bytes at a time, so it takes two clock cycles to transfer 64 bytes, the usual transfer
+unit.
+Having looked at how the components are arranged, let us now consider how
+the shared memory operates. At the bottom level, the 576 GB of memory is split
+into 229 blocks of 64 bytes each. These blocks are the atomic units of the memory
+system. Each block has a home board where it lives when not in use elsewhere.
+Most blocks are on their home board most of the time. However, when a CPU
+needs a memory block, either from its own board or one of the 17 remote ones, it
+first requests a copy for its own cache, then accesses the cached copy. Although
+each CPU chip on the E25K contains two CPUs, they share a single physical cache
+and thus share all the blocks contained in it.
+Each memory block and cache line of each CPU chip can be in one of three
+states:
+1. Exclusive access (for writing).
+2. Shared access (for reading).
+3. Invalid (i.e., empty).
+When a CPU needs to read or write a memory word, it first checks its own
+cache. Failing to find the word there, it issues a local request for the physical address that is broadcast only on its own boardset. If a cache on the boardset has the
+needed line, the snooping logic detects the hit and responds to the request. If the
+line is in exclusive mode, it is transferred to the requester and the original copy
+marked invalid. If it is in shared mode, the cache does not respond since memory
+always responds when a cache line is clean.
+If the snooping logic cannot find the cache line or it is present and shared, it
+sends a request over the centerplane to the home board asking where the memory
+block is. The state of each memory block is stored in the block’s ECC bits, so the
+home board can immediately determine its state. If the block is either unshared or
+shared with one or more remote boards, the home memory will be up to date, and
+the request can be satisfied from the home board’s memory. In this case, a copy of
+the case line is transmitted over the data crossbar switch in two clock cycles, eventually arriving at the requesting CPU.
+If the request was for reading, an entry is made in the directory at the home
+board noting that a new customer is sharing the cache line and the transaction is
+
+614
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+finished. However, if the request was for writing, an invalidation message must be
+sent to all other boards (if any) holding a copy of it. In this way, the board making
+the write request ends up with the only copy.
+Now consider the case in which the requested block is in exclusive state located on a different board. When the home board gets the request, it looks up the location of the remote board in the directory and sends the requester a message telling where the cache line is. The requester now sends the request to the correct
+boardset. When the request arrives, the board sends back the cache line. If it was
+a read request, the line is marked shared and a copy sent back to the home board.
+If it was a write request, the responder invalidates its copy so the new requester has
+an exclusive copy.
+Since each board has 229 memory blocks, it would take a directory with 229 entries to keep track of them all in the worst case. Since the directory is much smaller than 229 , it could happen that there is no room in the directory (which is
+searched associatively) for some entries. In this case, the home directory has to
+locate the block by broadcasting a request for it to all the other 17 boards. The response crossbar switch plays a role in the directory coherence and update protocol
+by handling much of the reverse traffic back to the sender. Splitting the protocol
+traffic over two buses (address and response) and the data over a third bus increases the throughput of the system.
+By distributing the load over multiple devices on different boards, the Sun Fire
+E25K is able to achieve very high performance. In addition to the 2.7 billion
+snoops/sec mentioned above, the centerplane can handle up to nine simultaneous
+transfers, with nine boards sending and nine boards receiving. Since the data
+crossbar is 32 bytes wide, on every clock cycle 288 bytes can be moved through
+the centerplane. At a clock rate of 150 MHz, this gives a peak aggregate bandwidth of 40 GB/sec when all accesses are remote. If the software can place pages
+in such a way to ensure that most accesses are local, then the system bandwidth
+can be appreciably higher than 40 GB/sec.
+For more technical information about the Sun Fire, see Charlesworth (2002)

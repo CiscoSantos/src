@@ -1,0 +1,100 @@
+
+pp. 36–45, Jan.–Feb. 2002.
+CHARLESWORTH, A.: ‘‘The Sun Fireplane Interconnect,’’ Proc. Conf. on High Perf. Net-
+
+working and Computing, ACM, 2001.
+CHEN, L., DROPSHO, S., and ALBONESI, D.H.: ‘‘Dynamic Data Dependence Tracking and
+
+Its Application to Branch Prediction,’’ Proc. Ninth Int’l Symp. on High-Performance
+Computer Arch., IEEE, pp. 65–78, 2003.
+CHENG, L., and CARTER, J.B.: ‘‘Extending CC-NUMA Systems to Support Write Update
+
+Optimizations,’’ Proc. 2008 ACM/IEEE Conf. on Supercomputing, ACM/IEEE, 2008.
+CHOU, Y., FAHS, B., and ABRAHAM, S.: ‘‘ Microarchitecture Optimizations for Exploiting
+
+Memory-Level Parallelism,’’ Proc. 31st Ann. Int’l Symp. on Computer Arch., ACM,
+pp. 76–77, 2004.
+
+662
+
+BIBLIOGRAPHY
+
+CHAP. 9
+
+COHEN, D.: ‘‘On Holy Wars and a Plea for Peace,’’ IEEE Computer Magazine, vol. 14, pp.
+
+48–54, Oct. 1981.
+CORBATO
+´ , F.J., and VYSSOTSKY, V.A.: ‘‘Introduction and Overview of the MULTICS
+
+System,’’ Proc. FJCC, pp. 185–196, 1965.
+DENNING, P.J.: ‘‘The Working Set Model for Program Behavior,’’ Commun. of the ACM,
+
+vol. 11, pp. 323–333, May 1968.
+DIJKSTRA, E.W.: ‘‘GOTO Statement Considered Harmful,’’ Commun. of the ACM, vol. 11,
+
+pp. 147–148, March 1968a.
+DIJKSTRA, E.W.: ‘‘Co-operating Sequential Processes,’’ in Programming Languages, F.
+
+Genuys (ed.), New York: Academic Press, 1968b.
+DONALDSON, G., and JONES, D.: ‘‘Cable Television Broadband Network Architectures,’’
+
+IEEE Commun. Magazine, vol. 39, pp. 122–126, June 2001.
+DUBOIS, M., SCHEURICH, C., and BRIGGS, F.A.: ‘‘Memory Access Buffering in Multi-
+
+processors,’’ Proc. 13th Ann. Int’l Symp. on Computer Arch., ACM, pp. 434–442,
+1986.
+DULONG, C.: ‘‘The IA-64 Architecture at Work,’’ IEEE Computer Magazine, vol. 31, pp.
+
+24–32, July 1998.
+DUTTA-ROY, A.: ‘‘An Overview of Cable Modem Technology and Market Perspectives,’’
+
+IEEE Commun. Magazine, vol. 39, pp. 81–88, June 2001.
+FAGGIN, F., HOFF, M.E., Jr., MAZOR, S., and SHIMA, M.: ‘‘The History of the 4004,’’
+
+IEEE Micro Magazine, vol. 16, pp. 10–20, Nov. 1996.
+FALCON, A., STARK, J., RAMIREZ, A., LAI, K., and VALERO, M.: ‘‘Prophet/Critic Hybrid
+
+Branch Prediction,’’ Proc. 31st Ann. Int’l Symp. on Computer Arch., ACM, pp.
+250–261, 2004.
+FISHER, J.A., and FREUDENBERGER, S.M.: ‘‘Predicting Conditional Branch Directions
+
+from Previous Runs of a Program,’’ Proc. Fifth Int’l Conf. on Arch. Support for Prog.
+Lang. and Operating Syst., ACM, pp. 85–95, 1992.
+FLYNN, D.: ‘‘AMBA: Enabling Reusable On-Chip Designs,’’ IEEE Micro Magazine, vol.
+
+17, pp. 20–27, July 1997.
+FLYNN, M.J.: ‘‘Some Computer Organizations and Their Effectiveness,’’ IEEE Trans. on
+
+Computers, vol. C-21, pp. 948–960, Sept. 1972.
+FOSTER, I., and KESSELMAN, C.: The Grid 2: Blueprint for a New Computing Infrastruc-
+
+ture, San Francisco: Morgan Kaufman, 2003.
+FOTHERINGHAM, J.: ‘‘Dynamic Storage Allocation in the Atlas Computer Including an
+
+Automatic Use of a Backing Store,’’ Commun. of the ACM, vol. 4, pp. 435–436, Oct.
+1961.
+FREITAS, H.C., MADRUGA, F.L., ALVES, M., and NAVAUX, P.: ‘‘Design of Interleaved
+
+Multithreading for Network Processors on Chip,’’ Proc. Int’l Symp. on Circuits and
+Systems, IEEE, 2009.
+
+BIBLIOGRAPHY
+
+663
+
+GASPAR, L., FISCHER, V., BERNARD, F., BOSSUET, L., and COTRET, P.: ‘‘HCrypt: A
+
+Novel Concept of Crypto-processor with Secured Key Management,’’ Int’l Conf. on
+Reconfigurable Computing and FPGAs, 2010.
+GAUR, J., CHAUDHURI, C., and SUBRAMONEY, S.: ‘‘Bypass and Insertion Algorithms for
+
+Exclusive Last-level Caches,’’ Proc. 38th Int’l Symp. on Computer Arch., ACM, 2011.
+GEBHART, M., JOHNSON, D.R., TARJAN, D., KECKLER, S.W., DALLY, W.J., LINDHOLM,
+E., and SKADRON, K.: ‘‘Energy-efficient Mechanisms for Managing Thread Context
+
+in Throughput Processors,’’ Proc. 38th Int’l Symp. on Computer Arch. ACM, 2011.
+GEIST, A., BEGUELIN, A., DONGARRA, J., JIANG, W., MANCHECK, R., and SUNDERRAM, V.: PVM: Parallel Virtual Machine—A User’s Guide and Tutorial for Networked
+
+Parallel Computing, Cambridge, MA: MIT Press, 1994.
+GEPNER, P., GAMAYUNOV, V., and FRASER, D.L.: ‘‘The 2nd Generation Intel Core Pro-

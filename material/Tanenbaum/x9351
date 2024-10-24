@@ -1,0 +1,100 @@
+Back if Z=1 and DEC(CX)≥0
+Back if Z=0 and DEC(CX)≥0
+Repeat string instruction
+
+label
+label
+label
+string instruction
+
+-
+
+-
+
+-
+
+-
+
+MOVS(B)
+LODS(B)
+STOS(B)
+SCAS(B)
+CMPS(B)
+
+Move word string
+Load word string
+Store word string
+Scan word string
+Compare word string
+
+-
+
+*
+*
+
+*
+*
+
+*
+*
+
+*
+*
+
+JCC
+JMP
+CALL
+RET
+SYS
+
+Jump according conditions
+Jump to label
+Jump to subroutine
+Return from subroutine
+System call trap
+
+label
+e, label
+e, label
+-, #
+-
+
+-
+
+-
+
+-
+
+-
+
+1, e ← CL
+1, e ← CL
+1, e ← CL
+1, e ← CL
+1, e ← CL
+1, e ← CL
+1, e ← CL
+
+Figure C-4. Some of the most important 8088 instructions.
+
+708
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+C.4.2 Logical, Bit and Shift Operations
+The next block contains instructions for sign extension, negation, logical complement, increment and decrement. The sign extend operations have no explicit
+operands, but act on the DX : AX or the AH : AL register combinations. The single
+operand for the other operations of this group can be found at any effective
+address. The flags are affected in the expected way in case of the NEG, INC and
+DEC, except that the carry is not affected in the increment and decrement, which is
+quite unexpected and which some people regard as a design error.
+The next block of instructions is the two-operand logical group, all of whose
+instructions behave as expected. In the shift and rotate group, all operations have
+an effective address as their destination, but the source is either the byte register CL
+or the number 1. In the shifts, all four flags are affected; in the rotates, only the
+carry and the overflow are affected. The carry always gets the bit that is shifted or
+rotated out of the high-order or low-order bit, depending on the direction of the
+shift or rotate. In the rotates with carry, RCR, RCL, RCRB, and RCLB, the carry
+together with the operand at the effective address, constitutes a 17-bit or a 9-bit circular shift register combination, which facilitates multiple word shifts and rotates.

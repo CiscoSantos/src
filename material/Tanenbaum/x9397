@@ -1,0 +1,100 @@
+Self-modifying, 374
+Semantics, memory, 593–598
+Semaphore, 478–480
+Sequencer, 253
+Sequential consistency, 594–595
+Sequential flow of control, 405–406
+Serial ATA, 92
+Server, 36
+Session, CD-ROM, 105
+Set-associative cache, 308–310
+Shard, 632
+Shared library, 549
+
+766
+
+INDEX
+
+Shared-memory, application-level, 640–646
+Shell, 485
+Shifter, 163–164
+Shockley, William, 19
+SIB (see Scale, Index, Base byte)
+SID (see Security ID)
+Sign extension, 250
+Signed magnitude number, 675
+Significand, 686
+SIMD (see Single Instruction stream Multiple
+Data steam)
+SIMM (see Single Inline Memory Modules)
+Simon smartphone, 27
+Simple COMA, 615
+Simplex line, 129
+Simultaneous multithreading, 564
+Single inline memory module, 85
+Single instruction stream multiple data stream, 70, 583
+Single large expensive disk, 94
+Single-chip multiprocessors, 568–574
+Skew, bus, 112
+Slave, 189
+bus, 189
+SLED (see Single Large Expensive Disk)
+SM (see Streaming Multiprocessor)
+Small computer system interface, 92–94
+Small memory model, 720
+Small outline DIMM, 85
+Smartphone, 27
+SMP (see Symmetric MultiProcessor)
+Snoop, 202
+Snooping cache, 599, 599–606
+Snoopy cache, 599
+SO-DIMM (see Small Outline DIMM)
+SoC, 208
+Socket, 483
+Software, 8
+Software layer, 227
+Software metric, 648
+Solid-ink printer, 126
+Solid-state disk, 97–99
+Source index, 698
+Source language, 517
+Source operand, 701
+SPARC, 14
+Spatial locality, 305
+Specialty printer, 126–127
+Speculative execution, 320–323, 321
+Speculative load, 429
+Speed vs cost, 283–285
+
+Split cache, 84, 305
+Splitter, 131
+SR latch, 169–170
+SRAM (see Static RAM)
+SSD (see Solid-State Disk)
+SSE (see Streaming SIMD Extensions)
+Stack, 258–260
+operand, 259
+Stack addressing, 376–379
+Stack frame, 698
+Stack pointer, 698
+Stage, pipeline, 65
+Stale data, 599
+Stall, 311
+Stalling, 298
+Standard error, 494
+Standard input, 494
+Standard output, 494
+Star, 620
+State, 244
+finite state machine, 290
+Statement, assembly language, 520–521
+Static branch prediction, 315
+Static RAM, 181
+Stibbitz, George, 16
+Storage, 73
+Store, 73
+Store buffer, OMAP4430, 331
+Store-and-forward network, 575
+Store-to-load forwarding, 329
+Stream, 484
+Streaming multiprocessor, 582

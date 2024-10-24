@@ -1,0 +1,100 @@
+
+2.3.4 SCSI Disks
+SCSI disks are not different from IDE disks in terms of how their cylinders,
+tracks, and sectors are organized, but they have a different interface and much
+higher transfer rates. SCSI traces its history back to Howard Shugart, the inventor
+of the floppy disk, which was used on the first personal computers in the 1980s.
+His company introduced the SASI (Shugart Associates System Interface) disk in
+1979. After some modification and quite a bit of discussion, ANSI standardized it
+in 1986 and changed the name to SCSI (Small Computer System Interface).
+SCSI is pronounced ‘‘scuzzy.’’ Since then, increasingly higher bandwidth versions
+
+SEC. 2.3
+
+93
+
+SECONDARY MEMORY
+
+have been standardized under the names Fast SCSI (10 MHz), Ultra SCSI (20
+MHz), Ultra2 SCSI (40 MHz), Ultra3 SCSI (80 MHz), Ultra4 SCSI (160 MHz),
+and Ultra5 SCSI (320 MHz). Each of these has a wide (16-bit) version as well. In
+fact, the recent ones have only a wide version. The main combinations are shown
+in Fig. 2-22.
+Name
+SCSI-1
+Fast SCSI
+
+Data bits Bus MHz
+
+MB/sec
+
+8
+
+5
+
+5
+10
+
+8
+
+10
+
+16
+
+10
+
+20
+
+8
+
+20
+
+20
+
+16
+
+20
+
+40
+
+8
+
+40
+
+40
+
+Wide Ultra2 SCSI
+
+16
+
+40
+
+80
+
+Wide Ultra3 SCSI
+
+16
+
+80
+
+160
+
+Wide Ultra4 SCSI
+
+16
+
+160
+
+320
+
+Wide Ultra5 SCSI
+
+16
+
+320
+
+640
+
+Wide Fast SCSI
+Ultra SCSI
+Wide Ultra SCSI

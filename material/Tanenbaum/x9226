@@ -1,0 +1,100 @@
+
+Terminate the calling thread
+
+pthread join
+
+Wait for a thread to terminate
+
+pthread mutex init
+
+Create a new mutex
+
+pthread mutex destroy
+
+Destroy a mutex
+
+pthread mutex lock
+
+Lock a mutex
+
+pthread mutex unlock
+
+Unlock a mutex
+
+pthread cond init
+
+Create a condition variable
+
+pthread cond destroy
+
+Destroy a condition variable
+
+pthread cond wait
+
+Wait on a condition variable
+
+pthread cond signal
+
+Release one thread waiting on a condition variable
+Figure 6-44. The principal POSIX thread calls.
+
+Mutexes can be created and destroyed by the calls pthread mutex init and
+pthread mutex destroy, respectively. A mutex can be in one of two states: locked
+or unlocked. When a thread needs to set a lock on an unlocked mutex (using
+pthread mutex lock), the lock is set and the thread continues. However, when a
+
+thread tries to lock a mutex that is already locked, it blocks. When the locking
+thread is finished with the shared resource, it is expected to unlock the corresponding mutex by calling pthread mutex unlock.
+Mutexes are intended for short-term locking, such as protecting a shared variable. They are not intended for long-term synchronization, such as waiting for a
+tape drive to become free. For long-term synchronization, condition variables are
+provided. These are created and destroyed by calls to pthread cond init and
+pthread cond destroy, respectively.
+A condition variable is used by having one thread wait on it, and another signal
+it. For example, having discovered that the tape drive it needs is busy, a thread
+would do pthread cond wait on a condition variable that all the threads have
+agreed to associate with the tape drive. When the thread using the tape drive is
+finally done with it (possibly hours later), it uses pthread cond signal to release
+exactly one thread waiting on that condition variable (if any). If no thread is waiting, the signal is lost. Condition variables do not count like semaphores. A few
+other operations are also defined on threads, mutexes, and condition variables.
+Windows 7 Process Management
+Windows 7 supports multiple processes, which can communicate and synchronize. Each process contains at least one thread. Together, processes and threads
+(which can be scheduled by the process itself) provide a general set of tools for
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+507
+
+managing parallelism, both on uniprocessors (single-CPU machines) and on multiprocessors (multi-CPU machines).
+New processes are created using the API function CreateProcess. This function has 10 parameters, each of which has many options. This design is clearly a
+lot more complicated than the UNIX scheme, in which fork has no parameters, and
+exec has just three: pointers to the name of the file to execute, the (parsed) command-line parameter array, and the environment strings. Roughly speaking, the 10
+parameters to CreateProcess are as follows:
+1. A pointer to the name of the executable file.
+2. The command line itself (unparsed).
+3. A pointer to a security descriptor for the process.
+4. A pointer to a security descriptor for the initial thread.
+5. A bit telling whether the new process inherits the creator’s handles.
+6. Miscellaneous flags (e.g., error mode, priority, debugging, consoles).
+7. A pointer to the environment strings.
+8. A pointer to the name of the new process’ current working directory.
+9. A pointer to a structure describing the initial window on the screen.
+10. A pointer to a structure that returns 18 values to the called.
+Windows 7 does not enforce any kind of parent-child or other hierarchy. All
+processes are created equal. However, since 1 of the 18 parameters returned to the
+creating process is a handle to the new process (allowing considerable control over
+the new process), there is an implicit hierarchy in terms of who has a handle to
+whom. Although these handles cannot just be passed directly to other processes,
+there is a way for a process to make a handle suitable for another process and then
+give it the handle, so the implicit process hierarchy may not last long.
+Each process in Windows 7 is created with a single thread, but a process can
+create more threads later on. Thread creation is simpler than process creation: CreateThread has only six parameters instead of 10: the security descriptor, the stack
+size, the starting address, a user-defined parameter, the initial state of the thread
+(ready or blocked), and the thread’s ID. The kernel does the thread creation, so it
+is clearly aware of threads (i.e., they are not implemented purely in user space as is
+the case in some other systems).
+When the kernel does scheduling, it looks only at the runnable threads and
+pays no any attention at all to which process each one is in. This means that the
+kernel is always aware of which threads are ready and which ones are blocked.
+Because threads are kernel objects, they have security descriptors and handles.

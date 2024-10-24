@@ -1,0 +1,100 @@
+600
+BRANCH TO 300
+
+400
+
+CALL B
+
+300
+
+MOVE P TO X
+
+200
+
+0
+
+CALL 1600
+
+MOVE R TO X
+
+Object
+module
+C
+
+BRANCH TO 1300
+
+CALL 1100
+
+900
+
+700
+
+100
+
+BRANCH TO 1800
+
+1200
+
+700
+
+500
+
+Object
+module
+D
+
+1400
+Object
+module
+C
+
+900
+800
+
+MOVE S TO X
+
+1700
+
+1500
+
+CALL D
+
+1200
+
+1100
+
+1800
+
+1600
+
+1400
+
+1300
+
+CHAP. 7
+
+500
+
+Object
+module
+A
+
+MOVE Q TO X
+
+BRANCH TO 800
+
+400
+
+CALL 500
+
+300
+
+MOVE P TO X
+
+200
+BRANCH TO 200
+
+100
+
+Object
+module

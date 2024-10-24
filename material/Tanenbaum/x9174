@@ -1,0 +1,100 @@
+string is printed literally except that %d means print the next integer in decimal).
+The only thing that is relevant here is that the procedure is called with three parameters: a format string and two integers.
+The reason for using the C version for the Core i7 and OMAP4430 ARM CPU
+is that the Java I/O library is not available in native form for these machines; the C
+library is. The difference is minimal, affecting only the print statement.
+
+5.7.1 The Towers of Hanoi in Core i7 Assembly Language
+Figure 5-44 gives a possible translation of the C version of the Towers of
+Hanoi for the Core i7. For the most part, it is fairly straightforward. The EBP register is used as the frame pointer. The first two words are used for linkage, so the
+first actual parameter, n (or N here, as MASM is case insensitive), is at EBP + 8,
+followed by i and j at EBP +12 and EBP + 16, respectively. The local variable, k, is
+in EBP + 20.
+The procedure begins by establishing the new frame at the end of the old one.
+It does this by copying ESP to the frame pointer, EBP. Then it compares n to 1,
+branching off to the else clause if n > 1. The then code pushes three values on the
+stack: the address of the format string, i, and j, and calls itself.
+The parameters are pushed in reverse order, which is required for C programs.
+This is necessary to put the pointer to the format string on top of the stack. Since
+printf has a variable number of parameters, if the parameters were pushed in forward order, printf would not know how deep in the stack the format string was.
+After the call, 12 is added to ESP to remove the parameters from the stack. Of
+course, they are not really erased from memory, but the adjustment of ESP makes
+them inaccessible via the normal stack operations.
+The else clause, which starts at L1, is straightforward. It first computes
+6 − i − j and stores this value in k. No matter what values i and j have, the third
+peg is always 6 − i − j. Saving it in k saves the trouble of recomputing it the second time.
+Next, the procedure calls itself three times, with different parameters each
+time. After each call, the stack is cleaned up. That is all there is to it.
+Recursive procedures sometimes confuse people at first, but when viewed at
+this level, they are straightforward. All that happens is that the parameters are
+pushed onto the stack and the procedure itself is called.
+
+5.7.2 The Towers of Hanoi in OMAP4430 ARM Assembly Language
+Now let us try again, only this time for the OMAP4430 ARM. The code is
+listed in Fig. 5-45. Because the OMAP4430 ARM code is especially unreadable,
+even for assembly code and even after a lot of practice, we have taken the liberty to
+
+SEC. 5.7
+
+A DETAILED EXAMPLE: THE TOWERS OF HANOI
+
+.686
+.MODEL FLAT
+PUBLIC towers
+EXTERN printf:NEAR
+.CODE
+towers: PUSH EBP
+MOV EBP, ESP
+CMP [EBP+8], 1
+JNE L1
+MOV EAX, [EBP+16]
+PUSH EAX
+MOV EAX, [EBP+12]
+PUSH EAX
+PUSH OFFSET FLAT:format
+CALL printf
+ADD ESP, 12
+JMP Done
+L1:
+MOV EAX, 6
+SUB EAX, [EBP+12]
+SUB EAX, [EBP+16]
+MOV [EBP+20], EAX
+PUSH EAX
+MOV EAX, [EBP+12]
+PUSH EAX
+MOV EAX, [EBP+8]
+DEC EAX
+PUSH EAX
+CALL towers
+ADD ESP, 12
+MOV EAX, [EBP+16]
+PUSH EAX
+MOV EAX, [EBP+12]
+PUSH EAX
+PUSH 1
+CALL towers
+ADD ESP, 12
+MOV EAX, [EBP+12]
+PUSH EAX
+MOV EAX, [EBP+20]
+PUSH EAX
+MOV EAX, [EBP+8]
+DEC EAX
+PUSH EAX
+CALL towers
+ADD ESP, 12
+Done:
+LEAVE
+RET 0
+.DATA
+format
+DB "Move disk from %d to %d\n"
+END
+
+419
+
+; compile for Core i7 class processor
+; export ’towers’
+; import printf
+; save EBP (frame pointer) and decrement ESP

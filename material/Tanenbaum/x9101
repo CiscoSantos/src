@@ -1,0 +1,100 @@
+is surprisingly short. Consequently, most of the ideas we will discuss are already
+in use in a wide variety of existing products.
+The ideas to be discussed fall into roughly two categories: implementation improvements and architectural improvements. Implementation improvements are
+ways of building a new CPU or memory to make the system run faster without
+changing the architecture. Modifying the implementation without changing the architecture means that old programs will run on the new machine, a major selling
+point. One way to improve the implementation is to use a faster clock, but this is
+
+304
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+not the only way. The performance gains from the 80386 through the 80486, Pentium, and later designs like the Core i7 are due to better implementations, as the architecture has remained essentially the same through all of them.
+Some kinds of improvements can be made only by changing the architecture.
+Sometimes these changes are incremental, such as adding new instructions or registers, so that old programs will continue to run on the new models. In this case, to
+get the full performance, the software must be changed, or at least recompiled with
+a new compiler that takes advantage of the new features.
+However, once in a few decades, designers realize that the old architecture has
+outlived its usefulness and that the only way to make progress is start all over
+again. The RISC revolution in the 1980s was one such breakthrough; another one
+is in the air now. We will look at one example (the Intel IA-64) in Chap. 5.
+In the rest of this section we will look at four different techniques for improving CPU performance. We will start with three well-established implementation improvements and then move on to one that needs a little architectural support to work best. These techniques are cache memory, branch prediction, out-oforder execution with register renaming, and speculative execution.
+
+4.5.1 Cache Memory
+One of the most challenging aspects of computer design throughout history has
+been to provide a memory system able to provide operands to the processor at the
+speed it can process them. The recent high rate of growth in processor speed has
+not been accompanied by a corresponding speedup in memories. Relative to
+CPUs, memories have been getting slower for decades. Given the enormous
+importance of primary memory, this situation has greatly limited the development
+of high-performance systems and has stimulated research on ways to get around
+the problem of memory speeds that are much slower than CPU speeds and, relatively speaking, getting worse every year.
+Modern processors place overwhelming demands on a memory system, in
+terms of both latency (the delay in supplying an operand) and bandwidth (the
+amount of data supplied per unit of time). Unfortunately, these two aspects of a
+memory system are largely at odds. Many techniques for increasing bandwidth do
+so only by increasing latency. For example, the pipelining techniques used in the
+Mic-3 can be applied to a memory system, with multiple, overlapping memory requests handled efficiently. Unfortunately, as with the Mic-3, this results in greater
+latency for individual memory operations. As processor clock speeds get faster, it
+becomes more and more difficult to provide a memory system capable of supplying operands in one or two clock cycles.
+One way to attack this problem is by providing caches. As we saw in Sec.
+2.2.5, a cache holds the most recently used memory words in a small, fast memory,
+speeding up access to them. If a large enough percentage of the memory words
+needed are in the cache, the effective memory latency can be reduced enormously.
+
+SEC. 4.5
+
+305
+
+IMPROVING PERFORMANCE
+
+One of the most effective ways to improve both bandwidth and latency is to
+use multiple caches. A basic technique that works very effectively is to introduce a
+separate cache for instructions and data. There are several benefits from having
+separate caches for instructions and data, often called a split cache. First, memory
+operations can be initiated independently in each cache, effectively doubling the
+bandwidth of the memory system. This is why it makes sense to provide two separate memory ports, as we did in the Mic-1: each port has its own cache. Note that
+each cache has independent access to the main memory.
+Today, many memory systems are more complicated than this, and an additional cache, called a level 2 cache, may reside between the instruction and data
+caches and main memory. In fact, as more sophisticated memory systems are required, there may be three or more levels of cache. In Fig. 4-37 we see a system
+with three levels of cache. The CPU chip itself contains a small instruction cache
+and a small data cache, typically 16 KB to 64 KB. Then there is the level 2 cache,
+which is not on the CPU chip but may be included in the CPU package, next to the
+CPU chip and connected to it by a high-speed path. This cache is generally unified, containing a mix of data and instructions. A typical size for the L2 cache is
+512 KB to 1 MB. The third-level cache is on the processor board and consists of a
+few megabytes of SRAM, which is much faster than the main DRAM memory.
+Caches are generally inclusive, with the full contents of the level 1 cache being in
+the level 2 cache and the full contents of the level 2 cache being in the level 3
+cache.
+
+CPU
+package
+
+CPU chip
+L1-I
+
+Processor
+board
+
+L1-D
+
+Unified
+L2
+cache
+
+Keyboard
+controller
+
+Split L1 instruction and data caches
+
+Unified
+L3 cache
+
+Graphics
+controller
+
+Main
+memory
+(DRAM)

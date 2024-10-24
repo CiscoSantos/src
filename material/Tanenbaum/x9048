@@ -1,0 +1,100 @@
+PCI cards are generally 17.5 cm by 10.7 cm and low-profile cards are 12.0 cm by
+3.6 cm. Neither of these fit well in laptop computers and and certainly not in
+mobile devices. Manufacturers would like to produce even smaller devices. Also,
+
+224
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+some companies like to repartition the PC, with the CPU and memory in a tiny
+sealed box and the hard disk inside the monitor. With PCI cards, doing this is impossible.
+Several solutions have been proposed, but the one that won a place in all modern PCs today (in no small part because Intel was behind it) is called PCI Express.
+It has little to do with the PCI bus and in fact is not a bus at all, but the marketing
+folks did not like letting go of the well-known PCI name. PCs containing it are
+now the standard. Let us now see how it works.
+The PCI Express Architecture
+The heart of the PCI Express solution (often abbreviated PCIe) is to get rid of
+the parallel bus with its many masters and slaves and go to a design based on highspeed point-to-point serial connections. This solution represents a radical break
+with the ISA/EISA/PCI bus tradition, borrowing many ideas from the world of
+local area networking, especially switched Ethernet. The basic idea comes down
+to this: deep inside, a PC is a collection of CPU, memory, and I/O controller chips
+that need to be interconnected. What PCI Express does is provide a general-purpose switch for connecting chips using serial links. A typical configuration is illustrated in Fig. 3-56.
+Level 2
+cache
+
+CPU
+
+Bridge
+chip
+
+Memory
+
+Switch
+Paired serial links
+
+Graphics
+
+Disk
+
+Network
+
+USB 2
+
+Other
+
+Figure 3-56. A typical PCI Express system.
+
+As illustrated in Fig. 3-56, the CPU, memory, and cache are connected to the
+bridge chip in the traditional way. What is new here is a switch connected to the
+
+SEC. 3.6
+
+EXAMPLE BUSES
+
+225
+
+bridge (possibly part of the bridge chip itself or integrated directly into the processor). Each I/O chip has a dedicated point-to-point connection to the switch.
+Each connection consists of a pair of unidirectional channels, one to the switch and
+one from it. Each channel is made up of two wires, one for the signal and one for
+ground, to provide high noise immunity during high-speed transmission. This architecture has replaced the old one with a much more uniform model, in which all
+devices are treated equally.
+The PCI Express architecture differs from the old PCI bus architecture in three
+key ways. We have already seen two of them: a centralized switch vs. a multidrop
+bus and a the use of narrow serial point-to-point connections vs. a wide parallel
+bus. The third difference is more subtle. The conceptual model behind the PCI
+bus is that of a bus master issuing a command to a slave to read a word or a block
+of words. The PCI Express model is that of a device sending a data packet to another device. The concept of a packet, which consists of a header and a payload,
+is taken from the networking world. The header contains control information,
+thus eliminating the need for the many control signals present on the PCI bus. The
+payload contains the data to be transferred. In effect, a PC with PCI Express is a
+miniature packet-switching network.
+In addition to these three major breaks with the past, there are also several
+minor differences as well. Fourth, an error-detecting code is used on the packets,
+providing a higher degree of reliability than on the PCI bus. Fifth, the connection
+between a chip and the switch is longer than it was, up to 50 cm, to allow system
+partitioning. Sixth, the system is expandable because a device may actually be another switch, allowing a tree of switches. Seventh, devices are hot pluggable,
+meaning that they can be added or removed from the system while it is running.
+Finally, since the serial connectors are much smaller than the old PCI connectors,
+devices and computers can be made much smaller. All in all, PCI Express is a
+major departure from the PCI bus.
+The PCI Express Protocol Stack
+In keeping with the model of a packet-switching network, the PCI Express system has a layered protocol stack. A protocol is a set of rules governing the conversation between two parties. A protocol stack is a hierarchy of protocols that deal
+with different issues at different layers. For example, consider a business letter. It
+has certain conventions about the placement and content of the letterhead, the recipient’s address, the date, the salutation, the body, the signature, and so on. This
+might be thought of as the letter protocol. In addition, there is another set of conventions about the envelope, such as its size, where the sender’s address goes and
+its format, where the receiver’s address goes and its format, where the stamp goes,
+and so on. These two layers and their protocols are independent. For example, it
+is possible to reformat the letter but use the same envelope or vice versa. Layered
+
+226
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+protocols make for a modular and flexible design, and have been widely used in
+the world of network software for decades. What is new here is building them into
+the ‘‘bus’’ hardware.
+The PCI Express protocol stack is shown in Fig. 3-57(a). It is discussed below.

@@ -1,0 +1,100 @@
+the page. Since only one copy of the page exists, the page must be ping-ponged
+back and forth constantly, a situation known as false sharing.
+The problem of false sharing can be attacked in several ways. In the Treadmarks system, for example, sequentially consistent memory is abandoned in favor
+
+642
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+of release consistency (Amza, 1996). Potentially writable pages may be present at
+multiple nodes at the same time, but before doing a write, a process must first do
+an acquire operation to signal its intention. At that point, all copies but the most
+recent one are invalidated. No other copies may be made until the corresponding
+release is done, at which time the page can be shared again.
+A second optimization done in Treadmarks is to initially map each writable
+page in read-only mode. When the page is first written to, a protection fault occurs
+and the system makes a copy of the page, called the twin. Then the original page
+is mapped in as read-write and subsequent writes can go at full speed. When a remote page fault happens later and the page has to be shipped over there, a wordby-word comparison is done between the current page and the twin. Only those
+words that have been changed are sent, reducing the size of the messages.
+When a page fault occurs, the missing page has to be located. Various solutions are possible, including those used in NUMA and COMA machines, such as
+(home-based) directories. In fact, many of the solutions used in DSM are also
+applicable to NUMA and COMA because DSM is really just a software implementation of NUMA or COMA with each page being treated like a cache line.
+DSM is a hot area of research. Interesting systems include CASHMERE
+(Kontothanassis, et al., 1997 and Stets et al., 1997), CRL (Johnson et al., 1995),
+Shasta (Scales et al., 1996), and Treadmarks (Amza, 1996 and Lu et al., 1997).
+Linda
+Page-based DSM systems like IVY and Treadmarks use the MMU hardware to
+trap accesses to missing pages. While making and sending differences instead of
+whole pages helps, the fact remains that pages are an unnatural unit for sharing, so
+other approaches have been tried.
+One such approach is Linda, which provides processes on multiple machines
+with a highly structured distributed shared memory (Carriero and Gelernter, 1989).
+This memory is accessed through a small set of primitive operations that can be
+added to existing languages, such as C and FORTRAN, to form parallel languages,
+in this case, C-Linda and FORTRAN-Linda.
+The unifying concept behind Linda is that of an abstract tuple space, which is
+global to the entire system and accessible to all processes in it. Tuple space is like
+a global shared memory, only with a certain built-in structure. The tuple space
+contains some number of tuples, each consisting of one or more fields. For CLinda, field types include integers, long integers, and floating-point numbers, as
+well as composite types such as arrays (including strings) and structures (but not
+other tuples). Figure 8-47 shows three tuples as examples.
+Four operations are provided on tuples. The first one, out, puts a tuple into the
+tuple space. For example,
+out(′′abc′′, 2, 5);
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+643
+
+(′′abc′′, 2, 5)
+(′′matrix-1′′, 1, 6, 3.14)
+(′′family′′, ′′is sister′′, Carolyn, Elinor)
+Figure 8-47. Three Linda tuples.
+
+puts the tuple (′′abc′′, 2, 5) into the tuple space. The fields of out are normally
+constants, variables, or expressions, as in
+out(′′matrix−1′′, i, j, 3.14);
+
+which outputs a tuple with four fields, the second and third of which are determined by the current values of the variables i and j.
+Tuples are retrieved from the tuple space by the in primitive. They are addressed by content rather than by name or address. The fields of in can be expressions or formal parameters. Consider, for example,
+in(′′abc′′, 2, ? i);
+
+This operation ‘‘searches’’ the tuple space for a tuple consisting of the string
+′′abc′′, the integer, 2, and a third field containing any integer (assuming that i is an
+integer). If found, the tuple is removed from the tuple space and the variable i is
+assigned the value of the third field. The matching and removal are atomic, so if
+two processes execute the same in operation simultaneously, only one of them will
+succeed, unless two or more matching tuples are present. The tuple space may
+even contain multiple copies of the same tuple.
+The matching algorithm used by in is straightforward. The fields of the in
+primitive, called the template, are (conceptually) compared to the corresponding
+fields of every tuple in the tuple space. A match occurs if the following three conditions are all met:
+1. The template and the tuple have the same number of fields.
+2. The types of the corresponding fields are equal.
+3. Each constant or variable in the template matches its tuple field.
+Formal parameters, indicated by a question mark followed by a variable name or
+type, do not participate in the matching (except for type checking), although those
+containing a variable name are assigned after a successful match.
+If no matching tuple is present, the calling process is suspended until another
+process inserts the needed tuple, at which time the called is automatically revived
+and given the new tuple. The fact that processes block and unblock automatically
+means that if one process is about to output a tuple and another is about to input it,
+it does not matter which goes first.
+
+644
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+In addition to out and in, Linda also has a primitive read, which is the same as
+in except that it does not remove the tuple from the tuple space. There is also a
+primitive eval, which causes its parameters to be evaluated in parallel and the resulting tuple to be deposited in the tuple space. This mechanism can be used to
+perform an arbitrary computation. This is how parallel processes are created in
+Linda.
+A common programming paradigm in Linda is the replicated worker model.
+This model is based on the idea of a task bag full of jobs to be done. The main

@@ -1,0 +1,100 @@
+Ultra2 SCSI
+
+Figure 2-22. Some of the possible SCSI parameters.
+
+Because SCSI disks have high transfer rates, they are the standard disk in
+many high-end workstations and servers, especially those that run RAID configurations (see below).
+SCSI is more than just a hard-disk interface. It is a bus to which a SCSI controller and up to seven devices can be attached. These can include one or more
+SCSI hard disks, CD-ROMs, CD recorders, scanners, tape units, and other SCSI
+peripherals. Each SCSI device has a unique ID, from 0 to 7 (15 for wide SCSI).
+Each device has two connectors: one for input and one for output. Cables connect
+the output of one device to the input of the next one, in series, like a string of cheap
+Christmas tree lamps. The last device in the string must be terminated to prevent
+reflections from the ends of the SCSI bus from interfering with other data on the
+bus. Typically, the controller is on a plug-in card and the start of the cable chain,
+although this configuration is not strictly required by the standard.
+The most common cable for 8-bit SCSI has 50 wires, 25 of which are grounds
+paired one-to-one with the other 25 wires to provide the excellent noise immunity
+needed for high-speed operation. Of the 25 wires, 8 are for data, 1 is for parity, 9
+are for control, and the remainder are for power or are reserved for future use. The
+16-bit (and 32-bit) devices need a second cable for the additional signals. The
+cables may be several meters long, allowing for external drives, scanners, etc.
+SCSI controllers and peripherals can operate either as initiators or as targets.
+Usually, the controller, acting as initiator, issues commands to disks and other
+peripherals acting as targets. These commands are blocks of up to 16 bytes telling
+the target what to do. Commands and responses occur in phases, using various
+
+94
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+control signals to delineate the phases and arbitrate bus access when multiple devices are trying to use the bus at the same time. This arbitration is important because SCSI allows all the devices to run at once, potentially greatly improving performance in an environment with multiple processes active at once. IDE and EIDE
+allow only one active device at a time.
+
+2.3.5 RAID
+CPU performance has been increasing exponentially over the past decade,
+roughly doubling every 18 months. Not so with disk performance. In the 1970s,
+average seek times on minicomputer disks were 50 to 100 msec. Now seek times
+are 10 msec. In most technical industries (say, automobiles or aviation), a factor of
+5 to 10 performance improvement in two decades would be major news, but in the
+computer industry it is an embarrassment. Thus the gap between CPU performance and disk performance has become much larger over time.
+As we have seen, parallel processing is often used to speed up CPU performance. It has occurred to various people over the years that parallel I/O might
+be a good idea, too. In their 1988 paper, Patterson et al. suggested six specific disk
+organizations that could be used to improve disk performance, reliability, or both
+(Patterson et al., 1988). These ideas were quickly adopted by industry and have
+led to a new class of I/O device called a RAID. Patterson et al. defined RAID as
+Redundant Array of Inexpensive Disks, but industry redefined the I to be ‘‘Independent’’ rather than ‘‘Inexpensive’’ (maybe so they could use expensive disks?).
+Since a villain was also needed (as in RISC versus CISC, also due to Patterson),
+the bad guy here was the SLED (Single Large Expensive Disk).
+The idea behind a RAID is to install a box full of disks next to the computer,
+typically a large server, replace the disk controller card with a RAID controller,
+copy the data over to the RAID, and then continue normal operation. In other
+words, a RAID should look like a SLED to the operating system but have better
+performance and better reliability. Since SCSI disks have good performance, low
+price, and the ability to have up to 7 drives on a single controller (15 for wide
+SCSI), it is natural that many RAIDs consist of a RAID SCSI controller plus a box
+of SCSI disks that appear to the operating system as a single large disk. In this
+way, no software changes are required to use the RAID, a big selling point for
+many system administrators.
+In addition to appearing like a single disk to the software, all RAIDs have the
+property that the data are distributed over the drives, to allow parallel operation.
+Several different schemes for doing this were defined by Patterson et al., and they
+are now known as RAID level 0 through RAID level 5. In addition, there are a few
+other minor levels that we will not discuss. The term ‘‘level’’ is something of a
+misnomer since there is no hierarchy involved; there are simply six different organizations, each with a different mix of reliability and performance characteristics.
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+95
+
+RAID level 0 is illustrated in Fig. 2-23(a). It consists of viewing the virtual
+disk simulated by the RAID as being divided up into strips of k sectors each, with
+sectors 0 to k − 1 being strip 0, sectors k to 2k − 1 as strip 1, and so on. For k = 1,
+each strip is a sector; for k = 2 a strip is two sectors, etc. The RAID level 0 organization writes consecutive strips over the drives in round-robin fashion, as depicted
+in Fig. 2-23(a) for a RAID with four disk drives. Distributing data over multiple
+drives like this is called striping. For example, if the software issues a command
+to read a data block consisting of four consecutive strips starting at a strip boundary, the RAID controller will break this command up into four separate commands,
+one for each of the four disks, and have them operate in parallel. Thus we have
+parallel I/O without the software knowing about it.
+RAID level 0 works best with large requests, the bigger the better. If a request
+is larger than the number of drives times the strip size, some drives will get multiple requests, so that when they finish the first request they start the second one. It
+is up to the controller to split the request up and feed the proper commands to the
+proper disks in the right sequence and then assemble the results in memory correctly. Performance is excellent and the implementation is straightforward.
+RAID level 0 works worst with operating systems that habitually ask for data
+one sector at a time. The results will be correct, but there is no parallelism and
+hence no performance gain. Another disadvantage of this organization is that the
+reliability is potentially worse than having a SLED. If a RAID consists of four
+disks, each with a mean time to failure of 20,000 hours, about once every 5000
+hours a drive will fail and all the data will be completely lost. A SLED with a
+mean time to failure of 20,000 hours would be four times more reliable. Because
+no redundancy is present in this design, it is not really a true RAID.
+The next option, RAID level 1, shown in Fig. 2-23(b), is a true RAID. It duplicates all the disks, so there are four primary disks and four backup disks in this example, although any other even number of disks is also possible. On a write, every
+strip is written twice. On a read, either copy can be used, distributing the load over
+more drives. Consequently, write performance is no better than for a single drive,
+but read performance can be up to twice as good. Fault tolerance is excellent: if a
+drive crashes, the copy is simply used instead. Recovery consists of simply installing a new drive and copying the entire backup drive to it.
+Unlike levels 0 and 1, which work with strips of sectors, RAID level 2 works

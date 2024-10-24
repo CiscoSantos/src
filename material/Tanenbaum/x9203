@@ -1,0 +1,100 @@
+
+Sector 0
+
+1
+3
+
+1
+
+11
+
+Sector 11
+
+6
+
+12
+0
+
+CHAP. 6
+
+1
+7
+
+1
+
+1
+
+6
+
+5
+
+9
+
+3
+
+9
+7
+
+4
+
+12
+
+Read/
+write
+head
+
+0
+
+8
+
+14
+2
+
+8
+
+Read/
+write
+head
+
+10
+14
+
+13
+
+Direction
+of disk
+rotation
+
+Direction
+of disk
+rotation
+
+(a)
+
+(b)
+
+Figure 6-21. Disk allocation strategies. (a) A file in consecutive sectors. (b) A
+file not in consecutive sectors.
+
+bytes or logical records. The operating system sees the file as an ordered, although
+not necessarily consecutive, collection of allocation units on disk.
+In order for the operating system to deliver byte or logical record n of some file
+on request, it must have some method for locating the data. If the file is allocated
+consecutively, the operating system need only know the location of the start of the
+file in order to calculate the position of the byte or logical record needed.
+If the file is not allocated consecutively, it is not possible to calculate the position of an arbitrary byte or logical record in the file from the position of the start of
+the file alone. Rather, a table called a file index, giving the allocation units and
+their actual disk addresses, is needed. The file index can be organized either as a
+list of disk block addresses (used by UNIX), a list of runs of consecutive blocks
+(used by Windows 7), or as a list of logical records, giving the disk address and
+offset for each one. Sometimes each logical record has a key and programs can
+refer to a record by its key, rather than by its logical record number. In this case,
+the latter organization is required, with each entry containing not only the location
+of the record on disk, but also its key. This organization is common on mainframes.
+An alternative method of locating the allocation units of a file is to organize
+the file as a linked list. Each allocation unit contains the address of its successor.
+One way to implement this scheme efficiently is to keep the table with all the successor addresses in main memory. For example, for a disk with 64K allocation
+units, the operating system could have a table in memory with 64K entries, each
+one giving the index of its successor. For example, if a file occupied allocation
+
+SEC. 6.3

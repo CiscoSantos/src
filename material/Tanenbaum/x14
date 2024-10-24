@@ -1,0 +1,100 @@
+a clever approach to building integrated circuits that did not require wheelbarrows
+full of money or access to a silicon fabrication facility. This new kind of computer
+chip, called a field-programmable gate array (FPGA), contained a large supply
+of generic logic gates that could be ‘‘programmed’’ into any circuit that fit into the
+device. This remarkable new approach to hardware design made FPGA hardware
+as malleable as software. Using FPGAs that cost tens to hundreds of U.S. dollars, it
+became possible to build computing systems specialized for unique applications
+
+26
+
+INTRODUCTION
+
+CHAP. 1
+
+that served only a few users. Fortunately, silicon fabrication companies could still
+produce faster, lower-power and less expensive chips for applications that needed
+millions of chips. But, for applications with only a few users, such as prototyping,
+low-volume design applications, and education, FPGAs remain a popular tool for
+building hardware.
+Up until 1992, personal computers were either 8-bit, 16-bit, or 32-bit. Then
+DEC came out with the revolutionary 64-bit Alpha, a true 64-bit RISC machine
+that outperformed all other personal computers by a wide margin. It had a modest
+success, but almost a decade elapsed before 64-bit machines began to catch on in a
+big way, and then mostly as high-end servers.
+Throughout the 1990s computing systems were getting faster and faster using a
+variety of microarchitectural optimizations, many of which we will examine in this
+book. Users of these systems were pampered by computer vendors, because each
+new system they bought would run their programs much faster than their old system. However, by the end of the 1990s this trend was beginning to wane because of
+two important obstacles in computer design: architects were running out of tricks
+to make programs faster, and the processors were getting too expensive to cool.
+Desperate to continue building faster processors, most computer companies began
+turning toward parallel architectures as a way to squeeze out more performance
+from their silicon. In 2001 IBM introduced the POWER4 dual-core architecture.
+This was the first time that a mainstream CPU incorporated two processors onto
+the same die. Today, most desktop and server class processors, and even some embedded processors, incorporate multiple processors on chip. The performance of
+these multiprocessors has unfortunately been less than stellar for the typical user,
+because (as we will see in later chapters) parallel machines require programmers to
+explicitly parallelize programs, which is a difficult and error-prone task.
+
+1.2.6 The Fifth Generation—Low-Power and Invisible Computers
+In 1981, the Japanese government announced that they were planning to spend
+$500 million to help Japanese companies develop fifth-generation computers,
+which would be based on artificial intelligence and represent a quantum leap over
+‘‘dumb’’ fourth-generation computers. Having seen Japanese companies take over
+the market in many industries, from cameras to stereos to televisions, American
+and European computer makers went from 0 to full panic in a millisecond, demanding government subsidies and more. Despite lots of fanfare, the Japanese
+fifth-generation project basically failed and was quietly abandoned. In a sense, it
+was like Babbage’s analytical engine—a visionary idea but so far ahead of its time
+that the technology for actually building it was nowhere in sight.
+Nevertheless, what might be called the fifth generation did happen, but in an
+unexpected way: computers shrank. In 1989, Grid Systems released the first tablet
+computer, called the GridPad. It consisted of a small screen on which the users
+could write with a special pen to control the system. Systems such as the GridPad
+
+SEC. 1.2
+
+MILESTONES IN COMPUTER ARCHITECTURE
+
+27
+
+showed that computers did not need to sit on a desk or in a server room, but instead, could be put into an easy-to-carry package with touchscreens and handwriting recognition to make them even more valuable.
+The Apple Newton, released in 1993, showed that a computer could be built in
+a package no bigger than a portable audiocassette player. Like the GridPad, the
+Newton used handwriting for user input, which in this case proved to be a big
+stumbling block to its success. However, later machines of this class, now called
+PDAs (Personal Digital Assistants), have improved user interfaces and are very
+popular. They have now evolved into smartphones.
+Eventually, the writing interface of the PDA was perfected by Jeff Hawkins,
+who had created a company called Palm to develop a low-cost PDA for the mass
+consumer market. Hawkins was an electrical engineer by training, but he had a
+keen interest in neuroscience, which is the study of the human brain. He realized
+that handwriting recognition could be made more reliable by training users to write
+in a manner that was more easily readable by computers, an input technique he
+called ‘‘Graffiti.’’ It required a small amount of training for the user, but in the end
+it led to faster and more reliable writing, and the first Palm PDA, called the Palm
+Pilot, was a huge success. Graffiti is one of the great successes in computing,
+demonstrating the power of the human mind to take advantage of the power of the
+human mind.
+Users of PDAs swore by the devices, religiously using them to manage their
+schedules and contacts. When cell phones started gaining popularity in the early
+1990s, IBM jumped at the opportunity to integrate the cell phone with the PDA,
+creating the ‘‘smartphone.’’ The first smartphone, called Simon, used a touchscreen for input, and it gave the user all of the capabilities of a PDA plus telephone, games, and email. Shrinking component sizes and cost eventually led to the
+wide use of smartphones, embodied in the popular Apple iPhone and Google
+Android platforms.
+But even the PDAs and smartphones are not really revolutionary. Even more
+important are the ‘‘invisible’’ computers, which are embedded into appliances,
+watches, bank cards, and numerous other devices (Bechini et al., 2004). These
+processors allow increased functionality and lower cost in a wide variety of applications. Whether these chips form a true generation is debatable (they have been
+around since the 1970s), but they are revolutionizing how thousands of appliances
+and other devices work. They are already starting to have a major impact on the
+world and their influence will increase rapidly in the coming years. One unusual
+aspects of these embedded computers is that the hardware and software are often
+codesigned (Henkel et al., 2003). We will come back to them later in this book.
+If we see the first generation as vacuum-tube machines (e.g. ENIAC), the second generation as transistor machines (e.g., the IBM 7094), the third generation as
+early integrated-circuit machines (e.g., the IBM 360), and the fourth generation as
+personal computers (e.g., the Intel CPUs), the real fifth generation is more a
+paradigm shift than a specific new architecture. In the future, computers will be
+
+28
+

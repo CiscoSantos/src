@@ -1,0 +1,100 @@
+7.4.3 Binding Time and Dynamic Relocation
+In a multiprogramming system, a program can be read into main memory, run
+for a little while, written to disk, and then read back into main memory to be run
+again. In a large system, with many programs, it is difficult to ensure that a program is read back into the same locations every time.
+Figure 7-16 shows what would happen if the already relocated program of
+Fig. 7-14(b) were reloaded at address 400 instead of address 100 where the linker
+put it originally. All the memory addresses are incorrect; moreover, the relocation
+information has long since been discarded. Even if the relocation information
+were still available, the cost of having to relocate all the addresses every time the
+program was swapped would be too high.
+
+SEC. 7.4
+
+LINKING AND LOADING
+
+2200
+2100
+
+MOVE S TO X
+
+2000
+1900
+1800
+
+Object
+module
+D
+
+BRANCH TO 1800
+
+CALL 1600
+
+1700
+1600
+
+MOVE R TO X
+
+Object
+module
+C
+
+1500
+1400
+
+BRANCH TO 1300
+
+1300
+
+CALL 1100
+
+1200
+
+1100
+
+MOVE Q TO X
+
+Object
+module
+B
+
+1000
+
+900
+800
+
+BRANCH TO 800
+
+700
+
+CALL 500
+
+600
+
+MOVE P TO X
+
+Object
+module
+A
+
+500
+400
+
+BRANCH TO 300
+
+0
+
+Figure 7-16. The relocated binary program of Fig. 7-14(b) moved up 300 addresses. Many instructions now refer to an incorrect memory address.
+
+543
+
+544
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+The problem of moving programs that have already been linked and relocated
+is intimately related to the time at which the final binding of symbolic names onto
+absolute physical memory addresses is completed. When a program is written it
+contains symbolic names for memory addresses, for example, BR L. The time at

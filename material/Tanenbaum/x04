@@ -1,0 +1,100 @@
+level 3 designs than between those at either level 1 or level 2.
+The new facilities added at level 3 are carried out by an interpreter running at
+level 2, which, historically, has been called an operating system. Those level 3 instructions that are identical to level 2’s are executed directly by the microprogram
+
+SEC. 1.1
+
+STRUCTURED COMPUTER ORGANIZATION
+
+7
+
+(or hardwired control), not by the operating system. In other words, some of the
+level 3 instructions are interpreted by the operating system and some are interpreted directly by the microprogram (or hardwired control). This is what we mean
+by ‘‘hybrid’’ level. Throughout this book we will call this level the operating system machine level.
+There is a fundamental break between levels 3 and 4. The lowest three levels
+are not designed for use by the average garden-variety programmer. Instead, they
+are intended primarily for running the interpreters and translators needed to support the higher levels. These interpreters and translators are written by people called systems programmers who specialize in designing and implementing new virtual machines. Levels 4 and above are intended for the applications programmer
+with a problem to solve.
+Another change occurring at level 4 is the method by which the higher levels
+are supported. Levels 2 and 3 are always interpreted. Levels 4, 5, and above are
+usually, although not always, supported by translation.
+Yet another difference between levels 1, 2, and 3, on the one hand, and levels
+4, 5, and higher, on the other, is the nature of the language provided. The machine
+languages of levels 1, 2, and 3 are numeric. Programs in them consist of long
+series of numbers, which are fine for machines but bad for people. Starting at level
+4, the languages contain words and abbreviations meaningful to people.
+Level 4, the assembly language level, is really a symbolic form for one of the
+underlying languages. This level provides a method for people to write programs
+for levels 1, 2, and 3 in a form that is not as unpleasant as the virtual machine languages themselves. Programs in assembly language are first translated to level 1,
+2, or 3 language and then interpreted by the appropriate virtual or actual machine.
+The program that performs the translation is called an assembler.
+Level 5 usually consists of languages designed to be used by applications programmers with problems to solve. Such languages are often called high-level languages. Literally hundreds exist. A few of the better-known ones are C, C++,
+Java, Perl, Python, and PHP. Programs written in these languages are generally
+translated to level 3 or level 4 by translators known as compilers, although occasionally they are interpreted instead. Programs in Java, for example, are usually
+first translated to a an ISA-like language called Java byte code, which is then interpreted.
+In some cases, level 5 consists of an interpreter for a specific application domain, such as symbolic mathematics. It provides data and operations for solving
+problems in this domain in terms that people knowledgeable in the domain can understand easily.
+In summary, the key thing to remember is that computers are designed as a
+series of levels, each one built on its predecessors. Each level represents a distinct
+abstraction, with different objects and operations present. By designing and analyzing computers in this fashion, we are temporarily able to suppress irrelevant detail and thus reduce a complex subject to something easier to understand.
+
+8
+
+INTRODUCTION
+
+CHAP. 1
+
+The set of data types, operations, and features of each level is called its architecture. The architecture deals with those aspects that are visible to the user of
+that level. Features that the programmer sees, such as how much memory is available, are part of the architecture. Implementation aspects, such as what kind of
+technology is used to implement the memory, are not part of the architecture. The
+study of how to design those parts of a computer system that are visible to the programmers is called computer architecture. In common practice, however, computer architecture and computer organization mean essentially the same thing.
+
+1.1.3 Evolution of Multilevel Machines
+To provide some perspective on multilevel machines, we will briefly examine
+their historical development, showing how the number and nature of the levels has
+evolved over the years. Programs written in a computer’s true machine language
+(level 1) can be directly executed by the computer’s electronic circuits (level 0),
+without any intervening interpreters or translators. These electronic circuits, along
+with the memory and input/output devices, form the computer’s hardware. Hardware consists of tangible objects—integrated circuits, printed circuit boards,
+cables, power supplies, memories, and printers—rather than abstract ideas, algorithms, or instructions.
+Software, in contrast, consists of algorithms (detailed instructions telling how
+to do something) and their computer representations—namely, programs. Programs can be stored on hard disk, CD-ROM, or other media, but the essence of
+software is the set of instructions that makes up the programs, not the physical
+media on which they are recorded.
+In the very first computers, the boundary between hardware and software was
+crystal clear. Over time, however, it has blurred considerably, primarily due to the
+addition, removal, and merging of levels as computers have evolved. Nowadays, it
+is often hard to tell them apart (Vahid, 2003). In fact, a central theme of this book
+is
+Hardware and software are logically equivalent.
+Any operation performed by software can also be built directly into the hardware, preferably after it is sufficiently well understood. As Karen Panetta put it:
+‘‘Hardware is just petrified software.’’ Of course, the reverse is also true: any instruction executed by the hardware can also be simulated in software. The decision to put certain functions in hardware and others in software is based on such
+factors as cost, speed, reliability, and frequency of expected changes. There are
+few hard-and-fast rules to the effect that X must go into the hardware and Y must
+be programmed explicitly. These decisions change with trends in technology economics, demand, and computer usage.
+
+SEC. 1.1
+
+STRUCTURED COMPUTER ORGANIZATION
+
+9
+
+The Invention of Microprogramming
+The first digital computers, back in the 1940s, had only two levels: the ISA
+level, in which all the programming was done, and the digital logic level, which executed these programs. The digital logic level’s circuits were complicated, difficult
+to understand and build, and unreliable.
+In 1951, Maurice Wilkes, a researcher at the University of Cambridge, suggested designing a three-level computer in order to drastically simplify the hardware and thus reduce the number of (unreliable) vacuum tubes needed (Wilkes,
+1951). This machine was to have a built-in, unchangeable interpreter (the
+microprogram), whose function was to execute ISA-level programs by interpretation. Because the hardware would now only have to execute microprograms,
+which have a limited instruction set, instead of ISA-level programs, which have a
+much larger instruction set, fewer electronic circuits would be needed. Because
+electronic circuits were then made from vacuum tubes, such a simplification
+promised to reduce tube count and hence enhance reliability (i.e., the number of
+crashes per day).
+A few of these three-level machines were constructed during the 1950s. More
+were constructed during the 1960s. By 1970 the idea of having the ISA level be
+interpreted by a microprogram, instead of directly by the electronics, was dominant. All the major machines of the day used it.
+The Invention of the Operating System
+In these early years, most computers were ‘‘open shop,’’ which meant that the
+programmer had to operate the machine personally. Next to each machine was a
+sign-up sheet. A programmer wanting to run a program signed up for a block of

@@ -1,0 +1,100 @@
+extra hardware could be readily justified. Thus expensive, high-performance computers came to have many more instructions than lower-cost ones. However, instruction compatibility requirements and the rising cost of software development
+created the need to implement complex instructions even on low-end computers
+where cost was more important than speed.
+By the late 1950s, IBM (then the dominant computer company) had recognized that supporting a single family of machines, all of which executed the same instructions, had many advantages, both for IBM and for its customers. IBM introduced the term architecture to describe this level of compatibility. A new family
+of computers would have one architecture but many different implementations that
+could all execute the same program, differing only in price and speed. But how to
+build a low-cost computer that could execute all the complicated instructions of
+high-performance, expensive machines?
+The answer lay in interpretation. This technique, first suggested by Maurice
+Wilkes (1951), permitted the design of simple, lower-cost computers that could
+nevertheless execute a large number of instructions. The result was the IBM System/360 architecture, a compatible family of computers, spanning nearly two
+orders of magnitude, in both price and capability. A direct hardware (i.e., not interpreted) implementation was used only on the most expensive models.
+Simple computers with interpreted instructions also some had other benefits.
+Among the most important were
+1. The ability to fix incorrectly implemented instructions in the field, or
+even make up for design deficiencies in the basic hardware.
+2. The opportunity to add new instructions at minimal cost, even after
+delivery of the machine.
+3. Structured design that permitted efficient development, testing, and
+documenting of complex instructions.
+
+SEC. 2.1
+
+PROCESSORS
+
+61
+
+As the market for computers exploded dramatically in the 1970s and computing
+capabilities grew rapidly, the demand for low-cost computers favored designs of
+computers using interpreters. The ability to tailor the hardware and the interpreter
+for a particular set of instructions emerged as a highly cost-effective design for
+processors. As the underlying semiconductor technology advanced rapidly, the advantages of the cost outweighed the opportunities for higher performance, and
+interpreter-based architectures became the conventional way to design computers.
+Nearly all new computers designed in the 1970s, from minicomputers to mainframes, were based on interpretation.
+By the late 70s, the use of simple processors running interpreters had become
+very widespread except among the most expensive, highest-performance models,
+such as the Cray-1 and the Control Data Cyber series. The use of an interpreter
+eliminated the inherent cost limitations of complex instructions so designers began
+to explore much more complex instructions, particularly the ways to specify the
+operands to be used.
+This trend reached its zenith with Digital Equipment Corporation’s VAX computer, which had several hundred instructions and more than 200 different ways of
+specifying the operands to be used in each instruction. Unfortunately, the VAX architecture was conceived from the beginning to be implemented with an interpreter, with little thought given to the implementation of a high-performance
+model. This mind set resulted in the inclusion of a very large number of instructions which were of marginal value and difficult to execute directly. This omission
+proved to be fatal to the VAX, and ultimately to DEC as well (Compaq bought
+DEC in 1998 and Hewlett-Packard bought Compaq in 2001).
+Though the earliest 8-bit microprocessors were very simple machines with
+very simple instruction sets, by the late 70s, even microprocessors had switched to
+interpreter-based designs. During this period, one of the biggest challenges facing
+microprocessor designers was dealing with the growing complexity made possible
+by integrated circuits. A major advantage of the interpreter-based approach was
+the ability to design a simple processor, with the complexity largely confined to the
+memory holding the interpreter. Thus a complex hardware design could be turned
+into a complex software design.
+The success of the Motorola 68000, which had a large interpreted instruction
+set, and the concurrent failure of the Zilog Z8000 (which had an equally large instruction set, but without an interpreter) demonstrated the advantages of an interpreter for bringing a new microprocessor to market quickly. This success was all
+the more surprising given Zilog’s head start (the Z8000’s predecessor, the Z80, was
+far more popular than the 68000’s predecessor, the 6800). Of course, other factors
+were instrumental here, too, not the least of which was Motorola’s long history as a
+chip manufacturer and Exxon’s (Zilog’s owner) long history of being an oil company, not a chip manufacturer.
+Another factor working in favor of interpretation during that era was the existence of fast read-only memories, called control stores, to hold the interpreters.
+
+62
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Suppose that a typical interpreted instruction took the interpreter 10 instructions,
+called microinstructions, at 100 nsec each, and two references to main memory, at
+500 nsec each. Total execution time was then 2000 nsec, only a factor-of-two
+worse than the best that direct execution could achieve. Had the control store not
+been available, the instruction would have taken 6000 nsec. A factor-of-six penalty
+is a lot harder to swallow than a factor-of-two penalty.
+
+2.1.3 RISC versus CISC
+During the late 70s there was experimentation with very complex instructions,
+made possible by the interpreter. Designers tried to close the ‘‘semantic gap’’ between what machines could do and what high-level programming languages required. Hardly anyone thought about designing simpler machines, just as now not
+a lot of research goes into designing less powerful spreadsheets, networks, Web
+servers, etc. (perhaps unfortunately).
+One group that bucked the trend and tried to incorporate some of Seymour
+Cray’s ideas in a high-performance minicomputer was led by John Cocke at IBM.
+This work led to an experimental minicomputer, named the 801. Although IBM
+never marketed this machine and the results were not published until years later
+(Radin, 1982), word got out and other people began investigating similar architectures.
+In 1980, a group at Berkeley led by David Patterson and Carlo Se´quin began
+designing VLSI CPU chips that did not use interpretation (Patterson, 1985, Patterson and Se´quin, 1982). They coined the term RISC for this concept and named
+their CPU chip the RISC I CPU, followed shortly by the RISC II. Slightly later, in
+1981, across the San Francisco Bay at Stanford, John Hennessy designed and fabricated a somewhat different chip he called the MIPS (Hennessy, 1984). These
+chips evolved into commercially important products, the SPARC and the MIPS, respectively.
+These new processors were significantly different than commercial processors
+of the day. Since they did not have to be backward compatible with existing products, their designers were free to choose new instruction sets that would maximize
+total system performance. While the initial emphasis was on simple instructions
+that could be executed quickly, it was soon realized that designing instructions that
+could be issued (started) quickly was the key to good performance. How long an
+instruction actually took mattered less than how many could be started per second.
+At the time these simple processors were being first designed, the characteristic that caught everyone’s attention was the relatively small number of instructions available, typically around 50. This number was far smaller than the 200 to
+300 on established computers such as the DEC VAX and the large IBM mainframes. In fact, the acronym RISC stands for Reduced Instruction Set Computer, which was contrasted with CISC, which stands for Complex Instruction
+Set Computer (a thinly veiled reference to the VAX, which dominated university
+
+SEC. 2.1

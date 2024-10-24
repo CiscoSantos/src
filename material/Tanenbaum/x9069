@@ -1,0 +1,100 @@
+
+AN EXAMPLE ISA: IJVM
+
+illustrated in Fig. 4-10. In our implementation, it is convenient to
+think of the operand stack as part of the local variable frame. In any
+case, an implicit register contains the address of the top word of the
+stack. Notice that, unlike CPP and LV, this pointer, SP, changes during the execution of the method as operands are pushed onto the stack
+or popped from it.
+4. The method area. Finally, there is a region of memory containing the
+program, referred to as the ‘‘text’’ area in a UNIX process. An
+implicit register contains the address of the instruction to be fetched
+next. This pointer is referred to as the Program Counter, or PC.
+Unlike the other regions of memory, the method area is treated as a
+byte array.
+Current
+Operand
+Stack 3
+
+SP
+
+Current
+Local
+Variable
+Frame 3
+LV
+Local
+Variable
+Frame 2
+Constant
+Pool
+
+Local
+Variable
+Frame 1
+
+Method
+Area
+
+PC
+
+CPP
+
+Figure 4-10. The various parts of the IJVM memory.
+
+One point needs to be made regarding the pointers. The CPP, LV, and SP registers are all pointers to words, not bytes, and are offset by the number of words. For
+the integer subset we have chosen, all references to items in the constant pool, the
+local variables frame, and the stack are words, and all offsets used to index into
+these frames are word offsets. For example, LV, LV + 1, and LV + 2 refer to the first
+three words of the local variables frame. In contrast, LV, LV + 4, and LV + 8 refer to
+words at intervals of four words (16 bytes).
+In contrast, PC contains a byte address, and an addition or subtraction to PC
+changes the address by a number of bytes, not a number of words. Addressing for
+PC is different from the others, and this fact is apparent in the special memory port
+provided for PC on the Mic-1. Remember that it is only 1 byte wide. Incrementing PC by one and initiating a read results in a fetch of the next byte. Incrementing
+SP by one and initiating a read results in a fetch of the next word.
+
+262
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+4.2.3 The IJVM Instruction Set
+The IJVM instruction set is shown in Fig. 4-11. Each instruction consists of an
+opcode and sometimes an operand, such as a memory offset or a constant. The
+first column gives the hexadecimal encoding of the instruction. The second gives
+its assembly-language mnemonic. The third gives a brief description of its effect.
+Hex
+
+Mnemonic
+
+Meaning
+
+0x10
+
+BIPUSH byte
+
+Push byte onto stack
+
+0x59
+
+DUP
+
+Copy top word on stack and push onto stack
+
+0xA7
+
+GOTO offset
+
+Unconditional branch
+
+0x60
+
+IADD
+
+Pop two words from stack; push their sum
+
+0x7E
+
+IAND

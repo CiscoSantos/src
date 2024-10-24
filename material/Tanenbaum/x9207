@@ -1,0 +1,100 @@
+
+Track 19
+
+Sector 9
+
+File 9
+
+Block 2:
+
+Track 11
+
+Sector 2
+
+File 10
+
+Block 3:
+
+Track 77
+
+Sector 0
+
+CHAP. 6
+
+Figure 6-23. A user file directory and the contents of a typical entry in a file directory.
+
+parallel, certain virtual instructions are needed. These instructions will be discussed in the following sections.
+The laws of physics provide yet another reason for the current interest in parallel processing. According to Einstein’s special theory of relativity, it is impossible
+to transmit electrical signals faster than the speed of light, which is nearly 1 ft/nsec
+in vacuum, less in copper wire or optical fiber. This limit has important implications for computer organization. For example, if a CPU needs data from the main
+memory 1 ft away, it will take at least 1 nsec for the request to arrive at the memory and another nanosecond for the reply to get back to the CPU. Consequently,
+subnanosecond computers will need to be extremely tiny. An alternative approach
+to speeding up computers is to build machines with many CPUs. A computer with
+a thousand 1-nsec CPUs may (in theory) have the same computing power as one
+CPU with a cycle time of 0.001 nsec, but the former may be much easier and
+cheaper to construct. Parallel computing is discussed in detail in Chap. 8.
+On a computer with more than one CPU, each of several cooperating processes
+can be assigned to its own CPU, to allow the processes to progress simultaneously.
+If only one processor is available, the effect of parallel processing can be simulated
+by having the processor run each process in turn for a short time. In other words,
+the processor can be shared among several processes.
+Figure 6-24 shows the difference between true parallel processing, with more
+than one physical processor, and simulated parallel processing, with only one physical processor. Even when parallel processing is simulated, it is useful to regard
+each process as having its own dedicated virtual processor. The same communication problems that arise when there is true parallel processing arise also in the simulated case. In both cases, debugging the problems is very difficult.
+
+SEC. 6.4
+
+OSM-LEVEL INSTRUCTIONS FOR PARALLEL PROCESSING
+
+473
+
+Process 3 waiting for CPU
+Process 3
+Process 3
+Process 2
+Process 2
+Process 1
+Process 1
+Process 1 running
+Time
+
+Time
+
+(a)
+
+(b)
+
+Figure 6-24. (a) True parallel processing with multiple CPUs. (b) Parallel processing simulated by switching one CPU among three processes.
+
+6.4.1 Process Creation
+When a program is to be executed, it must run as part of some process. This
+process, like all others, is characterized by a state and an address space through
+which the program and data can be accessed. The state includes at the very least
+the program counter, a program status word, a stack pointer, and the general registers.
+Most modern operating systems allow processes to be created and terminated
+dynamically. To take full advantage of this feature to achieve parallel processing, a
+system call to create a new process is needed. This system call may just make a
+clone of the called, or it may allow the creating process to specify the initial state
+of the new process, including its program, data, and starting address.
+In some cases, the creating (parent) process maintains partial or even complete
+control over the created (child) process. To this end, virtual instructions exist for a
+parent to stop, restart, examine, and terminate its children. In other cases, a parent
+has less control over its children: once a process has been created, there is no way
+for the parent to forcibly stop, restart, examine, or terminate it. The two processes
+then run independently of one another.
+
+6.4.2 Race Conditions
+In many cases, parallel processes need to communicate and synchronize in
+order to get their work done. In this section, process synchronization will be examined and some of the difficulties explained by means of a detailed example. A
+solution to these difficulties will be given in the following section.
+
+474
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+Consider a situation consisting of two independent processes, process 1 and
+process 2, which communicate via a shared buffer in main memory. For simplicity
+we will call process 1 the producer and process 2 the consumer. The producer
+computes prime numbers and puts them into the buffer one at a time. The consumer removes them from the buffer one at a time and prints them.

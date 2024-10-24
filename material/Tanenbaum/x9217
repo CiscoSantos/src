@@ -1,0 +1,100 @@
+file. In this model the sharing is an optimization, not part of the semantics.
+
+490
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+Windows 7 Virtual Memory
+In Windows 7, every user process has its own virtual address space. In the
+32-bit version of Windows 7, virtual addresses are 32 bits long, so each process has
+4 GB of virtual address space. The lower 2 GB are available for the process’ code
+and data; the upper 2 GB allow (limited) access to kernel memory, except in Server
+versions of Windows, in which the split can be 3 GB for the user and 1 GB for the
+kernel. The virtual address space is demand paged, with a fixed page size (4 KB
+on the Core i7). The address space for the 64-bit version of Windows 7 is similar,
+however, the code and data space is the lower 8 terabytes of the virtual address
+space.
+Each virtual page can be in one of three states: free, reserved, or committed. A
+free page is not currently in use and a reference to it causes a page fault. When a
+process is started, all of its pages are in free state until the program and initial data
+are mapped into its address space. Once code or data is mapped onto a page, the
+page is said to be committed. A reference to a committed page is mapped using
+the virtual memory hardware and succeeds if the page is in main memory. If the
+page is not in main memory, a page fault occurs and the operating system finds and
+brings in the page from disk. A virtual page can also be in reserved state, meaning
+it is not available for being mapped until the reservation is explicitly removed. Reserved pages are used when a run of consecutive pages may be needed in the future, such as for the stack. In addition to the free, reserved, and committed attributes, pages also have other attributes, such as being readable, writable, and executable. The top 64 KB and bottom 64 KB of memory are always free, to catch
+pointer errors (uninitialized pointers are often 0 or −1).
+Each committed page has a shadow page on the disk where it is kept when it is
+not in main memory. Free and reserved pages do not have shadow pages, so references to them cause page faults (the system cannot bring in a page from disk if
+there is no page on disk). The shadow pages on the disk are arranged into one or
+more paging files. The operating system keeps track of which virtual page maps
+onto which part of which paging file. For (execute only) program text, the executable binary file contains the shadow pages; for data pages, special paging files
+are used.
+Windows 7, like System V, allows files to be mapped directly onto regions of
+the virtual address spaces (i.e., runs of pages). Once a file has been mapped onto
+the address space, it can be read or written using ordinary memory references.
+Memory-mapped files are implemented in the same way as other committed
+pages, only the shadow pages can be in the disk file instead of in the paging file.
+As a result, when a file is mapped in, the version in memory may not be identical
+to the disk version (due to recent writes to the virtual address space). However,
+when the file is unmapped or is flushed, the disk version is updated from memory.
+Windows 7 explicitly allows two or more processes to map in the same file at
+the same time, possibly even at different virtual addresses. By reading and writing
+
+SEC. 6.5
+
+EXAMPLE OPERATING SYSTEMS
+
+491
+
+memory words, the processes can now communicate with each other and pass data
+back and forth at very high bandwidth, since no copying is required. Different
+processes may have different access permissions. Since all the processes using a
+mapped file share the same pages, changes made by one of them are immediately
+visible to all the others, even if the disk file has not yet been updated.
+The Win32 API contains a number of functions that allow a process to manage
+its virtual memory explicitly. The most important of these functions are listed in
+Fig. 6-34. All of them operate on a region consisting of either a single page or a
+sequence of two or more pages that are consecutive in the virtual address space.
+API function
+
+Meaning
+
+VirtualAlloc
+
+Reserve or commit a region
+
+VirtualFree
+
+Release or decommit a region
+
+VirtualProtect
+
+Change the read/write/execute protection on a region
+
+VirtualQuery
+
+Inquire about the status of a region
+
+VirtualLock
+
+Make a region memory resident (i.e., disable paging for it)
+
+VirtualUnlock
+
+Make a region pageable in the usual way
+
+CreateFileMapping
+
+Create a file-mapping object and (optionally) assign it a name
+
+MapViewOfFile
+
+Map (part of) a file into the address space
+
+UnmapViewOfFile
+
+Remove a mapped file from the address space
+

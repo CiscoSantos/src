@@ -1,0 +1,100 @@
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+285
+
+that must be performed serially in a single clock cycle that determines how long
+the clock cycle must be.
+One aspect that can be controlled is the amount of decoding that must be performed. Recall, for example, that in Fig. 4-6 we saw that while any of nine registers could be read into the ALU from the B bus, we required only 4 bits in the
+microinstruction word to specify which register was to be selected. Unfortunately,
+these savings come at a price. The decode circuit adds delay in the critical path. It
+means that whichever register is to enable its data onto the B bus will receive that
+command slightly later and will get its data on the bus slightly later. This effect
+cascades, with the ALU receiving its inputs a little later and producing its results a
+little later. Finally, the result is available on the C bus to be written to the registers
+a little later. Since this delay often is the factor that determines how long the clock
+cycle must be, this may mean that the clock cannot run quite as fast, and the entire
+computer must run a little slower. Thus there is a trade-off between speed and
+cost. Reducing the control store by 5 bits per word comes at the cost of slowing
+down the clock. The design engineer must take the design objectives into account
+when deciding which is the right choice. For a high-performance implementation,
+using a decoder is probably not a good idea; for a low-cost one, it might be.
+
+4.4.2 Reducing the Execution Path Length
+The Mic-1 was designed to be both moderately simple and moderately fast, although there is admittedly an enormous tension between these two goals. Briefly
+stated, simple machines are not fast and fast machines are not simple. The Mic-1
+CPU also uses a minimum amount of hardware: 10 registers, the simple ALU of
+Fig. 3-19 replicated 32 times, a shifter, a decoder, a control store, and a bit of glue
+here and there. The whole system could be built with fewer than 5000 transistors
+plus whatever the control store (ROM) and main memory (RAM) take.
+Having seen how IJVM can be implemented in a straightforward way in
+microcode with little hardware, let us now look at alternative, faster implementations. We will next look at ways to reduce the number of microinstructions
+per ISA instruction (i.e., reducing the execution path length). After that, we will
+consider other approaches.
+Merging the Interpreter Loop with the Microcode
+In the Mic-1, the main loop consists of one microinstruction that must be executed at the beginning of every IJVM instruction. In some cases it is possible to
+overlap it with the previous instruction. In fact, this has already been partially
+accomplished. Notice that when Main1 is executed, the opcode to be interpreted is
+already in MBR. It is there because it was fetched either by the previous main loop
+(if the previous instruction had no operands) or during the execution of the previous instruction.
+
+286
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+This concept of overlapping the beginning of the instruction can be carried further, and in fact, the main-loop can in some cases be reduced to nothing. This can
+occur in the following way. Consider each sequence of microinstructions that terminates by branching to Main1. At each of these places, the main loop microinstruction can be tacked on to the end of the sequence (rather than at the beginning
+of the following sequence), with the multiway branch now replicated many places
+(but always with the same set of targets). In some cases the Main1 microinstruction can be merged with previous microinstructions, since those instructions are
+not always fully utilized.
+In Fig. 4-23, the dynamic sequence of instructions is shown for a POP instruction. The main loop occurs before and after every instruction; in the figure we
+show only the occurrence after the POP instruction. Notice that the execution of
+this instruction takes four clock cycles: three for the specific microinstructions for
+POP and one for the main loop.
+Label
+
+Operations
+
+pop1
+pop2
+pop3
+Main1
+
+MAR = SP = SP − 1; rd
+
+Comments
+
+Read in next-to-top word on stack
+Wait for new TOS to be read from memory
+TOS = MDR; goto Main1
+Copy new word to TOS
+PC = PC + 1; fetch; goto (MBR) MBR holds opcode; get next byte; dispatch
+Figure 4-23. Original microprogram sequence for executing POP.
+
+In Fig. 4-24 the sequence has been reduced to three instructions by merging
+the main-loop instructions, taking advantage of a clock cycle when the ALU is not
+used in pop2 to save a cycle and again in Main1. Be sure to note that the end of
+this sequence branches directly to the specific code for the subsequent instruction,
+so only three cycles are required total. This little trick reduces the execution time
+of the next microinstruction by one cycle, so, for example, a subsequent IADD goes
+from four cycles to three. It is thus equivalent to speeding up the clock from 250
+MHz (4-nsec microinstructions) to 333 MHz (3-nsec microinstructions) for free.
+Label
+
+Operations
+
+Comments
+
+pop1
+Main1.pop
+pop3
+
+MAR = SP = SP − 1; rd
+PC = PC + 1; fetch
+TOS = MDR; goto (MBR)
+
+Read in next-to-top word on stack
+MBR holds opcode; fetch next byte
+Copy new word to TOS; dispatch on opcode
+

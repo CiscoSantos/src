@@ -1,0 +1,100 @@
+Set LV to point to LV Frame
+
+Figure 4-17. The microprogram for the Mic-1 (part 1 on facing page, part 2 above, part 3 on next page).
+
+274
+Label
+ireturn1
+ireturn2
+ireturn3
+ireturn4
+ireturn5
+ireturn6
+ireturn7
+ireturn8
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+Operations
+MAR = SP = LV; rd
+
+Comments
+Reset SP, MAR to get link pointer
+Wait for read
+LV = MAR = MDR; rd
+Set LV to link ptr; get old PC
+MAR = LV + 1
+Set MAR to read old LV
+PC = MDR; rd; fetch
+Restore PC; fetch next opcode
+MAR = SP
+Set MAR to write TOS
+LV = MDR
+Restore LV
+MDR = TOS; wr; goto Main1 Save return value on original top of stack
+
+Fig. 4-17. The microprogram for the Mic-1 (part 3 of 3).
+
+given for each microinstruction: the symbolic label, the actual microcode, and a
+comment. Note that consecutive microinstructions are not necessarily located in
+consecutive addresses in the control store, as we have already pointed out.
+By now the choice of names for most of the registers in Fig. 4-1 should be obvious: CPP, LV, and SP are used to hold the pointers to the constant pool, local variables, and the top of the stack, respectively, while PC holds the address of the next
+byte to be fetched from the instruction stream. MBR is a 1-byte register that sequentially holds the bytes of the instruction stream as they come in from memory
+to be interpreted. TOS and OPC are extra registers. Their use is described below.
+At certain times, each of these registers is guaranteed to hold a certain value,
+but each can be used as a temporary register if needed. At the beginning and end
+of each instruction, TOS contains the value of the memory location pointed to by
+SP, the top word on the stack. This value is redundant since it can always be read
+from memory, but having it in a register often saves a memory reference. For a
+few instructions maintaining TOS means more memory operations. For example,
+the POP instruction throws away the top word and therefore must fetch the new
+top-of-stack word from the memory into TOS.
+The OPC register is a temporary (i.e., scratch) register. It has no preassigned
+use. It is used, for example, to save the address of the opcode for a branch instruction while PC is incremented to access parameters. It is also used as a temporary
+register in the IJVM conditional branch instructions.
+Like all interpreters, the microprogram of Fig. 4-17 has a main loop that
+fetches, decodes, and executes instructions from the program being interpreted, in
+this case, IJVM instructions. Its main loop begins on the line labeled Main1. It
+starts with the invariant that PC has previously been loaded with an address of a
+memory location containing an opcode. Furthermore, that opcode has already
+been fetched into MBR. Note this implies, however, that when we get back to this
+location, we must ensure that PC has been updated to point to the next opcode to be
+interpreted and the opcode byte itself has already been fetched into MBR.
+This initial instruction sequence is executed at the beginning of every instruction, so it is important that it be as short as possible. Through careful design of the
+Mic-1 hardware and software, we have reduced the main loop to only a single
+microinstruction. Once the machine has started, every time this microinstruction is
+
+SEC. 4.3
+
+275
+
+AN EXAMPLE IMPLEMENTATION
+
+executed, the IJVM opcode to execute is already present in MBR. What the microinstruction does is branch to the microcode for executing this IJVM instruction and
+also begin fetching the byte following the opcode, which may be either an operand
+byte or the next opcode.
+Now we can reveal the real reason each microinstruction explicitly names its
+successor, instead of having them executed sequentially. All the control store addresses corresponding to opcodes must be reserved for the first word of the corresponding instruction interpreter. Thus from Fig. 4-11 we see that the code that
+interprets POP starts at 0x57 and the code that interprets DUP starts at 0x59. (How
+does MAL know to put POP at 0x57? Possibly there is a file that tells it.)
+Unfortunately, the code for POP is three microinstructions long, so if placed in
+consecutive words, it would interfere with the start of DUP. Since all the control
+store addresses corresponding to opcodes are effectively reserved, the microinstructions other than the initial one in each sequence must be stuffed away in the
+holes between reserved addresses. For this reason, there is a great deal of jumping
+around, so having an explicit microbranch (a microinstruction that branches) every
+few microinstructions to hop from hole to hole would be very wasteful.
+To see how the interpreter works, let us assume, for example, that MBR contains the value 0x60, that is, the opcode for IADD (see Fig. 4-11). In the onemicroinstruction main loop we accomplish three things:
+1. Increment the PC, leaving it containing the address of the first byte
+after the opcode.
+2. Initiate a fetch of the next byte into MBR. This byte will always be
+needed sooner or later, either as an operand for the current IJVM instruction or as the next opcode (as in the case of the IADD instruction,
+which has no operand bytes).
+3. Perform a multiway branch to the address contained in MBR at the
+start of Main1. This address is equal to the numerical value of the opcode currently being executed. It was placed there by the previous
+microinstruction. Note carefully that the value being fetched in this
+microinstruction does not play any role in the multiway branch.
+The fetch of the next byte is started here so it will be available by the start of the
+third microinstruction. It may or may not be needed then, but it will be needed
+eventually, so starting the fetch now cannot do any harm in any case.

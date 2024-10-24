@@ -1,0 +1,100 @@
+0
+0
+
+B
+
+Error
+
+0
+
+0
+
+(b)
+
+0
+B
+(c)
+
+Figure 2-14. (a) Encoding of 1100. (b) Even parity added. (c) Error in AC.
+
+Next we add a parity bit to each of the three empty regions to produce even
+parity, as illustrated in Fig. 2-14(b). By definition, the sum of the bits in each of
+the three circles, A, B, and C, is now an even number. In circle A, we have the four
+numbers 0, 0, 1, and 1, which add up to 2, an even number. In circle B, the numbers are 1, 1, 0, and 0, which also add up to 2, an even number. Finally, in circle C,
+we have the same thing. In this example all the circles happen to be the same, but
+sums of 0 and 4 are also possible in other examples. This figure corresponds to a
+codeword with 4 data bits and 3 parity bits.
+Now suppose that the bit in the AC region goes bad, changing from a 0 to a 1,
+as shown in Fig. 2-14(c). The computer can now see that circles A and C have the
+wrong (odd) parity. The only single-bit change that corrects them is to restore AC
+back to 0, thus correcting the error. In this way, the computer can repair single-bit
+memory errors automatically.
+Now let us see how Hamming’s algorithm can be used to construct error-correcting codes for any size memory word. In a Hamming code, r parity bits are
+added to an m-bit word, forming a new word of length m + r bits. The bits are
+numbered starting at 1, not 0, with bit 1 the leftmost (high-order) bit. All bits
+whose bit number is a power of 2 are parity bits; the rest are used for data. For example, with a 16-bit word, 5 parity bits are added. Bits 1, 2, 4, 8, and 16 are parity
+bits, and all the rest are data bits. In all, the memory word has 21 bits (16 data, 5
+parity). We will (arbitrarily) use even parity in this example.
+Each parity bit checks specific bit positions; the parity bit is set so that the total
+number of 1s in the checked positions is even. The bit positions checked by the
+parity bits are
+
+SEC. 2.2
+
+PRIMARY MEMORY
+
+81
+
+Bit 1 checks bits 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21.
+Bit 2 checks bits 2, 3, 6, 7, 10, 11, 14, 15, 18, 19.
+Bit 4 checks bits 4, 5, 6, 7, 12, 13, 14, 15, 20, 21.
+Bit 8 checks bits 8, 9, 10, 11, 12, 13, 14, 15.
+Bit 16 checks bits 16, 17, 18, 19, 20, 21.
+
+In general, bit b is checked by those bits b1 , b2 , ..., b j such that b1 + b2 + ...
++ b j = b. For example, bit 5 is checked by bits 1 and 4 because 1 + 4 = 5. Bit 6 is
+checked by bits 2 and 4 because 2 + 4 = 6, and so on.
+Figure 2-15 shows construction of a Hamming code for the 16-bit memory
+word 1111000010101110. The 21-bit codeword is 001011100000101101110. To
+see how error correction works, consider what would happen if bit 5 were inverted
+by an electrical surge on the power line. The new codeword would be
+001001100000101101110 instead of 001011100000101101110. The 5 parity bits
+will be checked, with the following results:
+
+Parity bit 1 incorrect (1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21 contain five 1s).
+Parity bit 2 correct (2, 3, 6, 7, 10, 11, 14, 15, 18, 19 contain six 1s).
+Parity bit 4 incorrect (4, 5, 6, 7, 12, 13, 14, 15, 20, 21 contain five 1s).
+Parity bit 8 correct (8, 9, 10, 11, 12, 13, 14, 15 contain two 1s).
+Parity bit 16 correct (16, 17, 18, 19, 20, 21 contain four 1s).
+
+The total number of 1s in bits 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, and 21 should be an
+even number because even parity is being used. The incorrect bit must be one of
+the bits checked by parity bit 1—namely, bit 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, or 21.
+Parity bit 4 is incorrect, meaning that one of bits 4, 5, 6, 7, 12, 13, 14, 15, 20, or 21
+is incorrect. The error must be one of the bits in both lists, namely, 5, 7, 13, 15, or
+21. However, bit 2 is correct, eliminating 7 and 15. Similarly, bit 8 is correct,
+eliminating 13. Finally, bit 16 is correct, eliminating 21. The only bit left is bit 5,
+which is the one in error. Since it was read as a 1, it should be a 0. In this manner,
+errors can be corrected.
+A simple method for finding the incorrect bit is first to compute all the parity
+bits. If all are correct, there was no error (or more than one). Then add up all the
+incorrect parity bits, counting 1 for bit 1, 2 for bit 2, 4 for bit 4, and so on. The resulting sum is the position of the incorrect bit. For example, if parity bits 1 and 4
+are incorrect but 2, 8, and 16 are correct, bit 5 (1 + 4) has been inverted.
+
+82
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Memory word 1111000010101110
+0
+1
+
+0
+2
+
+1
+3
+
+0

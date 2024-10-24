@@ -1,0 +1,100 @@
+
+10dddddd
+
+10dddddd
+
+10dddddd
+
+10dddddd
+
+31
+
+1111110x
+
+10dddddd
+
+10dddddd
+
+10dddddd
+
+10dddddd
+
+Byte 6
+
+10dddddd
+
+Figure 2-45. The UTF-8 encoding scheme.
+
+UTF-8 has a number of advantages over Unicode and other schemes. First, if a
+program or document uses only characters that are in the ASCII character set, each
+can be represented in 8 bits. Second, the first byte of every UTF-8 character
+uniquely determines the number of bytes in the character. Third, the continuation
+bytes in an UTF-8 character always start with 10, whereas the initial byte never
+does, making the code self synchronizing. In particular, in the event of a communication or memory error, it is always possible to go forward and find the start of
+the next character (assuming it has not been damaged).
+
+142
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Normally UTF-8 is used to encode only the 17 Unicode planes, even though
+the scheme has far more than 1,114,112 code points. However, if anthropologists
+discover new tribes in New Guinea or elsewhere whose languages are not currently
+known (or if we make contact later with extraterrestrials), UTF-8 will be up to the
+job of adding their alphabets or ideographs.
+
+2.5 SUMMARY
+Computer systems are built up from three types of components: processors,
+memories, and I/O devices. The task of a processor is to fetch instructions one at a
+time from a memory, decode them, and execute them. The fetch-decode-execute
+cycle can always be described as an algorithm and, in fact, is sometimes carried
+out by a software interpreter running at a lower level. To gain speed, many computers now have one or more pipelines or have a superscalar design with multiple
+functional units that operate in parallel. A pipeline allows an instruction to be broken into steps and the steps for different instructions executed at the same time.
+Multiple functional units is another way to gain parallelism without affecting the
+instruction set or architecture visible to the programmer or compiler.
+Systems with multiple processors are increasingly common. Parallel computers include array processors, on which the same operation is performed on multiple data sets at the same time, multiprocessors, in which multiple CPUs share a
+common memory, and multicomputers, in which multiple computers each have
+their own memories but communicate by message passing.
+Memories can be categorized as primary or secondary. The primary memory
+is used to hold the program currently being executed. Its access time is short—a
+few tens of nanoseconds at most—and independent of the address being accessed.
+Caches reduce this access time even more. They are needed because processor
+speeds are much greater than memory speeds, meaning that having to wait for
+memory accesses all the time greatly slows down processor execution. Some
+memories are equipped with error-correcting codes to enhance reliability.
+Secondary memories, in contrast, have access times that are much longer
+(milliseconds or more) and dependent on the location of the data being read or
+written. Tapes, flash memory, magnetic disks, and optical disks are the most common secondary memories. Magnetic disks come in many varieties, including IDE
+disks, SCSI disks, and RAIDs. Optical disks include CD-ROMs, CD-Rs, DVDs,
+and Blu-rays.
+I/O devices are used to transfer information into and out of the computer.
+They are connected to the processor and memory by one or more buses. Examples
+are terminals, mice, game controllers, printers, and modems. Most I/O devices use
+the ASCII character code, although Unicode is also used and UTF-8 is gaining acceptance as the computer industry becomes more Web-centric.
+
+SEC. 2.5
+
+SUMMARY
+
+143
+
+PROBLEMS
+1. Consider the operation of a machine with the data path of Fig. 2-2. Suppose that loading the ALU input registers takes 5 nsec, running the ALU takes 10 nsec, and storing
+the result back in the register scratchpad takes 5 nsec. What is the maximum number
+of MIPS this machine is capable of in the absence of pipelining?
+2. What is the purpose of step 2 in the list of Sec. 2.1.2? What would happen if this step
+were omitted?
+3. On computer 1, all instructions take 10 nsec to execute. On computer 2, they all take 5
+nsec to execute. Can you say for certain that computer 2 is faster? Discuss.
+4. Imagine you are designing a single-chip computer for an embedded system. The chip
+is going to have all its memory on chip and running at the same speed as the CPU with
+no access penalty. Examine each of the principles discussed in Sec. 2.1.4 and tell
+whether they are so important (assuming that high performance is still desired).
+5. To compete with the newly invented printing press, a medieval monastery decided to
+mass-produce handwritten paperback books by assembling a vast number of scribes in
+a huge hall. The head monk would then call out the first word of the book to be produced and all the scribes would copy it down. Then the head monk would call out the
+second word and all the scribes would copy it down. This process was repeated until
+the entire book had been read aloud and copied. Which of the parallel processor systems discussed in Sec. 2.1.6 does this system resemble most closely?
+6. As one goes down the five-level memory hierarchy discussed in the text, the access

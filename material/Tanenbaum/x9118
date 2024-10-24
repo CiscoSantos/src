@@ -1,0 +1,100 @@
+
+Instruction issue unit/
+decoder/renamer
+Instruction
+queue
+
+ALUs
+
+FPUs
+
+System
+interface
+Memory
+controller
+
+Level 1
+data cache
+
+Level 2
+unified
+cache
+
+Load-store unit/
+store buffer
+
+Retirement
+
+Figure 4-48. The block diagram of the OMAP4430’s Cortex A9 microarchitecture.
+
+At the top of Fig. 4-48 is the 32-KB 4-way associative instruction cache, which
+uses 32-byte cache lines. Since most ARM instructions are 4 bytes, there is room
+for about 8K instructions here in this cache, quite a bit larger than the Core i7’s
+micro-op cache.
+The instruction issue unit prepares up to four instructions for execution per
+clock cycle. If there is a miss on the L1 cache, fewer instructions will be issued.
+When a conditional branch is encountered, a branch predictor with 4K entries is
+consulted to predict whether or not the branch will be taken. If predicted taken, the
+1K entry branch-target-address cache is consulted for the predicted target address.
+In addition, if the front end detects that the program is executing a tight loop (i.e., a
+non-nested small loop), it will load it into the fast-loop look-aside cache. This optimization speeds up instruction fetch and reduces power, since the caches and
+branch predictors can be in a low-power sleep mode while the tight loop is executing.
+The output of the instruction issue unit flows into the decoders, which determine which resources and inputs are needed by the instructions. Like the Core i7,
+
+SEC. 4.6
+
+EXAMPLES OF THE MICROARCHITECTURE LEVEL
+
+331
+
+the instructions are renamed after decode to eliminate WAR hazards that can slow
+down out-of-order execution. After renaming, the instructions are placed into the
+instruction dispatch queue, which will issue them when their inputs are ready for
+the functional units, potentially out of order.
+The instruction dispatch queue sends instructions to the functional units, as
+shown in Fig. 4-48. The integer execution unit contains two ALUs as well as a
+short pipeline for branch instructions. The physical register file, which holds ISA
+registers and some scratch registers are also contained there. The Cortex A9
+pipeline can optionally contain one more more compute engines as well, which act
+as additional functional units. ARM supports a compute engine for floating-point
+computation called VFP and integer SIMD vector computation called NEON.
+The load/store unit handles various load and store instructions. It has paths to
+the data cache and the store buffer. The data cache is a traditional 32-KB 4-way
+associative L1 data cache using a 32-byte line size. The store buffer holds the
+stores that have not yet written their value to the data cache (at retirement). A load
+that executes will first try to fetch its value from the store buffer, using store-toload forwarding like that of the Core i7. If the value is not available in the store
+buffer, it will fetch it from the data cache. One possible outcome of a load executing is an indication from the store buffer that it should wait, because an earlier
+store with an unknown address is blocking its execution. In the event that the L1
+data cache access misses, the memory block will be fetched from the unified L2
+cache. Under certain circumstances, the Cortex A9 also performs hardware
+prefetching out of the L2 cache into the L1 data cache, in order to improve the performance of loads and stores.
+The OMAP 4430 chip also contains logic for controlling memory access. This
+logic is split into two parts: the system interface and the memory controller. The
+system interface interfaces with the memory over a 32-bit-wide LPDDR2 bus. All
+memory requests to the outside world pass through this interface. The LPDDR2
+bus supports a 26-bit (word, not byte) address to 8 banks that return a 32-bit data
+word. In theory, the main memory can be up to 2 GB per LPDDR2 channel. The
+OMAP4430 has two of them, so it can address up to 4 GB of external RAM.
+The memory controller maps 32-bit virtual addresses onto 32-bit physical addresses. The Cortex A9 supports virtual memory (discussed in Chap. 6), with a
+4-KB page size. To speed up the mapping, special tables, called TLBs (Translation Lookaside Buffers), are provided to compare the current virtual address
+being referenced to those referenced in the recent past. Two such tables are provided for mapping instruction and data addresses.
+The OMAP4430’s Cortex A9 Pipeline
+The Cortex A9 has an 11-stage pipeline, illustrated in simplified form in
+Fig. 4-49. The 11 stages are designated by short stage names shown on the lefthand side of the figure. Let us now briefly examine each stage. The Fe1 (Fetch
+
+332
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+#1) stage is at the beginning of the pipeline. It is here that the address of the next
+instruction to be fetched is used to index the instruction cache and start a branch
+prediction. Normally, this address is the one following the previous instruction.
+However, this sequential order can be broken for a variety of reasons, such as when
+a previous instruction is a branch that has been predicted to be taken, or a trap or
+interrupt needs to be serviced. Because instruction fetch and branch prediction
+takes more than one cycle, the Fe2 (Fetch #2) stage provides extra time to carry
+out these operations. In the Fe3 (Fetch #3) stage the instructions fetched (up to
+four) are pushed into the instruction queue.
+The De1 and De2 (Decode) stages decode the instructions. This step determines what inputs instructions will need (registers and memory) and what resources they will require to execute (functional units). Once decode is completed,

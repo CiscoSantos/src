@@ -1,0 +1,100 @@
+100
+
+SIB
+
+SIB with OFFSET8
+
+SIB with OFFSET32
+
+ESP or AH
+
+101
+
+Direct
+
+M[EBP + OFFSET8]
+
+M[EBP + OFFSET32]
+
+EBP or CH
+
+110
+
+M[ESI]
+
+M[ESI + OFFSET8]
+
+M[ESI + OFFSET32]
+
+ESI or DH
+
+111
+
+M[EDI]
+
+M[EDI + OFFSET8]
+
+M[EDI + OFFSET32]
+
+EDI or BH
+
+Figure 5-26. The Core i7 32-bit addressing modes. M[x] is the memory word at x.
+
+The MOD = 11 column gives a choice of two registers. For word instructions,
+the first choice is used; for byte instructions, the second choice. Observe that the
+table is not entirely regular. For example, there is no way to indirect through EBP
+and no way to offset from ESP.
+In some modes, an additional byte, called SIB (Scale, Index, Base), follows
+the MODE byte (see Fig. 5-13). The SIB byte specifies a scale factor as well as two
+registers. When a SIB byte is present, the operand address is computed by multiplying the index register by 1, 2, 4, or 8 (depending on SCALE), adding it to the
+base register, and finally possibly adding an 8- or 32-bit displacement, depending
+on MOD. Almost all the registers can be used as either index or base.
+The SIB modes are useful for accessing array elements. For example, consider
+the Java statement
+for (i = 0; i < n; i++) a[i] = 0;
+
+where a is an array of 4-byte integers local to the current procedure. Typically,
+EBP is used to point to the base of the stack frame containing the local variables
+and arrays, as shown in Fig. 5-27. The compiler might keep i in EAX. To access
+a[i], it would use an SIB mode whose operand address was the sum of 4 × EAX,
+EBP, and 8. This instruction could store into a[i] in a single instruction.
+Is this mode worth the trouble? It is hard to say. Undoubtedly this instruction,
+when properly used, saves a few cycles. How often it is used depends on the compiler and the application. The problem is that this instruction occupies a certain
+amount of chip area that could have been used in a different way had this instruction not been present. For example, the level 1 cache could have been made bigger, or the chip could have been made smaller, possibly allowing a slightly higher
+clock speed.
+These are the kinds of trade-offs that designers face constantly. Usually, extensive simulation runs are made before casting anything in silicon, but these simulations require having a good idea of what the workload is like. It is a safe bet that
+
+384
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+the designers of the 8088 did not include a Web browser in their test set. Nevertheless, quite a few of that product’s descendants are now used primarily for Web
+surfing, so the decisions made 20 years ago may be completely wrong for current
+applications. However, in the name of backward compatibility, once a feature gets
+in there, it is impossible to get it out.
+
+EBP
+i in EAX
+
+Other
+local
+variables
+Stack
+frame
+
+a [0]
+
+EBP + 8
+
+a [1]
+
+EBP + 12
+
+a [2]
+
+EBP + 16
+
+SIB Mode references
+M[4 * EAX + EBP + 8]

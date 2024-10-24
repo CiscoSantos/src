@@ -1,0 +1,100 @@
+pseudoinstructions, of course.
+26. Add a simple macro facility to the assembler of the preceding problem.
+
+8
+PARALLEL COMPUTER
+ARCHITECTURES
+
+Although computers keep getting faster, the demands placed on them are
+increasing at least as fast. Astronomers want to simulate the entire history of the
+universe, from the big bang until the show is over. Pharmaceutical engineers
+would love to be able to design medicines for specific diseases on their computer
+instead of having to sacrifice legions of rats. Aircraft designers could come up
+with more fuel-efficient products if computers could do all the work, without the
+need for constructing physical wind-tunnel prototypes. In short, for many users,
+however much computing power is available, especially in science, engineering,
+and industry, it is never enough.
+Although clock rates are continually rising, circuit speed cannot be increased
+indefinitely. The speed of light is already a major problem for designers of highend computers, and the prospects of getting electrons and photons to move faster
+are dim. Heat-dissipation issues are turning supercomputers into state-of-the-art
+air conditioners. Finally, as transistor sizes continue to shrink, at some point each
+transistor will have so few atoms in it that quantum-mechanical effects (e.g., the
+Heisenberg uncertainty principle) may become a major problem.
+Therefore, in order to be able to handle larger and larger problems, computer
+architects are turning increasingly to parallel computers. While it may not be possible to build a computer with one CPU and a cycle time of 0.001 nsec, it may well
+be possible to build one with 1000 CPUs each with a cycle time of 1 nsec. Although the latter design uses slower CPUs, its total computing capacity is theoretically the same. Herein lies the hope.
+553
+
+554
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+Parallelism can be introduced at various levels. At the lowest level, it can be
+added to the CPU chip, through pipelining and superscalar designs with multiple
+functional units. It can also be added by having very long instruction words with
+implicit parallelism. Special features can be added to a CPU to allow it to handle
+multiple threads of control at once. Finally, multiple CPUs can be put together on
+the same chip. Together, these features can pick up perhaps a factor of 10 in performance over purely sequential designs.
+At the next level, extra CPU boards with additional processing capacity can be
+added to a system. Usually, these plug-in CPUs have specialized functions, such
+as network packet processing, multimedia processing, or cryptography. For specialized applications, they can also gain a factor of perhaps 5 to 10.
+However, to win a factor of a hundred or a thousand or a million, it is necessary to replicate entire CPUs and to make them all work together efficiently. This
+idea leads to large multiprocessors and multicomputers (cluster computers). Needless to say, hooking up thousands of processors into a big system leads to its own
+problems that need to be solved.
+Finally, it is now possible to lash together entire organizations over the Internet
+to form very loosely coupled compute grids. These systems are only starting to
+emerge, but have interesting potential for the future.
+When two CPUs or processing elements are close together, have a high bandwidth and low delay between them, and are computationally intimate, they are said
+to be tightly coupled. Conversely, when they are far apart, have a low bandwidth
+and high delay and are computationally remote, they are said to be loosely coupled. In this chapter we will look at the design principles for these various forms
+of parallelism and study a variety of examples. We will start with the most tightly
+coupled systems, those that use on-chip parallelism, and gradually move to more
+and more loosely coupled systems, ending with a few words on grid computing.
+This spectrum is crudely illustrated in Fig. 8-1.
+The whole issue of parallelism, from one end of the spectrum to the other, is a
+hot topic of research. Accordingly, many references are given in this chapter, primarily to recent papers on the subject. Many conferences and journals publish
+papers on the subject as well and the literature is growing rapidly.
+
+8.1 ON-CHIP PARALELLISM
+One way to increase the throughput of a chip is to have it do more things at the
+same time. In other words, exploit parallelism. In this section, we will look at
+some of the ways of achieving speed-up through parallelism at the chip level, including instruction-level parallelism, multithreading, and putting more than one
+CPU on the chip. These techniques are quite different, but each helps in its own
+way. In all cases the idea is to get more activity going at the same time.
+
+SEC. 8.1
+
+555
+
+ON-CHIP PARALELLISM
+Private
+memory
+
+Computer
+
+Shared memory
+M
+
+Coprocessor
+Thread
+CPU
+
+CPU
+Internet
+
+M
+CPU
+
+M
+CPU
+
+CPU
+
+CPU
+
+Main CPU
+Tightly coupled
+(a)
+

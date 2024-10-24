@@ -1,0 +1,100 @@
+The registers in the first group, AX, BX, CX, and DX are the general registers.
+The first register of this group, AX, is called the accumulator register. It is used
+to collect results of computations and is the target of many of the instructions.
+Although each of the registers can perform a host of tasks, in some instructions this
+AX is the implied destination, for example, in multiplication.
+The second register of this group is BX, the base register. For many purposes
+BX can be used in the same way as AX, but it has one power AX does not have. It is
+
+696
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+General
+
+registers
+
+APP. C
+
+Segment registers
+
+AX
+
+AH
+
+AL
+
+CS
+
+Code segment
+
+BX
+
+BH
+
+BL
+
+DS
+
+Data segment
+
+CX
+
+CH
+
+CL
+
+SS
+
+Stack segment
+
+DX
+
+DH
+
+DL
+
+ES
+
+E x t r a segment
+
+15
+
+8 7
+
+0
+
+15
+
+P o i n t e r and index
+SP
+
+Stack p o i n t e r
+
+BP
+
+Base p o i n t e r
+
+SI
+
+Source index
+
+Condition
+SF
+15
+
+15
+
+index
+
+codes
+
+OD I T S Z A
+S t a t u s flags
+Instruction
+
+P
+
+C
+0
+

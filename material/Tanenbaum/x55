@@ -1,0 +1,100 @@
+on a word basis, possibly even a byte basis. Imagine splitting each byte of the single virtual disk into a pair of 4-bit nibbles, then adding a Hamming code to each
+one to form a 7-bit word, of which bits 1, 2, and 4 were parity bits. Further imagine that the seven drives of Fig. 2-23(c) were synchronized in terms of arm position
+and rotational position. Then it would be possible to write the 7-bit Hamming
+coded word over the seven drives, one bit per drive.
+The Thinking Machines CM-2 computer used this scheme, taking 32-bit data
+words and adding 6 parity bits to form a 38-bit Hamming word, plus an extra bit
+for word parity, and spread each word over 39 disk drives. The total throughput
+
+96
+
+(a)
+
+(b)
+
+COMPUTER SYSTEMS ORGANIZATION
+
+Strip 0
+
+Strip 1
+
+Strip 2
+
+Strip 3
+
+Strip 4
+
+Strip 5
+
+Strip 6
+
+Strip 7
+
+Strip 8
+
+Strip 9
+
+Strip 10
+
+Strip 11
+
+Strip 0
+
+Strip 1
+
+Strip 2
+
+Strip 3
+
+Strip 0
+
+Strip 1
+
+Strip 2
+
+Strip 3
+
+Strip 4
+
+Strip 5
+
+Strip 6
+
+Strip 7
+
+Strip 4
+
+Strip 5
+
+Strip 6
+
+Strip 7
+
+Strip 8
+
+Strip 9
+
+Strip 10
+
+Strip 11
+
+Strip 8
+
+Strip 9
+
+Strip 10
+
+Strip 11
+
+Bit 1
+
+Bit 2
+
+Bit 3
+
+Bit 4
+
+Bit 5
+
+Bit 6
+

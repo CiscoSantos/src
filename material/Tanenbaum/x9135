@@ -1,0 +1,100 @@
+SEC. 5.3
+
+365
+
+INSTRUCTION FORMATS
+
+(e.g., the Burroughs B1700). At the other extreme is a memory consisting of very
+long words (e.g., the CDC Cyber series had 60-bit words).
+Modern computer systems have arrived at a compromise that, in some sense,
+captures the worst of both. They require all the bits necessary to address individual
+bytes, but memory accesses read one, two, or sometimes four words at a time.
+Reading 1 byte from memory on the Core i7, for example, brings in a minimum of
+8 bytes and probably an entire 64-byte cache line.
+
+5.3.2 Expanding Opcodes
+In the preceding section we saw how short addresses and good memory resolution could be traded off against each other. In this section we will examine new
+trade-offs, involving both opcodes and addresses. Consider an (n + k) bit instruction with a k-bit opcode and a single n-bit address. This instruction allows 2k different operations and 2n addressable memory cells. Alternatively, the same n + k
+bits could be broken up into a (k − 1) bit opcode, and an (n + 1) bit address, meaning only half as many instructions but either twice as much memory addressable,
+or the same amount of memory but with twice the resolution. A (k + 1) bit opcode
+and an (n − 1) bit address gives more operations, but the price is either a smaller
+number of cells addressable, or poorer resolution and the same amount of memory
+addressable. Quite sophisticated trade-offs are possible between opcode bits and
+address bits as well as the simpler ones just described. The scheme discussed in
+the following paragraphs is called an expanding opcode.
+The concept of an expanding opcode can be most clearly seen by a simple example. Consider a machine in which instructions are 16 bits long and addresses
+are 4 bits long, as shown in Fig. 5-11. This situation might be reasonable for a machine that has 16 registers (hence a 4-bit register address) on which all arithmetic
+operations take place. One design would be a 4-bit opcode and three addresses in
+each instruction, giving 16 three-address instructions.
+15
+
+14
+
+13
+
+Opcode
+
+12
+
+11 10
+
+9
+
+Address 1
+
+8
+
+7
+
+6
+
+5
+
+Address 2
+
+4
+
+3
+
+2
+
+1
+
+0
+
+Address 3
+
+Figure 5-11. An instruction with a 4-bit opcode and three 4-bit address fields.
+
+However, if the designers need 15 three-address instructions, 14 two-address
+instructions, 31 one-address instructions, and 16 instructions with no address at all,
+they can use opcodes 0 to 14 as three-address instructions but interpret opcode 15
+differently (see Fig. 5-12).
+Opcode 15 means that the opcode is contained in bits 8 to 15 instead of in bits
+12 to 15. Bits 0 to 3 and 4 to 7 form two addresses, as usual. The 14 two-address
+
+366
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+16 bits
+4-bit
+opcode
+
+0000 xxxx yyyy zzzz
+0001 xxxx yyyy zzzz
+0010 xxxx yyyy zzzz
+
+15 3-address
+instructions
+
+…
+1100 xxxx yyyy zzzz
+1101 xxxx yyyy zzzz
+1110 xxxx yyyy zzzz
+8-bit
+opcode
+
+1111 0000 yyyy zzzz

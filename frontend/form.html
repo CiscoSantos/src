@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Saca só esse fomr</title>
+    </head>
+     <body>
+        <form action="">
+            <label for="username">Digite o nome:</label>
+            <input type="text" id="username" name="username" placeholder="username" required> <!-- O valor do atributo id é usado como um identificador unico que referencia esse campo, já o atributo name é usado pelo script que (php,javascript, ou outro) que vai fazer o processamento da informação, ele não precisa ser unico dentro da pagina, somente ser unico dentro de um dado FORM-->
+            <br><br>
+            <label for="email">Digite o e-mail:</label>
+            <input type="email" id="email" name="email" placeholder="email" required>
+            <br><br>
+            <label for="password">Senha:</label>
+            <input type="password" id="password" name="password" placeholder="Escolha uma senha" required>  
+
+            <p>Selecione sua idade:</p>
+            
+            <input type="radio" name="idade" id="opcao-1" value="0-25">
+            <label for="opcao-1">Entre 0-25 anos </label>
+            <input type="radio" name="idade" id="opção-2" value="25-50">
+            <label for="opcao-2">Entre 25-50 anos</label>
+            <input type="radio" name="idade" id="opcao-3" value="50+">
+            <label for="opcao-3">Mais de 50 anos</label>
+
+            <input type="submit" value="subimeter o form">
+
+        </form>
+    
+    
+    </body>
+</html>

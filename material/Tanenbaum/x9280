@@ -1,0 +1,100 @@
+other processors see them in that order, too. In other words, any other processor in
+a tight loop observing 1A, 1B, and 1C by reading the words written will never see
+the value written by 1B and then see the value written by 1A, and so on. The second point is needed to require every memory word to have an unambiguous value
+after several CPUs write to it and finally stop. Everyone must agree on who went
+last.
+Even with these constraints, the designer has a lot of flexibility. Consider what
+happens if CPU 2 issues writes 2A, 2B, and 2C concurrently with CPU 1’s three
+writes. Other CPUs that are busily reading memory will observe some interleaving
+of the six writes, such as 1A, 1B, 2A, 2B, 1C, 2C or 2A, 1A, 2B, 2C, 1B, 1C or
+many others. Processor consistency does not guarantee that every CPU sees the
+same ordering (unlike sequential consistency, which does make this guarantee).
+Thus it is perfectly legitimate for the hardware to behave in such a way that some
+CPUs see the first ordering above, some see the second, and some see yet other
+ones. What is guaranteed is that no CPU will see a sequence in which 1B comes
+before 1A, and so on. The order each CPU does its writes is observed everywhere.
+It is worth noting that some authors define processor consistency differently
+and do not require the second condition.
+Weak Consistency
+Our next model, weak consistency, does not even guarantee that writes from a
+single CPU are seen in order (Dubois et al., 1986). In a weakly consistent memory, one CPU might see 1A before 1B and another CPU might see 1A after 1B.
+However, to add some order to the chaos, weakly consistent memories have synchronization variables or a synchronization operation. When a synchronization is
+executed, all pending writes are finished and no new ones are started until all the
+old ones are done and the synchronization itself is done. In effect, a synchronization ‘‘flushes the pipeline’’ and brings the memory to a stable state with no operations pending. Synchronization operations are themselves sequentially consistent,
+that is, when multiple CPUs issue them, some order is chosen, but all CPUs see the
+same order.
+In weak consistency, time is divided into well-defined epochs delimited by the
+(sequentially consistent) synchronizations, as illustrated in Fig. 8-25. No relative
+order is guaranteed for 1A and 1B, and different CPUs may see the two writes in
+different order, that is, one CPU may see 1A then 1B and another CPU may see 1B
+then 1A. This situation is permitted. However, all CPUs see 1B before 1C because the first synchronization operation forces 1A, 1B, and 2A to complete before
+1C, 2B, 3A, or 3B is allowed to start. Thus by doing synchronization operations,
+software can force some order on the sequence of events, although not at zero cost
+since flushing the memory pipeline does take time and thus slows the machine
+down somewhat. Doing it too often can be a problem.
+
+SEC. 8.3
+
+597
+
+SHARED-MEMORY MULTIPROCESSORS
+Write
+
+CPU A
+CPU B
+
+1A
+
+1B
+
+2A
+
+CPU C
+
+1C
+
+1D 1E
+
+2B
+
+2C
+
+3A
+
+3B
+
+1F
+2D
+
+3C
+
+Synchronization point
+Time
+
+Figure 8-25. Weakly consistent memory uses synchronization operations to divide time into sequential epochs.
+
+Release Consistency
+Weak consistency has the problem that it is quite inefficient because it must
+finish off all pending memory operations and hold all new ones until the current
+ones are done. Release consistency improves matters by adopting a model akin to
+critical sections (Gharachorloo et al., 1990). The idea behind this model is that
+when a process exits a critical region it is not necessary to force all the writes to
+complete immediately. It is only necessary to make sure that they are done before
+any process enters that critical region again.
+In this model, the synchronization operation offered by weak consistency is
+split into two different operations. To read or write a shared data variable, a CPU
+(i.e., its software) must first do an acquire operation on the synchronization variable to get exclusive access to the shared data. Then the CPU can use them as it
+wishes, reading and writing them at will. When it is done, the CPU does a release
+operation on the synchronization variable to indicate that it is finished. The
+release does not force pending writes to complete, but it itself does not complete
+until all previously issued writes are done. Furthermore, new memory operations
+are not prevented from starting immediately.
+When the next acquire is issued, a check is made to see whether all previous
+release operations have completed. If not, the acquire is held up until they are all
+done (and hence all the writes done before them are all completed). In this way, if
+the next acquire occurs sufficiently long after the most recent release, it does not
+have to wait before starting and the critical region can be entered without delay. If
+it occurs too soon after a release, the acquire (and all the instructions following it)
+will be delayed until all pending releases are completed, thus guaranteeing that the
+variables in the critical section have been updated. This scheme is slightly more
+complicated than weak consistency, but it has the significant advantage of not

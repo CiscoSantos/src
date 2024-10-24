@@ -1,0 +1,100 @@
+
+CHAP. 9
+
+ALMASI, G.S. et al.: ‘‘System Management in the BlueGene/L Supercomputer,’’ Proc. 17th
+
+Int’l Parallel and Distr. Proc. Symp., IEEE, 2003a.
+ALMASI, G.S. et al.: ‘‘An Overview of the Bluegene/L System Software Organization,’’ Par.
+
+Proc. Letters, vol. 13, 561–574, April 2003b.
+AMZA, C., COX, A., DWARKADAS, S., KELEHER, P., LU, H., RAJAMONY, R., YU, W., and
+ZWAENEPOEL, W.: ‘‘TreadMarks: Shared Memory Computing on a Network of
+
+Workstations,’’ IEEE Computer Magazine, vol. 29, pp. 18–28, Feb. 1996.
+ANDERSON, D.: Universal Serial Bus System Architecture, Reading, MA: Addison-Wesley,
+
+1997.
+ANDERSON, D., BUDRUK, R., and SHANLEY, T.: PCI Express System Architecture, Read-
+
+ing, MA: Addison-Wesley, 2004.
+ANDERSON, T.E., CULLER, D.E., PATTERSON, D.A., and the NOW team: ‘‘A Case for
+
+NOW (Networks of Workstations),’’ IEEE Micro Magazine, vol. 15, pp. 54–64, Jan.
+1995.
+AUGUST, D.I., CONNORS, D.A., MAHLKE, S.A., SIAS, J.W., CROZIER, K.M., CHENG,
+B.-C., EATON, P.R., OLANIRAN, Q.B., and HWU, W.-M.: ‘‘Integrated Predicated and
+
+Speculative Execution in the IMPACT EPIC Architecture,’’ Proc. 25th Ann. Int’l Symp.
+on Computer Arch., ACM, pp. 227–237, 1998.
+BAL, H.E.: Programming Distributed Systems, Hemel Hempstead, England: Prentice Hall
+
+Int’l, 1991.
+BAL, H.E., BHOEDJANG, R., HOFMAN, R, JACOBS, C., LANGENDOEN, K., RUHL, T.,
+and KAASHOEK, M.F.: ‘‘Performance Evaluation of the Orca Shared Object System,’’
+
+ACM Trans. on Computer Systems, vol. 16, pp. 1–40, Jan.–Feb. 1998.
+BAL, H.E., KAASHOEK, M.F., and TANENBAUM, A.S.: ‘‘Orca: A Language for Parallel
+
+Programming of Distributed Systems,’’ IEEE Trans. on Software Engineering, vol. 18,
+pp. 190–205, March 1992.
+BAL, H.E., and TANENBAUM, A.S.: ‘‘Distributed Programming with Shared Data,’’ Proc.
+
+1988 Int’l Conf. on Computer Languages, IEEE, pp. 82–91, 1988.
+BALASANGAMESHWARA, J., and RAJU, N.: ‘‘A Hybrid Policy for Fault Tolerant Load
+
+Balancing in Grid Computing Environments,’’ J. Network and Computer Applications,
+vol. 35, pp. 412–422, Jan. 2012.
+BARROSO, L.A., DEAN, J., and HOLZLE, U.: ‘‘Web Search for a Planet: The Google Clus-
+
+ter Architecture,’’ IEEE Micro Magazine, vol. 23, pp. 22–28, March–April 2003.
+BECHINI, A., CONTE, T.M., and PRETE, C.A.: ‘‘Opportunities and Challenges in Embed-
+
+ded Systems,’’ IEEE Micro Magazine, vol. 24, pp. 8–9, July–Aug. 2004.
+BHAKTHAVATCHALU, R., DEEPTHY, G.R.; and SHANOOJA, S.: ‘‘Implementation of Re-
+
+configurable Open Core Protocol Compliant Memory System Using VHDL,’’ Proc.
+Int’l Conf. on Industrial and Information Systems, pp. 213–218, 2010.
+BJORNSON, R.D.: ‘‘Linda on Distributed Memory Multiprocessors,’’ Ph.D. Thesis, Yale
+
+Univ., 1993.
+
+BIBLIOGRAPHY
+
+661
+
+BLUMRICH, M., CHEN, D., CHIU, G., COTEUS, P., GARA, A., GIAMPAPA, M.E., HARING,
+R.A., HEIDELBERGER, P., HOENICKE, D., KOPCSAY, G.V., OHMACHT, M., STEINMACHER-BUROW, B.D., TAKKEN, T., VRANSAS, P., and LIEBSCH, T.: ‘‘An Overview
+
+of the BlueGene/L System,’’ IBM J. Research and Devel., vol. 49, March–May, 2005.
+BOSE, P.: ‘‘Computer Architecture Research: Shifting Priorities and Newer Challenges,’’
+
+IEEE Micro Magazine, vol. 24, p. 5, Nov.–Dec. 2004.
+BOUKNIGHT, W.J., DENENBERG, S.A., MCINTYRE, D.E., RANDALL, J.M., SAMEH,
+A.H., and SLOTNICK, D.L.: ‘‘The Illiac IV System,’’ Proc. IEEE, pp. 369–388, April
+
+1972.
+BRADLEY, D.: ‘‘A Personal History of the IBM PC,’’ IEEE Computer, vol. 44, pp. 19–25,
+
+Aug. 2011.
+BRIDE, E.: ‘‘The IBM Personal Computer: A Software-Driven Market,’’ IEEE Computer,
+
+vol. 44, pp. 34–39, Aug. 2011.
+BRIGHTWELL, R., CAMP, W., COLE, B., DEBENEDICTIS, E., LELAND, R., TOMPKINS,
+H, and MACCABE, A.B.: ‘‘Architectural Specification for Massively Parallel Supercom-
+
+puters: An Experience-and-Measurement-Based Approach,’’ Concurrency and Computation: Practice and Experience, vol. 17, pp. 1–46, 2005.
+BRIGHTWELL, R., UNDERWOOD, K.D., VAUGHAN, C., and STEVENSON, J.: ‘‘Perfor-
+
+mance Evaluation of the Red Storm Dual-Core Upgrade,’’ Concurrency and Computation: Practice and Experience, vol. 22, pp. 175–190, Feb. 2010.
+BURKHARDT, H., FRANK, S., KNOBE, B., and ROTHNIE, J.: ‘‘Overview of the KSR-1
+
+Computer System,’’ Technical Report KSR-TR-9202001, Kendall Square Research
+Corp., Cambridge, MA, 1992.
+CARRIERO, N., and GELERNTER, D.: ‘‘Linda in Context,’’ Commun. of the ACM, vol. 32,
+
+pp. 444–458, April 1989.
+CELAYA, J., and ARRONATEGUI, U.: ‘‘A Highly Scalable Decentralized Scheduler of
+
+Tasks with Deadlines,’’ Proc. 12th Int’l Conf. on Grid Computing, IEEE/ACM, pp.
+58–65, 2011.
+CHARLESWORTH, A.: ‘‘The Sun Fireplane Interconnect,’’ IEEE Micro Magazine, vol. 22,

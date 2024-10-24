@@ -1,0 +1,100 @@
+32-bit code) and still used the MS-DOS file system, with nearly all its limitations.
+
+486
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+The only major changes to the file system were the addition of long file names in
+place of the 8 + 3 character file names allowed in MS-DOS and the ability to have
+more than 65,536 blocks on a disk.
+Even with the release of Windows 98 in 1998, MS-DOS was still there (now
+called version 7.1) and running 16-bit code. Although a bit more functionality
+migrated from the MS-DOS part to the Windows part, and a disk layout suitable for
+larger disks was now standard, under the hood, Windows 98 was not very different
+from Windows 95. The main difference was the user interface, which integrated
+the desktop, the Internet, and to some extent, even television more closely. It was
+precisely this integration that attracted the attention of the U.S. Dept. of Justice,
+which then sued Microsoft claiming that it was an illegal monopoly. Windows 98
+was followed by the short-lived Windows Millennium Edition (ME), which was a
+slightly improved Windows 98.
+While all these developments were going on, Microsoft was also busy with a
+completely new 32-bit operating system being written from the ground up. This
+new system was called Windows New Technology, or Windows NT. It was initially hyped as the replacement for all other operating systems for Intel-based PCs
+(as well as the MIPS PowerPC chips), but it was somewhat slow to catch on and
+was later redirected to the upper end of the market, where it found a niche on large
+servers. The second version of NT was called Windows 2000 and became the
+mainstream version, also for the desktop market. The successor to Windows 2000
+was Windows XP, but the changes here were relatively minor (better backward
+compatibility and a few more features). In 2007, the followup Windows Vista was
+released. Vista implemented many graphical enhancements over Windows XP, and
+it added many new user applications, such as a media center. Vista’s adoption was
+slow because of its poor performance and high resource demands. A mere two
+years later, Windows 7 was released, which by all accounts is a tuned-up version of
+Windows Vista. Windows 7 runs much better on older hardware, and it requires
+significantly less hardware resources.
+Windows 7 is sold in six different versions. Three are for home users in various countries, two are aimed at business users, and one combines all the features of
+all versions. These versions are nearly identical and differ primarily in focus, advanced features, and optimizations made. We will focus on the core features and
+not make any further distinction between these versions.
+Before getting into the interface Windows 7 presents to programmers, let us
+take a very quick look at its internal structure, which is illustrated in Fig. 6-32. It
+consists of a number of modules that are structured in layers and work together to
+implement the operating system. Each module has some particular function and a
+well-defined interface to the other modules. Nearly all the modules are written in
+C, although part of the graphics device interface is written in C++ and tiny bits of
+the lowest layers are written in assembly language.
+At the bottom is a thin layer called the hardware abstraction layer. Its job is
+to present the rest of the operating system with abstract hardware devices, devoid
+
+SEC. 6.5
+
+487
+
+EXAMPLE OPERATING SYSTEMS
+
+of the warts and idiosyncracies with which real hardware is so richly endowed.
+Among the devices modeled are off-chip caches, timers, I/O buses, interrupt controllers, and DMA controllers. By exposing these to the rest of the operating system in idealized form, it becomes easier to port Windows 7 to other hardware platforms, since most of the modifications required are concentrated in one place.
+System Library Kernel User-mode Dispatch Routines
+
+User mode
+Kernel mode
+
+Trap/exception/interrupt dispatch
+
+NTOS
+Kernel
+layer
+
+CPU scheduling and synchronization, threads
+
+Drivers
+File systems,
+volume manager,
+TCP/IP stack,
+net interfaces
+graphics devices,
+all other devices
+
+Procs and threads
+
+Virtual memory
+
+Object manager
+
+Config manager
+
+Local Proc. Calls
+
+Cache manager
+
+I/O manager
+
+Security monitor
+
+Executive run-time library
+NTOS Executive layer
+Hardware Abstraction Layer
+
+Hardware
+

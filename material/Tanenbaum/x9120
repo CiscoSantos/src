@@ -1,0 +1,100 @@
+WB stage, any store instructions now complete writing their results to the L1 data
+cache.
+
+334
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+This description of the Cortex A9 is far from complete but should give a reasonable idea of how it works and how it differs from the Core i7 microarchitecture.
+
+4.6.3 The Microarchitecture of the ATmega168 Microcontroller
+Our last example of a microarchitecture is the Atmel ATmega168, shown in
+Fig. 4-50. This one is considerably simpler than that of the Core i7 and
+OMAP4430. The reason is that the chip must be very small and cheap to serve the
+embedded design market. As such, the primary design goal of the ATmega168 was
+to make the chip cheap, not fast. Cheap and Simple are good friends. Cheap and
+Fast are not good friends.
+Main bus 8-bit
+Program
+counter
+
+Flash
+program
+memory
+
+Status
+and control
+
+32 × 8
+general
+purpose
+registers
+
+Control lines
+
+Indirect addressing
+
+Instruction
+decoder
+
+Direct addressing
+
+Instruction
+register
+
+Interrupt
+unit
+SPI
+unit
+Watchdog
+timer
+
+ALU
+
+Analog
+comparator
+
+I/O module 1
+Data
+SRAM
+
+I/O module 2
+
+I/O module 3
+EEPROM
+
+Figure 4-50. The microarchitecture of the ATmega168.
+
+The heart of the ATmega168 is the 8-bit main bus. Attached to it are the registers and status bits, ALU, memory, and I/O devices. Let us briefly describe them
+now. The register file contains 32 8-bit registers, which are used to store temporary program values. The status and control register holds the condition codes of
+the last ALU operation (i.e., sign, overflow, negative, zero, and carry), plus a bit
+
+SEC. 4.6
+
+EXAMPLES OF THE MICROARCHITECTURE LEVEL
+
+335
+
+that indicates if an interrupt is pending. The program counter holds the address of
+the instruction currently executing. To perform an ALU operation, the operands
+are first read from the register and sent to the ALU. The ALU output can be written to any of the writable registers via the main bus.
+The ATmega168 has multiple memories for data and instructions. The data
+SRAM is 1 KB, too large to be fully addressed with an 8-bit address on the main
+bus. Thus, the AVR architecture allows addresses to be constructed with a sequential pair of 8-bit registers, thereby producing a 16-bit address that supports up to 64
+KB of data memory. The EEPROM provides up to 1 KB of nonvolatile storage
+where programs can write variables that need to survive a power outage.
+A similar mechanism exists to address program memory, but 64 KB of code is
+too small, even for low-cost embedded systems. To allow more instruction memory
+to be addressed the AVR architecture defines three RAM page registers (RAMPX,
+RAMPY, and RAMPZ), each 8 bits wide. The RAM page register is concatenated
+with a 16-bit register pair to produce a 24-bit program address, thereby allowing 16
+MB of instruction address space.
+Stop to think about that for a minute. 64 KB of code is too small for a
+microcontroller that might power a toy or small appliance. In 1964, IBM released
+the System 360 Model 30, which had 64 KB of total memory (with no tricks for
+upgrading it). It sold for $250,000, which is roughly $2 million in today’s dollars.
+The ATmega168 costs about $1, less if you buy a lot of them at once. If you check
+out, say, Boeing’s price list, you will discover that airplane prices have not dropped
+by a factor of 250,000 in the past 50 or so years. Nor have the prices of cars or

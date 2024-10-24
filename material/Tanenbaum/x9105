@@ -1,0 +1,100 @@
+The thing to observe here is that two of the five instructions are branches. Furthermore, one of these, BNE, is a conditional branch (a branch that is taken if and
+only if some condition is met—in this case, that the two operands in the previous
+CMP are unequal). The longest linear code sequence here is two instructions. As a
+consequence, fetching instructions at a high rate to feed the pipeline is very hard.
+At first glance, it might appear that unconditional branches, such as the instruction BR Next in Fig. 4-40(b), are not a problem. After all, there is no ambiguity about where to go. Why can the fetch unit not just continue to read instructions
+from the target address (the place that will be branched to)?
+The trouble lies in the nature of pipelining. In Fig. 4-36, for example, we see
+that instruction decoding occurs in the second stage. Thus the fetch unit has to
+decide where to fetch from next before it knows what kind of instruction it just got.
+Only one cycle later can it learn that it just picked up an unconditional branch, and
+by then it has already started to fetch the instruction following the unconditional
+branch. As a consequence, a substantial number of pipelined machines (such as
+the UltraSPARC III) have the property that the instruction following an unconditional branch is executed, even though logically it should not be. The position after
+a branch is called a delay slot. The Core i7 [and the machine used in Fig. 4-40(b)]
+do not have this property, but the internal complexity to get around this problem is
+often enormous. An optimizing compiler will try to find some useful instruction to
+put in the delay slot, but frequently there is nothing available, so it is forced to
+insert a NOP instruction there. Doing so keeps the program correct, but makes it
+bigger and slower.
+Annoying as unconditional branches are, conditional branches are worse. Not
+only do they also have delay slots, but now the fetch unit does not know where to
+read from until much later in the pipeline. Early pipelined machines just stalled
+until it was known whether the branch would be taken or not. Stalling for three or
+four cycles on every conditional branch, especially if 20% of the instructions are
+conditional branches, wreaks havoc with the performance.
+Consequently, what most machines do when they hit a conditional branch is
+predict whether it is going to be taken or not. It would be nice if we could just
+plug a crystal ball into a free PCIe slot (or better yet, into the IFU) to help out with
+the prediction, but so far this approach has not borne fruit.
+Lacking such a nice peripheral, various ways have been devised to do the prediction. One very simple way is as follows: assume that all backward conditional
+
+312
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+branches will be taken and that all forward ones will not be taken. The reasoning
+behind the first part is that backward branches are frequently located at the end of a
+loop. Most loops are executed multiple times, so guessing that a branch back to
+the top of the loop will be taken is generally a good bet.
+The second part is shakier. Some forward branches occur when error conditions are detected in software (e.g., a file cannot be opened). Errors are rare, so
+most of the branches associated with them are not taken. Of course, there are
+plenty of forward branches not related to error handling, so the success rate is not
+nearly as good as with backward branches. While not fantastic, this rule is at least
+better than nothing.
+If a branch is correctly predicted, there is nothing special to do. Execution just
+continues at the target address. The trouble comes when a branch is predicted
+incorrectly. Figuring out where to go and going there is not difficult. The hard
+part is undoing instructions that have already been executed and should not have
+been.
+There are two ways of going about this. The first way is to allow instructions
+fetched after a predicted conditional branch to execute until they try to change the
+machine’s state (e.g., storing into a register). Instead of overwriting the register,
+the value computed is put into a (secret) scratch register and only copied to the real
+register after it is known that the prediction was correct. The second way is to
+record the value of any register about to be overwritten (e.g., in a secret scratch
+register), so the machine can be rolled back to the state it had at the time of the
+mispredicted branch. Both solutions are complex and require industrial-strength
+bookkeeping to get them right. And if a second conditional branch is hit before it
+is known whether the first one was predicted right, things can get really messy.
+Dynamic Branch Prediction
+Clearly, having the predictions be accurate is of great value, since it allows the
+CPU to proceed at full speed. As a consequence, much ongoing research aims at
+improving branch prediction algorithms (Chen et al., 2003, Falcon et al., 2004,
+Jimenez, 2003, and Parikh et al., 2004). One approach is for the CPU to maintain
+a history table (in special hardware), in which it logs conditional branches as they
+occur, so they can be looked up when they occur again. The simplest version of
+this scheme is shown in Fig. 4-41(a). Here the history table contains one entry for
+each conditional branch instruction. The entry contains the address of the branch
+instruction along with a bit telling whether it was taken the last time it was executed. Using this scheme, the prediction is simply that the branch will go the
+same way it went last time. If the prediction is wrong, the bit in the history table is
+changed.
+There are several ways to organize the history table. In fact, these are precisely
+the same ways used to organize a cache. Consider a machine with 32-bit instructions that are word aligned so that the low-order 2 bits of each memory address are
+
+SEC. 4.5
+Branch/
+no branch
+
+Valid
+Slot
+
+313
+
+IMPROVING PERFORMANCE
+
+Branch
+address/tag
+
+6
+5
+4
+3
+2
+1
+0
+
+Valid
+Slot

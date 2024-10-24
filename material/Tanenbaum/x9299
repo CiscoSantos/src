@@ -1,0 +1,100 @@
+cage
+
+Opteron
+
+100-Mbps Ethernet
+
+Card
+cage
+
+Seastar
+Cabinet
+
+Figure 8-40. Packaging of the Red Storm components.
+
+SDRAM. Each CPU has access only to its own SDRAM. There is no shared
+memory. The theoretical computing power of the system is 41 teraflops/sec.
+The interconnection between the Opteron CPUs is done by the custom Seastar
+routers, one router per Opteron CPU. They are connected in a 3D torus of size
+27 × 16 × 24 with one Seastar at each mesh point. Each Seastar has seven bidirectional 24-Gbps links, going north, east, south, west, up, down, and to the Opteron.
+The transit time between adjacent mesh points is 2 microsec. Across the entire set
+of compute nodes it is only 5 microsec. A second network using 100-Mbps Ethernet is used for service and maintenance.
+In addition to the 108 compute cabinets, the system also contains 16 cabinets
+for I/O and service processors. Each cabinet holds 32 Opterons. These 512 CPUs
+are split: 256 for I/O and 256 for service. The rest of the space is for disks, which
+are organized as RAID 3 and RAID 5, each with a parity drive and a hot spare.
+The total disk space is 240 TB. The combined disk bandwidth is 50 GB/sec.
+The system is partitioned into classified and unclassified sections, with switches between the parts so they can be mechanically coupled or decoupled. A total of
+2688 are always in the classified section and another 2688 Opterons are always in
+the unclassified section. The remaining 4992 Opterons are switchable into either
+section, as depicted in Fig. 8-41. The 2688 classified Opterons each have 4 GB of
+RAM; all the rest have 2 GB each. Apparently classified work is memory intensive. The I/O and service processors are split between the two parts.
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+I/O and service node
+
+28 Classified
+120 TB
+cabinets
+storage (2688 Opterons)
+
+Switch
+
+629
+
+Compute node
+
+52 Switchable cabinets 28 Unclassified
+120 TB
+(4992 Opterons )
+cabinets
+(2688 Opterons) storage
+
+Figure 8-41. The Red Storm system as viewed from above.
+
+Everything is housed in a new 2000-m2 custom building. The building and site
+have been designed so that the system can be upgraded to as many as 30,000
+Opterons in the future if required. The compute nodes draw 1.6 megawatts of
+power; the disks draw another megawatt. Adding in the fans and air conditioning,
+the whole thing uses 3.5 MW.
+The computer hardware and software cost $90 million. The building and cooling cost another $9 million, so the total cost came in at just under $100 million, although some of that was nonrecurring engineering cost. If you want to order an
+exact clone, $60 million would be a good number to keep in mind. Cray intends to
+sell smaller versions of the system to other government and commercial customers
+under the name X3T.
+The compute nodes run a lightweight kernel called catamount. The I/O and
+service nodes run plain vanilla Linux with a small addition to support MPI (discussed later in this chapter). The RAS nodes run a stripped-down Linux. Extensive software from ASCI Red is available for use on Red Storm, including CPU
+allocators, schedulers, MPI libraries, math libraries, as well as the application programs.
+With such a large system, achieving high reliability is essential. Each board
+has a RAS processor for doing system maintenance and there are special hardware
+facilities as well. The goal is an MTBF (Mean Time Between Failures) of 50
+hours. ASCI Red had a hardware MTBF of 900 hours but was plagued by an operating-system crash every 40 hours. Although the new hardware is much more reliable than the old, the weak point remains the software.
+For more information about Red Storm, see Brightwell et al. (2005, 2010).
+A Comparison of BlueGene/P and Red Storm
+Red Storm and BlueGene/P are comparable in some ways but different in others, so it is interesting to put some of the key parameters next to each other, as
+presented in Fig. 8-42.
+
+630
+
+PARALLEL COMPUTER ARCHITECTURES
+
+Item
+
+BlueGene/P
+
+CHAP. 8
+
+Red Storm
+
+CPU
+
+32-Bit PowerPC
+
+64-Bit Opteron
+
+Clock
+
+850 MHz
+

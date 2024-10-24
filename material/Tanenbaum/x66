@@ -1,0 +1,100 @@
+have spatial structure, like a crystal. They were discovered by an Austrian botanist, Friedrich Reinitzer, in 1888 and first applied to displays (e.g., calculators,
+watches) in the 1960s. When all the molecules are lined up in the same direction,
+the optical properties of the crystal depend on the direction and polarization of the
+incoming light. Using an applied electric field, the molecular alignment, hence the
+optical properties, can be changed. In particular, by shining a light through a liquid
+
+116
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+crystal, the intensity of the light exiting from it can be controlled electrically. This
+property can be exploited to construct flat panel displays.
+An LCD display screen consists of two parallel glass plates between which is a
+sealed volume containing a liquid crystal. Transparent electrodes are attached to
+both plates. A light behind the rear plate (either natural or artificial) illuminates
+the screen from behind. The transparent electrodes attached to each plate are used
+to create electric fields in the liquid crystal. Different parts of the screen get different voltages, to control the image displayed. Glued to the front and rear of the
+screen are polarizing filters because the display technology requires the use of
+polarized light. The general setup is shown in Fig. 2-33(a).
+Liquid crystal
+Rear glass plate
+Rear
+electrode
+Rear
+polaroid
+
+Front glass plate
+Front electrode
+Front polaroid
+
+y
+Dark
+
+z
+
+Bright
+
+Light
+source
+
+Notebook computer
+(b)
+(a)
+
+Figure 2-33. (a) The construction of an LCD screen. (b) The grooves on the rear
+and front plates are perpendicular to one another.
+
+Although many kinds of LCD displays are in use, we will now consider one
+particular kind, the TN (Twisted Nematic) display, as an example. In this display,
+the rear plate contains tiny horizontal grooves and the front plate contains tiny vertical grooves, as illustrated in Fig. 2-33(b). In the absence of an electric field, the
+LCD molecules tend to align with the grooves. Since the front and rear alignments
+differ by 90 degrees, the molecules (and thus the crystal structure) twist from rear
+to front.
+At the rear of the display is a horizontal polarizing filter. It allows in only horizontally polarized light. At the front of the display is a vertical polarizing filter. It
+allows only vertically polarized light to pass through. If there were no liquid pres-
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+117
+
+ent between the plates, horizontally polarized light let in by the rear polarizing filter would be blocked by the front polarizing filter, making the screen black.
+However the twisted crystal structure of the LCD molecules guides the light as
+it passes and rotates its polarization, making it come out vertically. Thus in the
+absence of an electric field, the LCD screen is uniformly bright. By applying a
+voltage to selected parts of the plate, the twisted structure can be destroyed, blocking the light in those parts.
+Two schemes can be used for applying the voltage. In a (low-cost) passive
+matrix display, both electrodes contain parallel wires. In a 1920 × 1080 display
+(the size for full high-definition video), for example, the rear electrode might have
+1920 vertical wires and the front one 1080 horizontal ones. By putting a voltage
+on one of the vertical wires and then pulsing one of the horizontal ones, the voltage
+at one selected pixel position can be changed, making it go dark briefly. A pixel
+(originally a picture element, is a colored dot from which all digital images are
+built). By repeating this pulse with the next pixel and then the next one, a dark
+scan line can be painted. Normally, the entire screen is painted 60 times a second
+to fool the eye into thinking there is a constant image there.
+The other scheme in widespread use is the active matrix display. It is more
+expensive but it gives a better image. Instead of just having two sets of perpendicular wires, it has a tiny switching element at each pixel position on one of the electrodes. By turning these on and off, an arbitrary voltage pattern can be created across the screen, allowing for an arbitrary bit pattern. The switching elements are
+called thin film transistors and the flat panel displays using them are often called
+TFT displays. Most notebook computers and stand-alone flat panel displays for
+desktop computers use TFT technology now.
+So far we have described how a monochrome display works. Suffice it to say
+that color displays use the same general principles as monochrome displays but the
+details are a great deal more complicated. Optical filters are used to separate the
+white light into red, green, and blue components at each pixel position so these can
+be displayed independently. Every color can be built up from a linear superposition of these three primary colors.
+Still new screen technologies are on the horizon. One of the more promising is
+the Organic Light Emitting Diode (OLED) display. It consists of layers of electrically charged organic molecules sandwiched between two electrodes. Voltage
+changes cause the molecules to get excited and move to higher energy states.
+When they drop back to their normal state, they emit light. More detail is beyond
+the scope of this book (and its authors).
+Video RAM
+Most monitors are refreshed 60–100 times per second from a special memory,
+called a video RAM, on the display’s controller card. This memory has one or
+more bit maps that represent the screen image. On a screen with, say, 1920 × 1080
+
+118

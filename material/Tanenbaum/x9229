@@ -1,0 +1,100 @@
+Virtual
+Page
+page
+frame
+0
+14
+1
+1
+2
+6
+3
+On disk
+
+For each of the following accesses to virtual memory, tell what physical address is
+computed. If a fault occurs, tell which kind.
+Access
+1. fetch data
+2. fetch data
+3. fetch data
+4. store data
+5. store data
+6. store data
+7. branch to it
+8. fetch data
+9. fetch data
+10. branch to it
+
+Segment
+0
+1
+3
+0
+3
+3
+1
+0
+2
+3
+
+Page
+1
+1
+3
+1
+1
+0
+3
+2
+0
+0
+
+Offset within page
+1
+10
+2047
+4
+2
+14
+100
+50
+5
+60
+
+512
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+10. Some computers allow I/O directly to user space. For example, a program could start
+up a disk transfer to a buffer inside a user process. Does this cause any problems if
+compaction is used to implement the virtual memory? Discuss.
+11. Operating systems that allow memory-mapped files always require files to be mapped
+at page boundaries. For example, with 4-KB pages, a file can be mapped in starting at
+virtual address 4096, but not starting at virtual address 5000. Why?
+12. When a segment register is loaded on the Core i7, the corresponding descriptor is
+fetched and loaded into an invisible part of the segment register. Why do you think the
+Intel designers decided to do this?
+13. A program on the Core i7 references local segment 10 with offset 8000. The BASE
+field of LDT segment 10 contains 10000. Which page directory entry does the Core i7
+use? What is the page number? What is the offset?
+14. Discuss some possible algorithms for removing segments in an unpaged, segmented
+memory.
+15. Compare internal fragmentation to external fragmentation. What can be done to alleviate each?
+16. Supermarkets are constantly faced with a problem similar to page replacement in virtual memory systems. They have a fixed amount of shelf space to display an everincreasing number of products. If an important new product comes along, say, 100%
+efficient dog food, some existing product must be dropped from the inventory to make
+room for it. The obvious replacement algorithms are LRU and FIFO. Which of these
+would you prefer?
+17. In some ways, caching and paging are very similar. In both cases there are two levels
+of memory (the cache and main memory in the former and main memory and disk in
+the latter). In this chapter we looked at some of the arguments in favor of large disk
+pages and small disk pages. Do the same arguments hold for cache line sizes?
+18. Why do many file systems require that a file be explicitly opened with an open system
+call before being read?
+19. Compare the bit-map and hole-list methods for keeping track of free space on a disk
+with 800 cylinders, each one having 5 tracks of 32 sectors. How many holes would it
+take before the hole list would be larger than the bit map? Assume that the allocation
+unit is the sector and that a hole requires a 32-bit table entry.
+20. A third hole allocation scheme, in addition to best fit and first fit, is worst fit, where a
+process is allocated space from the largest remaning hole. What advantage can be

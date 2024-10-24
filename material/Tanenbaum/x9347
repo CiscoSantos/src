@@ -1,0 +1,100 @@
+is described further in Sec. C.4.5.
+All the addresses which comply with the addressing modes discussed up to
+now can be used as sources and as destinations for operations. Together they are
+defined to be effective addresses. The addressing mode in the remaining two
+blocks cannot be used as destinations and are not referred to as effective addresses.
+They can only be used as sources.
+The addressing mode in which the operand is a constant byte or word value in
+the instruction itself is called immediate addressing. Thus, for example,
+CMP AX,50
+
+compares AX to the constant 50 and sets bits in the flag register, depending on the
+results.
+Finally, some of the instructions use implied addressing. For these instructions, the operand or operands are implicit in the instruction itself. For example,
+the instruction
+PUSH AX
+
+pushes the contents of AX onto the stack by decrementing SP and then copying AX
+to the location now pointed to by SP. SP is not named in the instruction itself,
+however; the mere fact that it is a PUSH instruction implies that SP is used. Similarly, the flag manipulation instructions implicitly use the status flags register without naming it. Several other instructions also have implicit operands.
+The 8088 has special instructions for moving (MOVS), comparing (CMPS), and
+scanning (SCAS) strings. With these string instructions, the index registers SI and
+DI are automatically changed after the operation. This behavior is called auto
+increment or auto decrement mode. Whether SI and DI are incremented or decremented depends on the direction flag in the status flags register. A direction flag
+value of 0 increments, whereas a value of 1 decrements. The change is 1 for byte
+instructions and 2 for word instructions. In a way, the stack pointer is also auto
+increment and auto decrement: it is decremented by 2 at the start of a PUSH and
+incremented by 2 at the end of a POP.
+
+SEC. C.4
+
+THE 8088 INSTRUCTION SET
+
+705
+
+C.4 THE 8088 INSTRUCTION SET
+The heart of every computer is the set of instructions it can carry out. To really
+understand a computer, it is necessary to have a good understanding of its instruction set. In the following sections, we will discuss the most important of the
+8088’s instructions. Some of them are shown in Fig. C-4, where they are divided
+into 10 groups.
+
+C.4.1 Move, Copy and Arithmetic
+The first group of instructions is the copy and move instructions. By far, the
+most common is the instruction MOV, which has an explicit source and an explicit
+destination. If the source is a register, the destination can be an effective address.
+In this table a register operand is indicated by an r and an effective address by an e,
+so this operand combination is denoted by e←r. This is the first entry in the
+Operands column for MOV. Since, in the instruction syntax, the destination is the
+first operand and the source is the second operand, the arrow ← is used to indicate
+the operands. Thus, e←r means that a register is copied to an effective address.
+For the MOV instruction, the source can also be an effective address and the
+destination a register, which will be denoted by r←e, the second entry in the
+Operands column of the instruction. The third possibility is immediate data as
+source, and effective address as destination, which yields e←#. Immediate data in
+the table is indicated by the sharp sign (#). Since both the word move MOV and the
+byte move MOVB exist, the instruction mnemonic ends with a B between parentheses. Thus, the line really represents six different instructions.
+None of the flags in the condition code register are affected by a move instruction, so the last four columns have the entry ‘‘-’’. Note that the move instructions do not move data. They make copies, meaning that the source is not modified
+as would happen with a true move.
+The second instruction in the table is XCHG, which exchanges the contents of a
+register with the contents of an effective address. For the exchange the table uses
+the symbol →
+←. In this case, there exists a byte version as well as a word version.
+→e.
+Thus, the instruction is denoted by XCHG and the Operand field contains r←
+The next instruction is LEA, which stands for Load Effective Address. It computes
+the numerical value of the effective address and stores it in a register.
+Next is PUSH, which pushes its operand onto the stack. The explicit operand
+can either be a constant (# in the Operands column) or an effective address (e in
+the Operands column). There is also an implicit operand, SP, which is not mentioned in the instruction syntax. What the instruction does is decrement SP by 2,
+then store the operand at the location now pointed to by SP.
+Then comes POP, which removes an operand from the stack to an effective
+address. The next two instructions, PUSHF and POPF, also have implied operands,
+and push and pop the flags register, respectively. This is also the case for XLAT
+
+706
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+which loads the byte register AL from the address computed from AL + BX . This
+instruction allows for rapid lookup in tables of size 256 bytes.
+Officially defined in the 8088, but not implemented in the interpreter (and thus
+not listed in Fig. C-4), are the IN and OUT instructions. These are, in fact, move
+instructions to and from an I/O device. The implied address is always the AX register, and the second operand in the instruction is the port number of the desired device register.
+In the second block of Fig. C-4 are the addition and subtraction instructions.
+Each of these has the same three operand combinations as MOV: effective address
+to register, register to effective address, and constant to effective address. Thus, the
+Operands column of the table contains r←e, e←r, and e←#. In all four of these
+instructions, the overflow flag, O, the sign flag, S, the zero flag, Z, and the carry
+flag, C are all set, based on the result of the instruction. This means, for example,
+that O is set if the result cannot be correctly expressed in the allowed number of
+bits, and cleared if it can be. When the largest 16-bit number, 0x7fff (32,767 in
+decimal), is added to itself, the result cannot be expressed as a 16-bit signed number, so O is set to indicate the error. Similar things happen to the other status flags
+in these operations. If an instruction has an effect on a status flag, an asterisk (*) is
+shown in the corresponding column. In the instructions ADC and SBB, the carry
+flag at the start of the operation is used as an extra 1 (or 0), which is seen as a carry
+or borrow from the previous operation. This facility is especially useful for representing 32-bit or longer integers in several words. For all additions and subtractions, byte versions also exist.
+The next block contains the multiplication and division instructions. Signed
+integer operands require the IMUL and IDIV instructions; unsigned ones use MUL and
+DIV. The AH : AL register combination is the implied destination in the byte version

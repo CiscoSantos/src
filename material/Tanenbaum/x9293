@@ -1,0 +1,100 @@
+building and using parallel computers in which each CPU has its own private memory, not directly accessible to any other CPU. These are the multicomputers. Programs on multicomputer CPUs interact using primitives like send and receive to
+explicitly pass messages because they cannot get at each other’s memory with
+LOAD and STORE instructions. This difference completely changes the programming model.
+Each node in a multicomputer consists of one or a few CPUs, some RAM
+(conceivably shared among the CPUs at that node only), a disk and/or other I/O devices, and a communication processor. The communication processors are connected by a high-speed interconnection network of the types we discussed in Sec.
+8.3.3. Many different topologies, switching schemes, and routing algorithms are
+used. What all multicomputers have in common is that when an application program executes the send primitive, the communication processor is notified and
+transmits a block of user data to the destination machine (possibly after first asking
+for and getting permission). A generic multicomputer is shown in Fig. 8-36.
+CPU
+
+Node
+
+Memory
+
+…
+
+…
+Local interconnect
+
+Disk
+and
+I/O
+
+…
+
+Local interconnect
+
+Disk
+and
+I/O
+
+Communication
+processor
+High-performance interconnection network
+
+Figure 8-36. A generic multicomputer.
+
+8.4.1 Interconnection Networks
+In Fig. 8-36 we see that multicomputers are held together by interconnection
+networks. Now it is time to look more closely at these interconnection networks.
+Interestingly enough, multiprocessors and multicomputers are surprisingly similar
+in this respect because multiprocessors often have multiple memory modules that
+must also be interconnected with one another and with the CPUs. Thus the material in this section frequently applies to both kinds of systems.
+The fundamental reason why multiprocessor and multicomputer interconnection networks are similar is that at the very bottom both of them use message
+
+618
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+passing. Even on a single-CPU machine, when the processor wants to read or
+write a word, what it typically does is assert certain lines on the bus and wait for a
+reply. This action is fundamentally like message passing: the initiator sends a request and waits for a response. In large multiprocessors, communication between
+CPUs and remote memory almost always consists of the CPU sending an explicit
+message, called a packet, to memory requesting some data, and the memory sending back a reply packet.
+Topology
+The topology of an interconnection network describes how the links and
+switches are arranged, for example, as a ring or as a grid. Topological designs can
+be modeled as graphs, with the links as arcs and the switches as nodes, as shown in
+Fig. 8-37. Each node in an interconnection network (or its graph) has some number of links connected to it. Mathematicians call the number of links the degree of
+the node; engineers call it the fanout. In general, the greater the fanout, the more
+routing choices there are and the greater the fault tolerance, that is, the ability to
+continue functioning even if a link fails by routing around it. If every node has k
+arcs and the wiring is done right, it is possible to design the network so that it
+remains fully connected even if k − 1 links fail.
+Another property of an interconnection network (or its graph) is its diameter.
+If we measure the distance between two nodes by the number of arcs that have to
+be traversed to get from one to the other, then the diameter of a graph is the distance between the two nodes that are the farthest apart (i.e., have the greatest distance between them). The diameter of an interconnection network is related to the
+worst-case delay when sending packets from CPU to CPU or from CPU to memory because each hop across a link takes a finite amount of time. The smaller the
+diameter, the better the worst-case performance. Also important is the average distance between two nodes, since this relates to the average packet transit time.
+Yet another important property of an interconnection network is its transmission capacity, that is, how much data it can move per second. One useful measure
+of this capacity is the bisection bandwidth. To compute this quantity, we first
+have to (conceptually) partition the network into two equal (in terms of number of
+nodes) but unconnected parts by removing a set of arcs from its graph. Then we
+compute the total bandwidth of the arcs that have been removed. There may be
+many different ways to partition the network into two equal parts. The bisection
+bandwidth is the minimum of all the possible partitions. The significance of this
+number is that if the bisection bandwidth is, say, 800 bits/sec, then if there is a lot
+of communication between the two halves, the total throughput may be limited to
+only 800 bits/sec, in the worst case. Many designers believe bisection bandwidth
+is the most important metric of an interconnection network. Many interconnection
+networks are designed with the goal of maximizing the bisection bandwidth.
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+(f)

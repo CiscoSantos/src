@@ -1,0 +1,100 @@
+Consequently, very accurate branch prediction is essential to make sure the right
+instructions are being entered into the pipeline. Because a misprediction requires
+the pipeline to be flushed, at great cost, even a fairly low misprediction rate can
+cause a substantial performance degradation. Strike five.
+To alleviate the problems with mispredictions, the processor has to do speculative execution, with all the problems it entails, especially when memory references
+on the wrong path cause an exception. Strike six.
+We are not going to play the whole baseball game here, but it should be clear
+by now that there is a problem. And we have not even mentioned that IA-32’s
+32-bit addresses limit individual programs to 4 GB of memory, which is a big
+problem on servers. The EMT-64 solves this problem but not all the others.
+All in all, the situation with IA-32 can be favorably compared to the state of
+celestial mechanics just prior to Copernicus. The then-current theory dominating
+
+SEC. 5.8
+
+THE IA-64 ARCHITECTURE AND THE ITANIUM 2
+
+423
+
+astronomy was that the earth was fixed and motionless in space and that the planets
+moved in circles with epicycles around it. However, as observations got better and
+more deviations from this model could be clearly observed, epicycles were added
+to the epicycles until the whole model just collapsed from its internal complexity.
+Intel is in the same pickle now. A huge fraction of all the transistors on the
+Core i7 are devoted to decomposing CISC instructions, figuring out what can be
+done in parallel, resolving conflicts, making predictions, repairing the consequences of incorrect predictions, and other bookkeeping, leaving surprisingly few
+for doing the real work the user asked for. The conclusion that Intel is being inexorably driven to is the only sane conclusion: junk the whole thing (IA-32) and start
+all over with a clean slate (IA-64). The EMT-64 provides some breathing room,
+but it really papers over the complexity issue.
+
+5.8.2 The IA-64 Model: Explicitly Parallel Instruction Computing
+The key idea behind the IA-64 is moving work from run time to compile time.
+On the Core i7, during execution the CPU reorders instructions, renames registers,
+schedules functional units, and does a lot of other work to determine how to keep
+all the hardware resources fully occupied. In the IA-64 model, the compiler figures out all these things in advance and produces a program that can be run as is,
+without the hardware having to juggle everything during execution. For example,
+rather than tell the compiler that the machine has eight registers when it actually
+has 128 and then try to figure out at run time how to avoid dependences, in the
+IA-64 model, the compiler is told how many registers the machine really has so it
+can produce a program that does not have any register conflicts to start with. Similarly, in this model, the compiler keeps track of which functional units are busy and
+does not issue instructions that use functional units that are not available. The
+model of making the underlying parallelism in the hardware visible to the compiler
+is called EPIC (Explicitly Parallel Instruction Computing). To some extent,
+EPIC can be thought of as the successor to RISC.
+The IA-64 model has a number of features that speed up performance. These
+include reducing memory references, instruction scheduling, reducing conditional
+branches, and speculation. We will now examine each of these in turn and discuss
+how they are implemented in the Itanium 2.
+
+5.8.3 Reducing Memory References
+The Itanium 2 has a simple memory model. Memory consists of up to 264
+bytes of linear memory. Instructions are available to access memory in units of 1,
+2, 4, 8, 16, and 10 bytes, the latter for 80-bit IEEE 745 floating-point numbers.
+Memory references need not be aligned on their natural boundaries, but a performance penalty is incurred if they are not. Memory can be either big endian or
+little endian, determined by a bit in a register loadable by the operating system.
+
+424
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Memory access is a huge bottleneck in all modern computers because CPUs
+are so much faster than memory. One way to reduce memory references is to have
+a large level 1 cache on chip and an even larger level 2 cache close to the chip. All
+modern designs have these two caches. But one can go beyond caching to look for
+other ways to reduce memory references, and the IA-64 uses some of these ways.
+The best way to speed up memory references is to avoid having them in the
+first place. The Itanium 2 implementation of the IA-64 model has 128 general-purpose 64-bit registers. The first 32 of these are static, but the remaining 96 are used
+as a register stack, very similar to the register window scheme in other RISC processors, such as the UltraSPARC. However, unlike the UltraSPARC, the number of
+registers visible to the program is variable and can change from procedure to procedure. Thus each procedure has access to 32 static registers and some (variable)
+number of dynamically allocated registers.
+When a procedure is called, the register stack pointer is advanced so the input
+parameters are visible in registers, but no registers are allocated for local variables.
+The procedure itself decides how many registers it needs and advances the register
+stack pointer to allocate them. These registers need not be saved on entry or restored on exit, although if the procedure needs to modify a static register it must take
+care to explicitly save it first and restore it later. By making the number of registers available variable and tailored to what each procedure needs, scarce registers
+are not wasted and procedure calls can go deeper before registers have to be spilled
+to memory.
+The Itanium 2 also has 128 floating-point registers in IEEE 745 format. They
+do not operate as a register stack. This very large number of registers means that
+many floating-point computations can keep all their intermediate results in registers and avoid having to store temporary results in memory.
+There are also 64 1-bit predicate registers, eight branch registers, and 128 special-purpose application registers used for various purposes, such as passing parameters between application programs and the operating system. An overview of
+the Itanium 2’s registers is given in Fig. 5-46.
+
+5.8.4 Instruction Scheduling
+One of the main problems in the Core i7 is the difficulty of scheduling the various instructions over the various functional units and avoiding dependences.
+Exceedingly complex mechanisms are needed to handle these issues at run time,
+and a large fraction of the chip area is devoted to managing them. The IA-64 and
+Itanium 2 avoid all these problems by having the compiler do the work. The key
+idea is that a program consists of a sequence of instruction groups. Within certain boundaries, all the instructions within a group do not conflict with one another,
+do not use more functional units and resources than the machine has, do not contain RAW and WAW dependences, and have only certain restricted WAR dependences. Consecutive instruction groups give the appearance of being executed
+
+SEC. 5.8
+
+THE IA-64 ARCHITECTURE AND THE ITANIUM 2
+
+425
+
+64 1-Bit

@@ -1,0 +1,100 @@
+
+298
+
+THE MICROARCHITECTURE LEVEL
+
+Swap1
+
+Swap2
+
+Swap3
+
+Cy MAR=SP−1;rd MAR=SP H=MDR;wr
+
+Swap4
+
+CHAP. 4
+
+Swap5
+
+Swap6
+
+MDR=TOS MAR=SP−1;wr TOS=H;goto (MBR1)
+
+1 B=SP
+2 C=B−1
+
+B=SP
+
+3 MAR=C; rd
+
+C=B
+
+4 MDR=Mem
+
+MAR=C
+
+5
+
+B=MDR
+
+6
+
+C=B
+
+B=TOS
+
+7
+
+H=C; wr
+
+C=B
+
+8
+
+Mem=MDR MDR=C
+
+B=SP
+C=B−1
+
+B=H
+
+9
+
+MAR=C; wr
+
+C=B
+
+10
+
+Mem=MDR
+
+TOS=C
+
+11
+
+goto (MBR1)
+Figure 4-33. The implementation of SWAP on the Mic-3.
+
+Stopping to wait for a needed value is called stalling. After that, we can continue
+starting microinstructions every cycle as there are no more dependences, although
+swap6 just barely makes it, since it reads H in the cycle after swap3 writes it. If
+swap5 had tried to read H, it would have stalled for one cycle.
+Although the Mic-3 program takes more cycles than the Mic-2 program, it still
+runs faster. If we call the Mic-3 cycle time ΔT nsec, then the Mic-3 requires 11ΔT
+nsec to execute SWAP. In contrast, the Mic-2 takes 6 cycles at 3ΔT each, for a total
+of 18ΔT. Pipelining has made the machine faster, even though we had to stall once
+to avoid a dependence.
+Pipelining is a key technique in all modern CPUs, so it is important to understand it well. In Fig. 4-34 we see the data path of Fig. 4-31 graphically illustrated
+as a pipeline. The first column represents what is going on during cycle 1, the second column represents cycle 2, and so on (assuming no stalls). The shaded region
+in cycle 1 for instruction 1 indicates that the IFU is busy fetching instruction 1.
+One clock tick later, during cycle 2, the registers required by instruction 1 are
+being loaded into the A and B latches while at the same time the IFU is busy fetching instruction 2, again shown by the two shaded rectangles in cycle 2.
+During cycle 3, instruction 1 is using the ALU and shifter to do its operation,
+the A and B latches are being loaded for instruction 2, and instruction 3 is being
+fetched. Finally, during cycle 4, four instructions are being worked on at the same
+time. The results from instruction 1 are being stored, the ALU work for instruction
+2 is being performed, the A and B latches for instruction 3 are being loaded, and
+instruction 4 is being fetched.
+If we had shown cycle 5 and subsequent cycles, the pattern would have been
+the same as in cycle 4: all four parts of the data path that can run independently

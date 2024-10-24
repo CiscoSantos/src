@@ -1,0 +1,100 @@
+Pentium Pro plus MMX instructions
+
+Pentium III
+
+2/1999
+
+650–1400
+
+9.5M
+
+4 GB
+
+SSE Instructions for 3D graphics
+
+Memory protection present
+
+Pentium 4
+
+11/2000 1300–3800
+
+42M
+
+4 GB
+
+Hyperthreading; more SSE instructions
+
+Core Duo
+
+1/2006 1600–3200
+
+152M
+
+2 GB
+
+Dual cores on a single die
+
+Core
+
+7/2006 1200–3200
+
+410M
+
+64 GB
+
+64-bit quad core architecture
+
+Core i7
+
+1/2011 1100–3300
+
+1160M
+
+24 GB
+
+Integrated graphics processor
+
+Figure 1-11. Key members of the Intel CPU family. Clock speeds are measured
+in MHz (megahertz), where 1 MHz is 1 million cycles/sec.
+
+Intel did not expect much demand for the 8008, so it set up a low-volume production line. Much to everyone’s amazement, there was an enormous amount of interest, so Intel set about designing a new CPU chip that got around the 8008’s limit
+
+SEC. 1.4
+
+EXAMPLE COMPUTER FAMILIES
+
+41
+
+of 16 kilobytes of memory (imposed by the number of pins on the chip). This design resulted in the 8080, a small, general-purpose CPU, introduced in 1974.
+Much like the PDP-8, this product took the industry by storm and instantly became
+a mass-market item. Only instead of selling thousands, as DEC had, Intel sold millions.
+In 1978 came the 8086, a genuine 16-bit CPU on a single chip. The 8086 was
+designed to be similar to the 8080, but it was not completely compatible with the
+8080. The 8086 was followed by the 8088, which had the same architecture as the
+8086 and ran the same programs but had an 8-bit bus instead of a 16-bit bus, making it both slower and cheaper than the 8086. When IBM chose the 8088 as the
+CPU for the original IBM PC, this chip quickly became the personal computer industry standard.
+Neither the 8088 nor the 8086 could address more than 1 megabyte of memory.
+By the early 1980s this had become a serious problem, so Intel designed the
+80286, an upward compatible version of the 8086. The basic instruction set was
+essentially the same as that of the 8086 and 8088, but the memory organization
+was quite different, and rather awkward, due to the requirement of compatibility
+with the older chips. The 80286 was used in the IBM PC/AT and in the midrange
+PS/2 models. Like the 8088, it was a huge success, mostly because people viewed
+it as a faster 8088.
+The next logical step was a true 32-bit CPU on a chip, the 80386, brought out
+in 1985. Like the 80286, this one was more or less compatible with everything
+back to the 8080. Being backward compatible was a boon to people for whom running old software was important, but a nuisance to people who would have preferred a simple, clean, modern architecture unencumbered by the mistakes and
+technology of the past.
+Four years later the 80486 came out. It was essentially a faster version of the
+80386 that also had a floating-point unit and 8 kilobytes of cache memory on chip.
+Cache memory is used to hold the most commonly used memory words inside or
+close to the CPU, in order to avoid (slow) accesses to main memory. The 80486
+also had built-in multiprocessor support, allowing manufacturers to build systems
+containing multiple CPUs sharing a common memory.
+At this point, Intel found out the hard way (by losing a trademark infringement
+lawsuit) that numbers (like 80486) cannot be trademarked, so the next generation
+got a name: Pentium (from the Greek word for five, πεντε). Unlike the 80486,
+which had one internal pipeline, the Pentium had two of them, which helped make
+it twice as fast (we will discuss pipelines in detail in Chap. 2).
+Later in the production run, Intel added special MMX (MultiMedia eXtension) instructions. These instructions were intended to speed up computations required to process audio and video, making the addition of special multimedia
+coprocessors unnecessary.

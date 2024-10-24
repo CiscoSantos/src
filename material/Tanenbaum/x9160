@@ -1,0 +1,100 @@
+TEST SRC1,SRC2
+
+Boolean AND operands, set flags
+
+CMP SRC1,SRC2
+
+Set flags based on SRC1 - SRC2
+
+Condition codes
+
+LAHF
+
+Load AH from EFLAGS register
+
+SAHF
+
+Store AH in EFLAGS register
+
+SWAP DST
+
+Change endianness of DST
+
+CWQ
+
+Extend EAX to EDX:EAX for division
+
+Miscellaneous
+
+CWDE
+
+Extend 16-bit number in AX to EAX
+
+ENTER SIZE,LV
+
+Create stack frame with SIZE bytes
+
+LEAVE
+
+Undo stack frame built by ENTER
+
+NOP
+
+No operation
+
+HLT
+
+Halt
+
+IN AL,PORT
+
+Input a byte from PORT to AL
+
+OUT PORT,AL
+
+Output a byte from AL to PORT
+
+WAIT
+
+Wait for an interrupt
+
+SRC = source
+DST = destination
+
+# = shift/rotate count
+LV = # locals
+
+Figure 5-33. A selection of the Core i7 integer instructions.
+
+of instructions that are rarely used, or are used only by the operating system. In
+our discussion, we will focus on the common instructions. Let us start with the
+Core i7. It is the most complicated. Then it is all downhill from there.
+
+SEC. 5.5
+
+INSTRUCTION TYPES
+
+399
+
+The Core i7 instruction set is a mixture of instructions that make sense in
+32-bit mode and those that hark back to its former life as an 8088. In Fig. 5-33 we
+show a small selection of the more common integer instructions that compilers and
+programmers are likely to use these days. This list is far from complete, as it does
+not include any floating-point instructions, control instructions, or even some of
+the more exotic integer instructions (such as using an 8-bit byte in AL to perform
+table lookup). Nevertheless, it does give a good feel for what the Core i7 can do.
+Many of the Core i7 instructions reference one or two operands, either in registers or in memory. For example, the two-operand ADD instruction adds the source
+to the destination and the one operand INC instruction increments (adds 1 to) its operand. Some of the instructions have several closely related variants. For example,
+the shift instructions can shift either left or right and can treat the sign bit specially
+or not. Most of the instructions have a variety of different encodings, depending
+on the nature of the operands.
+In Fig. 5-33, the SRC fields are sources of information and are not changed. In
+contrast, the DST fields are destinations and are normally modified by the instruction. There are some rules about what is allowed as a source or a destination, varying somewhat erratically from instruction to instruction, but we will not go into
+them here. Many instructions have three variants, for 8-, 16-, and 32-bit operands,
+respectively. These are distinguished by different opcodes and/or a bit in the instruction. The list of Fig. 5-33 emphasizes the 32-bit instructions.
+For convenience, we have divided the instructions into several groups. The
+first group contains instructions that move data around the machine, among registers, memory, and the stack. The second group does arithmetic, both signed and
+unsigned. For multiplication and division, the 64-bit product or dividend is stored
+in EAX (low-order part) and EDX (high-order part).
+The third group does Binary Coded Decimal (BCD) arithmetic, treating each
+byte as two 4-bit nibbles. Each nibble holds one decimal digit (0 to 9). Bit combinations 1010 to 1111 are not used. Thus a 16-bit integer can hold a decimal number from 0 to 9999. While this form of storage is inefficient, it eliminates the need

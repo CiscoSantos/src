@@ -1,0 +1,100 @@
+predicate
+registers
+128 General
+registers
+
+128 Floating-point 128 Application
+registers
+registers
+
+96
+Registers
+used as a
+register
+stack
+
+8 Branch
+registers
+
+32 Static
+registers
+
+Figure 5-46. The Itanium 2’s registers.
+
+strictly sequentially with the second group not starting until the first one has completed. The CPU may, however, start the second group (in part) as soon as it feels
+it is safe to.
+As a consequence of these rules, the CPU is free to schedule the instructions
+within a group in any order it chooses, possibly in parallel if it can, without having
+to worry about conflicts. If the instruction group violates the rules, program behavior is undefined. It is up to the compiler to reorder the assembly code generated from the source program to meet all these requirements. For rapid compilation while a program is being debugged, the compiler can put every instruction in a
+different group, which is easy to do but gives poor performance. When it is time to
+produce production code, the compiler can spend a long time optimizing it.
+Instructions are organized into 128-bit bundles as shown at the top of
+Fig. 5-47. Each bundle contains three 41-bit instructions and a 5-bit template. An
+instruction group need not be an integral number of bundles; it can start and end in
+the middle of a bundle.
+Over 100 instruction formats exist. A typical one, in this case for ALU operations such as ADD, which sums two registers into a third one, is shown in Fig. 5-47.
+The first field, the OPERATION GROUP, is the major group and mostly tells the
+broad class of the instruction, such as an integer ALU operation. The next field,
+the OPERATION TYPE, gives the specific operation required, such as ADD or SUB.
+Then come the three register fields. Finally, we have the PREDICATE REGISTER, to
+be described shortly.
+The bundle template essentially tells which functional units the bundle needs
+and also the position of an instruction-group boundary present, if any. The major
+functional units are the integer ALU, non-ALU integer instructions, memory operations, floating-point operations, branching, and other. Of course, with six units
+and three instructions, complete orthogonality would require 216 combinations,
+
+426
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+Bits
+
+41
+
+41
+
+41
+
+Instruction 2
+
+Instruction 1
+
+Instruction 0
+
+CHAP. 5
+5
+
+Template
+
+Bits
+
+4
+
+10
+
+7
+
+7
+
+7
+
+OP. TYPE
+
+REGISTER 3
+
+REGISTER 2
+
+REGISTER 1
+
+OPERATION GROUP
+
+6
+
+PREDICATE REGISTER
+
+Figure 5-47. An IA-64 bundle contains three instructions.
+
+plus another 216 to indicate an instruction-group marker after instruction 0, another 216 to indicate an instruction-group marker after instruction 1, and yet another
+216 to indicate an instruction-group marker after instruction 2. With only 5 bits
+available, only a very limited number of these combinations are allowed. On the
+other hand, allowing three floating-point instructions in a bundle would not work,

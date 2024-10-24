@@ -1,0 +1,100 @@
+⎯ x. If x is negative, the procedure gives an error message; otherwise
+it computes the square root. A function sqrt has to test x and then branch, depending on whether it is negative or not.
+A common method for doing so is to provide conditional branch instructions
+that test some condition and branch to a particular memory address if the condition
+is met. Sometimes a bit in the instruction indicates whether the branch is to occur
+if the condition is met or not met, respectively. Often the target address is not
+absolute, but relative to the current instruction.
+The most common condition to be tested is whether a particular bit in the machine is 0 or not. If an instruction tests the sign bit of a number and branches to
+LABEL if it is 1, the statements beginning at LABEL will be executed if the number
+was negative, and the statements following the conditional branch will be executed
+if it was 0 or positive.
+Many machines have condition code bits that are used to indicate specific conditions. For example, there may be an overflow bit that is set to 1 whenever an
+arithmetic operation gives an incorrect result. By testing this bit, one checks for
+overflow on the previous arithmetic operation, so that if an overflow occurred, a
+branch can be made to an error routine and corrective action taken.
+
+SEC. 5.5
+
+INSTRUCTION TYPES
+
+391
+
+Similarly, some processors have a carry bit that is set when a carry spills over
+from the leftmost bit, for example, if two negative numbers are added. A carry
+from the leftmost bit is quite normal and should not be confused with an overflow.
+Testing of the carry bit is needed for multiple-precision arithmetic (i.e., where an
+integer is represented in two or more words).
+Testing for zero is important for loops and many other purposes. If all the conditional branch instructions tested only 1 bit, then to test a particular word for 0,
+one would need a separate test for each bit, to ensure that none was a 1. To avoid
+this situation, many machines have an instruction to test a word and branch if it is
+zero. Of course, this solution merely passes the buck to the microarchitecture. In
+practice, the hardware usually contains a register all of whose bits are ORed together to give a single bit telling whether the register contains any 1 bits. The Z bit in
+Fig. 4-1 would normally be computed by ORing all the ALU output bits together
+and then inverting the result.
+Comparing two words or characters to see if they are equal or, if not, which
+one is greater is also important, in sorting for example. To perform this test, three
+addresses are needed: two for the data items, and one for the address to branch to if
+the condition is true. Computers whose instruction format allows three addresses
+per instruction have no trouble, but those that do not must do something to get
+around this problem.
+One common solution is to provide an instruction that performs a comparison
+and sets one or more condition bits to record the result. A subsequent instruction
+can test the condition bits and branch if the two compared values were equal, or
+unequal, or if the first was greater, and so on. The Core i7, OMAP4430 ARM
+CPU, and ATmega168 AVR all use this approach.
+Some subtle points are involved in comparing two numbers. For example,
+comparison is not quite as simple as subtraction. If a very large positive number is
+compared to a very large negative number, the subtraction will result in overflow,
+since the result of the subtraction cannot be represented. Nevertheless, the comparison instruction must determine whether the specified test is met and return the correct answer—there is no overflow on comparisons.
+Another subtle point relating to comparing numbers is deciding whether or not
+the numbers should be considered signed or not. Three-bit binary numbers can be
+ordered in one of two ways. From smallest to largest:
+Unsigned Signed
+000
+100 (smallest)
+001
+101
+010
+110
+011
+111
+100
+000
+101
+001
+110
+010
+111
+011 (largest)
+
+392
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+The column on the left shows the positive integers 0 to 7 in increasing order. The
+column on the right shows the two’s complement signed integers −4 to +3. The
+answer to the question ‘‘Is 011 greater than 100?’’ depends on whether or not the
+numbers are regarded as being signed. Most ISAs have instructions to handle both
+orderings.
+
+5.5.5 Procedure Call Instructions
+A procedure is a group of instructions that performs some task and that can be
+invoked (called) from several places in the program. The term subroutine is often
+used instead of procedure, especially when referring to assembly-language programs. In C, procedures are called functions, even though they are not necessarily
+functions in the mathematical sense. In Java, the term used is method. When the
+procedure has finished its task, it must return to the statement after the call. Therefore, the return address must be transmitted to the procedure or saved somewhere
+so that it can be located when it is time to return.
+The return address may be placed in any of three places: memory, a register, or
+the stack. Far and away the worst solution is putting it in a single, fixed memory
+location. In this scheme, if the procedure called another procedure, the second call
+would cause the return address from the first one to be lost.
+A slight improvement is having the procedure-call instruction store the return
+address in the first word of the procedure, with the first executable instruction
+being in the second word. The procedure can then return by branching indirectly
+to the first word or, if the hardware puts the opcode for branch in the first word
+along with the return address, branching directly to it. The procedure may call
+other procedures, because each procedure has space for one return address. If the
+procedure calls itself, this scheme fails, because the first return address will be

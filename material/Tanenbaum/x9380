@@ -1,0 +1,100 @@
+address, so subtracting this register from CX (line 63), yields the number of bytes
+to be read in order to bring the line into the buffer.
+The rest of the program is easy. The line is read from the file on lines 64
+through 68 and then it is written to standard output via file descriptor 1 on lines 70
+through 72. Note that the count and the buffer value are still on the stack after the
+partial stack cleanup on line 69. Finally, on line 73, we reset the stack pointer
+completely and we are ready for the next step, so we jump back to label 3, and
+restart with another call to getnum.
+
+Acknowledgements
+The assembler used in this appendix is part of the ‘‘Amsterdam Compiler Kit.’’
+The full kit is available online at www.cs.vu.nl/ack. We thank the people who were
+involved in the original design: Johan Stevenson, Hans Schaminee, and Hans de
+Vries. We are especially indebted to Ceriel Jacobs, who maintains this software
+package, and who has helped adapt it several times to meet the teaching requirements of our classes, and also to Elth Ogston for reading the manuscript and testing the examples and exercises.
+We also want to thank Robbert van Renesse and Jan-Mark Wams, who
+designed tracers for the PDP-11 and the Motorola 68000, respectively. Many of
+their ideas are used in the design of this tracer. Moreover, we wish to thank the
+large group of teaching assistants and system operators who have assisted us during many assembly language programming courses over a period of many years.
+
+PROBLEMS
+1. After the instruction MOV AX, 702 is executed, what are the decimal values for the contents of AH and AL?
+2. The CS register has the value 4. What is the range of absolute memory addresses for
+the code segment?
+3. What is the highest memory address the 8088 can access?
+
+746
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+4. Suppose that CS = 40, DS = 8000, and IP = 20.
+a. What is the absolute address of the next instruction?
+b. If MOV AX, (2) is executed, which memory word is loaded into AX?
+5. A subroutine with three integer arguments is called following the calling sequence
+described in the text, that is, the caller pushes the arguments onto the stack in reverse
+order, then executes a CALL instruction. The callee then saves the old BP and sets the
+new BP to point to the saved old one. Then the stack pointer is decremented to allocate
+space for local variables. With these conventions, give the instruction needed to move
+the first argument into AX.
+6. In Fig. C-1 the expression de − hw is used as an operand. This value is the difference
+of two labels. Might there be circumstances in which de + hw could be used as a valid
+operand? Discuss your answer.
+7. Give the assembly code for computing the expression:
+x=a+b+2
+
+8. A C function is called by
+foobar(x, y);
+
+Give the assembly code for making this call.
+9. Write an assembly language program to accept input expressions consisting of an integer, an operator, and another integer and output the value of the expression. Allow the
++, −, ×, and / operators..Pc
+
+INDEX
+
+This page intentionally left blank
+
+INDEX
+A
+
+Addressing, 362, 371–386
+8088, 701–704
+ARM, 384
+ATmega168, 384–385
+based-indexed, 376
+branch instructions, 380–381
+Core i7, 382–384
+direct, 372
+displacement, 703
+immediate, 372
+indexed, 374
+register, 372
+register indirect, 373–374
+stack, 376–379
+Addressing and memory, 8088, 699–704
+Addressing direct, 372
+Addressing modes, 384–385
+ARM, 384
+discussion, 385–386
+ADSL (see Asymmetric DSL)
+Advanced microcontroller bus architecture, 574
+Advanced programmable interrupt controller, 205
+Aggregate bandwidth, 647
+AGP bus (see Accelerated Graphics Port bus)
+Aiken, Howard, 16
+
+Absolute path, 494
+Accelerated graphics port bus, 217
+Access control list, 501
+Access token, 501
+Accumulator, 19, 695
+Achieving high performance, 650, 650–652
+ACK (see Amsterdam Compiler Kit)
+Acknowledgment packet, 226
+ACL (see Access Control List)
+Acorn Archimedes computer, 45
+Active matrix display, 117
+Actual parameter, macro, 526
+Adder, 164–166

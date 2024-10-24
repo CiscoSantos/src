@@ -1,0 +1,100 @@
+flexible, especially if the program counter, stack pointer, and local variable pointer
+are among the general registers that can be accessed the usual way.
+
+382
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+The only problem here is that for direct addressing, we need more bits for the
+address. What the PDP-11 and VAX did was add an extra word to the instruction
+for the address of each directly addressed operand. We could also use one of the
+two available addressing modes for an indexed mode with a 32-bit offset following
+the instruction. Thus in the worst case, say, a memory-to-memory ADD with both
+operands directly addressed or using the long indexed form, the instruction would
+be 96 bits long and use three bus cycles (one for the instruction, two for its addresses). In addition, three more cycles would be needed to fetch the two operands
+and write the result. On the other hand, most RISC designs would require at least
+96 bits, probably more, to add an arbitrary word in memory to another arbitrary
+word in memory and use at least four bus cycles, depending how the operands
+were addressed.
+Many alternatives to Fig. 5-25 are possible. In this design, it is possible to execute the statement
+i = j;
+
+in one 32-bit instruction, provided that both i and j are among the first 16 local
+variables. On the other hand, for variables beyond 16, we have to go to 32-bit offsets. One option would be another format with a single 8-bit offset instead of two
+4-bit offsets, plus a rule saying that either the source or the destination could use it,
+but not both. The possibilities and trade-offs are unlimited, and machine designers
+must juggle many factors to get a good result.
+
+5.4.11 The Core i7 Addressing Modes
+The Core i7’s addressing modes are highly irregular and are different depending on whether a particular instruction is in 16-, 32-, or 64-bit mode. Below we
+will ignore the 16- and 64-bit modes; 32-bit mode is bad enough. The modes supported include immediate, direct, register, register indirect, indexed, and a special
+mode for addressing array elements. The problem is that not all modes apply to all
+instructions and not all registers can be used in all modes. This makes the compiler writer’s job much more difficult and leads to worse code.
+The MODE byte in Fig. 5-13 controls the addressing modes. One of the operands is specified by the combination of the MOD and R/M fields. The other is always a register and is given by the value of the REG field. The 32 combinations
+that can be specified by the 2-bit MOD field and the 3-bit R/M field are listed in
+Fig. 5-26. If both fields are zero, for example, the operand is read from the memory address contained in the EAX register.
+The 01 and 10 columns involve modes in which a register is added to an 8- or
+32-bit offset that follows the instruction. If an 8-bit offset is selected, it is first
+sign-extended to 32 bits before being added. For example, an ADD instruction with
+R/M = 011, MOD = 01, and an offset of 6 computes the sum of EBX and 6 and reads
+the memory word at that address for one of the operands. EBX is not modified.
+
+SEC. 5.4
+
+383
+
+ADDRESSING
+
+MOD
+R/M
+
+00
+
+01
+
+10
+
+11
+
+000
+
+M[EAX]
+
+M[EAX + OFFSET8]
+
+M[EAX + OFFSET32]
+
+EAX or AL
+
+001
+
+M[ECX]
+
+M[ECX + OFFSET8]
+
+M[ECX + OFFSET32]
+
+ECX or CL
+
+010
+
+M[EDX]
+
+M[EDX + OFFSET8]
+
+M[EDX + OFFSET32]
+
+EDX or DL
+
+011
+
+M[EBX]
+
+M[EBX + OFFSET8]
+
+M[EBX + OFFSET32]
+
+EBX or BL
+

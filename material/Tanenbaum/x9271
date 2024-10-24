@@ -1,0 +1,100 @@
+the job of processing a packet can be split up into smaller pieces.
+Another technique is to add specialized processors or ASICs to handle specific, time-consuming operations that are performed repeatedly and that can be done
+faster in hardware than in software. Lookups, checksum computations, and cryptography are among the many candidates.
+Adding more internal buses and widening existing buses may help gain speed
+by moving packets through the system faster. Finally, replacing SDRAM by
+SRAM can usually be counted to improve performance, but at a price, of course.
+There is much more that can be said about network processors, of course.
+Some references are Freitas et al. (2009), Lin et al. (2010), and Yamamoto and
+Nakao (2011).
+
+8.2.2 Graphics Processors
+A second area in which coprocessors are used is for handling high-resolution
+graphics processing, such as 3D rendering. Ordinary CPUs are not especially good
+at the massive computations needed to process the large amounts of data required
+for these applications. For this reason, most PCs and many future processors will
+be equipped with GPUs (Graphics Processing Units) to which they can offload
+large portions of overall processing.
+The NVIDIA Fermi GPU
+We will study this increasingly important area by means of an example: the
+NVIDIA Fermi GPU, an architecture used in a family of graphics processing
+chips that are available at several speeds and sizes. The architecture of the Fermi
+GPU is shown in Fig. 8-17. It is organized into 16 SMs (Streaming Multiprocessors) having its own high-bandwidth private level-1 cache. Each of the streaming
+
+SEC. 8.2
+
+COPROCESSORS
+
+583
+
+multiprocessors contain 32 CUDA cores, for a total of 512 CUDA cores per Fermi
+GPU. A CUDA (Compute Unified Device Architecture) core is a simple processor supporting single-precision integer and floating-point computations. A single
+SM with 32 CUDA cores is illustrated in Fig. 2-7. The 16 SMs share access to a
+single unified 768-KB level 2 cache, which is connected to a multiported DRAM
+interface. The host processor interface provides a communication path between
+the host system and the GPU via a shared DRAM bus interface, typically through a
+PCI-Express interface.
+Streaming multiprocessor
+
+CUDA core
+
+Shared mem
+
+To DRAM
+L2 cache
+To host
+interface
+
+Figure 8-17. The Fermi GPU architecture.
+
+The Fermi architecture is designed to efficiently execute graphics, video, and
+image processing codes, which typically have many redundant computations
+spread across many pixels. Because of this redundancy, the streaming multiprocessors, while capable of executing 16 operations at a time, require that all of the operations executed in a single cycle be identical. This style of processing is called
+SIMD (Single-Instruction Multiple Data) computation, and it has the important
+advantage that each SM fetches and decodes only a single instruction each cycle.
+Only by sharing the instruction processing across all of the cores in an SM can
+NVIDIA cram 512 cores onto a single silicon die. If programmers can harness all
+of the computation resources (always a very big and uncertain ‘‘if’’), then the system provides significant computational advantages over traditional scalar architectures, such as the Core i7 or OMAP4430.
+
+584
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+The SIMD processing requirements within the SMs place constraints on the
+kind of code programmers can run on these units. In fact, each CUDA core must be
+running the same code in lock-step to achieve 16 operations simultaneously. To
+ease this burden on programmer, NVIDIA developed the CUDA programming language. The CUDA language specifies the program parallelism using threads.
+Threads are then grouped into blocks, which are assigned to streaming processors.
+As long as every thread in a block executes exactly the same code sequence (that
+is, all branches make the same decision), up to 16 operations will execute simultaneously (assuming there are 16 threads ready to execute). When threads on an SM
+make different branch decisions, a performance-degrading effect called branch
+divergence will occur that forces threads with differing code paths to execute serially on the SM. Branch divergence reduces parallelism and slows GPU processing.
+Fortunately, there is a wide range of activities in graphics and image processing
+that can avoid branch divergence and achieve good speed-ups. Many other codes
+have also been shown to benefit from the SIMD-style architecture on graphics
+processors, such as medical imaging, proof solving, financial prediction, and graph
+analysis. This widening of potential applications for GPUs has earned them the
+new moniker of GPGPUs (General-Purpose Graphics Processing Units).
+
+Threads
+
+16-KB
+Shared
+Memory
+
+48-KB
+Shared Memory
+or L1 Cache
+
+16-KB
+L1
+Cache
+
+768-KB
+L2 Cache
+
+DRAM
+
+Figure 8-18. The Fermi GPU memory hierarchy.

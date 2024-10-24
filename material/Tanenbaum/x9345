@@ -1,0 +1,100 @@
+POP command retrieves the value, and increments SP by 2. Addresses in the stack
+segment which are lower than those indicated by SP are considered free. Stack
+cleanup is thus achieved by merely increasing SP. In practice, DS and SS are
+always the same, so a 16-bit pointer can be used to refer to a variable in the shared
+data/stack segment. If DS and SS were different, a 17th bit would be needed on
+each pointer to distinguish pointers into the data segment from pointers into the
+stack segment. In retrospect, having a separate stack segment at all was probably a
+mistake.
+If addresses in the four segment registers are chosen to be far apart, then the
+four segments will be disjointed, but if the available memory is restricted, it is not
+necessary to make them disjoint. After compilation, the size of the program code is
+known. It is then efficient to start the data and stack segments at the first multiple
+of 16 after the last instruction. This assumes that the code and data segment will
+never use the same physical addresses.
+
+C.3.2 Addressing
+Almost every instruction needs data, either from memory or from the registers.
+To name this data, the 8088 has a reasonably versatile collection of addressing
+modes. Many instructions contain two operands, usually called destination and
+source. Think, for instance, about the copy instruction, or the add instruction:
+MOV AX,BX
+
+or
+ADD CX,20
+
+In these instructions, the first operand is destination and the second is the source.
+(The choice of which goes first is arbitrary; the reverse choice could also have been
+made.) It goes without saying that, in such a case, the destination must be a left
+value that is, it must be a place where something can be stored. This means that
+constants can be sources, but not destinations.
+In its original design, the 8088 required that at least one operand in a twooperand instruction be a register. This was done so that the difference between
+word instructions, and byte instructions could be seen by checking whether the
+addressed register was a word register or a byte register. In the first release of
+the processor, this idea was so strictly enforced that it was impossible to push a
+constant, because neither the source nor the destination was a register in that instruction. Later versions were not as strict, but the idea influenced the design
+
+702
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+anyway. In some cases, one of the operands is not mentioned. For example, in the
+MULB instruction, only the AX register is powerful enough to act as a destination.
+There are also a number of one-operand instructions, such as increments,
+shifts, negates, etc. In these cases, there is no register requirement, and the difference between the word and byte operations has to be inferred from the opcodes
+(i.e., instruction types) only.
+The 8088 supports four basic data types: 1-byte byte, the 2-byte word, the
+4-byte long, and binary coded decimal, in which two decimal digits are packed
+into a word. The latter type is not supported by the interpreter.
+A memory address always refers to a byte, but in case of a word or a long, the
+memory locations directly above the indicated byte are implicitly referred to as
+well. The word at 20 is in the memory locations 20 and 21. The long at address
+24 occupies the addresses 24, 25, 26 and 27. The 8088 is little endian, meaning
+that the low-order part of the word is stored at the lower address. In the stack segment, words should be placed at even addresses. The combination AX DX, in which
+AX holds the low-order word, is the only provision made for longs in the processor
+registers.
+The table of Fig. C-3 gives an overview of the 8088 addressing modes. Let us
+now briefly discuss them. The topmost horizontal block of the table lists the registers. They can be used as operands in nearly all instructions, both as sources and
+as destinations. There are eight word registers and eight byte registers.
+The second horizontal block, data segment addressing, contains addressing
+modes for the data segment. Addresses of this type always contain a pair of parentheses, to indicate that the contents of the address instead of the value is meant.
+The easiest addressing mode of this type is direct addressing, in which the data
+address of the operand is in the instruction itself. Example
+ADD CX,(20)
+
+in which the contents of the memory word at address 20 and 21 is added to CX.
+Memory locations are usually represented by labels instead of by numerical values
+in the assembly language, and the conversion is made at assembly time. Even in
+CALL and JMP instructions, the destination can be stored in a memory location
+addressed by a label. The parentheses around the labels are essential (for the
+assembler we are using) because
+ADD CX,20
+
+is also a valid instruction, only it means add the constant 20 to CX, not the contents
+of memory word 20. In Fig. C-3, the # symbol is used to indicate a numerical constant, label, or constant expression involving a label.
+In register indirect addressing, the address of the operand is stored in one of
+the registers BX, SI, or DI. In all three cases the operand is found in the data
+
+SEC. C.3
+
+703
+
+MEMORY AND ADDRESSING
+
+Mode
+
+Operand
+
+Examples
+
+Register addressing
+Byte register
+Word register
+
+Byte register
+Word register
+
+AH,AL,BH,BL,CH,CL,DH,DL
+AX,BX,CX,DX,SP,BP,SI,DI

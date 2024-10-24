@@ -1,0 +1,100 @@
+A8
+A9
+A10
+
+4096K × 1
+Memory
+chip
+D
+(4 Mbit)
+
+RAS
+CAS
+
+CS WE OE
+
+CS WE OE
+
+(a)
+
+(b)
+
+Figure 3-30. Two ways of organizing a 4-Mbit memory chip.
+
+being written rather than being read. Finally, the OE (Output Enable) signal is
+asserted to drive the output signals. When it is not asserted, the chip output is
+disconnected from the circuit.
+In Fig. 3-30(b), a different addressing scheme is used. Internally, this chip is
+organized as a 2048 × 2048 matrix of 1-bit cells, which gives 4 Mbits. To address
+the chip, first a row is selected by putting its 11-bit number on the address pins.
+Then the RAS (Row Address Strobe) is asserted. After that, a column number is
+put on the address pins and CAS (Column Address Strobe) is asserted. The chip responds by accepting or outputting one data bit.
+Large memory chips are often constructed as n × n matrices that are addressed
+by row and column. This organization reduces the number of pins required but
+also makes addressing the chip slower, since two addressing cycles are needed, one
+for the row and one for the column. To win back some of the speed lost by this design, some memory chips can be given a row address followed by a sequence of
+column addresses to access consecutive bits in a row.
+Years ago, the largest memory chips were often organized like Fig. 3-30(b).
+As memory words have grown from 8 bits to 32 bits and beyond, 1-bit-wide chips
+began to be inconvenient. To build a memory with a 32-bit word from 4096K × 1
+chips requires 32 chips in parallel. These 32 chips have a total capacity of at least
+16 MB, whereas using 512K × 8 chips requires only four chips in parallel and allows memories as small as 2 MB. To avoid having 32 chips for memory, most chip
+manufacturers now have chip families with 4-, 8-, and 16-bit widths. And the
+situation with 64-bit words is even worse, of course.
+
+180
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+Two examples of 512-Mbit chips are given in Fig. 3-31. These chips have four
+internal memory banks of 128 Mbit each, requiring two bank select lines to choose
+a bank. The design of Fig. 3-31(a) is a 32M × 16 design, with 13 lines for the RAS
+signal, 10 lines for the CAS signal, and 2 lines for the bank select. Together, these
+25 signals allow each of the 225 internal 16-bit cells to be addressed. In contrast,
+Fig. 3-31(b) is a 128M × 4 design, with 13 lines for the RAS signal, 12 lines for the
+CAS signal, and 2 lines for the bank select. Here, 27 signals can select any of the
+227 internal 4-bit cells to be addressed. The decision about how many rows and
+how many columns a chip has is made for engineering reasons. The matrix need
+not be square.
+A0
+A1
+A2
+A3
+A4
+A5
+A6
+A7
+A8
+A9
+A10
+A11
+A12
+
+32M × 16
+Memory
+chip
+(512 Mbit)
+
+RAS
+CAS
+Bank 0
+Bank 1
+
+D0
+D1
+D2
+D3
+D4
+D5
+D6
+D7
+D8
+D9
+D10
+D11
+D12
+D13
+D14
+D15

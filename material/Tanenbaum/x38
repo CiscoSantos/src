@@ -1,0 +1,100 @@
+Instruction Dispatch
+
+Register File
+
+Operand
+
+FP Unit
+
+Operand
+
+ALU
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Core
+
+Result Register
+
+Interconnection Network
+
+Shared Memory
+
+Figure 2-7. The SIMD core of the Fermi graphics processing unit.
+
+processor. The next instruction from each thread then executes on up to 16 SIMD
+processors, although possibly fewer if there is not enough data parallelism. If each
+thread is able to perform 16 operations per cycle, a fully loaded Fermi GPU core
+with 32 SMs will perform a whopping 512 operations per cycle. This is an impressive feat considering that a similar-sized general purpose quad-core CPU would
+struggle to achieve 1/32 as much processing.
+A vector processor appears to the programmer very much like a SIMD processor. Like a SIMD processor, it is very efficient at executing a sequence of operations on pairs of data elements. But unlike a SIMD processor, all of the operations
+are performed in a single, heavily pipelined functional unit. The company Seymour Cray founded, Cray Research, produced many vector processors, starting
+with the Cray-1 back in 1974 and continuing through current models.
+Both SIMD processors and vector processors work on arrays of data. Both execute single instructions that, for example, add the elements together pairwise for
+two vectors. But while the SIMD processor does it by having as many adders as
+elements in the vector, the vector processor has the concept of a vector register,
+
+72
+
+COMPUTER SYSTEMS ORGANIZATION
+

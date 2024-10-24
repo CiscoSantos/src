@@ -1,0 +1,100 @@
+predictor
+
+Front end
+
+Renaming,
+Scheduling
+
+Retirement
+unit
+
+Out-of-order control
+
+Figure 4-46. The block diagram of the Core i7’s Sandy Bridge microarchitecture.
+
+associative cache with 64-byte cache lines. The shared L3 cache varies in size
+from 1 MB to 20 MB. If you pay more cash to Intel you get more cache in return.
+Regardless of its size, the L3 is organized as a 12-way associative cache with
+64-byte cache lines. In the event that an access to the L3 cache misses, it is sent to
+external RAM via the DDR3 RAM bus.
+Associated with the L1 cache are two prefetch units (not shown in the figure)
+that attempt to prefetch data from lower levels of the memory system into the L1
+before they are needed. One prefetch unit prefetches the next memory block when
+it detects that a sequential ‘‘stream’’ of memory is being fetched into the processor.
+A second, more sophisticated, prefetcher tracks the sequence of addresses from
+specific program loads and stores. If they progress in a regular stride (e.g.,
+0x1000...0x1020...0x1040...) it will prefetch the next element likely to be accessed
+in advance of the program. This stride-oriented prefetching does wonders for programs that are marching through arrays of structured variables.
+The memory subsystem in Fig. 4-46 is connected to both the front end and the
+L1 data cache. The front end is responsible for fetching instructions from the
+memory subsystem, decoding them into RISC-like micro-ops, and storing them
+into two instruction storage caches. All instructions fetched are placed into the L1
+(level 1) instruction cache. The L1 cache is 32 KB in size, organized as an 8-way
+associative cache with 64-byte blocks. As instructions are fetched from the L1
+cache, they enter the decoders which determine the sequence of micro-ops used to
+
+SEC. 4.6
+
+EXAMPLES OF THE MICROARCHITECTURE LEVEL
+
+325
+
+implement the instruction in the execution pipeline. This decoder mechanism
+bridges the gap between an ancient CISC instruction set and a modern RISC data
+path.
+The decoded micro-ops are fed into the micro-op cache, which Intel refers to
+as the L0 (level 0) instruction cache. The micro-op cache is similar to a traditional
+instruction cache, but it has a lot of extra breathing room to store the micro-op sequences that individual instructions produce. When the decoded micro-ops rather
+than the original instructions are cached, there is no need to decode the instruction
+on subsequent executions. At first glance, you might think that Intel did this to
+speed up the pipeline (and indeed it does speed up the process of producing an instruction), but Intel claims that the micro-op cache was added to reduce front end
+power consumption. With the micro-op cache in place, the remainder of the front
+end sleeps in an unclocked low-power mode 80% of the time.
+Branch prediction is also performed in the front end. The branch predictor is
+responsible for guessing when the program flow breaks from pure sequential fetching, and it must be able to do this long before the branch instructions are executed.
+The branch predictor in the Core i7 is quite remarkable. Unfortunately for us, the
+specifics of processor branch predictors are closely held secrets for most designs.
+This is because the performance of the predictor is often the most critical component to the overall speed of the design. The more prediction accuracy designers can
+squeeze out of each square micrometer of silicon, the better the performance of the
+entire design. As such, companies hide these secrets under lock and key and even
+threaten employees with criminal prosecution should any of them decide to share
+these jewels of knowledge. Suffice it to say, though, that all of them keep track of
+which way previous branches went and use this to make predictions. It is the details of precisely what they record and how they store and look up the information
+that is top secret. After all, if you had a fantastic way to predict the future, you
+probably would not put it on the Web for the whole world to see.
+Instructions are fed from the micro-op cache to the out-of-order scheduler in
+the order dictated by the program, but they are not necessarily issued in program
+order. When a micro-op that cannot be executed is encountered, the scheduler
+holds it but continues processing the instruction stream to issue subsequent instructions all of whose resources (registers, functional units, etc.) are available. Register renaming is also done here to allow instructions with a WAR or WAW dependence to continue without delay.
+Although instructions can be issued out of order, the Core i7 architecture’s requirement of precise interrupts means that the ISA instructions must be retired
+(i.e., have their results made visible) in original program order. The retirement unit
+handles this chore.
+In the back end of the processor we have the execution units, which carry out
+the integer, floating-point, and specialized instructions. Multiple execution units
+exist and run in parallel. They get their data from the register file and the L1 data
+cache.
+
+326
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+The Core i7’s Sandy Bridge Pipeline
+Figure 4-47 is a simplified version of the Sandy Bridge microarchitecture
+showing the pipeline. At the top is the front end, whose job is to fetch instructions
+from memory and prepare them for execution. The front end is fed new x86 instructions from the L1 instruction cache. It decodes them into micro-ops for storage in the micro-op cache, which holds approximately 1.5K micro-ops. A microop cache of this size performs comparably to a 6-KB conventional L0 cache. The
+micro-op cache holds groups of six micro-ops in a single trace line. For longer sequences of micro-ops, multiple trace lines can be linked together.
+
+Level 1
+inst cache
+Front
+end
+
+Decode unit
+
+Branch
+predictor/
+Branch
+target
+buffer

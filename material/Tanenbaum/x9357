@@ -1,0 +1,100 @@
+called an object file. Many programs make calls to subroutines that have been previously assembled and stored in libraries. To run these programs, the newlyassembled object file and the library subroutines it uses (also object files) must be
+combined into a single executable binary file by another program called a linker.
+Only when the linker has built the executable binary file from one or more object
+files is the translation fully completed. The operating system can then read the
+executable binary file into memory and execute it.
+The first task of the assembler is to build a symbol table, which is used to map
+the names of symbolic constants and labels directly to the binary numbers that they
+represent. Constants that are directly defined in the program can be put in the symbol table without any processing. This work is done on pass one.
+Labels represent addresses whose values are not immediately obvious. To
+compute their values, the assembler scans the program line by line in what is called
+the first pass. During this pass, it keeps track of a location counter usually indicated by the symbol ‘‘.’’, pronounced dot. For every instruction and memory reservation that is found in this pass, the location counter is increased by the size of the
+memory necessary to contain the scanned item. Thus, if the first two instructions
+are of size 2 and 3 bytes, respectively, then a label on the third instruction will have
+numerical value 5. For example, if this code fragment is at the start of a program,
+the value of L will be 5.
+MOV AX,6
+MOV BX,500
+L:
+
+At the start of the second pass, the numerical value of every symbol is known.
+Since the numerical values of the instruction mnemonics are constants, code generation can now begin. One at a time, instructions are read again and their binary
+values are written into the object file. When the last instruction has been assembled, the object file is complete.
+
+C.5.2 The ACK-Based Assembler, as88
+This section describes the details of the assembler/linker as88, which is provided on the CD-ROM and website and which works with the tracer. This assembler is Amsterdam Compiler Kit (ACK) and is patterned after UNIX assemblers
+rather than MS-DOS or Windows assemblers. The comment symbol in this assembler is the exclamation mark (!). Anything following an exclamation mark until
+the end of the line is a comment and does not affect the object file produced. In the
+same way, empty lines are allowed, but ignored.
+
+SEC. C.5
+
+THE ASSEMBLER
+
+717
+
+This assembler uses three different sections, in which the translated code and
+data will be stored. Those sections are related to the memory segments of the
+machine. The first is the TEXT section, for the processor instructions. Next is the
+DATA section for the initialization of the memory in the data segment, which is
+known at the start of the process. The last is the BSS (Block Started by Symbol),
+section, for the reservation of memory in the data segment that is not initialized
+(i.e., initialized to 0). Each of these sections has its own location counter. The purpose of having sections is to allow the assembler to generate some instructions,
+then some data, then some instructions, then more data, and so on, and then have
+the linker rearrange the pieces so that all the instructions are together in the text
+segment and all the data words are together in the data segment. Each line of
+assembly code produces output for only one section, but code lines and data lines
+can be interleaved. At run time, the TEXT section is stored in the text segment and
+the data and BSS sections are stored (consecutively) in the data segment.
+An instruction or data word in the assembly language program can begin with
+a label. A label may also appear all by itself on a line, in which case it is as though
+it appeared on the next instruction or data word. For example, in
+CMP AX,ABC
+JE L
+MOV AX,XYZ
+L:
+
+L is a label that refers to the instruction of data word following it. Two kinds of
+labels are allowed. First are the global labels, which are alphanumeric identifiers
+followed by a colon (:). These must all be unique, and cannot match any keyword
+or instruction mnemonic. Second, in the TEXT section only, we can have local
+labels, each of which consists of a single digit followed by a colon (:). A local
+label may occur multiple times. When a program contains an instruction such as
+JE 2f
+
+this means JUMP EQUAL forward to the next local label 2. Similarly,
+JNE 4b
+
+means JUMP NOT EQUAL backward to the closest label 4.
+The assembler allows constants to be given a symbolic name using the syntax
+identifier = expression
+
+in which the identifier is an alphanumeric string, as in
+BLOCKSIZE = 1024
+
+Like all identifiers in this assembly language, only the first eight characters are significant, so BLOCKSIZE and BLOCKSIZZ are the same symbol, namely, BLOCKSIZ. Expressions can be constructed from constants, numerical values, and
+
+718
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+operators. Labels are considered to be constants because at the end of the first pass
+their numerical values are known.
+Numerical values can be octal (starting with a 0), decimal, or hexadecimal
+(starting with 0X or 0x). Hexadecimal numbers use the letters a–f or A–F for the
+values 10–15. The integer operators are +, −, *, /, and %, for addition, subtraction,
+multiplication, division and remainder, respectively. The logical operators are &, ˆ,
+and ~, for bitwise AND, bitwise OR and logical complement (NOT) respectively.
+Expressions can use the square brackets, [ and ] for grouping. Parentheses are
+NOT used, to avoid confusion with the addressing modes.
+Labels in expressions should be handled in a sensible way. Instruction labels
+cannot be subtracted from data labels. The difference between comparable labels
+is a numerical value, but neither labels nor their differences are allowed as constants in multiplicative or logical expressions. Expressions which are allowed in
+constant definitions can also be used as constants in processor instructions. Some
+assemblers have macro facility, by which multiple instructions can be grouped
+together and given a name, but as88 does not have this feature.
+In every assembly language, there are some directives that influence the assembly process itself but which are not translated into binary code. They are called
+pseudoinstructions. The as88 pseudoinstructions are listed in Fig. C-8.
+Instruction

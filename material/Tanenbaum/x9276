@@ -1,0 +1,100 @@
+run-time
+system
+
+Language
+run-time
+system
+
+Language
+run-time
+system
+
+Language
+run-time
+system
+
+Language
+run-time
+system
+
+Operating
+system
+
+Operating
+system
+
+Operating
+system
+
+Operating
+system
+
+Operating
+system
+
+Operating
+system
+
+Hardware
+
+Hardware
+
+Hardware
+
+Hardware
+
+Hardware
+
+Hardware
+
+Shared memory
+
+Shared memory
+
+Shared memory
+
+(a)
+
+(b)
+
+(c)
+
+Figure 8-21. Various layers where shared memory can be implemented. (a) The
+hardware. (b) The operating system. (c) The language run-time system.
+
+instruction restarted. In effect, the operating system is just satisfying page faults
+from remote memory instead of from disk. To the user, the machine looks as if it
+has shared memory. We will examine DSM later in this chapter.
+A third possibility is to have a user-level run-time system implement a (possibly language-specific) form of shared memory. In this approach, the programming
+language provides some kind of shared-memory abstraction, which is then implemented by the compiler and run-time system. For example, the Linda model is
+based on the abstraction of a shared space of tuples (data records containing a collection of fields). Processes on any machine can input a tuple from the shared
+tuple space or output a tuple to the shared tuple space. Because access to the tuple
+space is controlled entirely in software (by the Linda run-time system), no special
+hardware or operating system support is needed.
+Another example of a language-specific shared memory implemented by the
+run-time system is the Orca model of shared data objects. In Orca, processes share
+generic objects rather than just tuples and can execute object-specific methods on
+them. When a method call changes the internal state of an object, it is up to the
+run-time system to make sure all copies of the object on all machines are updated
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+591
+
+simultaneously. Again, because objects are a strictly software concept, the implementation can be done by the run-time system without help from the operating system or hardware. We will look at both Linda and Orca later in this chapter.
+Taxonomy of Parallel Computers
+Now let us get back to our main topic, the architecture of parallel computers.
+Many kinds of parallel computers have been proposed and built over the years, so
+it is natural to ask if there is some way of categorizing them into a taxonomy.
+Many researchers have tried, with mixed results (Flynn, 1972, and Treleaven,
+1985). Unfortunately, the Carolus Linnaeus† of parallel computing is yet to
+emerge. The only scheme that is used much is Flynn’s, and even his is, at best, a
+very crude approximation. It is given in Fig. 8-22.
+Instruction streams Data streams
+
+Name
+
+Examples
+

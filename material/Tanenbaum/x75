@@ -1,0 +1,100 @@
+There is much more to be said about cable modems. Some relevant references
+are Adams and Dulchinos (2001), Donaldson and Jones (2001), and Dutta-Roy
+(2001).
+
+2.4.7 Digital Cameras
+An increasingly popular use of computers is for digital photography, making
+digital cameras a kind of computer peripheral. Let us briefly see how that works.
+All cameras have a lens that forms an image of the subject in the back of the camera. In a conventional camera, the back of the camera is lined with film, on which
+a latent image is formed when light strikes it. The latent image can be made visible by the action of certain chemicals in the film developer. A digital camera
+works the same way except that the film is replaced by a rectangular array of
+CCDs (Charge-Coupled Devices) that are sensitive to light. (Some digital cameras use CMOS, but we will concentrate on the more common CCDs here.)
+When light strikes a CCD, it acquires an electrical charge. The more light, the
+more charge. The charge can be read off by an analog-to-digital converter as an
+integer from 0 to 255 (on low-end cameras) or from 0 to 4095 (on digital singlelens-reflex cameras). The basic arrangement is shown in Fig. 2-43.
+Each CCD produces a single value, independent of the color of light striking it.
+To form color images, the CCDs are organized in groups of four elements. A
+Bayer filter is placed on top of the CCD to allow only red light to strike one of the
+four CCDs in each group, blue light to strike another one, and green light to strike
+
+136
+
+COMPUTER SYSTEMS ORGANIZATION
+
+R GR G
+GB GB
+RGR G
+GB GB
+
+Lens
+
+CHAP. 2
+
+One pixel is made
+up for four CCDs,
+one red, one blue,
+and two green
+
+Diaphragm
+CPU
+
+RAM
+Flash memory
+
+CCD array
+
+Digital camera
+
+Figure 2-43. A digital camera.
+
+the other two. Two greens are used because using four CCDs to represent one
+pixel is much more convenient than using three, and the eye is more sensitive to
+green light than to red or blue light. When a digital camera manufacturer claims a
+camera has, say, 6 million pixels, it is lying. The camera has 6 million CCDs,
+which together form 1.5 million pixels. The image will be read out as an array of
+2828 × 2121 pixels (on low-end cameras) or 3000 times 2000 pixels (on digital
+SLRs), but the extra pixels are produced by interpolation by software inside the
+camera.
+When the camera’s shutter button is depressed, software in the camera performs three tasks: setting the focus, determining the exposure, and performing the
+white balance. The autofocus works by analyzing the high-frequency information
+in the image and then moving the lens until it is maximized, to give the most detail.
+The exposure is determined by measuring the light falling on the CCDs and then
+adjusting the lens diaphragm and exposure time to have the light intensity fall in
+the middle of the CCDs’ range. Setting the white balance has to do with measuring the spectrum of the incident light to perform necessary color corrections in the
+postprocessing.
+Then the image is read off the CCDs and stored as a pixel array in the camera’s
+internal RAM. High-end digital SLRs used by photojournalists can shoot eight
+high-resolution frames per second for 5 seconds, and they need around 1 GB of internal RAM to store the images before processing and storing them permanently.
+Low-end cameras have less RAM, but still quite a bit.
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+137
+
+In the post-capture phase, the camera’s software applies the white-balance
+color correction to compensate for reddish or bluish light (e.g., from a subject in
+shadow or the use of a flash). Then it applies an algorithm to do noise reduction
+and another one to compensate for defective CCDs. After that, it attempts to
+sharpen the image (unless this feature has been disabled) by looking for edges and
+increasing the intensity gradient around them.
+Finally, the image may be compressed to reduce the amount of storage required. A common format is JPEG (Joint Photographic Experts Group), in
+which a two-dimensional spatial Fourier transform is applied and some of the
+high-frequency components omitted. The result of this transformation is that the
+image requires fewer bits to store but fine detail is lost.
+When all the in-camera processing is completed, the image is written to the
+storage medium, usually a flash memory or microdrive. The postprocessing and
+writing can take several seconds per image.
+When the user gets home, the camera can be connected to a computer, usually
+using a USB or proprietary cable. The images are then transferred from the camera to the computer’s hard disk. Using special software, such as Adobe Photoshop,
+the user can then crop the image, adjust brightness, contrast, and color balance,
+sharpen, blur, or remove portions of the image, and apply numerous filters. When
+the user is content with the result, the image files can be printed on a color printer,
+uploaded over the Internet to a photo-sharing Website or photofinisher, or written
+to CD-ROM or DVD for archival storage.
+The amount of computing power, RAM, disk space, and software in a digital
+SLR camera is mind boggling. Not only does the computer have to do all the
+things mentioned above, but it also has to communicate with the CPU in the lens
+and the CPU in the flash, refresh the image on the LCD screen, and manage all the
+buttons, wheels, lights, displays, and gizmos on the camera in real time. This is an

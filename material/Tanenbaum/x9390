@@ -1,0 +1,100 @@
+Introduction, 715
+Invalidate strategy, 600
+Inversion bubble, 149
+Inverter, 149
+Inverting buffer, 177
+Invisible computer, 26–28
+IP header, 576
+IP protocol, 576
+IR (see Instruction Register)
+Iron Oxide Valley, 20
+ISA bus (see Industry Standard Architecture bus)
+ISA level, 6
+addressing, 371–386
+ARM, 354–356
+ATmega168, 356–358
+Core i7, 351–353
+data types, 358–362
+flow of control, 404–417
+instruction formats, 362–371
+instruction types, 386–404
+overview, 345–358
+
+INDEX
+ISA level properties, 345–347
+ISP (see Internet Service Provider)
+Itanium 2, 420–429
+
+J
+Java virtual machine, 260
+Jobs, Steve, 24
+Johnniac, 17
+Joint Photographic Experts Group, 137
+Joint test action group, 206
+JPEG (see Joint Photographic Experts Group)
+JTAG (see Joint Test Action Group)
+
+K
+Kernel mode, 347
+Key, record, 468
+Keyboard, 113
+Kilby, Jack, 21
+Kildall, Gary, 24
+Kinect controller, 122
+
+L
+Label, 692
+assembly language, 717
+LAN (see Local Area Network)
+Land, 100
+Land grid array, 158
+Lane, PCI Express, 112, 226
+Language, 1
+Large memory model, 720
+Laser printer, 122–134
+Latch, 169–172
+D, 171–172
+Latency, 67
+Latin-1, 138
+Layer, 3
+LBA (see Logical Block Addressing)
+LCD (see Liquid Crystal Display)
+
+759
+LDT (see Local Descriptor Table)
+Least recently used algorithm, 309, 446
+LED (see Light Emitting Diode)
+Left value, 701
+Leibniz, Gottfried Wilhelm von, 13
+Level, 3
+assembly-language, 517–550
+device, 5
+digital logic, 147–237
+ISA, 6, 343–430
+microarchitecture, 6, 243–338
+operating-system machine, 7, 437–510
+Level 2 cache, 305
+Level-triggered latch, 172
+LGA (see Land Grid Array)
+Light emitting diode, 119
+Linda, 642–644
+Linear address, 457
+Lines per inch, 124
+Link, file, 494
+Link layer, PCI Express, 226
+Linkage editor, 536
+Linkage segment, 545
+Linker, 536, 716
+tasks performed, 538–541
+Linking, 536–549
+binding time, 542–545
+dynamic, 545–549
+MULTICS, 545–547
+UNIX, 549
+Windows, 547–548
+Linking loader, 536
+Liquid crystal display, 115
+Lisa, 14
+Literal, 532
+Little endian, 702
+Little endian memory, 76–78

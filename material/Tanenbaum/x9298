@@ -1,0 +1,100 @@
+Internet beyond. The other one is used for debugging the system.
+Each CPU node runs a small, custom, lightweight kernel that supports a single
+user and a single process. This process has at most four threads, one running on
+each CPU in the node. This simple structure was designed for high performance
+and high reliability.
+For additional reliability, application software can call a library procedure to
+make a checkpoint. Once all outstanding messages have been cleared from the
+network, a global checkpoint can be made and stored so that in the event of a system failure, the job can be restarted from the checkpoint, rather than from the beginning. The I/O nodes run a traditional Linux operating system and support multiple processes.
+Work is continuing to develop the next generation of BlueGene system, called
+the BlueGene/Q. This system is expected to go online in 2012, and it will have 18
+processors per compute chip, which also feature simultaneous multithreading.
+These two features should greatly increase the number of instructions per cycle the
+system can execute. The system is expected to reach speeds of 20 petaflops/sec.
+For more information about BlueGene see Adiga et al. (2002), Alam et al., 2008,
+Almasi et al. (2003a, 2003b), Blumrich et al. (2005), and IBM (2008).
+Red Storm
+As our second example of an MPP, let us consider the Red Storm machine
+(also called Thor’s Hammer) at Sandia National Laboratory. Sandia is operated by
+Lockheed Martin and does classified and unclassified work for the U.S. Department of Energy. Some of the classified work concerns the design and simulation
+of nuclear weapons, which is highly compute intensive.
+Sandia has been in this business for a long time and over the decades has had
+many leading-edge supercomputers over the years. For decades, it favored vector
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+627
+
+supercomputers, but eventually technology and economics made MPPs more cost
+effective. By 2002, the then-current MPP, called ASCI Red, was getting a bit
+creaky. Although it had 9460 nodes, collectively they had a mere 1.2 TB of RAM
+and 12.5 TB of disk space, and the system could barely crank out 3 teraflops/sec.
+So in the summer of 2002, Sandia selected Cray Research, a long-time supercomputer vendor, to build it a replacement for ASCI Red.
+The replacement was delivered in August 2004, a remarkably short design and
+implementation cycle for such a large machine. The reason it could be designed
+and delivered so quickly is that Red Storm uses almost entirely off-the-shelf parts,
+except for one custom chip used for routing. In 2006, the system was updated with
+new processors; we detail this version of Red Storm here.
+The CPU selected for Red Storm was the AMD 2.4-GHz dual-core Opteron.
+The Opteron has several key characteristics that made it the first choice. The first
+is that it has three operating modes. In legacy mode, it runs standard Pentium binary programs unmodified. In compatibility mode, the operating system runs in
+64-bit mode and can address 264 bytes of memory, but application programs run in
+32-bit mode. Finally, in 64-bit mode, the entire machine is 64 bits and all programs can address the full 64-bit address space. In 64-bit mode, it is possible to
+mix and match software: both 32-bit and 64-bit programs can run at the same time,
+allowing an easy upgrade path.
+The Opteron’s second key characteristic is its attention to the memory bandwidth problem. In recent years, CPUs have been getting faster and faster and
+memory has not been keeping pace, resulting in a massive penalty when there is a
+level 2 cache miss. AMD integrated the memory controller into the Opteron so it
+can run at the speed of the processor clock instead of the speed of the memory bus,
+which improves memory performance. The controller can handle eight DIMMS of
+4 GB each, for a maximum total memory of 32 GB per Opteron. In the Red Storm
+system, each Opteron has only 2–4 GB. However, as memory gets cheaper, no
+doubt more will be added in the future. By utilizing dual-core Opterons, the system was able to double the raw compute power.
+Each Opteron has its own dedicated custom network processor called the
+Seastar, manufactured by IBM. The Seastar is a critical component since nearly
+all the data traffic between the processors goes over the Seastar network. Without
+the very high-speed interconnect provided by these custom chips, the system
+would quickly bog down in data.
+Although the Opterons are commercially available off the shelf, the Red Storm
+packaging is custom built. Each Red Storm board contains four Opterons, 4 GB of
+RAM, four Seastars, a RAS (Reliability, Availability, and Service) processor, and a
+100-Mbps Ethernet chip, as shown in Fig. 8-40.
+A set of eight boards is plugged into a backplane and inserted into a card cage.
+Each cabinet holds three card cages for a total of 96 Opterons, plus the necessary
+power supplies and fans. The full system consists of 108 cabinets for compute
+nodes, giving a total of 10,368 Opterons (20,736 processors) with 10 TB of
+
+628
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+2–4 GB SDRAM
+Set of
+8 boards
+
+Card
+cage
+
+M
+
+M
+
+M
+
+M
+
+CPU
+
+CPU
+
+CPU
+
+CPU
+
+RAS
+
+Card

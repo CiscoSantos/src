@@ -1,0 +1,100 @@
+To program the flash bit cell, a high voltage (in the computer world 12 V is a
+high voltage) is applied to the control gate, which accelerates the process of hot
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+99
+
+carrier injection into the floating gate. Electrons become embedded into the floating gate, which places a negative charge internal to the flash transistor. The embedded negative charge increases the voltage necessary to turn on the flash transistor,
+and by testing whether or not the channel turns on with a high or low voltage, it is
+possible to determine whether the floating gate is charged or not, resulting in a 0 or
+1 value for the flash cell. The embedded charge remains in the transistor, even if
+power is removed from the system, making the flash memory cell nonvolatile.
+Because SSDs are essentially memory, they have superior performance to spinning disks and have zero seek time. While a typical magnetic disk can access data
+up to 100 MB/sec, a SSD can operate two to three times faster. And because the
+device has no moving parts, it is particularly suited for use in notebook computers,
+where jarring and movement will not affect its ability to access data. The downside
+of SSDs, compared to magnetic disks, is their cost. While magnetic disks cost pennies/gigabyte, a typical SSD will cost one to three dollars/gigabyte, making their
+use appropriate only for smaller drive applications or situations that are not cost
+sensitive. The cost of SSDs is dropping, but they still have a long way to go to
+catch up to cheap magnetic disks. So while SSDs are replacing magnetic disks in
+many computers, it will likely be a long time before the magnetic disk goes the
+way of the dinosaur (unless another big meteorite strikes the earth, in which cases
+the SSDs are probably not going to survive either).
+Another disadvantage of SSDs compared with magnetic disks is their failure
+rate. A typical flash cell can be written only about 100,000 times before it will no
+longer function. The process of injecting electrons into the floating gate slowly
+damages it and the surrounding insulators, until it can no longer function. To increase the lifetime of SSDs, a technique called wear leveling is used to spread
+writes out to all flash cells in the disk. Every time a new disk block is written, the
+destination block is reassigned to a new SSD block that has not been recently written. This requires the use of a logical block map inside the flash drive, which is one
+of the reasons that flash drives have high internal storage overheads. Using wear
+leveling, a flash drive can support a number of writes equal to the number of writes
+a cell can sustain times the number of blocks on the disk.
+Some SSDs are able to encode multiple bits per byte using multilevel flash
+cells. The technology carefully controls the amount of charge placed into the floating gate. An increasing sequence of voltages is then applied to the control gate to
+determine how much charge is stored in the floating gate. Typical multilevel cells
+will support four charge levels, yielding two bits per flash cell.
+
+2.3.7 CD-ROMs
+Optical disks were originally developed for recording television programs, but
+they can be put to more esthetic use as computer storage devices. Due to their
+large capacity and low price optical disks are widely used for distributing software,
+books, movies, and data of all kinds, as well as making backups of hard disks.
+
+100
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+First-generation optical disks were invented by the Dutch electronics conglomerate Philips for holding movies. They were 30 cm across and marketed under the
+name LaserVision, but they did not catch on, except in Japan.
+In 1980, Philips, together with Sony, developed the CD (Compact Disc), which
+rapidly replaced the 33 1/3 RPM vinyl record for music. The precise technical details for the CD were published in an official International Standard (IS 10149),
+popularly called the Red Book, after to the color of its cover. (International Standards are issued by the International Organization for Standardization, which is the
+international counterpart of national standards groups like ANSI, DIN, etc. Each
+one has an IS number.) The point of publishing the disk and drive specifications as
+an International Standard is to allow CDs from different music publishers and
+players from different electronics manufacturers to work together. All CDs are 120
+mm across and 1.2 mm thick, with a 15-mm hole in the middle. The audio CD was
+the first successful mass-market digital storage medium. Audio CDs are supposed
+to last 100 years. Please check back in 2080 for an update on how well the first
+batch did.
+A CD is prepared by using a high-power infrared laser to burn 0.8-micron
+diameter holes in a coated glass master disk. From this master, a mold is made,
+with bumps where the laser holes were. Into this mold, molten polycarbonate is
+injected to form a CD with the same pattern of holes as the glass master. Then a
+thin layer of reflective aluminum is deposited on the polycarbonate, topped by a
+protective lacquer and finally a label. The depressions in the polycarbonate substrate are called pits; the unburned areas between the pits are called lands.
+When a CD is played back, a low-power laser diode shines infrared light with
+a wavelength of 0.78 micron on the pits and lands as they stream by. The laser is
+on the polycarbonate side, so the pits stick out in the direction of the laser as
+bumps in the otherwise flat surface. Because the pits have a height of one-quarter
+the wavelength of the laser light, light reflecting off a pit is half a wavelength out
+of phase with light reflecting off the surrounding surface. As a result, the two parts
+interfere destructively and return less light to the player’s photodetector than light
+bouncing off a land. This is how the player tells a pit from a land. Although it
+might seem simplest to use a pit to record a 0 and a land to record a 1, it is more
+reliable to use a pit/land or land/pit transition for a 1 and its absence as a 0, so this
+scheme is used.
+The pits and lands are written in a single continuous spiral starting near the
+hole and working out a distance of 32 mm toward the edge. The spiral makes
+22,188 revolutions around the disk (about 600 per mm). If unwound, it would be
+5.6 km long. The spiral is illustrated in Fig. 2-25.
+To make the music play at a uniform rate, it is necessary for the pits and lands
+to stream by at a constant linear velocity. Consequently, the rotation rate of the
+CD must be continuously reduced as the reading head moves from the inside of the
+CD to the outside. At the inside, the rotation rate is 530 RPM to achieve the desired streaming rate of 120 cm/sec; at the outside it has to drop to 200 RPM to give
+
+SEC. 2.3
+
+101
+
+SECONDARY MEMORY
+
+Spiral groove
+
+Pit
+Land

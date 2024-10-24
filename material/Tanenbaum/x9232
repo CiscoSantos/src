@@ -1,0 +1,100 @@
+the translator is called an assembler and the source language is called an assembly
+language. When the source language is a high-level language such as Java or C
+and the target language is either a numerical machine language or a symbolic
+representation for one, the translator is called a compiler.
+
+7.1.1 What Is an Assembly Language?
+A pure assembly language is a language in which each statement produces exactly one machine instruction. In other words, there is a one-to-one correspondence between machine instructions and statements in the assembly program.
+If each line in the assembly language program contains exactly one statement and
+
+SEC. 7.1
+
+INTRODUCTION TO ASSEMBLY LANGUAGE
+
+519
+
+each machine word contains exactly one machine instruction, then an n-line assembly program will produce an n-instruction machine language program.
+The reason that people use assembly language, as opposed to programming in
+machine language (in binary or hexadecimal), is that it is much easier to program
+in assembly language. The use of symbolic names and symbolic addresses instead
+of binary or hexadecimal ones makes an enormous difference. Most people can
+remember that the abbreviations for add, subtract, multiply, and divide are ADD,
+SUB, MUL, and DIV, but few can remember the corresponding numerical values the
+machine uses. The assembly language programmer need only remember the symbolic names because the assembler translates them to the machine instructions.
+The same remarks apply to addresses. The assembly language programmer
+can give symbolic names to memory locations and have the assembler worry about
+supplying the correct numerical values. The machine language programmer must
+always work with the numerical values of the addresses. As a consequence, no one
+programs in machine language today, although people did so decades ago, before
+assemblers had been invented.
+Assembly languages have another property, besides the one-to-one mapping of
+assembly language statements onto machine instructions, that distinguishes them
+from high-level languages. The assembly programmer has access to all the features and instructions available on the target machine. The high-level language
+programmer does not. For example, if the target machine has an overflow bit, an
+assembly language program can test it, but a Java program cannot test it. An
+assembly language program can execute every instruction in the instruction set of
+the target machine, but the high-level language program cannot. In short, everything that can be done in machine language can be done in assembly language, but
+many instructions, registers, and similar features are not available for the high-level
+language programmer to use. Languages for system programming, like C, are a
+cross between these types, with the syntax of a high-level language but with some
+of the access to the machine of an assembly language.
+One final difference that is worth making explicit is that an assembly language
+program can run only on one family of machines, whereas a program written in a
+high-level language can potentially run on many machines. For many applications,
+this ability to move software from one machine to another is of great practical
+importance.
+
+7.1.2 Why Use Assembly Language?
+Assembly language programming is difficult. Make no mistake about that. It
+is not for wimps and weaklings. Furthermore, writing a program in assembly language takes much longer than writing the same program in a high-level language.
+It also takes much longer to debug and is much harder to maintain.
+Under these conditions, why would anyone ever program in assembly language? There are two reasons: performance and access to the machine. First of
+
+520
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+all, an expert assembly language programmer working very hard can sometimes
+produce code that is much smaller and much faster than a high-level language programmer can. For some applications, speed and size are critical. Many embedded
+applications, such as the code on a smart card or RFID card, device drivers, stringmanipulation libraries, BIOS routines, and the inner loops of performance-critical
+real-time applications fall in this category.
+Second, some procedures need complete access to the hardware, something
+usually impossible in high-level languages. For example, the low-level interrupt
+and trap handlers in an operating system and the device controllers in many embedded real-time systems fall into this category.
+Besides these reasons for programming in assembly language, there are also
+two additional reasons for studying it. First, a compiler must either produce output
+used by an assembler or perform the assembly process itself. Thus understanding
+assembly language is essential to understanding how compilers work. Someone
+has to write the compiler (and its assembler) after all.
+Second, studying assembly language exposes the real machine to view. For
+students of computer architecture, writing some assembly code is the only way to
+get a feel for what a machine is really like at the architectural level.
+
+7.1.3 Format of an Assembly Language Statement
+Although the structure of an assembly language statement closely mirrors the
+structure of the machine instruction that it represents, assembly languages for different machines sufficiently resemble one another to allow a discussion of assembly language in general. Figure 7-1 shows fragments of assembly language programs for the x86 which performs the computation N = I + J. The statements
+below the blank line are commands to the assembler to reserve memory for the
+variables I, J, and N and are not symbolic representations of machine instructions.
+Label
+
+Opcode
+
+Operands
+
+Comments
+
+FORMULA:
+
+MOV
+ADD
+MOV
+
+EAX,I
+EAX,J
+N,EAX
+
+; register EAX = I
+; register EAX = I + J
+;N=I+J

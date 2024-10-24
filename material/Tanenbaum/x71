@@ -1,0 +1,100 @@
+possible for each pixel, so no halftoning is needed. Small snapshot printers often
+use the dye sublimation process to produce highly realistic photographic images on
+special (and expensive) paper.
+Finally, we come to the thermal printer, which contains a small print head
+with some number of tiny heatable needles on it. When an electric current is passed through a needle, it gets very hot very fast. When a special thermally sensitive
+paper is pulled past the print head, dots are made on the paper when the needles are
+hot. In effect, a thermal printer is like the old matrix printers whose pins pressed
+against a typewriter ribbon to make dots on the paper behind the ribbon. Thermal
+printers are widely used to print receipts in stores, ATM machines, automated gas
+stations, etc.
+
+2.4.6 Telecommunications Equipment
+Most computers nowadays are connected to a computer network, often the Internet. Achieving this access requires special equipment. In this section we will
+see how this equipment works.
+Modems
+With the growth of computer usage in the past years, it is common for one
+computer to need to communicate with another computer. For example, many people have personal computers at home that they use for communicating with their
+computer at work, with an Internet Service Provider, or with a home banking system. In many cases, the telephone line provides the physical communication.
+However, a raw telephone line (or cable) is not suitable for transmitting computer signals, which generally represent a 0 as 0 volts and a 1 as 3 to 5 volts as
+shown in Fig. 2-38(a). Two-level signals suffer considerable distortion when transmitted over a voice-grade telephone line, thereby leading to transmission errors. A
+
+128
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+pure sine-wave signal at a frequency of 1000 to 2000 Hz, called a carrier, can be
+transmitted with relatively little distortion, however, and this fact is exploited as the
+basis of most telecommunication systems.
+
+(a)
+
+Voltage
+
+V2
+
+0
+
+1
+
+0
+
+0
+
+1
+
+Time
+0
+1
+
+1
+
+0
+
+0
+
+0
+
+1
+
+0
+
+0
+
+V1
+High
+amplitude
+
+Low
+amplitude
+
+High
+frequency
+
+Low
+frequency
+
+(b)
+
+(c)
+
+(d)
+
+Phase change
+
+Figure 2-38. Transmission of the binary number 01001011000100 over a telephone line bit by bit. (a) Two-level signal. (b) Amplitude modulation. (c) Frequency modulation. (d) Phase modulation.
+
+Because the pulsations of a sine wave are completely predictable, a pure sine
+wave transmits no information at all. However, by varying the amplitude, frequency, or phase, a sequence of 1s and 0s can be transmitted, as shown in Fig. 2-38.
+This process is called modulation and the device that does it is called a modem,
+which stands for MOdulator DEModulator. In amplitude modulation [see
+Fig. 2-38(b)], two different voltage levels are used, for 0 and 1, respectively. A
+person listening to digital data transmitted at a very low data rate would hear a loud
+noise for a 1 and no noise for a 0.
+In frequency modulation [see Fig. 2-38(c)], the voltage level is constant but
+the carrier frequency is different for 1 and 0. A person listening to frequency modulated digital data would hear two tones, corresponding to 0 and 1. Frequency
+modulation is often referred to as frequency shift keying.
+In simple phase modulation [see Fig. 2-38(d)], the amplitude and frequency
+do not change, but the phase of the carrier is reversed 180 degrees when the data

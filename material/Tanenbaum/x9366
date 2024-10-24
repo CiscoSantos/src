@@ -1,0 +1,100 @@
+llp: MUL
+2(BX)
+LOOP llp
+.SECT .DATA
+times: .WORD 10
+muldat :.WORD 625, 2
+(a)
+
+! 3
+! 4
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 12
+! 13
+
+C S : 00 D S = S S = E S :0 02
+AH:03 A L : 0 2 A X :
+770
+BH:00 BL:02 B X :
+2
+CH:00 C L : 0 a C X :
+10
+DH: 0 0 D L : 0 0 D X :
+0
+S P : 7 f e 0 SF O D S Z C
+B P : 0000 CC - > p - S I : 0000 I P : 0 0 0 9 : P C
+D I : 0000 s t a r t + 4
+(b)
+
+C S : 00 D S = S S = E S :0 02
+A H : 3 8 A L : 8 0 A X : 14464
+BH:00 BL:02 B X :
+2
+CH:00 C L : 0 4 C X :
+4
+D H :00 D L : 0 1 D X :
+1
+S P : 7 f e 0 SF O D S Z C
+B P : 0000 CC v > p - c
+S I : 0000 I P : 0 0 1 1 : P C
+D I : 0000 s t a r t + 7
+(c)
+
+Figure C-13. (a) Part of a program. (b) The tracer register window after line 7
+has been executed. (c) The registers.
+
+The next instruction (line 8) copies the contents of muldat into AX. Thus, after
+the return key is hit, AX will be 625.
+We are now ready to enter a loop that multiplies the contents of AX by the word
+addressed by 2BX (i.e., muldat + 2), which has the value 2. The implied destination of the MUL instruction is the DX : AX long register combination. In the first
+iteration of the loop, the result fits in one word, so AX contains the result (1250),
+and DX remains 0. The contents of all the registers after 7 multiplications are
+shown in Fig. C-13.
+Since AX started at 625, the result after those seven multiplications by 2 is
+80,000. This result does not fit in AX, but the product is held in the 32-bit register
+formed by the concatenation of DX : AX, so DX is 1 and AX is 14,464. Numerically,
+this value is 1 × 65,536 + 14,464, which is, indeed, 80,000. Note that CX is 4 here,
+because the LOOP instruction decrements it every iteration. Because it started at
+10, after seven executions of the MUL instruction (but only six iterations of the
+LOOP instruction) we have CX set to 4.
+In the next multiplication, trouble crops up. Multiplication involves AX but not
+DX, so the MUL multiples AX (14464) by 2 to get 28,928. This results in AX being
+set to 28,928 and DX being set to 0, which is numerically incorrect.
+
+C.8.3 Call Command and Pointer Registers
+The next example, vecprod.s is a small program that computes the inner product of two vectors, vec1 and vec2. It is listed in Fig. C-14.
+
+SEC. C.8
+
+EXAMPLES
+
+731
+
+The first part of the program prepares to call vecmul by saving SP in BP and
+then pushing the addresses of vec2 and vec1 onto the stack so that vecmul will have
+access to them. Then the length of the vector in bytes is loaded in CX on line 8.
+By shifting this result right one bit, on line 9, CX now contains the number of
+words in the vector, which is pushed onto the stack on line 10. The call to vecmul
+is made on line 11.
+Once again, it is worth mentioning that the arguments of subroutines are, by
+convention, pushed onto the stack in reverse order to be compatible with the C calling convention. In this way, vecmul can also be called from C using
+vecmul(count, vec1, vec2)
+
+During the CALL instruction, the return address is pushed onto the stack. If the program is traced, then this address turns out to be 0x0011.
+The first instruction in the subroutine is a PUSH of the base pointer, BP, on line
+22. BP is saved because we will need this register to address the arguments and the
+local variables of the subroutine. Next, the stack pointer is copied to the BP register on line 23, so that the new value of the base pointer is pointing to the old value.
+Now everything is ready for loading the arguments into registers and for
+reserving space for a local variable. In the next three lines, each of the arguments
+is fetched from the stack and put in a register. Recall that the stack is word oriented, so stack addresses should be even. The return address is next to the old base
+pointer so it is addressed by 2(BP). The count argument is next and addressed by
+4(BP). It is loaded into CX on line 24. In lines 25 and 26, SI is loaded with vec1
+and DI is loaded with vec2. This subroutine needs one local variable with initial
+value 0 to save the intermediate result, so the value 0 is pushed on line 27.
+The state of the processor just before the loop is entered on line 28 for the first

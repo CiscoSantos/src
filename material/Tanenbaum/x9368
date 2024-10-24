@@ -1,0 +1,100 @@
+! 25
+! 26
+! 27
+
+start of vecmul(count, vec1, vec2)
+save BP on stack
+copy SP into BP to access arguments
+put count in CX to control loop
+SI = vec1
+DI = vec2
+push 0 onto stack
+
+1:
+
+! 28
+! 29
+! 30
+! 31
+! 32
+! 33
+! 34
+! 35
+
+move (SI) to AX
+multiply AX by (DI)
+add AX to accumulated value in memory
+increment DI to point to next element
+if CX > 0, go back to label 1b
+pop top of stack to AX
+restore BP
+return from subroutine
+
+! 36
+! 37
+! 38
+! 39
+! 40
+! 41
+! 42
+
+start DATA segment
+define string
+force address even
+vector 1
+vector 2
+start BSS segment
+allocate space for inprod
+
+LODS
+MUL (DI)
+ADD -2(BP),AX
+ADD DI,2
+LOOP 1b
+POP AX
+POP BP
+RET
+
+.SECT .DATA
+pfmt: .ASCIZ "Inner product is: %d\n"
+.ALIGN 2
+vec1:.WORD 3,4,7,11,3
+vec2:.WORD 2,6,3,1,0
+.SECT .BSS
+inprod: .SPACE 2
+
+Figure C-14. The program vecprod.s.
+
+SEC. C.8
+
+EXAMPLES
+
+733
+
+When the tracer window appears, type the command
+/vecmul+7b
+
+followed by a return to put a breakpoint at the line containing the LODS. From now
+on, we will not mention that all commands must be followed by the return key.
+Then give the command
+g
+
+to have the tracer execute commands until the breakpoint is encountered. It will
+stop at the line containing the LODS.
+On line 29, the value of AX is multiplied to the source operand. The memory
+word for the MUL instruction is fetched from the data segment through the DI in
+register indirect mode. The implied destination of MUL is the DX : AX long register
+combination which is not mentioned in the instruction but which is implied by it.
+On line 30, the result is added to the local variable at the stack address −2(BP).
+Because MUL does not autoincrement its operand, that must be done explicitly on
+line 31. Afterward, DI points to the next entry of vec2.
+The LOOP instruction finishes this step. Register CX is decremented, and, if it
+is still positive, the program jumps back to the local label 1 on line 28. The use of
+the local label 1b means the closest label 1 looking backward from the current
+location. After the loop, the subroutine pops the return value into AX (line 33),
+restores BP (line 34), and returns to the calling program (line 35).
+Then the main program is resumed after the call with the MOV instruction on
+line 12. This instruction is the start of a five-instruction sequence whose goal is to
+print the result. The printf system call is modeled after the printf function in the
+standard C programming library. Three arguments are pushed onto the stack on
+lines 13-15. These arguments are the integer value to be printed, the address of the

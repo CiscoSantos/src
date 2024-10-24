@@ -1,0 +1,100 @@
+of these instructions. In the word version, the implied destination is the AX: DX
+register combination. Even if the result of the multiplication is only a word or a
+byte, the DX or AH register is rewritten during the operation. The multiplication is
+always possible because the destination contains enough bits. The overflow and
+carry bits are set when the product cannot be represented in one word, or one byte.
+The zero and the negative flags are undefined after a multiply.
+Division also uses the register combinations DX : AX or AH : AL as the destination. The quotient goes into AX or AL and the remainder into DX or AH. All four
+flags, carry, overflow, zero and negative, are undefined after a divide operation. If
+the divisor is 0, or if the quotient does not fit into the register, the operation
+executes a trap, which stops the program unless a trap handler routine is present.
+Moreover, it is sensible to handle minus signs in software before and after the
+divide, because in the 8088 definition the sign of the remainder equals the sign of
+the dividend, whereas in mathematics, a remainder is always nonnegative.
+The instructions for binary coded decimals, among which Ascii Adjust for
+Addition (AAA), and Decimal Adjust for Addition (DAA), are not implemented by
+the interpreter and not shown in Fig. C-4.
+
+SEC. C.4
+
+Mnemonic
+
+707
+
+THE 8088 INSTRUCTION SET
+
+Description
+
+Operands
+O
+
+Status flags
+S
+Z
+
+C
+
+MOV(B)
+XCHG(B)
+LEA
+PUSH
+POP
+PUSHF
+POPF
+XLAT
+
+Move word, byte
+Exchange word
+Load effective address
+Push onto stack
+Pop from stack
+Push flags
+Pop flags
+Translate AL
+
+r ← e, e ← r, e ← #
+r→
+←e
+r ← #e
+e, #
+e
+-
+
+-
+
+-
+
+-
+
+-
+
+ADD(B)
+ADC(B)
+SUB(B)
+SBB(B)
+
+Add word
+Add word with carry
+Subtract word
+Subtract word with borrow
+
+r ← e, e ← r, e ← #
+r ← e, e ← r, e ← #
+r ← e, e ← r, e ← #
+r ← e, e ← r, e ← #
+
+*
+*
+*
+*
+
+*
+*
+*
+*
+
+*
+*
+*
+*
+

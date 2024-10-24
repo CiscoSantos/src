@@ -1,0 +1,100 @@
+
+2
+1-bit flip–flop
+
+N
+
+6
+ALU
+control
+
+High
+bit
+
+ALU
+
+Control
+signals
+Enable
+onto
+B bus
+
+Z
+Shifter
+C bus
+
+2
+Write
+C bus
+to register
+
+Figure 4-6. The complete block diagram of our example microarchitecture, the Mic-1.
+
+In one important way, the control store is quite different from the main memory: instructions in main memory are always executed in address order (except for
+branches); microinstructions are not. The act of incrementing the program counter
+in Fig. 2-3 reflects the fact that the default instruction to execute after the current
+one is the instruction following the current one in memory. Microprograms need
+more flexibility (because microinstruction sequences tend to be short), so they
+usually do not have this property. Instead, each microinstruction explicitly specifies its successor.
+Since the control store is functionally a (read-only) memory, it needs its own
+memory address register and memory data register. It does not need read and write
+
+SEC. 4.1
+
+AN EXAMPLE MICROARCHITECTURE
+
+255
+
+signals, because it is continuously being read. We will call the control store’s
+memory address register MPC (MicroProgram Counter). This name is ironic
+since the locations in it are explicitly not ordered, so the concept of counting is not
+useful (but who are we to argue with tradition?). The memory data register is called MIR (MicroInstruction Register). Its function is to hold the current microinstruction, whose bits drive the control signals that operate the data path.
+The MIR register in Fig. 4-6 holds the same six groups as in Fig. 4-5. The Addr
+and J (for JAM) groups control the selection of the next microinstruction and will
+be discussed shortly. The ALU group contains the 8 bits that select the ALU function and drive the shifter. The C bits cause individual registers to load the ALU
+output from the C bus. The M bits control memory operations.
+Finally, the last 4 bits drive the decoder that determines what goes onto the B
+bus. In this case we have chosen to use a standard 4-to-16 decoder, even though
+only nine possibilities are required. In a more finely tuned design, a 4-to-9 decoder
+could be used. The trade-off here is using a standard circuit taken from a library of
+circuits versus designing a custom one. Using the standard circuit is simpler and is
+unlikely to introduce any bugs. Rolling your own uses less chip area but takes
+longer to design and you might get it wrong.
+The operation of Fig. 4-6 is as follows. At the start of each clock cycle (the
+falling edge of the clock in Fig. 4-3), MIR is loaded from the word in the control
+store pointed to by MPC. The MIR load time is indicated in the figure by Δw. If
+one thinks in terms of subcycles, MIR is loaded during the first one.
+Once the microinstruction is set up in MIR, the various signals propagate out
+into the data path. A register is put out onto the B bus, the ALU knows which operation to perform, and there is lots of activity out there. This is the second subcycle. After an interval Δw + Δx from the start of the cycle, the ALU inputs are
+stable.
+Another Δy later, everything has settled down and the ALU, N, Z, and shifter
+outputs are stable. The N and Z values are then saved in a pair of 1-bit flip-flops.
+These bits, like all the registers that are loaded from the C bus and from memory,
+are saved on the rising edge of the clock, near the end of the data path cycle. The
+ALU output is not latched but just fed into the shifter. The ALU and shifter activity occurs during subcycle 3.
+After an additional interval, Δz, the shifter output has reached the registers via
+the C bus. Then the registers can be loaded near the end of the cycle (at the rising
+edge of the clock pulse in Fig. 4-3). Subcycle 4 consists of loading the registers
+and N and Z flip-flops. It terminates a little after the rising edge of the clock, when
+all the results have been saved and the results of the previous memory operations
+are available and MPC has been loaded. This process goes on and on until somebody gets bored with it and turns the machine off.
+In parallel with driving the data path, the microprogram also has to determine
+which microinstruction to execute next, as they need not be executed in the order
+they happen to appear in the control store. The calculation of the address of the
+
+256
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+next microinstruction begins after MIR has been loaded and is stable. First, the
+NEXT ADDRESS field is copied to MPC. While this copy is taking place, the JAM
+field is inspected. If it has the value 000, nothing else is done; when the copy of
+NEXT ADDRESS completes, MPC will point to the next microinstruction.
+If one or more of the JAM bits are 1, more work is needed. If JAMN is set, the
+1-bit N flip-flop is ORed into the high-order bit of MPC. Similarly, if JAMZ is set,
+the 1-bit Z flip-flop is ORed there. If both are set, both are ORed there. The reason that the N and Z flip-flops are needed is that after the rising edge of the clock
+(while the clock is high), the B bus is no longer being driven, so the ALU outputs
+can no longer be assumed to be correct. Saving the ALU status flags in N and Z
+makes the correct values available and stable for the MPC computation, no matter

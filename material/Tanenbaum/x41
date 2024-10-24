@@ -1,0 +1,100 @@
+
+12 bits
+
+9
+
+(b)
+
+10
+11
+8 bits
+(a)
+
+Figure 2-9. Three ways of organizing a 96-bit memory.
+
+Computers that use the binary number system (including octal and hexadecimal notation for binary numbers) express memory addresses as binary numbers. If
+an address has m bits, the maximum number of cells addressable is 2m . For example, an address used to reference the memory of Fig. 2-9(a) needs at least 4 bits
+in order to express all the numbers from 0 to 11. A 3-bit address is sufficient for
+Fig. 2-9(b) and (c), however. The number of bits in the address determines the
+maximum number of directly addressable cells in the memory and is independent
+of the number of bits per cell. A memory with 212 cells of 8 bits each and a memory with 212 cells of 64 bits each need 12-bit addresses.
+The number of bits per cell for some computers that have been sold commercially is listed in Fig. 2-10.
+The significance of the cell is that it is the smallest addressable unit. In recent
+years, nearly all computer manufacturers have standardized on an 8-bit cell, which
+is called a byte. The term octet is also used. Bytes are grouped into words. A
+computer with a 32-bit word has 4 bytes/word, whereas a computer with a 64-bit
+word has 8 bytes/word. The significance of a word is that most instructions operate on entire words, for example, adding two words together. Thus a 32-bit machine will have 32-bit registers and instructions for manipulating 32-bit words,
+
+76
+
+COMPUTER SYSTEMS ORGANIZATION
+
+Computer
+Burroughs B1700
+IBM PC
+
+CHAP. 2
+
+Bits/cell
+1
+8
+
+DEC PDP-8
+
+12
+
+IBM 1130
+
+16
+
+DEC PDP-15
+
+18
+
+XDS 940
+
+24
+
+Electrologica X8
+
+27
+
+XDS Sigma 9
+
+32
+
+Honeywell 6180
+
+36
+
+CDC 3600
+
+48
+
+CDC Cyber
+
+60
+
+Figure 2-10. Number of bits per cell for some historically interesting commercial computers.
+
+whereas a 64-bit machine will have 64-bit registers and instructions for moving,
+adding, subtracting, and otherwise manipulating 64-bit words.
+
+2.2.3 Byte Ordering
+The bytes in a word can be numbered from left to right or right to left. At first
+it might seem that this choice is unimportant, but as we shall see shortly, it has
+major implications. Figure 2-11(a) depicts part of the memory of a 32-bit computer whose bytes are numbered from left to right, such as the SPARC or the big
+IBM mainframes. Figure 2-11(b) gives the analogous representation of a 32-bit
+computer using right-to-left numbering, such as the Intel family. The former system, where the numbering begins at the ‘‘big’’ (i.e., high-order) end is called a big
+endian computer, in contrast to the little endian of Fig. 2-11(b). These terms are
+due to Jonathan Swift, whose Gulliver’s Travels satirized politicians who made war
+over their dispute about whether eggs should be broken at the big end or the little
+end. The term was first used in computer architecture in a delightful article by
+Cohen (1981).
+It is important to understand that in both the big endian and little endian systems, a 32-bit integer with the numerical value of, say, 6, is represented by the bits
+110 in the rightmost (low-order) 3 bits of a word and zeros in the leftmost 29 bits.
+In the big endian scheme, the 110 bits are in byte 3 (or 7, or 11, etc.), whereas in
+the little endian scheme they are in byte 0 (or 4, or 8, etc.). In both cases, the word
+containing this integer has address 0.
+If computers stored only integers, there would be no problem. However, many
+applications require a mixture of integers, character strings, and other data types.

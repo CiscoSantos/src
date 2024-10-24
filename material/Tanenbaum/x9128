@@ -1,0 +1,100 @@
+address space has its own address, with words being 32 bits long. Words are stored
+in little-endian format (the low-order byte has the lowest address).
+The Core i7’s registers are shown in Fig. 5-3. The first four registers, EAX,
+EBX, ECX, and EDX, are 32-bit, more-or-less general-purpose registers, although
+each has its own peculiarities. EAX is the main arithmetic register; EBX is good for
+holding pointers (memory addresses); ECX plays a role in looping; EDX is needed
+for multiplication and division, where, together with EAX, it holds 64-bit products
+and dividends. Each of these registers contains a 16-bit register in the low-order
+16 bits and an 8-bit register in the low-order 8 bits. These registers make it easy to
+manipulate 16- and 8-bit quantities, respectively. The 8088 and 80286 had only
+the 8- and 16-bit registers. The 32-bit registers were added with the 80386, along
+with the E prefix, which stands for Extended.
+The next four are also somewhat general purpose, but with more peculiarities.
+The ESI and EDI registers are intended to hold pointers into memory, especially for
+
+SEC. 5.1
+Bits
+
+353
+
+OVERVIEW OF THE ISA LEVEL
+16
+
+8
+AH
+BH
+CH
+DH
+
+8
+A X
+B X
+C X
+D X
+
+AL
+
+EAX
+
+BL
+
+EBX
+
+CL
+
+ECX
+
+DL
+
+EDX
+
+ESI
+EDI
+EBP
+ESP
+
+CS
+SS
+DS
+ES
+FS
+GS
+
+EIP
+
+EFLAGS
+
+Figure 5-3. The Core i7’s primary registers.
+
+the hardware string-manipulation instructions, where ESI points to the source string
+and EDI points to the destination string. The EBP register is also a pointer register.
+It is typically used to point to the base of the current stack frame, the same as LV in
+IJVM. When a register (like EBP) is used to point to the base of the local stack
+frame, it is usually called the frame pointer. Finally, ESP is the stack pointer.
+The next group of registers, CS through GS, are segment registers. To some
+extent, they are electronic trilobites, ancient fossils left over from the time the 8088
+attempted to address 220 bytes of memory using 16-bit addresses. Suffice it to say
+that when the Core i7 is set up to use a single linear 32-bit address space, they can
+be safely ignored. Next is EIP, which is the program counter (Extended Instruction
+Pointer). Finally, we come to EFLAGS, which is the PSW.
+
+354
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+5.1.6 Overview of the OMAP4430 ARM ISA Level
+The ARM Architecture was first introduced in 1985 by Acorn Computer. The
+architecture was inspired by the research done at Berkeley in the 1980s (Patterson,
+1985, and Patterson and Se´quin, 1982). The original ARM architecture (called the
+ARM2) was a 32-bit architecture that supported a 26-bit address space. The
+OMAP4430 utilizes the ARM Cortex A9 microarchitecture, which implements the
+version 7 of the ARM architecture, and that is the ISA we will describe in this
+chapter. For consistency with the rest of the book, we will refer to the OMAP4430
+here, but at the ISA level, all designs based on the ARM Cortex A9 core implement the same ISA.
+The OMAP4430 memory structure is clean and simple: addressable memory is
+a linear array of 232 bytes. ARM processors are bi-endian, such that they can access memory with big- or little- endian order. The endian is specified in a system
+memory block that is read immediately after processor reset. To ensure that the
+system memory block is read correctly, it must be in little-endian format, even if

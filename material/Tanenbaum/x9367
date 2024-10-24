@@ -1,0 +1,100 @@
+time is shown in Fig. C-15. The narrow window in the middle of the top row (to
+the right of the registers) shows the stack. At the bottom of the stack is the address
+of vec2 (0x0022), with vec1 (0x0018) above it and the third argument, the number
+of items in each vector (0x0005) above that. Next comes the return address
+(0x0011). The number 1 to the left of this address indicates it is a return address
+one level from the main program. In the window below the registers, the same
+number 1 is shown, this time giving its symbolic address. Above the return
+address in the stack is the old value of BP (0x7fc0) and then the zero pushed on
+line 27. The arrow pointing to this value indicates where SP points. The window
+to the right of the stack shows a fragment of the program text, with the arrow indicating the next instruction to be executed.
+Now let us examine the loop starting at line 28. The instruction LODS loads a
+memory word indirectly through the register SI from the data segment into AX.
+Because the direction flag is set, LODS is in auto-increment mode, so after the
+instruction SI will point to the next entry of vec1.
+To see this effect graphically, start the tracer with the command
+t88
+
+vecprod
+
+732
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+EXIT = 1
+PRINTF = 127
+.SECT .TEXT
+inpstart:
+MOV BP,SP
+PUSH vec2
+PUSH vec1
+MOV CX,vec2-vec1
+SHR CX,1
+PUSH CX
+CALL vecmul
+MOV (inprod),AX
+PUSH AX
+PUSH pfmt
+PUSH PRINTF
+SYS
+ADD SP,12
+PUSH 0
+PUSH EXIT
+SYS
+
+! 1
+! 2
+! 3
+! 4
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 12
+! 13
+! 14
+! 15
+! 16
+! 17
+! 18
+! 19
+! 20
+
+define the value of EXIT
+define the value of PRINTF
+start the TEXT segment
+define label inpstart
+save SP in BP
+push address of vec2
+push address of vec1
+CX = number of bytes in vector
+CX = number of words in vector
+push word count
+call vecmul
+move AX
+push result to be printed
+push address of format string
+push function code for PRINTF
+call the PRINTF function
+clean up the stack
+push status code
+push function code for EXIT
+call the EXIT function
+
+vecmul:
+PUSH BP
+MOV BP,SP
+MOV CX,4(BP)
+MOV SI,6(BP)
+MOV DI,8(BP)
+PUSH 0
+
+! 21
+! 22
+! 23
+! 24

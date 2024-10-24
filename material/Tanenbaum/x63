@@ -1,0 +1,100 @@
+typically one or more words. A controller that reads or writes data to or from
+memory without CPU intervention is said to be performing Direct Memory Access, better known by its acronym DMA. When the transfer is completed, the controller normally causes an interrupt, forcing the CPU to immediately suspend running its current program and start running a special procedure, called an interrupt
+handler, to check for errors, take any special action needed, and inform the operating system that the I/O is now finished. When the interrupt handler is finished, the
+CPU continues with the program that was suspended when the interrupt occurred.
+
+110
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Monitor
+
+CPU
+
+Memory
+
+Video
+controller
+
+Keyboard
+
+CD-ROM
+drive
+
+Hard
+disk drive
+
+Keyboard
+controller
+
+CD-ROM
+controller
+
+Hard
+disk
+controller
+
+Bus
+
+Figure 2-30. Logical structure of a simple personal computer.
+
+The bus is used not only by the I/O controllers but also by the CPU for fetching instructions and data. What happens if the CPU and an I/O controller want to
+use the bus at the same time? The answer is that a chip called a bus arbiter
+decides who goes next. In general, I/O devices are given preference over the CPU,
+because disks and other moving devices cannot be stopped, and forcing them to
+wait would result in lost data. When no I/O is in progress, the CPU can have all
+the bus cycles for itself to reference memory. However, when some I/O device is
+also running, that device will request and be granted the bus when it needs it. This
+process is called cycle stealing and it slows down the computer.
+This design worked fine for the first personal computers, since all the components were roughly in balance. However, as the CPUs, memories, and I/O devices
+got faster, a problem arose: the bus could no longer handle the load presented. On
+a closed system, such as an engineering workstation, the solution was to design a
+new and faster bus for the next model. Because nobody ever moved I/O devices
+from an old model to a new one, this approached worked fine.
+However, in the PC world, people often upgraded their CPU but wanted to
+move their printer, scanner, and modem to the new system. Also, a huge industry
+had grown up around providing a vast range of I/O devices for the IBM PC bus,
+and this industry had exceedingly little interest in throwing out its entire investment and starting over. IBM learned this the hard way when it brought out the successor to the IBM PC, the PS/2 range. The PS/2 had a new, faster bus, but most
+clone makers continued to use the old PC bus, now called the ISA (Industry Standard Architecture) bus. Most disk and I/O device makers also continued to make
+controllers for it, so IBM found itself in the peculiar situation of being the only PC
+maker that was no longer IBM compatible. Eventually, it was forced back to supporting the ISA bus. Today the ISA bus has been relegated to ancient systems and
+computer museums, since it has been replaced by newer and faster standard bus
+
+SEC. 2.4
+
+111
+
+INPUT/OUTPUT
+
+architectures. As an aside, please note that ISA stands for Instruction Set Architecture in the context of machine levels, whereas it stands for Industry Standard Architecture in the context of buses.
+The PCI and PCIe Buses
+Nevertheless, despite the market pressure not to change anything, the old bus
+really was too slow, so something had to be done. This situation led to other companies developing machines with multiple buses, one of which was the old ISA
+bus, or its backward-compatible successor, the EISA (Extended ISA) bus. The
+winner was the PCI (Peripheral Component Interconnect) bus. It was designed
+by Intel, but Intel decided to put all the patents in the public domain, to encourage
+the entire industry (including its competitors) to adopt it.
+The PCI bus can be used in many configurations, but a typical one is illustrated
+in Fig. 2-31. Here the CPU talks to a memory controller over a dedicated highspeed connection. The controller talks to the memory and to the PCI bus directly,
+so CPU-memory traffic does not go over the PCI bus. Other peripherals connect to
+the PCI bus directly. A machine of this design would typically contain two or
+three empty PCI slots to allow customers to plug in PCI I/O cards for new peripherals.
+Memory bus
+PCI
+bridge
+
+CPU
+SCSI
+bus
+SCSI
+scanner
+
+cache
+Cache
+
+SCSI
+disk
+
+SCSI

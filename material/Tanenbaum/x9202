@@ -1,0 +1,100 @@
+18
+19
+
+19
+
+20
+
+20
+
+21
+
+21
+
+22
+
+Main memory
+
+22
+
+Next logical
+record to be
+read
+
+Main memory
+
+23
+Logical
+record 18
+
+23
+
+Buffer
+
+24
+
+24
+
+25
+
+25
+
+26
+
+(a)
+
+Logical
+record 19
+
+Buffer
+
+(b)
+
+Figure 6-20. Reading a file consisting of logical records. (a) Before reading
+record 19. (b) After reading record 19.
+
+The basic virtual output instruction writes a logical record from memory onto a
+file. Consecutive sequential write instructions produce consecutive logical records
+on the file.
+
+6.3.2 Implementation of OSM-Level I/O Instructions
+To understand how virtual I/O instructions are implemented, we need to examine how files are organized and stored. A basic issue that must be dealt with by all
+file systems is allocation of storage. The allocation unit (sometimes called a block)
+can be a single disk sector, but often it consists of a block of consecutive sectors.
+Another fundamental property of a file-system implementation is whether a
+file is stored in consecutive allocation units or not. Figure 6-21 depicts a simple
+disk with one surface consisting of five tracks of 12 sectors each. Figure 6-21(a)
+shows an allocation scheme in which the sector is the basic unit of space allocation
+and in which a file consists of consecutive sectors. Consecutive allocation of file
+blocks is commonly used on CD-ROMs. Figure 6-21(b) shows an allocation
+scheme in which the sector is the basic allocation unit but in which a file need not
+occupy consecutive sectors. This scheme is the norm on hard disks (and, of
+course, solid state disks).
+There is a key distinction between the application programmer’s and the operating system’s view of a file. The programmer sees the file as a linear sequence of
+
+468
+
+THE OPERATING SYSTEM MACHINE LEVEL
+Sector 11
+
+Sector 0
+Sector
+1
+
+Sector
+1
+
+5
+
+4
+
+2
+
+Track 0
+3
+
+1
+
+0
+
+Track 4

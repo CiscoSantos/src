@@ -1,0 +1,100 @@
+format string (pfmt), and the function code for printf (127). Note that the format
+string pfmt contains a %d to indicate that an integer variable can be found as argument to the printf call to complete the output.
+Line 17 cleans up the stack. Since the program started on line 5 by saving the
+stack pointer in the base pointer, we could also use the instruction
+MOV SP,BP
+
+for a stack cleanup. The advantage of this solution is that the programmer does not
+need to keep the stack balanced in the process. For the main program this is not a
+big issue, but in subroutines this approach is an easy way to throw away garbage
+such as obsolete local variables.
+The subroutine vecmul can be included in other programs. If the source file
+vecprod.s is put on the command line behind another assembler source file, the
+subroutine is available for multiplying two vectors of a fixed length. It is advisable
+to remove the constant definitions EXIT and PRINTF first, in order to avoid their
+being defined twice. If the header file syscalnr.h is included somewhere, then there
+is no need to define the system call constants anywhere else.
+
+734
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+MOV BP,SP
+PUSH vec2
+PUSH vec1
+MOV CX,vec2-vec1
+SHR CX,1
+PUSH CX
+CALL vecmul
+---------vecmul :
+PUSH BP
+MOV BP,SP
+MOV CX,4(BP)
+MOV SI,6(BP)
+MOV DI,8(BP)
+PUSH 0
+1: LODS
+MUL (DI)
+ADD -2(BP),A X
+ADD DI,2
+LOOP 1b
+
+! 5
+! 6
+! 7
+! 8
+! 9
+! 10
+! 11
+! 21
+! 22
+! 23
+! 24
+! 25
+! 26
+! 27
+! 28
+! 29
+! 30
+! 31
+! 32
+
+C S : 00 D S = S S = E S :0 04
+AH:00 A L : 0 0 A X :
+0
+BH:00 BL:00 B X :
+0
+CH:00 C L : 0 5 C X :
+5 =>0000
+DH: 0 0 D L : 0 0 D X :
+0
+7fc0
+S P : 7 f b 4 SF O D S Z C 1 0011
+B P : 7 f b 6 CC - > p z 0005 = > 1 :
+S I : 0018 I P : 0 0 3 1 : P C
+0018
+D I : 0022 vecmul+7
+0022
+1 <= i n p s t a r t + 7
+
+vec1+ 0
+vec2+ 0
+pfmt + 0
+pfmt+18
+
+PUSH BP
+MOV B P , S P
+MOV C X , 4 ( B P )
+MOV S I , 6 ( B P )
+MOV D I , 8 ( B P )
+PUSH 0
+LODS
+MUL ( D I)
+ADD - 2 ( B P ) , A X
+
+APP. C
+!
+!
+!
+!
+!

@@ -1,0 +1,100 @@
+
+0
+
+0
+
+Virtual page 3
+
+2
+
+1
+
+1
+
+0
+
+Virtual page 0
+
+1
+
+0
+
+1
+
+1
+
+Virtual page 1
+
+0
+
+1 = Present in main memory
+0 = Absent from main memory
+
+Figure 6-5. A possible mapping of the first 16 virtual pages onto a main memory
+with eight page frames.
+
+not in main memory. When the CPU tries to fetch the first instruction, it immediately gets a page fault, which causes the page containing the first instruction
+to be loaded into memory and entered in the page table. Then the first instruction
+can begin. If the first instruction has two addresses, with the two addresses on different pages, both different from the instruction page, two more page faults will occur, and two more pages will be brought in before the instruction can finally execute. The next instruction may cause some more page faults, and so on.
+This method of operating a virtual memory is called demand paging, in analogy to the well-known demand feeding algorithm for babies: when the baby cries,
+you feed it (as opposed to feeding it on a schedule). In demand paging, a page is
+brought into memory only when a request for it occurs, not in advance.
+
+446
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+The question of whether demand paging should be used or not is relevant only
+when a program first starts up. Once it has been running for a while, the needed
+pages will already have been collected in main memory. If, however, the computer
+is timeshared and processes are swapped out after running 100 msec or thereabouts, each program will be restarted many times during the course of its run.
+Because the memory map is unique to each program, and is changed when programs are switched, for example, in a timesharing system, the question repeatedly
+becomes a critical one.
+The alternative approach is based on the observation that most programs do not
+reference their address space uniformly but that references tend to cluster on a
+small number of pages. This concept is called the locality principle. A memory
+reference may fetch an instruction, it may fetch data, or it may store data. At any
+instant in time, t, there exists a set consisting of all the pages used by the k most
+recent memory references. Denning (1968) has called this the working set.
+Because the working set normally varies slowly with time, it is possible to
+make a reasonable guess as to which pages will be needed when the program is
+restarted, on the basis of its working set when it was last stopped. These pages
+could then be loaded in advance before starting the program up (assuming they fit).
+
+6.1.4 Page-Replacement Policy
+Ideally, the set of pages that a program is actively and heavily using, called the
+working set, can be kept in memory to reduce page faults. However, programmers
+rarely know which pages are in the working set, so the operating system must discover this set dynamically. When a program references a page that is not in main
+memory, the needed page must be fetched from the disk. To make room for it,
+however, some other page will generally have to be sent back to the disk. Thus an
+algorithm that decides which page to remove is needed.
+Choosing a page to remove at random is probably not a good idea. If the page
+containing the faulting instruction should happen to be the one picked, another
+page fault will occur as soon as an attempt is made to fetch the next instruction.
+Most operating systems try to predict which of the pages in memory is the least
+useful in the sense that its absence would have the smallest adverse effect on the
+running program. One way of doing so is to make a prediction when the next reference to each page will occur and remove the page whose predicted next reference
+lies furthest in the future. In other words, rather than evict a page that will be
+needed shortly, try to select one that will not be needed for a long time.
+One popular algorithm evicts the page least recently used because the a priori
+probability of its not being in the current working set is high. It is called the LRU
+(Least Recently Used) algorithm. Although it usually performs well, there are
+pathological situations, such as the one described below, where it fails miserably.
+Imagine a program that is executing a large loop that extends over nine virtual
+pages on a machine with room for only eight pages in physical memory. After the
+
+SEC. 6.1
+
+447
+
+VIRTUAL MEMORY
+
+program gets to page 7, the main memory will be as shown in Fig. 6-6(a). An attempt is eventually made to fetch an instruction from virtual page 8, which causes
+a page fault. A decision has to be made about which page to evict. The LRU algorithm will choose virtual page 0, because it has been used least recently. Virtual
+page 0 is removed and virtual page 8 is brought in to replace it, giving the situation
+in Fig. 6-6(b).
+Virtual page 7
+
+Virtual page 7

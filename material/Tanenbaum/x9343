@@ -1,0 +1,100 @@
+15
+
+CC
+
+pointer
+
+Program counter
+
+IP
+Destination
+
+DI
+
+0
+
+PC
+0
+
+0
+
+Figure C-2. The 8088 registers.
+
+possible to put a memory address in BX and then execute an instruction whose
+operand comes from the memory address contained in BX. In other words, BX can
+hold a pointer to memory, AX cannot. To show this, we compare two instructions.
+First we have
+MOV AX,BX
+
+which copies to AX the contents of BX. Second we have
+MOV AX,(BX)
+
+which copies to AX the contents of the memory word whose address is contained in
+BX. In the first example, BX contains the source operand; in the second one it
+points to the source operand. In both of these examples, note that the MOV
+
+SEC. C.2
+
+THE 8088 PROCESSOR
+
+697
+
+instruction has a source and a destination operand, and that the destination is written before the source.
+The next general register is CX, the counter register. Besides fulfilling many
+other tasks, this register is specifically used to contain counters for loops. It is automatically decremented in the LOOP instruction, and loops are usually terminated
+when CX reaches zero.
+The fourth register of the general group is DX, the data register. It is used
+together with AX in double word length (i.e., 32-bit) instructions. In this case, DX
+contains the high-order 16 bits and AX contains the low-order 16 bits. Usually,
+32-bit integers are indicated by the term long. The term double is usually reserved
+for 64-bit floating point values, although some people use ‘‘double’’ for 32-bit integers. In this tutorial, there will be no confusion because we will not discuss floating-point numbers at all.
+All of these general registers can be regarded either as a 16-bit register or as a
+pair of 8-bit registers. In this way, the 8088 has precisely eight different 8-bit registers, which can be used in byte and character instructions. None of the other registers can be split into 8-bit halves. Some instructions use an entire register, such
+as AX, but other instructions use only half of a register, such as AL or AH. In general, instructions doing arithmetic use the full 16-bit registers, but instructions dealing with characters usually use the 8-bit registers. It is important, however, to realize that AL and AH are just names for both halves of AX. When AX is loaded with a
+new value, both AL and AH are changed to the lower and upper halves of the 16-bit
+number put in AX, respectively. To see how AX, AH, and AL interact, consider the
+instruction
+MOV AX,258
+
+which loads the AX register with the decimal value 258. After this instruction, the
+byte register AH contains the value 1, and the byte register AL contains the number
+2. If this instruction is followed by the byte add instruction
+ADDB AH,AL
+
+then the byte register AH is incremented by the value in AL (2) so that it now contains 3. The effect on the register AX of this action is that its value is now 770,
+which is equivalent to 00000011 00000010 in binary notation or 0x03 0x02 in hexadecimal notation. The eight byte-wide registers are almost interchangeable, with
+the exception that AL always contains one of the operands in the MULB instruction,
+and is the implied destination of this operation, together with AH. DIVB also uses
+the AH : AL pair for the dividend. The lower byte of the counter register CL can be
+used to hold the number of cycles in shift and rotate instruction.
+Section C.8, example 2, shows some of the properties of the general registers
+by means of a discussion of the program GenReg.s.
+
+698
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+C.2.3 Pointer Registers
+The second group of registers consists of the pointer and index registers.
+The most important register of this group is the stack pointer, which is denoted by
+SP. Stacks are important in most programming languages. The stack is a segment
+of memory that holds certain context information about the running program. Usually, when a procedure is called, part of the stack is reserved for holding the procedure’s local variables, the address to return to when the procedure has finished, and
+other control information. The portion of the stack relating to a procedure is called
+its stack frame. When a called procedure calls another procedure, an additional
+stack frame is allocated, usually just below the current one. Additional calls allocate additional stack frames below the current ones. While not mandatory, stacks
+almost always grow downward, from high addresses to low addresses. Nevertheless, the lowest numerical address occupied on the stack is always called the top of
+the stack.
+In addition to their use for holding local variables, stacks can also hold temporary results. The 8088 has an instruction, PUSH, which puts a 16-bit word on top
+of the stack. This instruction first decrements SP by 2, then stores its operand at
+the address SP is now pointing to. Similarly, POP removes a 16-bit word from the
+top of the stack by fetching the value on top of the stack and then incrementing SP
+by 2. The SP register points to the top of the stack and is modified by PUSH, POP,
+and CALL instructions, being decremented by PUSH, incremented by POP, and
+decremented by CALL.
+The next register in this group is BP, the base pointer. It usually contains an
+address in the stack. Whereas SP always points to the top of the stack, BP can point
+to any location within the stack. In practice, a common use for BP is to point to the
+beginning of the current procedure’s stack frame, in order to make it easy to find
+the procedure’s local variables. Thus, BP often points to the bottom of the current

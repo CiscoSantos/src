@@ -1,0 +1,100 @@
+
+0
+
+0
+
+1
+
+0
+
+1
+
+0
+
+1
+
+0
+
+0
+
+1
+
+1
+
+0
+
+(c)
+
+latch in state 1. (c) Truth table for
+
+Q, is 1. The 1 is fed back into the lower gate, which then has inputs 1 and 0, yielding Q = 0. This state is at least consistent and is depicted in Fig. 3-21(a).
+Now let us imagine that Q is not 0 but 1, with R and S still 0. The upper gate
+has inputs of 0 and 1, and an output, Q, of 0, which is fed back to the lower gate.
+This state, shown in Fig. 3-21(b), is also consistent. A state with both outputs
+equal to 0 is inconsistent, because it forces both gates to have two 0s as input,
+which, if true, would produce 1, not 0, as output. Similarly, it is impossible to have
+both outputs equal to 1, because that would force the inputs to 0 and 1, which
+yields 0, not 1. Our conclusion is simple: for R = S = 0, the latch has two stable
+states, which we will refer to as 0 and 1, depending on Q.
+Now let us examine the effect of the inputs on the state of the latch. Suppose
+that S becomes 1 while Q = 0. The inputs to the upper gate are then 1 and 0, forcing the Q output to 0. This change makes both inputs to the lower gate 0, forcing
+the output to 1. Thus, setting S (i.e., making it 1) switches the state from 0 to 1.
+Setting R to 1 when the latch is in state 0 has no effect because the output of the
+lower NOR gate is 0 for inputs of 10 and inputs of 11.
+Using similar reasoning, it is easy to see that setting S to 1 when in state Q = 1
+has no effect but that setting R drives the latch to state Q = 0. In summary, when S
+is set to 1 momentarily, the latch ends up in state Q = 1, regardless of what state it
+was previously in. Likewise, setting R to 1 momentarily forces the latch to state
+Q = 0. The circuit ‘‘remembers’’ whether S or R was last on. Using this property,
+we can build computer memories.
+Clocked SR Latches
+It is often convenient to prevent the latch from changing state except at certain
+specified times. To achieve this goal, we modify the basic circuit slightly, as
+shown in Fig. 3-22, to get a clocked SR latch.
+
+SEC. 3.3
+
+171
+
+MEMORY
+S
+Q
+Clock
+Q
+R
+
+Figure 3-22. A clocked SR latch.
+
+This circuit has an additional input, the clock, which is normally 0. With the
+clock 0, both AND gates output 0, independent of S and R, and the latch does not
+change state. When the clock is 1, the effect of the AND gates vanishes and the
+latch becomes sensitive to S and R. Despite its name, the clock signal need not be
+driven by a clock. The terms enable and strobe are also widely used to mean that
+the clock input is 1; that is, the circuit is sensitive to the state of S and R.
+Up until now we have carefully swept under the rug the problem of what happens when both S and R are 1. And for good reason: the circuit becomes nondeterministic when both R and S finally return to 0. The only consistent state for
+S = R = 1 is Q = Q = 0, but as soon as both inputs return to 0, the latch must jump
+to one of its two stable states. If either input drops back to 0 before the other, the
+one remaining 1 longest wins, because when just one input is 1, it forces the state.
+If both inputs return to 0 simultaneously (which is very unlikely), the latch jumps
+to one of its stable states at random.
+Clocked D Latches
+A good way to resolve the SR latch’s instability (caused when S = R = 1) is to
+prevent it from occurring. Figure 3-23 gives a latch circuit with only one input, D.
+Because the input to the lower AND gate is always the complement of the input to
+the upper one, the problem of both inputs being 1 never arises. When D = 1 and
+the clock is 1, the latch is driven into state Q = 1. When D = 0 and the clock is 1,
+it is driven into state Q = 0. In other words, when the clock is 1, the current value
+of D is sampled and stored in the latch. This circuit, called a clocked D latch, is a
+true 1-bit memory. The value stored is always available at Q. To load the current
+value of D into the memory, a positive pulse is put on the clock line.
+This circuit requires 11 transistors. More sophisticated (but less obvious) circuits can store 1 bit with as few as six transistors. In practice, such designs are
+normally used. This circuit can remain stable indefinitely as long as power (not
+shown) is applied. Later we will see memory circuits that quickly forget what state
+they are in unless constantly ‘‘reminded’’ somehow.
+
+172
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+

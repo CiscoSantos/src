@@ -1,0 +1,100 @@
+
+Nonnegative
+
+SF=0
+
+711
+
+When to jump
+
+Figure C-5. Conditional jumps.
+
+near call is implemented. The destination is either a label or can be found at an
+effective address. Parameters needed in the subroutines have to be pushed onto the
+stack in reverse order first, as illustrated in Fig. C-6. In assembly language, parameters are usually called arguments, but the terms are interchangeable. Following
+these pushes the CALL instruction is executed. The instruction starts by pushing the
+current program counter onto the stack. In this way the return address is saved.
+The return address is the address at which the execution of the calling routine has
+to be resumed when the subroutine returns.
+BP+8
+
+...
+
+BP+6
+
+Argument 2
+
+BP+4
+
+Argument 1
+
+BP+2
+
+Return address
+
+BP
+
+Old BP
+
+BP−2
+
+Local variable 1
+
+BP−4
+
+Local variable 2
+
+BP−6
+
+Local variable 3
+
+BP−8
+
+Temporary result
+
+← BP
+
+← SP
+
+Figure C-6. An example stack.
+
+Next the new program counter is loaded either from the label, or from the
+effective address. If the call is far, then the CS register is pushed before PC and
+
+712
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+both the program counter and the code segment register are either loaded from
+immediate data or from the effective address. This finishes the CALL instruction.
+The return instruction, RET, just pops the return address from the stack, stores
+it in the program counter and the program continues at the instruction immediately
+after the CALL instruction. Sometimes the RET instruction contains a positive number as immediate data. This number is assumed to be the number of bytes of arguments that were pushed onto the stack before the call; it is added to SP to clean up
+the stack. In the far variant, RETF, the code segment register is popped after the
+program counter, as would be expected.
+Inside the subroutine, the arguments need to be accessible. Therefore the subroutine starts often by pushing the base pointer and copying the current value of SP
+into BP. This means that the base pointer points to its previous value. Now the
+return address is at BP + 2 and the first and second arguments can be found at the
+effective addresses BP + 4 and BP + 6, respectively. If the procedure needs local
+variables, then the required number of bytes can be subtracted from the stack
+pointer, and those variables can be addressed from the base pointer with negative
+offsets. In the example of Fig. C-6, there are three single-word local variables,
+located at BP − 2, BP − 4, and BP − 6, respectively. In this way, the entire set of current arguments and local variables is reachable through the BP register.
+The stack is used in the ordinary way to save intermediate results, or for
+preparing arguments for the next call. Without computing the amount of stack used
+in the subroutine, the stack can be restored before the return by copying the base
+pointer into the stack pointer, popping the old BP and finally executing the RET
+instruction.
+During a subroutine call, the values of the processor registers sometimes
+change. It is good practice to use some type of convention such that the calling
+routine need not be aware of the registers used by the called routine. The simplest
+way to do this is to use the same conventions for system calls and ordinary subroutines. It is assumed that the AX and DX can change in the called routine. If one of
+these registers contains valuable information then it is advisable for the calling routine to stack them before pushing the arguments. If the subroutine uses other registers as well, those can be pushed onto the stack immediately at the start of the subroutine, and popped before the RET instruction. In other words, a good convention
+is for the caller to save AX and DX if they contain anything important, and for the
+callee to save any other registers it overwrites.
+
+C.4.6 System Calls and System Subroutines
+In order to separate the tasks of opening, closing, reading, and writing files
+from assembly programming, programs are run on top of an operating system. To

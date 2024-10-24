@@ -1,0 +1,100 @@
+1st
+
+level page
+table index
+12 bits
+
+2nd
+
+level
+table index
+
+Offset
+
+8 bits
+
+12 bits
+
+TTBR
+1st level
+descriptor
+table
+
+TLB (MMU hardware)
+ASID
+Flags
+Virtual
+page Physical
+page
+Valid
+
+2nd level
+descriptor
+table
+20 bits
+
+Physical page address
+(a)
+
+Offset
+(b)
+
+Figure 6-18. Data structures used in translating virtual addresses on the
+OMAP4430 ARM CPU. (a) Address translation table. (b) TLB.
+
+Instead, the TLB holds only the most recently used virtual page numbers. Instruction and data pages are kept track of separately, with the TLB holding the 128
+most recently used virtual page numbers in each category. Each TLB entry holds a
+virtual page number and the corresponding physical page-frame number. When a
+process number, called an address space identifier (ASID), and a virtual address
+
+462
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+within that address space is presented to the MMU, it uses special circuitry to compare the virtual page number contained in it to all the TLB entries at once. If a
+match is found, the page frame number in that TLB entry is combined with the offset taken from the virtual address to form a 32-bit physical address and produce
+some flags, such as protection bits. The TLB is illustrated in Fig. 6-18(b).
+However, if no match is found, a TLB miss occurs, which initiates a hardware
+‘‘walk’’ of the page tables. When the new physical-page descriptor entry is located
+in the page table, it is checked to see if the page is in memory and, if so, its corresponding address translation is loaded into the TLB. If the page is not in memory, a
+standard page-fault action is started. Since the TLB has only a few entries, it is
+quite likely to displace an existing entry in the TLB. Future accesses to the displaced page will have to once again walk the page tables to get an address mapping. If too many pages are being touched too quickly, the TLB will thrash, and
+most memory accesses will require a 200% overhead for address translation.
+It is interesting to compare the Core i7 and OMAP4430 ARM CPU virtual
+memory systems. The Core i7 supports pure segmentation, pure paging, and paged
+segments. The OMAP4430 ARM CPU has only paging. Both the Core i7 and the
+OMAP4430 use hardware to walk the page table to reload the TLB in the event of
+a TLB miss. Other architectures, such as SPARC and MIPS, just give control to the
+operating system on a TLB miss. These architectures define special privileged instructions to manipulate the TLB, such that the operating system can perform the
+page-table walks and TLB loads necessary for address translation.
+
+6.1.10 Virtual Memory and Caching
+Although at first glance, (demand-paged) virtual memory and caching may
+look unrelated, they are conceptually very similar. With virtual memory, the entire
+program is kept on disk and broken up into fixed-size pages. Some subset of these
+pages are in main memory. If the program mostly uses the pages in memory, there
+will be few page faults and the program will run fast. With caching, the entire program is kept in main memory and broken up into fixed-size cache blocks. Some
+subset of these blocks are in the cache. If the program mostly uses the blocks in
+the cache, there will be few cache misses and the program will run fast. Conceptually, the two are identical, only operating at different levels in the hierarchy.
+Of course, virtual memory and caching also have some differences. For one,
+cache misses are handled by the hardware, whereas page faults are handled by the
+operating system. Also, cache blocks are typically much smaller than pages (e.g.,
+64 bytes vs. 8 KB). In addition, the mapping between virtual pages and page
+frames is different, with page tables organized by indexing on the high-order bits
+of the virtual address, whereas caches index on the low-order bits of the memory
+address. Nevertheless, it is important to realize that these are implementation differences. The underlying concept is very similar.
+
+SEC. 6.2
+
+463
+
+HARDWARE VIRTUALIZATION
+
+6.2 HARDWARE VIRTUALIZATION
+Traditionally, hardware architectures have been designed with the expectation
+that they will run one operating system at a time. The proliferation of shared computing resources, such as cloud computing servers, benefit from having the ability
+to run multiple operating systems at the same time. For example, Internet hosting
+services typically provide a complete system to paying clients, upon which can be
+built web services. It would be prohibitively expensive to install a new computer in

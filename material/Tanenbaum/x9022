@@ -1,0 +1,100 @@
+
+16 × 4
+memory
+CK
+(a)
+Signal Assignment
+FPGA Counter
+I3
+CLR
+O2..0 O2..0
+CK
+
+CK
+
+Addr Data
+
+Addr Data
+
+0
+
+1
+
+4
+
+0
+
+1
+
+2
+
+5
+
+0
+
+2
+
+3
+
+6
+
+0
+
+3
+
+0
+
+7
+
+0
+
+(b)
+
+Figure 3-33. (a) A field-programmable logic array lookup table (LUT). (b) The
+LUT configuration to create a 3-bit clearable counter.
+
+To better understand the FPGA-based counter with reset, let’s consider its operation. If, for example, the current state of the counter is 2 and the reset (CLR)
+signal is not asserted, the input address to the LUT will be 2, which will produce
+an output to the flip-flops of 3. If the reset signal (CLR) were asserted for the same
+state, the input to the LUT would be 6, which would produce the next state of 0.
+
+SEC. 3.3
+
+MEMORY
+
+185
+
+All in all, this may seem like an arcane way to build a counter with reset, and
+in fact a fully custom design with an incrementer circuit and reset signals to the
+flip-flops would be smaller, faster, and use less power. The main advantage of the
+FPGA-based design is that you can craft it in an hour at home, whereas the more
+efficient fully custom design must be fabricated from silicon, which could take a
+month or more.
+To use an FPGA, the design must be described using a circuit description or a
+hardware description language (i.e., a programming language used to describe
+hardware structures). The design is then processed by a synthesizer, which maps
+the circuit to a specific FPGA architecture. One challenge of using FPGAs is that
+the design you want to map never seems to fit. FPGAs are manufactured with
+varying number of LUTs, with larger quantities costing more. In general, if your
+design does not fit, you need to simplify or throw away some functionality, or purchase a larger (and more expensive) FPGA. Very large designs may not fit into the
+largest FPGAs, which will require the designer to map the design into multiple
+FPGAs; this task is definitely more difficult, but still a walk in the park compared
+to designing a complete custom integrated circuit.
+
+3.4 CPU CHIPS AND BUSES
+Armed with information about integrated circuits, clocks, and memory chips,
+we can now start to put all the pieces together to look at complete systems. In this
+section, we will first look at some general aspects of CPUs as viewed from the digital logic level, including pinout (what the signals on the various pins mean).
+Since CPUs are so closely intertwined with the design of the buses they use, we
+will also provide an introduction to bus design in this section. In subsequent sections we will give detailed examples of both CPUs and their buses and how they
+are interfaced.
+
+3.4.1 CPU Chips
+All modern CPUs are contained on a single chip. This makes their interaction
+with the rest of the system well defined. Each CPU chip has a set of pins, through
+which all its communication with the outside world must take place. Some pins
+output signals from the CPU to the outside world; others accept signals from the
+outside world; some can do both. By understanding the function of all the pins, we
+can learn how the CPU interacts with the memory and I/O devices at the digital
+logic level.
+The pins on a CPU chip can be divided into three types: address, data, and control. These pins are connected to similar pins on the memory and I/O chips via a

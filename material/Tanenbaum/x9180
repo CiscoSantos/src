@@ -1,0 +1,100 @@
+
+CMOVZ R2,R3,R1
+CMOVZ R4,R5,R1
+CMOVN R6,R7,R1
+CMOVN R8,R9,R1
+
+(c)
+
+Figure 5-49. (a) An if statement. (b) Generic assembly code for (a). (c) Conditional execution.
+
+Although simple, the example of Fig. 5-50 shows the basic idea of how predication can be used to eliminate branches. The CMPEQ instruction compares two
+registers and sets the predicate register P4 to 1 if they are equal and to 0 if they are
+different. It also sets a paired register, say, P5, to the inverse condition. Now the
+instructions for the if and then parts can be put after one another, each one conditioned on some predicate register (shown in angle brackets). Arbitrary code can be
+put here provided that each instruction is properly predicated.
+if (R1 == R2)
+R3 = R4 + R5;
+else
+R6 = R4 − R5
+
+(a)
+
+CMP R1,R2
+BNE L1
+MOV R3,R4
+ADD R3,R5
+BR L2
+L1: MOV R6,R4
+SUB R6,R5
+L2:
+(b)
+
+CMPEQ R1,R2,P4
+<P4> ADD R3,R4,R5
+<P5> SUB R6,R4,R5
+
+(c)
+
+Figure 5-50. (a) An if statement. (b) Generic assembly code for (a). (c) Predicated execution.
+
+In the IA-64, this idea is taken to the extreme, with comparison instructions for
+setting the predicate registers as well as arithmetic and other instructions whose execution is dependent on some predicate register. Predicated instructions can be
+stuffed into the pipeline in sequence, with no stalls and no problems. That is why
+they are so useful.
+The way predication really works on the IA-64 is that every instruction is actually executed. At the very end of the pipeline, when it is time to retire an instruction, a check is made to see if the predicate is true. If so, the instruction is retired
+normally and its results are written back to the destination register. If the predicate
+is false, no writeback is done so the instruction has no effect. Predication is discussed further in Dulong (1998).
+
+SEC. 5.8
+
+THE IA-64 ARCHITECTURE AND THE ITANIUM 2
+
+429
+
+5.8.6 Speculative Loads
+Another feature of the IA-64 that speeds up execution is the presence of speculative LOADs. If a LOAD is speculative and it fails, instead of causing an exception,
+it just stops and a bit associated with the register to be loaded is set marking the
+register as invalid. This is just the poison bit introduced in Chap. 4. If it turns out
+that the poisoned register is later used, the exception occurs at that time; otherwise,
+it never happens.
+The way speculation is normally used is for the compiler to hoist LOADs to
+positions before they are needed. By starting early, they may be finished before the
+results are needed. At the place where the compiler needs to use the register just
+loaded, it inserts a CHECK instruction. If the value is there, CHECK acts like a NOP
+and execution continues immediately. If the value is not there yet, the next instruction must stall. If an exception occurred and the poison bit is on, the pending exception occurs at that point.
+In summary, a machine implementing the IA-64 architecture gets its speed
+from several different sources. At the core is a state-of-the-art pipelined,
+load/store, three-address RISC engine. That is already a big improvement over the
+overly complex IA-32 architecture.
+In addition, the IA-64 has a model of explicit parallelism that requires the
+compiler to figure out which instructions can be executed at the same time without
+conflicts and group them together in bundles. In this way the CPU can just blindly
+schedule a bundle without having to do any heavy-duty thinking. Moving work
+from run time to compile time is always a win.
+Next, predication allows the statements in both branches of an if statement to
+be merged together in a single stream, eliminating the conditional branch and thus
+the prediction of which way it will go. Finally, speculative LOADs make it possible
+to fetch operands in advance, without penalty if it turns out later that they are not
+needed after all.
+All in all, the Itanium architecture is an impressive design that appears to better
+serve architects and users. So, are you running an Itanium processor in your computer, are we running one in ours, is your mom running one, do you know someone
+that is running one? Answer: no, no, no, and (probably) no. More than a decade
+after its introduction, its adoption can be described politely as lackluster. But Intel
+is still committed to producing Itanium-based systems, although they are limited to
+high-end servers.
+So let’s bring it back to the original challenges that motivated the creation of
+IA-64. Itanium was designed to solve the many deficiencies in the IA-32 architecture. Given that it was not widely adopted, how did Intel address these deficiencies? As we will see in Chap. 8, the key to marching the IA-32 line forward was
+not in retooling the ISA, but rather in embracing parallel computing, through chip
+multiprocessor designs. For more information about the Itanium 2 and its microarchitecture, see McNairy and Soltis (2003) and Rusu et al. (2004).
+
+430
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+5.9 SUMMARY
+The instruction set architecture level is what most people think of as ‘‘machine
+language’’ although on CISC machines it is generally built on a lower layer of
+microcode. At this level the machine has a byte- or word-oriented memory consisting of some number of megabytes or gigabytes, and instructions such as MOVE,

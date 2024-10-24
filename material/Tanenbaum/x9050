@@ -1,0 +1,100 @@
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+receiving end, the reverse process takes place, with the link header and trailer
+being stripped and the result being given to the transaction layer.
+The concept of each layer adding additional information to the data as it works
+its way down the protocol has been used for decades in the networking world with
+great success. The big difference between a network and PCI Express is that in the
+networking world the code in the various layers is nearly always software that is
+part of the operating system. With PCI Express it is all part of the device hardware.
+PCI Express is a complicated subject. For more information see Mayhew and
+Krishnan (2003) and Solari and Congdon (2005). It is also still evolving. In 2007,
+PCIe 2.0 was released. It supports 500 MB/s per lane up to 32 lines, for a total
+bandwidth of 16 GB/sec. Then came PCIe 3.0 in 2011, which changed the encoding from 8b/10b to 128b/130b and can run at 8 billion transactions/sec, double
+PCIe 2.0.
+
+3.6.3 The Universal Serial Bus
+The PCI bus and PCI Express are fine for attaching high-speed peripherals to a
+computer, but they are too expensive for low-speed I/O devices such as keyboards
+and mice. Historically, each standard I/O device was connected to the computer in
+a special way, with some free ISA and PCI slots for adding new devices. Unfortunately, this scheme has been fraught with problems from the beginning.
+For example, each new I/O device often comes with its own ISA or PCI card.
+The user is often responsible for setting switches and jumpers on the card and
+making sure the settings do not conflict with other cards. Then the user must open
+up the case, carefully insert the card, close the case, and reboot the computer. For
+many users, this process is difficult and error prone. In addition, the number of
+ISA and PCI slots is very limited (two or three typically). Plug-and-play cards
+eliminate the jumper settings, but the user still has to open the computer to insert
+the card and bus slots are still limited.
+To deal with this problem, in 1993, representatives from seven companies
+(Compaq, DEC, IBM, Intel, Microsoft, NEC, and Northern Telecom) got together
+to design a better way to attach low-speed I/O devices to a computer. Since then,
+hundreds of other companies have joined them. The resulting standard, officially
+released in 1998, is called USB (Universal Serial Bus) and it is now widely implemented in personal computers. It is described further in Anderson (1997) and Tan
+(1997).
+Some of the goals of the companies that originally conceived of the USB and
+started the project were as follows:
+1. Users must not have to set switches or jumpers on boards or devices.
+2. Users must not have to open the case to install new I/O devices.
+3. There should be only one kind of cable to connect all devices.
+
+SEC. 3.6
+
+EXAMPLE BUSES
+
+229
+
+4. I/O devices should get their power from the cable.
+5. Up to 127 devices should be attachable to a single computer.
+6. The system should support real-time devices (e.g., sound, telephone).
+7. Devices should be installable while the computer is running.
+8. No reboot should be needed after installing a new device.
+9. The new bus and its I/O devices should be inexpensive to manufacture.
+USB meets all these goals. It is designed for low-speed devices such as keyboards,
+mice, still cameras, snapshot scanners, digital telephones, and so on. Version 1.0
+has a bandwidth of 1.5 Mbps, which is enough for keyboards and mice. Version
+1.1 runs at 12 Mbps, which is enough for printers, digital cameras, and many other
+devices. Version 2.0 supports devices with up to 480 Mbps, which is sufficient to
+support external disk drives, high-definition webcams, and network interfaces. The
+recently defined USB version 3.0 pushes speeds up to 5 Gbps; only time will tell
+what new and bandwidth-hungry applications will spring forth from this
+ultra-high-bandwidth interface.
+A USB system consists of a root hub that plugs into the main bus (see
+Fig. 3-51). This hub has sockets for cables that can connect to I/O devices or to
+expansion hubs, to provide more sockets, so the topology of a USB system is a tree
+with its root at the root hub, inside the computer. The cables have different connectors on the hub end and on the device end, to prevent people from accidentally
+connecting two hub sockets together.
+The cable consists of four wires: two for data, one for power (+5 volts), and
+one for ground. The signaling system transmits a 0 as a voltage transition and a 1
+as the absence of a voltage transition, so long runs of 0s generate a regular pulse
+stream.
+When a new I/O device is plugged in, the root hub detects this event and interrupts the operating system. The operating system then queries the device to find
+out what it is and how much USB bandwidth it needs. If the operating system
+decides that there is enough bandwidth for the device, it assigns the new device a
+unique address (1–127) and downloads this address and other information to configuration registers inside the device. In this way, new devices can be added onthe-fly, without requiring any user configuration or the installation of any new ISA
+or PCI cards. Uninitialized cards start out with address 0, so they can be addressed. To make the cabling simpler, many USB devices contain built-in hubs to
+accept additional USB devices. For example, a monitor might have two hub sockets to accommodate the left and right speakers.
+Logically, the USB system can be viewed as a set of bit pipes from the root
+hub to the I/O devices. Each device can split its bit pipe up into a maximum of 16
+subpipes for different types of data (e.g., audio and video). Within each pipe or
+
+230
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+subpipe, data flows from the root hub to the device or the other way. There is no
+traffic between two I/O devices.
+Precisely every 1.00 ± 0.05 msec, the root hub broadcasts a new frame to keep
+all the devices synchronized in time. A frame is associated with a bit pipe and
+consists of packets, the first of which is from the root hub to the device. Subsequent packets in the frame may also be in this direction, or they may be back from
+the device to the root hub. A sequence of four frames is shown in Fig. 3-58.
+Time (msec)
+1
+
+0
+

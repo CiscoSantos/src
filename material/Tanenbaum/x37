@@ -1,0 +1,100 @@
+S1
+
+S2
+
+S3
+
+Instruction
+fetch
+unit
+
+Instruction
+decode
+unit
+
+Operand
+fetch
+unit
+
+S5
+LOAD
+
+Write
+back
+unit
+
+STORE
+
+Floating
+point
+
+Figure 2-6. A superscalar processor with five functional units.
+
+idea. In reality, most of the functional units in stage 4 take appreciably longer than
+one clock cycle to execute, certainly the ones that access memory or do floating-point arithmetic. As can be seen from the figure, it is possible to have multiple
+ALUs in stage S4.
+
+2.1.6 Processor-Level Parallelism
+The demand for ever faster computers seems to be insatiable. Astronomers
+want to simulate what happened in the first microsecond after the big bang,
+economists want to model the world economy, and teenagers want to play 3D
+interactive multimedia games over the Internet with their virtual friends. While
+CPUs keep getting faster, eventually they are going to run into the problems with
+the speed of light, which is likely to stay at 20 cm/nanosecond in copper wire or
+optical fiber, no matter how clever Intel’s engineers are. Faster chips also produce
+more heat, whose dissipation is a huge problem. In fact, the difficulty of getting
+rid of the heat produced is the main reason CPU clock speeds have stagnated in the
+past decade.
+Instruction-level parallelism helps a little, but pipelining and superscalar operation rarely win more than a factor of five or ten. To get gains of 50, 100, or more,
+the only way is to design computers with multiple CPUs, so we will now take a
+look at how some of these are organized.
+
+70
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Data Parallel Computers
+A substantial number of problems in computational domains such as the physical sciences, engineering, and computer graphics involve loops and arrays, or
+otherwise have a highly regular structure. Often the same calculations are performed repeatedly on many different sets of data. The regularity and structure of these
+programs makes them especially easy targets for speed-up through parallel execution. Two primary methods have been used to execute these highly regular programs quickly and efficiently: SIMD processors and vector processors. While these
+two schemes are remarkably similar in most ways, ironically, the first is generally
+thought of as a parallel computer while the second is considered an ex extension to
+a single processor.
+Data parallel computers have found many successful applications as a consequence of their remarkable efficiency. They are able to produce significant computational power with fewer transistors than alternative approaches. Gordon Moore
+(of Moore’s law) famously noted that silicon costs about $1 billion per acre (4047
+square meters). Thus, the more computational muscle that can be squeezed out of
+that acre of silicon, the more money a computer company can make selling silicon.
+Data parallel processors are one of the most efficient means to squeeze performance out of silicon. Because all of the processors are running the same instruction, the system needs only one ‘‘brain’’ controlling the computer. Consequently,
+the processor needs only one fetch stage, one decode stage, and one set of control
+logic. This is a huge saving in silicon that gives data parallel computers a big edge
+over other processors, as long as the software they are running is highly regular
+with lots of parallelism.
+A Single Instruction-stream Multiple Data-stream or SIMD processor consists of a large number of identical processors that perform the same sequence of
+instructions on different sets of data. The world’s first SIMD processor was the
+University of Illinois ILLIAC IV computer (Bouknight et al., 1972). The original
+ILLIAC IV design consisted of four quadrants, each quadrant having an 8 × 8
+square grid of processor/memory elements. A single control unit per quadrant
+broadcast a single instruction to all processors, which was executed by all processors in lockstep each using its own data from its own memory. Owing to funding
+constraints only one 50 megaflops (million floating-point operations per second)
+quadrant was ever built; had the entire 1-gigaflop machine been completed, it
+would have doubled the computing power of the entire world.
+Modern graphics processing units (GPUs) heavily rely on SIMD processing to
+provide massive computational power with few transistors. Graphics processing
+lends itself to SIMD processors because most of the algorithms are highly regular,
+with repeated operations on pixels, vertices, textures, and edges. Fig. 2-7 shows
+the SIMD processor at the core of the Nvidia Fermi GPU. A Fermi GPU contains
+up to 16 SIMD stream multiprocessors (SM), with each SM containing 32 SIMD
+processors. Each cycle, the scheduler selects two threads to execute on the SIMD
+
+SEC. 2.1
+
+71
+
+PROCESSORS
+
+Instruction Cache
+
+Instruction Dispatch
+

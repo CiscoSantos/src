@@ -1,0 +1,100 @@
+
+CPU
+EEPROM
+AVCC
+AREF
+
+DATABUS
+
+GND
+8bit T/C 0
+
+16bit T/C 1
+
+A/D conv.
+
+8bit T/C 2
+
+Analog
+comp.
+
+Internal
+bandgap
+
+USART 0
+
+SPI
+
+TWI
+
+PORT D (8)
+
+PORT B (8)
+
+PORT C (7)
+
+2
+
+6
+
+RESET
+XTAL[1..2]
+PD[0..7]
+
+PB[0..7]
+
+PC[0..6]
+
+ADC[6..7]
+
+Figure 3-50. The internal architecture and logical pinout of the ATmega168.
+
+214
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+Instead of address and data pins, the ATmega168 has 27 digital I/O ports, 8
+lines in port B and D, and 7 lines in port C. These digital I/O lines are designed to
+be connected to I/O peripherals, and each line can be internally configured by
+startup software to be an input or an output. For example, when used in a microwave oven, one digital I/O line would be an input from the ‘‘door open’’ sensor.
+Another digital I/O line would be an output used to turn the microwave generator
+on and off. Software in the ATmega168 would check that the door was closed before turning on the microwave generator. If the door is suddenly opened, the software must kill the power. In practice, hardware interlocks are always present, too.
+Optionally, six of the inputs from port C can be configured to be analog I/O.
+Analog I/O pins can read the voltage level of an input or set the voltage level of an
+output. Extending our microwave oven example, some ovens have a sensor that allows the user to heat food to a given temperature. The temperature sensor would be
+connected to a C port input, and software could read the voltage of the sensor and
+then convert it to a temperature using a sensor-specific translation function. The
+remaining pins on the ATmega168 are the power input (VCC), two ground pins
+(GND), and two pins to configure the analog I/O circuitry (AREF, AVCC).
+The internal architecture of the ATmega168, like that of the OMAP4430, is a
+system-on-a-chip with a rich array of internal devices and memory. The
+ATmega168 comes with up to 16 KB of internal flash memory, for storage of infrequently changing nonvolatile information such as program instructions. It also includes up to 1 KB of EEPROM, which is nonvolatile memory that can be written
+by software. The EEPROM stores system-configuration data. Again, using our
+microwave example, the EEPROM would store a bit indicating whether the microwave displayed time in 12- or 24-hour format. The ATmega168 also incorporates
+up to 1 KB of internal SRAM, where software can store temporary variables.
+The internal processor runs the AVR instruction set, which is composed of 131
+instructions, each 16 bits in length. The processor is an 8-bit processor, which
+means that it operates on 8-bit data values, and internally its registers are 8 bits in
+size. The instruction set incorporates special instructions that allow the 8-bit processor to efficiently operate on larger data types. For example, to perform 16-bit or
+larger additions, the processor provides the ‘‘add-with-carry’’ instruction, which
+adds two values plus the carry out of the previous addition. The remaining internal
+components include the real-time clock and a variety of interface logic, including
+support for serial links, pulse-width-modulated (PWM) links, I2C (Inter-IC bus)
+link, and analog and digital I/O controllers.
+
+3.6 EXAMPLE BUSES
+Buses are the glue that hold computer systems together. In this section we will
+take a close look at some popular buses: the PCI bus and the Universal Serial Bus.
+The PCI bus is the primary I/O peripheral bus used today in PCs. It comes in two
+
+SEC. 3.6
+
+EXAMPLE BUSES
+
+215
+
+forms, the older PCI bus, and the new and much faster PCI Express (PCIe) bus.
+The Universal Serial Bus is an increasingly popular I/O bus for low-speed peripherals such as mice and keyboards. A second and third version of the USB bus run
+at much higher speeds. In the following sections, we will look at each of these

@@ -1,0 +1,100 @@
+frame. It could point to the link pointer, as in IJVM, or to the first local variable.
+Figure 5-39 shows the stack frame for a machine with a 32-bit word. The original
+call to towers pushes n, i, and j onto the stack and then executes a CALL instruction
+that pushes the return address onto the stack, at address 1012. On entry, the called
+procedure stores the old value of FP on the stack at 1016 and then advances the
+stack pointer to allocate storage for the local variables. With only one 32-bit local
+variable (k), SP is incremented by 4 to 1020. The situation, after all these things
+have been done, is shown in Fig. 5-39(a).
+The first thing a procedure must do when called is save the previous FP (so it
+can be restored at procedure exit), copy SP into FP, and possibly increment by one
+word, depending on where in the new frame FP points. In this example, FP points
+to the first local variable, but in IJVM, LV pointed to the link pointer. Different
+
+408
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Initial state
+
+First move 2 disks
+from peg 1 to peg 2
+
+Then move 1 disk
+from peg 1 to peg 3
+
+Finally move 2 disks
+from peg 2 to peg 3
+
+Figure 5-38. The steps required to solve the Towers of Hanoi for three disks.
+
+machines handle the frame pointer slightly differently, sometimes putting it at the
+bottom of the stack frame, sometimes at the top, and sometimes in the middle as in
+Fig. 5-40. In this respect, it is worth comparing Fig. 5-40 with Fig. 4-12 to see two
+different ways to manage the link pointer. Other ways are also possible. In all
+cases, the key is the ability to later be able to do a procedure return and restore the
+
+SEC. 5.6
+
+409
+
+FLOW OF CONTROL
+
+public void towers(int n, int i, int j) {
+int k;
+if (n == 1)
+System.out.println("Move a disk from " + i + " to " + j);
+else {
+k = 6 − i − j;
+towers(n − 1, i, k);
+towers(1, i, j);
+towers(n − 1, k, j);
+}
+}
+Figure 5-39. A procedure for solving the Towers of Hanoi.
+
+Address
+
+FP
+k
+Old FP = 1000
+Return addr
+j=2
+i=1
+n=2
+k=2
+Old FP
+Return addr
+j=3
+i=1
+n=3
+
+k
+Old FP = 1024
+Return addr
+j=3
+i=1
+n=1
+k=3
+Old FP = 1000
+Return addr
+j=2
+i=1
+n=2
+k=2
+Old FP
+Return addr
+j=3
+i=1
+n=3
+
+FP
+k
+Old FP = 1000
+Return addr
+j=2
+i=1
+n=2
+k=2

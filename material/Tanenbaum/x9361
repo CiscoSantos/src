@@ -1,0 +1,100 @@
+If a number is given as a command, then that number of instructions is executed.
+The number k is equivalent to typing a return k times. The same effect is achieved
+if the number is followed by an exclamation mark, !, or an X.
+
+724
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+The command g can be used to go to a certain line in the source file. There are
+three versions of this command. If it is preceded by a line number, then the tracer
+executes until that line is encountered. With a label /T, with or without +#, the line
+number at which to stop is computed from the instruction label T. The g command, without any indication preceding it, causes the tracer to execute commands
+until the current line number is again encountered.
+Address
+
+Command
+
+Example
+
+Description
+Execute one instruction
+
+#
+
+,!,X
+
+24
+
+Execute # instructions
+
+/T+#
+
+g,!,
+
+/start+5g
+
+Run until line # after label T
+
+/T+#
+
+b
+
+/start+5b
+
+Put breakpoint on line # after label T
+
+/T+#
+
+c
+
+/start+5c
+
+Remove breakpoint on line # after label T
+
+#
+
+g
+
+108g
+
+Execute program until line #
+
+g
+
+g
+
+Execute program until current line again
+
+b
+
+b
+
+Put breakpoint on current line
+
+c
+
+c
+
+Remove breakpoint on current line
+
+n
+
+n
+
+Execute program until next line
+
+r
+
+r
+
+Execute until breakpoint or end
+
+\&=
+
+\&=
+
+Run program until same subroutine level
+

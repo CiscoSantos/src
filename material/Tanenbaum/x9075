@@ -1,0 +1,100 @@
+where WSP means ‘‘write the SP register.’’ This notation is complete but hard to
+understand. Instead we will combine the operations in a natural and intuitive way
+to capture the effect of what is happening:
+SP = SP + 1; rd
+
+Let us call our high-level Micro Assembly Language ‘‘MAL’’ (French for
+‘‘sick,’’ something you become if you have to write too much code in it). MAL is
+tailored to reflect the characteristics of the microarchitecture. During each cycle,
+any of the registers can be written, but typically only one is. Only one register can
+be gated to the B side of the ALU. On the A side, the choices are +1, 0, −1, and
+the register H. Thus we can use a simple assignment statement, as in Java, to indicate the operation to be performed. For example, to copy something from SP to
+MDR, we can say
+MDR = SP
+
+To indicate the use of the ALU functions other than passing through the B bus,
+we can write, for example,
+MDR = H + SP
+
+which adds the contents of the H register to SP and writes the result into MDR. The
++ operator is commutative (which means that the order of the operands does not
+matter), so the above statement can also be written as
+MDR = SP + H
+
+and generate the same 36-bit microinstruction, even though strictly speaking H
+must be the left ALU operand.
+We have to be careful to use only permitted operations. The most important of
+them are shown in Fig. 4-16, where SOURCE can be any of MDR, PC, MBR, MBRU,
+SP, LV, CPP, TOS, or OPC (MBRU implies the unsigned version of MBR). These registers can all act as sources to the ALU on the B bus. Similarly, DEST can be any
+of MAR, MDR, PC, SP, LV, CPP, TOS, OPC, or H, all of which are possible destinations for the ALU output on the C bus. This format is deceptive because many
+seemingly reasonable statements are illegal. For example,
+MDR = SP + MDR
+
+SEC. 4.3
+
+AN EXAMPLE IMPLEMENTATION
+
+269
+
+looks perfectly reasonable, but there is no way to execute it on the data path of
+Fig. 4-6 in one cycle. This restriction exists because for an addition (other than
+increment or decrement) one of the operands must be the H register. Likewise,
+H = H − MDR
+
+might be useful, but it, too, is impossible, because the only possible source of a
+subtrahend (the value being subtracted) is the H register. It is up to the assembler
+to reject statements that look valid but are, in fact, illegal.
+DEST = H
+DEST = SOURCE
+DEST = H
+DEST = SOURCE
+DEST = H + SOURCE
+DEST = H + SOURCE + 1
+DEST = H + 1
+DEST = SOURCE + 1
+DEST = SOURCE − H
+DEST = SOURCE − 1
+DEST = −H
+DEST = H AND SOURCE
+DEST = H OR SOURCE
+DEST = 0
+DEST = 1
+DEST = −1
+Figure 4-16. All permitted operations. Any of the above operations may be extended by adding ‘‘<< 8’’ to them to shift the result left by 1 byte. For example, a
+common operation is H = MBR < < 8.
+
+We extend the notation to permit multiple assignments by the use of multiple
+equal signs. For example, adding 1 to SP and storing it back into SP as well as
+writing it into MDR can be accomplished by
+SP = MDR = SP + 1
+
+To indicate memory reads and writes of 4-byte data words, we will just put rd
+and wr in the microinstruction. Fetching a byte through the 1-byte port is indicated
+by fetch. Assignments and memory operations can occur in the same cycle. This
+is indicated by writing them on the same line.
+To avoid any confusion, let us repeat that the Mic-1 has two ways of accessing
+memory. Reads and writes of 4-byte data words use MAR/MDR and are indicated in
+the microinstructions by rd and wr, respectively. Reads of 1-byte opcodes from the
+
+270
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+instruction stream use PC/MBR and are indicated by fetch in the microinstructions.
+Both kinds of memory operations can proceed simultaneously.
+However, the same register may not receive a value from memory and the data
+path in the same cycle. Consider the code
+MAR = SP; rd
+MDR = H
+
+The effect of the first microinstruction is to assign a value from memory to MDR at
+the end of the second microinstruction. However, the second microinstruction also
+assigns a value to MDR at the same time. These two assignments are in conflict
+and are not permitted, as the results are undefined.
+Remember that each microinstruction must explicitly supply the address of the
+next microinstruction to be executed. However, it commonly occurs that a
+microinstruction is invoked only by one other microinstruction, namely, by the one
+on the line immediately above it. To ease the microprogrammer’s job, the microassembler normally assigns an address to each microinstruction (not necessarily
+consecutive in the control store) and fills in the NEXT ADDRESS field so that

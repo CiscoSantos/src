@@ -1,0 +1,100 @@
+PC = PC + 1; fetch
+H = MBR << 8
+H = MBRU OR H
+PC = OPC + H; fetch
+goto Main1
+MAR = SP = SP − 1; rd
+OPC = TOS
+TOS = MDR
+N = OPC; if (N) goto T; else goto F
+MAR = SP = SP − 1; rd
+OPC = TOS
+TOS = MDR
+Z = OPC; if (Z) goto T; else goto F
+MAR = SP = SP − 1; rd
+MAR = SP = SP − 1
+H = MDR; rd
+OPC = TOS
+TOS = MDR
+Z = OPC − H; if (Z) goto T; else goto F
+OPC = PC − 1; goto goto2
+PC = PC + 1
+PC = PC + 1; fetch
+goto Main1
+PC = PC + 1; fetch
+H = MBRU << 8
+H = MBRU OR H
+MAR = CPP + H; rd
+OPC = PC + 1
+PC = MDR; fetch
+PC = PC + 1; fetch
+H = MBRU << 8
+H = MBRU OR H
+PC = PC + 1; fetch
+TOS = SP − H
+TOS = MAR = TOS + 1
+PC = PC + 1; fetch
+H = MBRU << 8
+H = MBRU OR H
+MDR = SP + H + 1; wr
+MAR = SP = MDR;
+MDR = OPC; wr
+MAR = SP = SP + 1
+MDR = LV; wr
+PC = PC + 1; fetch
+LV = TOS; goto Main1
+
+273
+
+Comments
+MBR contains index; copy LV to H
+Copy LV + index to MAR; read variable
+Fetch constant
+Copy variable to H
+Fetch next opcode
+Put sum in MDR; update variable
+Save address of opcode.
+MBR = 1st byte of offset; fetch 2nd byte
+Shift and save signed first byte in H
+H = 16-bit branch offset
+Add offset to OPC
+Wait for fetch of next opcode
+Read in next-to-top word on stack
+Save TOS in OPC temporarily
+Put new top of stack in TOS
+Branch on N bit
+Read in next-to-top word of stack
+Save TOS in OPC temporarily
+Put new top of stack in TOS
+Branch on Z bit
+Read in next-to-top word of stack
+Set MAR to read in new top-of-stack
+Copy second stack word to H
+Save TOS in OPC temporarily
+Put new top of stack in TOS
+If top 2 words are equal, goto T, else goto F
+Same as goto1; needed for target address
+Skip first offset byte
+PC now points to next opcode
+Wait for fetch of opcode
+MBR = index byte 1; inc. PC, get 2nd byte
+Shift and save first byte in H
+H = offset of method pointer from CPP
+Get pointer to method from CPP area
+Save return PC in OPC temporarily
+PC points to new method; get param count
+Fetch 2nd byte of parameter count
+Shift and save first byte in H
+H = number of parameters
+Fetch first byte of # locals
+TOS = address of OBJREF − 1
+TOS = address of OBJREF (new LV)
+Fetch second byte of # locals
+Shift and save first byte in H
+H = # locals
+Overwrite OBJREF with link pointer
+Set SP, MAR to location to hold old PC
+Save old PC above the local variables
+SP points to location to hold old LV
+Save old LV above saved PC
+Fetch first opcode of new method.

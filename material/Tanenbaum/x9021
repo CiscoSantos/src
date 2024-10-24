@@ -1,0 +1,100 @@
+
+EPROM
+
+Read-mostly UV light
+
+No
+
+Device prototyping
+
+Type
+
+Category
+
+SRAM
+
+Read/write
+
+DRAM
+SDRAM
+
+Erasure
+
+No
+
+Typical use
+
+EEPROM Read-mostly Electrical
+
+Yes
+
+No
+
+Device prototyping
+
+Flash
+
+No
+
+No
+
+Film for digital camera
+
+Read/write
+
+Electrical
+
+Figure 3-32. A comparison of various memory types.
+
+Field-Programmable Gate Arrays
+As we saw in Chap. 1, field-programmable gate arrays (FPGAs) are chips
+which contain programmable logic such that we can form arbitrary logic circuit by
+simply loading the FPGA with appropriate configuration data. The main advantage
+of FPGAs is that new hardware circuits can be built in hours, rather than the
+months it takes to fabricate ICs. Integrated circuits are not going the way of the
+dodo, however, as they still hold a significant cost advantage over FPGAs for
+high-volume applications, and they run faster and use much less power. Because of
+their design-time advantages, however, FPGAs are often used for design prototyping and low-volume applications.
+Let’s now look inside an FPGA and understand how it can be used to implement a wide range of logic circuits. The FPGA chip contains two primary components that are replicated many times: LUTs (LookUp Tables) and programmable
+interconnects. Let us now examine how they are used.
+
+184
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+A LUT, shown in Fig. 3-33(a), is a small programmable memory that produces
+a signal output optionally to a register, which is then output to the programmable
+interconnect. The programmable memory is used to create an arbitrary logic function. The LUT in the figure has a 16 × 4 memory, which can emulate any logic circuit with 4 bits of input and 4 bits of output. Programming the LUT requires loading the memory with the appropriate responses of the combinational logic being
+emulated. In other words, if the combinational logic produces the value Y when
+given the input X, the value Y would be written into the LUT at index X.
+The example design in Fig. 3-32(b) shows how a single 4-input LUT could implement a 3-bit counter with reset. The example counter continually counts up by
+adding one (modulo 4) to the current value of the counter, unless the reset signal
+CLR is asserted, in which case the counter resets its value to zero.
+To implement the example counter, the upper four entries of the LUT are all
+zero. These entries output the value zero when the counter is reset. Thus, the most
+significant bit of the LUT input (I 3 ) represents the reset input (CLR) which is
+asserted with a logic 1. For the remaining LUT entries, the value at index I 0..3 of
+the LUT contains the value (I + 1) modulo 4. To complete the design, the output
+signal O0..3 must be connected, using the programmable interconnect to the internal input signal I 0..3 .
+From
+programmable
+interconnect
+
+O0..3
+
+I0..3
+
+D
+
+Addr Data
+
+Q
+
+To
+programmable
+interconnect
+
+Flip-flop
+×4

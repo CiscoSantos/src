@@ -1,0 +1,27 @@
+Estrutura de Diretórios de Projetos:
+/project-root
+   /src
+      /main
+         /java
+            /your/package
+               Main.java
+         /resources
+            config.properties
+   /lib
+      some-library.jar
+      odbc-driver.jar
+   /bin
+   /build
+
+1 - src/main/java: This is where your Java source code files reside. They should be placed according to their package structure.
+
+2 - src/main/resources: This directory contains non-code resources such as configuration files, properties, or other assets that your application might need.
+ 
+3 - lib/: Place your external libraries (JAR files like ODBC drivers, javax libraries, etc.) here.
+ 
+4 - bin/: This is where your compiled class files will go.
+ 
+5 - build/: This is where your final JAR file (if applicable) will be created after compilation.
+
+
+

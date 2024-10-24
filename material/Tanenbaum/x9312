@@ -1,0 +1,100 @@
+achieve. Nonzero communication latencies, finite communication bandwidths, and
+algorithmic inefficiencies can also play a role. Also, even if 1000 CPUs were
+available, not all programs can be written to make use of so many CPUs, and the
+overhead in getting them all started may be significant. Furthermore, sometimes
+the best-known algorithm does not parallelize well, so a suboptimal algorithm must
+be used in the parallel case. This all said, for many applications, having the program run n times faster is highly desirable, even if it takes 2n CPUs to do it. CPUs
+are not that expensive, after all, and many companies live with considerably less
+than 100% efficiency in other parts of their businesses.
+Achieving High Performance
+The most straightforward way to improve performance is to add more CPUs to
+the system. However, this addition must be done in such a way as to avoid creating
+any bottlenecks. A system in which one can add more CPUs and get correspondingly more computing power is said to be scalable.
+To see some of the implications of scalability, consider four CPUs connected
+by a bus, as illustrated in Fig. 8-51(a). Now imagine scaling the system to 16
+CPUs by adding 12 more, as shown in Fig. 8-51(b). If the bandwidth of the bus is
+b MB/sec, then by quadrupling the number of CPUs, we have also reduced the
+available bandwidth per CPU from b/4 MB/sec to b/16 MB/sec. Such a system is
+not scalable.
+CPU
+
+Bus
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+Figure 8-51. (a) A 4-CPU bus-based system. (b) A 16-CPU bus-based system.
+(c) A 4-CPU grid-based system. (d) A 16-CPU grid-based system.
+
+Now we do the same thing with a grid-based system, as shown in Fig. 8-51(c)
+and Fig. 8-51(d). With this topology, adding new CPUs also adds new links, so
+scaling the system up does not cause the aggregate bandwidth per CPU to drop, as
+it does with a bus. In fact, the ratio of links to CPUs increases from 1.0 with 4
+CPUs (4 CPUs, 4 links) to 1.5 with 16 CPUs (16 CPUs, 24 links), so adding CPUs
+improves the aggregate bandwidth per CPU.
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+651
+
+Of course, bandwidth is not the only issue. Adding CPUs to the bus does not
+increase the diameter of the interconnection network or latency in the absence of
+traffic, whereas adding them to the grid does. For an n × n grid, the diameter is
+2(n − 1), so the worst (and average) case latency increases roughly as the square
+root of the number of CPUs. For 400 CPUs, the diameter is 38, whereas for 1600
+CPUs it is 78, so quadrupling the number of CPUs approximately doubles the
+diameter and thus the average latency.
+Ideally, a scalable system should maintain the same average bandwidth per
+CPU and a constant average latency as more and more CPUs are added. In practice, however, keeping enough bandwidth per CPU is doable, but in all practical
+designs, latency grows with size. Having it grow logarithmically, as in a hypercube, is about the best that can be done.
+The problem with having latency grow as the system scales up is that latency is
+often fatal to performance in fine- and medium-grained applications. If a program
+needs data that are not in its local memory, there is often a substantial delay in getting them, and the bigger the system, the longer the delay, as we have just seen.
+This problem is equally true of multiprocessors as of multicomputers, since in both
+cases the physical memory is invariably divided up into far-flung modules.
+As a consequence of this observation, system designers often go to great
+lengths to reduce, or at least hide, the latency, using several techniques we will now
+mention. The first latency-hiding technique is data replication. If copies of a
+block of data can be kept at multiple locations, accesses from those locations can
+be speeded up. One such replication technique is caching, in which one or more
+copies of data blocks are kept close to where they are being used, as well as where
+they ‘‘belong.’’ However, another strategy is to maintain multiple peer copies—copies that have equal status—as opposed to the asymmetric primary/secondary relationship used in caching. When multiple copies are maintained, in
+whatever form, key issues are where the data blocks are placed, when, and by
+whom. Answers range from dynamic placement on demand by the hardware, to
+intentional placement at load time following compiler directives. In all cases, managing consistency is an issue.
+A second technique for hiding latency is prefetching. If a data item can be
+fetched before it is needed, the fetching process can be overlapped with normal execution, so that when the item is needed, it will be there. Prefetching can be automatic or under program control. When a cache loads not only the word being referenced, but an entire cache line containing the word, it is gambling that the succeeding words are also likely to be needed soon.
+Prefetching can also be controlled explicitly. When the compiler realizes that
+it will need some data, it can put in an explicit instruction to go get them, and put
+that instruction sufficiently far in advance that the data will be there in time. This
+strategy requires that the compiler has a complete knowledge of the underlying
+machine and its timing, as well as control over where all data are placed. Such
+speculative LOAD instructions work best when it is known for sure that the data will
+
+652
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+be needed. Getting a page fault on a LOAD for a path that is ultimately not taken is
+very costly.
+A third technique that can hide latency is multithreading, as we have seen. If
+switching between processes can be made fast enough, for example, by giving each
+one its own memory map and hardware registers, then when one thread blocks
+waiting for remote data to arrive, the hardware can quickly switch to another one
+that is able to continue. In the limiting case, the CPU runs the first instruction
+from thread one, the second instruction from thread two, and so on. In this way,
+the CPU can be kept busy, even in the face of long memory latencies for the individual threads.
+A fourth technique for hiding latency is using nonblocking writes. Normally,
+when a STORE instruction is executed, the CPU waits until the STORE has completed before continuing. With nonblocking writes, the memory operation is started, but the program just continues anyway. Continuing past a LOAD is harder, but
+with out-of-order execution, even that is possible.
+
+8.5 GRID COMPUTING
+Many of today’s challenges in science, engineering, industry, the environment,

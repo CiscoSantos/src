@@ -1,0 +1,100 @@
+
+SEC. 6.1
+
+455
+
+VIRTUAL MEMORY
+
+that allowed them to be looked up quickly. Although MULTICS is gone now, it
+had a very long run, from 1965 to Oct. 30, 2000, when the last MULTICS system
+was shut down. Few other operating systems have lasted 35 years. Futhermore, its
+spirit lives on because the virtual memory of every Intel CPU since the 386 has
+been closely modeled on it. History and other aspects of MULTICS are described
+at www.multicians.org.
+
+Descriptor
+Page frame
+
+Descriptor
+segment
+
+Segment
+number
+
+Page
+number
+
+Word
+
+Page
+table
+
+Offset
+Page
+6-Bit page
+number
+
+18-Bit segment
+number
+
+10-Bit offset
+within the page
+
+Two-part MULTICS address
+
+Figure 6-11. Conversion of a two-part MULTICS address into a main memory address.
+
+6.1.8 Virtual Memory on the Core i7
+The Core i7 has a sophisticated virtual memory system that supports demand
+paging, pure segmentation, and segmentation with paging. The heart of the Core
+i7 virtual memory consists of two tables: the LDT (Local Descriptor Table) and
+the GDT (Global Descriptor Table). Each program has its own LDT, but a single
+GDT is shared by all the programs on the computer. The LDT describes segments
+local to each program, including its code, data, stack, and so on, whereas the GDT
+describes system segments, including the operating system itself.
+As we described in Chap. 5, to access a segment, a Core i7 program first loads
+a selector for that segment into one of the segment registers. During execution, CS
+holds the selector for the code segment, DS holds the selector for the data segment,
+and so on. Each selector is a 16-bit number, as shown in Fig. 6-12.
+One of the selector bits tells whether the segment is local or global (i.e., whether it is held in the LDT or GDT). Thirteen other bits specify the LDT or GDT
+entry number, so these tables are each restricted to holding 8 KB (213 ) descriptors
+
+456
+
+THE OPERATING SYSTEM MACHINE LEVEL
+Bits
+
+13
+
+CHAP. 6
+
+1 2
+
+INDEX
+0 = GDT
+1 = LDT
+
+Privilege level (0-3)
+
+Figure 6-12. A Core i7 selector.
+
+for segments. The other 2 bits relate to protection and will be described later. Descriptor 0 is invalid and causes a trap if used. It may be safely loaded into a segment register to indicate that the segment register is not currently available, but it
+causes a trap if used.
+At the time a selector is loaded into a segment register, the corresponding descriptor is fetched from the LDT or GDT and stored in internal MMU registers, so
+it can be accessed quickly. A descriptor consists of 8 bytes, including the segment’s base address, size, and other information, as depicted in Fig. 6-13.
+32 Bits
+BASE 0-15
+BASE 24-31 G D 0
+
+0 : LIMIT is in bytes
+1 : LIMIT is in pages
+0 : 16-bit segment
+1 : 32-bit segment
+
+LIMIT 0-15
+LIMIT 16-19 P DPL
+
+TYPE
+
+BASE 16-23
+

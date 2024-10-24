@@ -1,0 +1,100 @@
+BH:00 BL:00 B X :
+0
+CH:00 C L : 0 c C X :
+12
+DH:00 D L : 0 0
+DX:
+0
+S P : 7 f d 8 SF O D S Z C => 0004
+0001
+B P : 0000 CC - > p - 0000
+S I : 0000
+IP:000c:PC
+000c
+D I : 0000
+start + 7
+E
+I
+
+=>
+
+MOV
+PUSH
+PUSH
+PUSH
+PUSH
+SYS
+ADD
+SUB
+PUSH
+
+CX,de-hw
+CX
+HW
+_STDOUT
+_WRITE
+SP , 8
+CX,AX
+CX
+
+!
+!
+!
+!
+!
+!
+!
+!
+!
+
+6
+7
+8
+9
+10
+11
+12
+13
+14
+
+hw
+> H e l l o World\n
+hw + 0 = 0 0 0 0 : 48 65 6c 6c 6f 20 57 6f H e l l o
+
+World
+
+25928
+
+(b)
+
+(a)
+
+Figure C-12. (a) HlloWrld.s. (b) The corresponding tracer window.
+
+Lines 7 through 11 show how system calls are made in the toolkit. These five
+lines are the assembly code translation of the C language function call
+write(1, hw, 12);
+
+where the first parameter is the file descriptor for standard output (1), the second is
+the address of the string to be printed (hw), and the third is the length of the string
+(12). Lines 7 through 9 push these parameters onto the stack in reverse order,
+which is the C calling sequence and the one used by the tracer. Line 10 pushes the
+system call number for write (4) onto the stack, and line 11 makes the actual call.
+While this calling sequence closely mimics how an actual assembly language program would work on a UNIX (or Linux) PC, for a different operating system, it
+would have to be modified slightly to use the calling conventions of that operating
+
+728
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+system. The as88 assembler and t88 tracer use the UNIX calling conventions even
+when they are running on Windows, however.
+The system call on line 11 does the actual printing. Line 12 performs a
+cleanup on the stack, resetting the stack pointer back to the value it had before the
+four 2-byte words were pushed onto the stack. If the write call is successful, the
+number of bytes written is returned in AX. Line 13 subtracts the system call result
+after line 11 from the original string length in CX to see whether the call was successful, that is, to see if all the bytes were written. Thus, the exit status of the program will be 0 on success and something else on failure. Lines 14 and 15 prepare
+for the exit system call on line 16 by pushing the exit status and function code for
+the EXIT call onto the stack.

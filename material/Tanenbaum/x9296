@@ -1,0 +1,100 @@
+cache
+
+To
+DDR2
+DRAM
+
+East
+
+Snooping
+
+FPU
+
+PowerPC
+450 core
+
+I
+D
+
+L2
+cache
+
+Snooping
+FPU
+FPU
+
+Collective
+
+PowerPC
+450 core
+
+Barrier
+
+I
+D
+
+L2
+cache
+
+South
+
+Multiplexing Switch
+
+FPU
+
+4-MB
+L3
+cache
+
+10Gb Ethernet
+
+To
+DDR2
+DRAM
+
+Down
+
+Figure 8-38. The BlueGene/P custom processor chip.
+
+Three levels of cache are present on the chip. The first consists of a split L1
+cache with 32 KB for instructions and 32 KB for data. The second is a unified
+cache consisting of a unified 2-KB cache. The L2 caches are really prefetch buffers rather than true caches. They snoop on each other and are cache consistent.
+The third level is a unified 4-MB shared cache that feeds data to the L2 caches.
+The four processors share access to two 4-MB L3 cache modules. There is cache
+
+624
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+coherency between the L1 caches on the four CPUs. Thus when a shared piece of
+memory resides in more than one cache, accesses to that storage by one processor
+will be immediately visible to the other three processors. A memory reference that
+misses on the L1 cache but hits on the L2 cache takes about 11 clock cycles. A
+miss on L2 that hits on L3 takes about 28 cycles. Finally, a miss on L3 that has to
+go to the main DRAM takes about 75 cycles.
+The four CPUs are connected via a high-bandwidth bus to a 3D torus network,
+which requires six connections: up, down, north, south, east, and west. In addition,
+each processor has a port to the collective network, used for broadcasting data to
+all processors. The barrier port is used to speed up synchronization operations, giving each processor fast access to a specialized synchronization network.
+At the next level up, IBM designed a custom card that holds one of the chips
+shown in Fig. 8-38 along with 2 GB of DDR2 DRAM. The chip and the card are
+shown in Fig. 8-39(a)–(b) respectively.
+
+2-GB
+DDR2
+DRAM
+
+Chip:
+4 processors
+8-MB L3 cache
+
+(a)
+
+Card
+1 Chip
+4 CPUs
+2 GB
+
+Board

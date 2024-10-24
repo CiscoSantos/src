@@ -1,0 +1,100 @@
+and other areas are large scale and interdisciplinary. Solving them requires expertise, skills, knowledge, facilities, software, and data from multiple organizations,
+often in different countries. Some examples are as follows:
+1. Scientists developing a mission to Mars.
+2. A consortium building a complex product (e.g., a dam or aircraft).
+3. An international relief team coordinating aid after a natural disaster.
+Some of these are long-term cooperations, others are more short term, but they all
+share the common thread of requiring separate organizations with their own resources and procedures to work together to achieve a common goal.
+Until recently, having different organizations, with different computers, operating systems, databases, and protocols work together to share resources and data has
+been very difficult. However, the growing need for large-scale interorganizational
+cooperation has led to the development of systems and technology for connecting
+widely separated computers into what is called the grid. In a sense, the grid is the
+next step along the axis of Fig. 8-1. It can be thought of as a very large, international, loosely coupled, heterogeneous, cluster.
+The goal of the grid is to provide a technical infrastructure to allow a group of
+organizations that share a common goal to form a virtual organization. This virtual organization has to be flexible, with a large and changing membership, permitting the members to work together in areas they deem appropriate, while allowing
+them to maintain control over their own resources to whatever degree they wish.
+
+SEC. 8.5
+
+GRID COMPUTING
+
+653
+
+To this end, grid researchers are developing services, tools, and protocols to enable
+these virtual organizations to function.
+The grid is inherently multilateral with many participants who are peers. It can
+be contrasted with existing computing frameworks. In the client-server model, a
+transaction involves two parties: the server, who offers some service, and the client,
+who wants to use the service. A typical example of the client-server model is the
+Web, in which users go to Web servers to find information. The grid also differs
+from peer-to-peer applications, in which pairs of individuals exchange files. Email
+is a common example of a peer-to-peer application. Because the grid is different
+from these models, it requires new protocols and technology.
+The grid needs access to a wide variety of resources. Each resource has a specific system and organization that owns it and that decides how much of the resource to make available to the grid, during which hours, and to whom. In an
+abstract sense, what the grid is about is resource access and management.
+One way to model the grid is the layered hierarchy of Fig. 8-52. The fabric
+layer at the bottom is the set of components from which the grid is built. It includes CPUs, disks, networks, and sensors on the hardware side, and programs and
+data on the software side. These are the resources that the grid makes available in
+a controlled way.
+Layer
+
+Function
+
+Application
+
+Applications that share managed
+resources in controlled ways
+
+Collective
+
+Discovery, brokering, monitoring
+and control of resource groups
+
+Resource
+
+Secure, managed access
+to individual resources
+
+Fabric
+
+Physical resources: computers, storage,
+networks, sensors, programs and data
+Figure 8-52. The grid layers.
+
+One level higher is the resource layer, which manages the individual resources. In many cases, a resource participating in the grid has a local process that
+manages it and allows controlled access to it by remote users. This layer provides
+a uniform interface to higher layers for inquiring about the characteristics and status of individual resources, monitoring them, and using them in a secure way.
+Next is the collective layer, which handles groups of resources. One of its
+functions is resource discovery, by which a user can locate available CPU cycles,
+disk space, or specific data. The collective layer may maintain directories or other
+databases to provide this information. It may also offer a brokering service by
+which the providers and users of services are matched up, possibly allocating
+scarce resources among competing users. The collective layer is also responsible
+
+654
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+for replicating data, managing the admission of new members and resources to the
+grid, accounting, and maintaining the policy databases of who can use what.
+Still further up is the application layer, where the user applications reside. It
+uses the lower layers to acquire credentials proving its right to use certain resources, submit usage requests, monitor the progress of these requests, deal with
+failures, and notify the user of the results.
+Security is the key to a successful grid. Resource owners nearly always insist
+on maintaining tight control of their resources and want to determine who gets to
+use them, for how long, and how much. Without good security, no organization
+would make its resources available to the grid. On the other hand, if a user had to
+have a login account and password on every computer he wanted to use, using the
+grid would be unbearably cumbersome. Consequently, the grid has had to develop
+a security model to handle these concerns.
+A key characteristic of the security model is the single sign-on. The first step
+in using the grid is to be authenticated and acquire a credential, a digitally signed
+document specifying on whose behalf the work is to be done. Credentials can be
+delegated, so that when a computation needs to create subcomputations, the child
+processes can also be identified. When a credential is presented at a remote machine, it has to be mapped onto the local security mechanism. On UNIX systems,
+for example, users are identified by 16-bit user IDs, but other systems have other
+schemes. Finally, the grid needs mechanisms to allow access policies to be stated,
+maintained, and updated.
+In order to provide interoperability between different organizations and machines, standards are needed, in terms both of the services offered and of the protocols used to access them. The grid community has created an organization, the

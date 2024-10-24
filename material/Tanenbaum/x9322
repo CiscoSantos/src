@@ -1,0 +1,100 @@
+a × (b − c) = a × b − a × c
+Let us evaluate both sides for a = 5, b = 210, c = 195. The left-hand side is
+5 × 15, which yields 75. The right-hand side is not 75 because a × b overflows.
+Judging from these examples, one might conclude that although computers are
+general-purpose devices, their finite nature renders them especially unsuitable for
+doing arithmetic. This conclusion is, of course, not true, but it does serve to illustrate the importance of understanding how computers work and what limitations
+they have.
+
+A.2 RADIX NUMBER SYSTEMS
+An ordinary decimal number with which everyone is familiar consists of a
+string of decimal digits and, possibly, a decimal point. The general form and its
+usual interpretation are shown in Fig. A-1. The choice of 10 as the base for exponentiation, called the radix, is made because we are using decimal, or base 10,
+numbers. When dealing with computers, it is frequently convenient to use radices
+other than 10. The most important radices are 2, 8, and 16. The number systems
+based on these radices are called binary, octal, and hexadecimal, respectively.
+
+dn
+
+…
+
+100's
+place
+
+10's
+place
+
+1's
+place
+
+d2
+
+d1
+
+d0
+
+.
+
+.1's
+place
+
+.01's
+place
+
+.001's
+place
+
+d–1
+
+d–2
+
+d–3
+
+…
+
+d–k
+
+n
+
+Number =
+
+Σ
+
+di × 10i
+
+i = –k
+Figure A-1. The general form of a decimal number.
+
+A radix k number system requires k different symbols to represent the digits 0
+to k − 1. Decimal numbers are built up from the 10 decimal digits
+
+672
+
+BINARY NUMBERS
+
+APP. A
+
+0123456789
+In contrast, binary numbers do not use these ten digits. They are all constructed
+exclusively from the two binary digits
+01
+Octal numbers are built up from the eight octal digits
+01234567
+For hexadecimal numbers, 16 digits are needed. Thus six new symbols are required. It is conventional to use the uppercase letters A through F for the six digits
+following 9. Hexadecimal numbers are then built up from the digits
+0123456789ABCDEF
+The expression ‘‘binary digit’’ meaning a 1 or a 0 is usually referred to as a bit.
+Figure A-2 shows the decimal number 2001 expressed in binary, octal, decimal,
+and hexadecimal form. The number 7B9 is obviously hexadecimal, because the
+symbol B can only occur in hexadecimal numbers. However, the number 111
+might be in any of the four number systems discussed. To avoid ambiguity, people
+use a subscript of 2, 8, 10, or 16 to indicate the radix when it is not obvious from
+the context.
+Binary
+
+1
+
+1
+
+1
+

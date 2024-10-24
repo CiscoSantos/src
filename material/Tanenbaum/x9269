@@ -1,0 +1,100 @@
+rewired in the field by removing them from the system and inserting them into a
+special reprogramming device. On the other hand, they are complex, slow, and expensive, making them unattractive except for niche applications.
+Finally, we come to network processors, programmable devices that can
+handle incoming and outgoing packets at wire speed (i.e., in real time). A common
+design is a plug-in board containing a network processor on a chip along with
+memory and support logic. One or more network lines connect to the board and
+are routed to the network processor. There packets are extracted, processed, and
+either sent out on a different network line (e.g., for a router) or are sent out onto the
+main system bus (e.g., the PCI bus) in the case of end-user device such as a PC. A
+typical network processor board and chip are illustrated in Fig. 8-16.
+Network processor board
+SRAM
+
+SDRAM
+
+SRAM
+interface
+
+SDRAM
+interface
+
+PPE
+
+PPE
+
+PPE
+
+Network
+processor
+
+Control
+CPU
+
+PPE
+
+Local Specialized procs.
+mem
+...
+
+PPE
+
+PPE
+
+PPE
+
+Network
+interface
+
+PPE
+
+Buses
+
+PCI
+interf.
+PCI connector
+
+Figure 8-16. A typical network processor board and chip.
+
+Both SRAM and SDRAM are provided on the board and typically used in different ways. SRAM is faster, but more expensive, than SDRAM, so there is only a
+relatively small amount of it. SRAM is used to hold routing tables and other key
+
+SEC. 8.2
+
+COPROCESSORS
+
+579
+
+data structures, whereas SDRAM holds the actual packets being processed. Making the SRAM and SDRAM external to the network processor chip gives the board
+designers the flexibility to determine how much of each to supply. In this way,
+low-end boards with a single network line (e.g., for a PC or server) can be
+equipped with a small amount of memory whereas a high-end board for a large
+router can be equipped with much more.
+Network processor chips are optimized for quickly processing large numbers
+of incoming and outgoing packets. Millions of packets per second per network
+line is the norm and a router could easily have half a dozen lines. The only way to
+achieve such processing rates is to build network processors that are highly parallel
+inside. Indeed, all network processors consist of multiple PPEs, variously called
+Protocol/Programmable/Packet Processing Engines. Each one consists of a
+(possibly modified) RISC core and a small amount of internal memory for holding
+the program and some variables.
+The PPEs can be organized in two ways. The simplest organization is having
+all the PPEs identical. When a packet arrives at the network processor, either an
+incoming packet from a network line or an outgoing packet from the bus, it is
+handed to an idle PPE for processing. If no PPE is idle, the packet is queued in the
+on-board SDRAM until a PPE frees up. When this organization is used, the horizontal connections shown between the PPEs in Fig. 8-16 do not exist because the
+PPEs have no need to communicate with one another.
+The other PPE organization is the pipeline. In this one, each PPE performs
+one processing step and then feeds a pointer to its output packet to the next PPE in
+the pipeline. In this way, the PPE pipeline acts very much like the CPU pipelines
+we studied in Chap. 2. In both organizations, the PPEs are completely programmable.
+In advanced designs, the PPEs have multithreading, meaning that they have
+multiple register sets and a hardware register indicating which one is currently in
+use. This feature is used to run multiple programs at the same time by allowing a
+program (i.e., thread) switch by just changing the ‘‘current register set’’ variable.
+Most commonly, when a PPE stalls, for example, when it references the SDRAM
+(which takes multiple clock cycles), it can instantaneously switch to a runnable
+thread. In this manner, a PPE can achieve a high utilization even when frequently
+blocking to access the SDRAM or perform some other slow external operation.
+In addition to the PPEs, all network processors contain a control processor,
+usually just a standard general-purpose RISC CPU, for performing all work not related to packet processing, such as updating the routing tables. Its program and

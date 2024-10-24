@@ -1,0 +1,100 @@
+points. Each major alphabet in Unicode has a sequence of consecutive zones.
+Some examples (and the number of code points allocated) are Latin (336), Greek
+(144), Cyrillic (256), Armenian (96), Hebrew (112), Devanagari (128), Gurmukhi
+(128), Oriya (128), Telugu (128), and Kannada (128). Note that each of these languages has been allocated more code points than it has letters. This choice was
+made in part because many languages have multiple forms for each letter. For example, each letter in English has two forms—lowercase and UPPERCASE. Some
+languages have three or more forms, possibly depending on whether the letter is at
+the start, middle, or end of a word.
+In addition to these alphabets, code points have been allocated for diacritical
+marks (112), punctuation marks (112), subscripts and superscripts (48), currency
+symbols (48), math symbols (256), geometric shapes (96), and dingbats (192).
+After these come the symbols needed for Chinese, Japanese, and Korean. First
+are 1024 phonetic symbols (e.g., katakana and bopomofo) and then the unified Han
+ideographs (20,992) used in Chinese and Japanese, and the Korean Hangul syllables (11,156).
+To allow users to invent special characters for special purposes, 6400 code
+points have been allocated for local use.
+While Unicode solves many problems associated with internationalization, it
+does not (attempt to) solve all the world’s problems. For example, while the Latin
+alphabet is in order, the Han ideographs are not in dictionary order. As a consequence, an English program can examine ‘‘cat’’ and ‘‘dog’’ and sort them alphabetically by simply comparing the Unicode value of their first character. A Japanese
+program needs external tables to figure out which of two symbols comes before the
+other in the dictionary.
+Another issue is that new words are popping up all the time. Fifty years ago
+nobody talked about apps, chatrooms, cyberspace, emoticons, gigabytes, lasers,
+modems, smileys, or videotapes. Adding new words in English does not require
+new code points. Adding them in Japanese does. In addition to new technical
+words, there is a demand for adding at least 20,000 new (mostly Chinese) personal
+and place names. Blind people think Braille should be in there, and special interest
+groups of all kinds want what they perceive as their rightful code points. The Unicode consortium reviews and decides on all new proposals.
+Unicode uses the same code point for characters that look almost identical but
+have different meanings or are written slightly differently in Japanese and Chinese
+(as though English word processors always spelled ‘‘blue’’ as ‘‘blew’’ because they
+sound the same). Some people view this as an optimization to save scarce code
+points; others see it as Anglo-Saxon cultural imperialism (and you thought
+
+SEC. 2.4
+
+141
+
+INPUT/OUTPUT
+
+assigning 16-bit numbers to characters was not highly political?). To make matters
+worse, a full Japanese dictionary has 50,000 kanji (excluding names), so with only
+20,992 code points available for the Han ideographs, choices had to be made. Not
+all Japanese people think that a consortium of computer companies, even if a few
+of them are Japanese, is the ideal forum to make these choices.
+Guess what? 65,536 code points was not enough to satisfy everyone, so in
+1996 an additional 16 planes of 16 bits each were added, expanding the total number of characters to 1,114,112.
+UTF-8
+Although better than ASCII, Unicode eventually ran out of code points and it
+also requires 16 bits per character to represent pure ASCII text, which is wasteful.
+Consequently, another coding scheme was developed to address these concerns. It
+is called UTF-8 UCS Transformation Format where UCS stands for Universal
+Character Set, which is essentially Unicode. UTF-8 codes are variable length,
+from 1 to 4 bytes, and can code about two billion characters. It is the dominant
+character set used on the World Wide Web.
+One of the nice properties of UTF-8 is that codes 0 to 127 are the ASCII characters, allowing them to be expressed in 1 byte (versus 2 bytes in Unicode). For
+characters not in ASCII, the high-order bit of the first byte is set to 1, indicating
+that 1 or more additional bytes follow. In all, six different formats are used, as illustrated in Fig. 2-45. The bits marked ‘‘d’’ are data bits.
+Bits
+
+Byte 1
+
+7
+
+0ddddddd
+
+Byte 2
+
+Byte 3
+
+Byte 4
+
+Byte 5
+
+11
+
+110ddddd
+
+10dddddd
+
+16
+
+1110dddd
+
+10dddddd
+
+10dddddd
+
+21
+
+11110ddd
+
+10dddddd
+
+10dddddd
+
+10dddddd
+
+26
+
+111110dd

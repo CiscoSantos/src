@@ -1,0 +1,100 @@
+televisions or anything except computers.
+In addition, the ATmega168 has an on-chip interrupt controller, serial port interface (SPI), and timers, which are essential for real-time applications. There are
+also three 8-bit digital I/O ports, which allow the ATmega168 to control up to 24
+external buttons, lights, sensors, actuators, and so on. It is the presence of the
+timers and I/O ports more than anything else that makes it possible to use the
+ATmega168 for embedded applications without any additional chips.
+The ATmega168 is a synchronous processor, with most instructions taking one
+clock cycle, although some take more. The processor is pipelined, such that while
+one instruction is being fetched, the previous instruction is being executed. The
+pipeline is only two stages, however, fetch and execute. To execute instructions in
+one cycle, the clock cycle must accommodate reading the register from the register
+file, followed by executing the instruction in the ALU, followed by writing the register back to the register file. Because all of these operations occur in one clock
+cycle, there is no need for bypass logic or stall detection. Program instructions are
+executed in order, in one cycle, and without overlap with other instructions.
+While we could go into more detail about the ATmega168, the description
+above and Fig. 4-50 give the basic idea. The ATmega168 has a single main bus (to
+reduce chip area), a heterogeneous set of registers, and a variety of memories and
+I/O devices hanging off the main bus. On each data path cycle, two operands are
+
+336
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+read from the register file and run through the ALU and the results stored back into
+a register, just as on more modern computers.
+
+4.7 COMPARISON OF THE I7, OMAP4430, AND ATMEGA168
+Our three examples are very different, yet even they exhibit a certain amount
+of commonality. The Core i7 has an ancient CISC instruction set that Intel’s engineers would dearly love to toss into San Francisco Bay, except that doing so
+would violate California’s water pollution laws. The OMAP4430 is a pure RISC
+design, with a lean and mean instruction set. The ATmega168 is a simple 8-bit
+processor for embedded applications. Yet the heart of each of them is a set of registers and one or more ALUs that perform simple arithmetic and Boolean operations on register operands.
+Despite their obvious external differences, the Core i7 and the OMAP4430
+have fairly similar execution units. Both of the execution units accept micro-operations that contain an opcode, two source registers, and a destination register. Both
+of them can execute a micro-operation in one cycle. Both of them have deep
+pipelines, branch prediction, and split I- and D-caches.
+This internal similarity is not an accident or even due to the endless job-hopping by Silicon Valley engineers. As we saw with our Mic-3 and Mic-4 examples,
+it is easy and natural to build a pipelined data path that takes two source registers,
+runs them through an ALU, and stores the results in a register. Figure 4-34 shows
+this pipeline graphically. With current technology, this is the most effective design.
+The main difference between the Core i7 and the OMAP4430 is how they get
+from their ISA instruction set to the execution unit. The Core i7 has to break up its
+CISC instructions to get them into the three-register format needed by the execution unit. That is what the front end in Fig. 4-47 is all about—hacking big instructions into nice, neat micro-operations. The OMAP4430 does not have to do anything because its native ARM instructions are already nice, neat micro-operations.
+This is why most new ISAs are of the RISC type—to provide a better match between the ISA instruction set and the internal execution engine.
+It is instructive to compare our final design, the Mic-4, to these two real-world
+examples. The Mic-4 is most like the Core i7. Both of them have the job of interpreting a non-RISC ISA instruction set. Both of them do this by breaking the ISA
+instructions into micro-operations with an opcode, two source registers, and a destination register. In both cases, the micro-operations are deposited in a queue for
+execution later. The Mic-4 has a strict in-order issue, in-order execute, in-order
+retire design, whereas the Core i7 has an in-order issue, out-of-order execute, inorder retire policy.
+The Mic-4 and the OMAP4430 are not really comparable at all because the
+OMAP4430 has RISC instructions (i.e., three-register micro-operations) as its ISA
+
+SEC. 4.7
+
+COMPARISON OF THE I7, OMAP4430, AND ATMEGA168
+
+337
+
+instruction set. They do not have to be broken up. They can be executed as is,
+each in a single data path cycle.
+In contrast to the Core i7 and the OMAP4430, the ATmega168 is a simple machine indeed. It is more RISC like than CISC like because most of its simple instructions can be executed in one clock cycle and do not need to be decomposed.
+It has no pipelining and no caching, and it has in-order issue, in-order execute, and
+in-order retirement. In its simplicity, it is much akin to the Mic-1.
+
+4.8 SUMMARY
+The heart of every computer is the data path. It contains some registers, one,
+two or three buses, and one or more functional units such as ALUs and shifters.
+The main execution loop consists of fetching some operands from the registers and
+sending them over the buses to the ALU and other functional unit for execution.
+The results are then stored back in the registers.
+The data path can be controlled by a sequencer that fetches microinstructions
+from a control store. Each microinstruction contains bits that control the data path
+for one cycle. These bits specify which operands to select, which operation to perform, and what to do with the results. In addition, each microinstruction specifies
+its successor, typically explicitly by containing its address. Some microinstructions modify this base address by ORing bits into the address before it is used.
+The IJVM machine is a stack machine with 1-byte opcodes that push words
+onto the stack, pop words from the stack, and combine (e.g., add) words on the
+stack. A microprogrammed implementation was given for the Mic-1 microarchitecture. By adding an instruction fetch unit to preload the bytes in the instruction
+stream, many references to the program counter could be eliminated and the machine greatly speeded up.
+There are many ways to design the microarchitecture level. Many trade-offs
+exist, including two-bus versus three-bus designs, encoded versus decoded microinstruction fields, presence or absence of prefetching, shallow or deep pipelines,
+and much more. The Mic-1 is a simple, software-controlled machine with sequential execution and no parallelism. In contrast, the Mic-4 is a highly parallel
+microarchitecture with a seven-stage pipeline.
+Performance can be improved in a variety of ways. Cache memory is a major
+one. Direct-mapped caches and set-associative caches are commonly used to
+speed up memory references. Branch prediction, both static and dynamic, is important, as are out-of-order execution, and speculative execution.
+Our three example machines, the Core i7, OMAP4430, and ATmega168, all
+have microarchitectures not visible to the ISA assembly-language programmers.
+The Core i7 has a complex scheme for converting the ISA instructions into
+micro-operations, caching them, and feeding them into a superscalar RISC core for
+out-of-order execution, register renaming, and every other trick in the book to get
+
+338
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+the last possible drop of speed out of the hardware. The OMAP4430 has a deep

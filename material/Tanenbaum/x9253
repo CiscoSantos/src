@@ -1,0 +1,100 @@
+source address as the second operand. What problems would have to be solved to do it
+the other way?
+4. Can the following program be assembled in two passes? EQU is a pseudoinstruction
+that equates the label to the expression in the operand field.
+P EQU Q
+Q EQU R
+R EQU S
+S EQU 4
+
+5. The Dirtcheap Software Company is planning to produce an assembler for a computer
+with a 48-bit word. To keep costs down, the project manager, Dr. Scrooge, has decided
+to limit the length of allowed symbols so that each symbol can be stored in a single
+word. Scrooge has declared that symbols may consist only of letters, except the letter
+Q, which is forbidden (to demonstrate their concern for efficiency to the customers).
+What is the maximum length of a symbol? Describe your encoding scheme.
+6. What is the difference between an instruction and a pseudoinstruction?
+7. What is the difference between the instruction location counter and the program counter, if any? After all, both keep track of the next instruction in a program.
+8. Show the symbol table after the following x86 statements have been encountered. The
+first statement is assigned to address 1000.
+EVEREST:
+K2:
+WHITNEY:
+MCKINLEY:
+FUJI:
+KIBO:
+
+POP BX
+PUSH BP
+MOV BP,SP
+PUSH X
+PUSH SI
+SUB SI,300
+
+(1 BYTE)
+(1 BYTE)
+(2 BYTES)
+(3 BYTES)
+(1 BYTE)
+(3 BYTES)
+
+CHAP. 7
+
+PROBLEMS
+
+551
+
+9. Can you envision circumstances in which an assembly language permits a label to be
+the same as an opcode (e.g., MOV as a label)? Discuss.
+10. Show the steps needed to look up Ann Arbor using binary search on the following list:
+Ann Arbor, Berkeley, Cambridge, Eugene, Madison, New Haven, Palo Alto, Pasadena,
+Santa Cruz, Stony Brook, Westwood, and Yellow Springs. When computing the middle element of a list with an even number of elements, use the element just after the
+middle index.
+11. Is it possible to use binary search on a table whose size is prime?
+12. Compute the hash code for each of the following symbols by adding up the letters (A =
+1, B = 2, etc.) and taking the result modulo the hash table size. The hash table has 19
+slots, numbered 0 to 18.
+els, jan, jelle, maaike
+Does each symbol generate a unique hash value? If not, how can the collision problem
+be dealt with?
+13. The hash coding method described in the text links all the entries having the same hash
+code together on a linked list. An alternative method is to have only a single n-slot table, with each table slot having room for one key and its value (or pointers to them). If
+the hashing algorithm generates a slot that is already full, a second hashing algorithm
+is used to try again. If that one is also full, another is used, and so on, until an empty is
+found. If the fraction of the slots that are full is R, how many probes will be needed,
+on the average, to enter a new symbol?
+14. As technology progresses, it may one day be possible to put thousands of identical
+CPUs on a chip, each CPU having a few words of local memory. If all CPUs can read
+and write three shared registers, how can an associative memory be implemented?
+15. The x86 has a segmented architecture, with multiple independent segments. An
+assembler for this machine might well have a pseudoinstruction SEG N that would
+direct the assembler to place subsequent code and data in segment N. Does this
+scheme have any influence on the ILC?
+16. Programs often link to multiple DLLs. Would it not be more efficient just to put all the
+procedures in one big DLL and then link to it?
+17. Can a DLL be mapped into two process’ virtual address spaces at different virtual addresses? If so, what problems arise? Can they be solved? If not, what can be done to
+eliminate them?
+18. One way to do (static) linking is as follows. Before scanning the library, the linker
+builds a list of procedures needed, that is, names defined as EXTERN in the modules
+being linked. Then the linker goes through the library linearly, extracting every procedure that is in the list of names needed. Does this scheme work? If not, why not and
+how can it be remedied?
+19. Can a register be used as the actual parameter in a macro call? How about a constant?
+Why or why not?
+
+552
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+20. You are to implement a macro assembler. For esthetic reasons, your boss has decided
+that macro definitions need not precede their calls. What implications does this decision have on the implementation?
+21. Think of a way to put a macro assembler into an infinite loop.
+22. A linker reads five modules, whose lengths are 200, 800, 600, 500, and 700 words, respectively. If they are loaded in that order, what are the relocation constants?
+23. Write a symbol table package consisting of two routines: enter(symbol, value) and
+lookup(symbol, value). The former enters new symbols in the table and the latter looks
+them up. Use some form of hash coding.
+24. Repeat the previous problem, only this time instead of using a hash table, after the last
+symbol is entered, sort the table and use a binary-lookup algorithm to find symbols.
+25. Write a simple assembler for the Mic-1 computer of Chap. 4. In addition to handling
+the machine instructions, provide a facility for assigning constants to symbols at assembly time, and a way to assemble a constant into a machine word. These should be

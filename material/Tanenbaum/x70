@@ -1,0 +1,100 @@
+
+125
+
+built up from the linear superposition of the three additive primary colors, which
+are red, green, and blue.
+In contrast, reflected-light images, such as color photographs and pictures in
+glossy magazines, absorb certain wavelengths of light and reflect the rest. These
+are built up from a linear superposition of the three subtractive primary colors,
+cyan (all red absorbed), magenta (all green absorbed), and yellow (all blue
+absorbed). In theory, every color can be produced by mixing cyan, yellow, and
+magenta ink. In practice it is difficult to get the inks pure enough to absorb all
+light and produce a true black. For this reason, nearly all color printing systems
+use four inks: cyan, magenta, yellow, and black. These systems are called CMYK
+printers. The K is sometimes attributed to blacK but it really stands for the Key
+plate with which the color plates are aligned in conventional four-color printing
+presses. Monitors, in contrast, use transmitted light and the RGB system for producing colors.
+The complete set of colors that a display or printer can produce is called its
+gamut. No device has a gamut that matches the real world, since typically each
+color comes in 256 intensities, giving only 16,777,216 discrete colors. Imperfections in the technology reduce the total more, and the remaining ones are not always uniformly spaced over the color spectrum. Furthermore, color perception has
+a lot to do with how the rods and cones in the human retina work, and not just the
+physics of light.
+As a consequence of the above observations, converting a color image that
+looks fine on the screen to an identical printed one is far from trivial. Among the
+problems are
+1. Color monitors use transmitted light; color printers use reflected light.
+2. Monitors have 256 intensities per color; color printers must halftone.
+3. Monitors have a dark background; paper has a light background.
+4. The RGB gamut of a monitor and the CMYK gamut of a printer are
+different.
+Getting printed color images to match real life (or even to match screen images) requires hardware device calibration, sophisticated software for building and using
+International Color Consortium profiles, and considerable expertise on the part of
+the user.
+Inkjet Printers
+For low-cost home printing, inkjet printers are a favorite. The movable print
+head, which holds the ink cartridges, is swept horizontally across the paper by a
+belt while ink is sprayed from tiny nozzles. The ink droplets have a volume of
+about 1 picoliter, so 100 million of them fit in a single drop of water.
+
+126
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+Inkjet printers come in two varieties: piezoelectric (used by Epson) and thermal (used by Canon, HP, and Lexmark). The piezoelectric inkjet printers have a
+special kind of crystal next to the ink chamber. When a voltage is applied to the
+crystal, it deforms slightly, forcing a droplet of ink out of the nozzle. The higher
+the voltage, the larger the droplet, allowing the software to control the droplet size.
+Thermal inkjet printers (also called bubblejet printers) contain a tiny resistor
+inside each nozzle. When a voltage is applied to the resistor, it heats up extremely
+fast, instantly raising the temperature of the ink touching it to the boiling point
+until the ink vaporizes to form a gas bubble. The gas bubble takes up more volume
+than the ink that created it, producing pressure in the nozzle. The only place the
+ink can go is out the front of the nozzle onto the paper. The nozzle is then cooled
+and the resulting vacuum sucks in another ink droplet from the ink tank. The
+speed of the printer is limited by how fast the boil/cool cycle can be repeated. The
+droplets are all the same size, but smaller than what the piezoelectric printers use.
+Inkjet printers typically have resolutions of at least 1200 dpi (dots per inch)
+and at the high end, 4800 dpi. They are cheap, quiet, and have good quality, although they are also slow, and use expensive ink cartridges. When the best of the
+high-end inkjet printers is used to print a professional high-resolution photograph
+on specially coated photographic paper, the results are indistinguishable from conventional photography, even up to 8 × 10 inch prints.
+For best results, special ink and paper should be used. Two kinds of ink exist.
+Dye-based inks consist of colored dyes dissolved in a fluid carrier. They give
+bright colors and flow easily. Their main disadvantage is that they fade when
+exposed to ultraviolet light, such as that contained in sunlight. Pigment-based
+inks contain solid particles of pigment suspended in a fluid carrier that evaporates
+from the paper, leaving the pigment behind. These inks do not fade over time but
+are not as bright as dye-based inks and the pigment particles have a tendency to
+clog the nozzles, requiring periodic cleaning. Coated or glossy paper is required
+for printing photographs properly. These kinds of paper have been specially designed to hold the ink droplets and not let them spread out.
+Specialty Printers
+While laser and inkjet printers dominate the home and office printing markets,
+other kinds of printers are used in other situations that have other requirements in
+terms of color quality, price, and other characteristics.
+A variant on the inkjet printer is the solid ink printer. This kind of printer accepts four solid blocks of a special waxy ink which are then melted into hot ink
+reservoirs. Startup times of these printers can be as much as 10 minutes, while the
+ink blocks are melting. The hot ink is sprayed onto the paper, where it solidifies
+and is fused with the paper by forcing it between two hard rollers. In a way, it
+combines the idea of ink spraying from inkjet printers and the idea of fusing the
+ink onto the paper with hard rubber rollers from laser printers.
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+127
+
+Another printer is the wax printer. It has a wide ribbon of four-color wax that
+is segmented into page-size bands. Thousands of heating elements melt the wax as
+the paper moves under it. The wax is fused to the paper in the form of pixels using
+the CMYK system. Wax printers used to be the main color-printing technology,
+but they are being replaced by the other kinds with cheaper consumables.
+Still another kind of color printer is the dye sublimation printer. Although it
+has Freudian undertones, sublimation is the scientific name for a solid changing
+into a gas without passing through the liquid state. Dry ice (frozen carbon dioxide)
+is a well-known material that sublimates. In a dye sublimation printer, a carrier
+containing the CMYK dyes passes over a thermal print head containing thousands
+of programmable heating elements. The dyes are vaporized instantly and absorbed
+by a special paper close by. Each heating element can produce 256 different temperatures. The higher the temperature, the more dye that is deposited and the more
+intense the color. Unlike all the other color printers, nearly continuous colors are

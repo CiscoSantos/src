@@ -1,0 +1,100 @@
+
+Description
+
+.SECT .TEXT
+
+Assemble the following lines in the TEXT section
+
+.SECT .DATA
+
+Assemble the following lines in the DATA section
+
+.SECT .BSS
+
+Assemble the following lines in the BSS section
+
+.BYTE
+
+Assemble the arguments as a sequence of bytes
+
+.WORD
+
+Assemble the arguments as a sequence of words
+
+.LONG
+
+Assemble the arguments as a sequence of longs
+
+.ASCII "str"
+
+Store str as an ASCII string without a trailing zero byte
+
+.ASCIZ "str"
+
+Store str as an ASCII string with a trailing zero byte
+
+.SPACE n
+
+Advance the location counter n positions
+
+.ALIGN n
+
+Advance the location counter up to an n-byte boundary
+
+.EXTERN
+
+Identifier is an external name
+Figure C-8. The as88 pseudoinstructions.
+
+The first block of pseudoinstructions determines the section in which the following lines should be processed by the assembler. Usually such a section requirement is made on a separate line and can be put anywhere in the code. For
+implementation reasons, the first section to be used must be the TEXT section,
+then the DATA section, then the BSS section. After these initial references, the
+sections can be used in any order. Furthermore, the first line of a section should
+have a global label. There are no other restrictions on the ordering of the sections.
+
+SEC. C.5
+
+THE ASSEMBLER
+
+719
+
+The second block of pseudoinstructions contains the data type indications for
+the data segment. There are four types: .BYTE, .WORD, .LONG, and string. After an
+optional label and the pseudoinstruction keyword, the first three types expect a
+comma-separated list of constant expressions on the remainder of the line. For
+strings there are two keywords, ASCII, and ASCIZ, with the only difference being
+that the second keyword adds a zero byte to the end of the string. Both require a
+string between double quotes. Several escapes are allowed in string definitions.
+These include those of Fig. C-9. In addition to these, any specific character can be
+inserted by a backslash and an octal representation, for example, \377 (at most
+three digits, no 0 required here).
+Escape symbol
+
+Description
+
+\n
+
+New line (line feed)
+
+\t
+
+Tab
+
+\\
+
+Backslash
+
+\b
+
+Back space
+
+\f
+
+Form feed
+
+\r
+
+Carriage return
+
+\"
+

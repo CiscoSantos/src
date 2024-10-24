@@ -1,0 +1,100 @@
+2.2.1 Bits
+The basic unit of memory is the binary digit, called a bit. A bit may contain a
+0 or a 1. It is the simplest possible unit. (A device capable of storing only zeros
+could hardly form the basis of a memory system; at least two values are needed.)
+People often say that computers use binary arithmetic because it is ‘‘efficient.’’
+What they mean (although they rarely realize it) is that digital information can be
+stored by distinguishing between different values of some continuous physical
+quantity, such as voltage or current. The more values that must be distinguished,
+the less separation between adjacent values, and the less reliable the memory. The
+binary number system requires only two values to be distinguished. Consequently,
+it is the most reliable method for encoding digital information. If you are not
+familiar with binary numbers, see Appendix A.
+Some computers, such as the large IBM mainframes, are advertised as having
+decimal as well as binary arithmetic. This trick is accomplished by using 4 bits to
+store one decimal digit using a code called BCD (Binary Coded Decimal). Four
+bits provide 16 combinations, used for the 10 digits 0 through 9, with six combinations not used. The number 1944 is shown below encoded in decimal and in pure
+binary, using 16 bits in each example:
+decimal: 0001 1001 0100 0100
+
+binary: 0000011110011000
+
+Sixteen bits in the decimal format can store the numbers from 0 to 9999, giving
+only 10,000 combinations, whereas a 16-bit pure binary number can store 65,536
+different combinations. For this reason, people say that binary is more efficient.
+Consider, however, what would happen if some brilliant young electrical engineer invented a highly reliable electronic device that could directly store the digits
+0 to 9 by dividing the region from 0 to 10 volts into 10 intervals. Four of these devices could store any decimal number from 0 to 9999. Four such devices would
+provide 10,000 combinations. They could also be used to store binary numbers, by
+only using 0 and 1, in which case, four of them could store only 16 combinations.
+With such devices, the decimal system would obviously be more efficient.
+
+2.2.2 Memory Addresses
+Memories consist of a number of cells (or locations), each of which can store a
+piece of information. Each cell has a number, called its address, by which programs can refer to it. If a memory has n cells, they will have addresses 0 to n − 1.
+All cells in a memory contain the same number of bits. If a cell consists of k bits,
+
+SEC. 2.2
+
+75
+
+PRIMARY MEMORY
+
+it can hold any one of 2k different bit combinations. Figure 2-9 shows three different organizations for a 96-bit memory. Note that adjacent cells have consecutive
+addresses (by definition).
+Address
+
+Address
+
+1 Cell
+
+Address
+
+0
+
+0
+
+0
+
+1
+
+1
+
+1
+
+2
+
+2
+
+2
+
+3
+
+3
+
+3
+
+4
+
+4
+
+4
+
+5
+
+5
+
+5
+
+6
+
+6
+
+16 bits
+
+7
+
+7
+
+(c)
+
+8

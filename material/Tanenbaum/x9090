@@ -1,0 +1,100 @@
+main
+memory
+
+CHAP. 4
+
+MDR
+PC
+Instruction
+fetch unit
+(IFU)
+
+MBR
+MBR2
+SP
+LV
+
+Control signals
+CPP
+
+Enable onto B bus
+
+TOS
+
+Write C bus to register
+
+C bus
+
+OPC
+B bus
+
+H
+A bus
+
+ALU
+control
+
+6
+ALU
+
+N
+Z
+
+Shifter
+
+Figure 4-29. The data path for Mic-2.
+
+transition to a state one lower than its current one. If the new state is 2, the IFU
+starts fetching a word from memory. All of this is in hardware. The microprogram
+does not have to do anything. That is why IADD can be reduced from four microinstructions to three.
+The Mic-2 improves some instructions more than others. LDC W goes from
+nine microinstructions to only three, cutting its execution time by a factor of three.
+
+SEC. 4.4
+
+DESIGN OF THE MICROARCHITECTURE LEVEL
+
+293
+
+On the other hand, SWAP goes only from eight microinstructions to six. For overall performance, the gain for the more common instructions is what really counts.
+These include ILOAD (was 6, now 3), IADD (was 4, now 3), and IF ICMPEQ (was 13,
+now 10 for the taken case; was 10, now 8 for the not taken case). To measure the
+improvement, one would have to choose and run some benchmarks, but clearly
+there is a major gain here.
+
+4.4.4 A Pipelined Design: The Mic-3
+The Mic-2 is clearly an improvement over the Mic-1. It is faster and uses less
+control store, although the cost of the IFU will undoubtedly more than offset the
+real estate won by having a smaller control store. Thus it is a considerably faster
+machine at a marginally higher price. Let us see if we can make it faster still.
+How about trying to decrease the cycle time? To a considerable extent, the
+cycle time is determined by the underlying technology. The smaller the transistors
+and the smaller the physical distances between them, the faster the clock can be
+run. For a given technology, the time required to perform a full data path operation
+is fixed (at least from our point of view). Nevertheless, we do have some freedom
+and we will exploit it to the fullest shortly.
+Our other option is to introduce more parallelism into the machine. At the
+moment, the Mic-2 is highly sequential. It puts registers onto its buses, waits for
+the ALU and shifter to process them, and then writes the results back to the registers. Except for the IFU, little parallelism is present. Adding parallelism is a real
+opportunity.
+As mentioned earlier, the clock cycle is limited by the time needed for the signals to propagate through the data path. Figure 4-3 shows a breakdown of the
+delay through the various components during each cycle. There are three major
+components to the actual data path cycle:
+1. The time to drive the selected registers onto the A and B buses.
+2. The time for the ALU and shifter to do their work.
+3. The time for the results to get back to the registers and be stored.
+In Fig. 4-31, we show a new three-bus architecture, including the IFU, but with
+three additional latches (registers), one inserted in the middle of each bus. The
+latches are written on every cycle. In effect, these registers partition the data path
+into distinct parts that can now operate independently of one another. We will refer
+to this as Mic-3, or the pipelined model.
+How can these extra registers possibly help? Now it takes three clock cycles to
+use the data path: one for loading the A and B latches, one for running the ALU
+and shifter and loading the C latch, and one for storing the C latch back into the
+registers. Surely this is worse than what we already had.
+
+294
+Label
+nop1
+iadd1
+iadd2

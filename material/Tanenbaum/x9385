@@ -1,0 +1,100 @@
+Data movement instructions, 386–387
+Data parallel computer, 70–72
+Data path, 6, 56, 244–250
+Mic-1, 254
+Mic-2, 292
+Mic-3, 296
+Mic-4, 301
+Data path cycle, 58
+Data path timing, 247–249
+Data register, 697
+Data section, 717
+Data segment, 709
+Data type, nonnumeric, 359–360
+numeric, 358–359
+Data types, 358–362
+ARM, 360
+ATmega168, 361–362
+Core i7,360
+DDR (see Double Data Rate RAM)
+De Morgan’s law 156
+
+754
+DEC (see Digital Equipment Corporation)
+DEC Alpha, 14, 26
+DEC PDP-1, 14, 20
+DEC PDP-11, 14
+DEC PDP-8, 14, 20
+DEC VAX, 14, 61
+Decimal number, 718
+Decoder, 161–162
+Decoding unit, 300
+Degree, node, 618
+Delay slot, 311
+Demand paging, 443–446, 445
+Demultiplexer, 161
+Denormalized number, 687
+Dependence, 297, 318
+Design principles, 63–65
+Destination determination, 580
+Destination index, 698
+Destination operand, 701
+Device level, 5
+Device register bus, 573
+Diameter, network 618
+Dibit encoding, 129
+Difference engine, 15
+Digital camera, 135–137
+Digital Equipment Corporation, 14, 19–20
+Digital logic circuits, 158–169
+Digital logic level, 5
+buses, 185–201, 214–232
+circuits, 158–169
+CPU chips, 201–214
+gates, 147–157
+I/O interfacing, 232–235
+memory, 169–185
+PCI bus, 215–223
+PCI express bus, 223–228
+Digital subscriber line, 129–132, 130
+Digital subscriber line access multiplexer, 132
+Digital versatile disk, 106–108
+Digital video disk, 106–108
+Dimensionality, 619
+DIMM (see Dual Inline Memory Module)
+DIP (see Dual Inline Package)
+Direct addressing, 372, 702
+Direct memory access, 109, 396
+Direct-mapped cache, 306
+Direction flag, 704
+Directory, 471
+Directory management instructions, 471
+Directory-based multiprocessor, 608
+
+INDEX
+Disambiguation, 329
+Disk,
+ATAPI, 92
+CD-ROM, 101–103
+DVD, 106–108
+IDE, 91–92
+magnetic, 87–97
+optical, 99–108
+RAID, 94–97
+SCSI, 92–94
+SSD, 97–99
+Winchester, 111
+Disk controller, 90
+Diskette, 89
+Disposable computer, 31–33
+Distributed memory system, 587
+Distributed shared memory, 589–591, 640–642
+DLL (see Dynamic Link Library)
+DMA (see Direct Memory Access)
+Dot, 716
+Dots per inch, 126
+Double data rate RAM, 181
+Double indirect block, 497
+Double integer, 697
+Double torus, 620
+Double-precision number, 358

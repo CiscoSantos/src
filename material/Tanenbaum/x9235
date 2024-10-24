@@ -1,0 +1,100 @@
+pseudoinstructions have a scope of the local file. This default means that using,
+say, FOO in multiple files does not generate a conflict because each definition is
+local to its own file.
+The INCLUDE pseudoinstruction causes the assembler to fetch another file and
+include it bodily into the current one. Such included files often contain definitions,
+macros, and other items needed in multiple files.
+Many assemblers, support conditional assembly. For example,
+WORDSIZE EQU 32
+IF WORDSIZE GT 32
+WSIZE:
+DD 64
+ELSE
+WSIZE:
+DD 32
+ENDIF
+
+524
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+allocates a single 32-bit word and calls its address WSIZE. The word is initialized
+to either 64 or 32, depending on the value of WORDSIZE, in this case, 32. Typically this construction would be used to write a program that could be assembled
+for either 32-bit mode or 64-bit mode. IF and ENDIF, then by changing a single
+definition, WORDSIZE, the program can automatically be set to assemble for either
+size. Using this approach, it is possible to maintain one source program for multiple (different) target machines, which makes software development and maintenance easier. In many cases, all the machine-dependent definitions, like WORDSIZE, are collected into a single file, with different versions for different machines.
+By including the right definitions file, the program can be easily recompiled for
+different machines.
+The COMMENT pseudoinstruction allows the user to change the comment
+delimiter to something other than semicolon. PAGE is used to control the listing
+the assembler can produce, if requested. END marks the end of the program.
+Many other pseudoinstructions exist in MASM. Other x86 assemblers have a
+different collection of pseudoinstructions available because they are dictated not by
+the underlying architecture, but by the taste of the assembler writer.
+
+7.2 MACROS
+Assembly language programmers frequently need to repeat sequences of instructions several times within a program. The most obvious way to do so is simply to write the required instructions wherever they are needed. If a sequence is
+long, however, or must be used a large number of times, writing it repeatedly becomes tedious.
+An alternative approach is to make the sequence into a procedure and call it
+wherever it is needed. This strategy has the disadvantage of requiring a procedure
+call instruction and a return instruction to be executed every time a sequence is
+needed. If the sequences are short—for example, two instructions—but are used
+frequently, the procedure call overhead may significantly slow the program down.
+Macros provide an easy and efficient solution to the problem of repeatedly needing
+the same or nearly the same sequences of instructions.
+
+7.2.1 Macro Definition, Call, and Expansion
+A macro definition is a way to give a name to a piece of text. After a macro
+has been defined, the programmer can write the macro name instead of the piece of
+program. A macro is, in effect, an abbreviation for a piece of text. Figure 7-3(a)
+shows an assembly language program for the x86 that exchanges the contents of
+the variables p and q twice. These sequences could be defined as macros, as
+shown in Fig. 7-3(b). After its definition, every occurrence of SWAP causes it to
+be replaced by the four lines:
+
+SEC. 7.2
+
+525
+
+MACROS
+
+MOV EAX,P
+MOV EBX,Q
+MOV Q,EAX
+MOV P,EBX
+
+The programmer has defined SWAP as an abbreviation for the four statements
+shown above.
+MOV
+MOV
+MOV
+MOV
+
+EAX,P
+EBX,Q
+Q,EAX
+P,EBX
+
+MOV
+MOV
+MOV
+MOV
+
+EAX,P
+EBX,Q
+Q,EAX
+P,EBX
+
+SWAP
+
+(a)
+
+MACRO
+MOV EAX,P
+MOV EBX,Q
+MOV Q,EAX
+MOV P,EBX
+ENDM
+SWAP

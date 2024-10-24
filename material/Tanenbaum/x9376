@@ -1,0 +1,100 @@
+! 40
+! 41
+! 42
+! 43
+! 44
+! 45
+! 46
+! 47
+! 48
+! 49
+! 50
+! 51
+! 52
+! 53
+! 54
+! 55
+! 56
+! 57
+! 58
+! 59
+! 60
+! 61
+
+Figure C-18. A program demonstrating a multiway branch using a dispatch table.
+
+through rout8, each load the addresses of their private messages in AX, and then
+jump to the second line of erout to output the message and finish the subroutine.
+In order to get accustomed to the dispatch tables, the program should be traced
+with several different input characters. As an exercise, the program can be changed
+
+742
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+in such a way that all characters generate a sensible action. For example, all characters other than the octal digits should give an error message.
+
+C.8.7 Buffered and Random File Access
+The program InFilBuf.s, shown in Fig. C-19, demonstrates random I/O on files.
+A file is assumed to consist of some number of lines, with different lines potentially having different lengths. The program first reads the file and builds a table in
+which entry n is the file position at which line n begins. Afterward, a line can be
+requested, its position looked up in the table, and the line read in by means of lseek
+and read system calls. The file name is given as the first input line on standard
+input. This program contains several fairly independent chunks of code, which can
+be modified for other purposes.
+The first five lines simply define the system call numbers and the buffer size,
+and set the base pointer at the top of the stack, as usual. Lines 6 through 13 read
+the file name from standard input, and store it as a string at label linein. If the file
+name is not properly closed with a new line, then an error message is generated,
+and the process exits with a nonzero status. This is done in lines 38 through 45.
+Note that the address of the file name is pushed on line 39, and the address of an
+error message is pushed on line 40. If we examine the error message itself, (on
+line 113) then we have a %s string request in the PRINTF format. The contents of
+the string linein are inserted here.
+If the file name can be copied without problems, the file is opened on lines 14
+to 20. If the open call fails, then the return value is negative and a jump is made to
+the label 9 on line 28 to print an error message. If the system call succeeds, then
+the return value is a file descriptor, which is stored in the variable fildes. This file
+descriptor is needed in the subsequent read and lseek calls.
+Next, we read the file in blocks of 512 bytes, each of which is stored in the
+buffer buf. The buffer allocated is two bytes larger than the necessary 512 bytes,
+just to demonstrate how a symbolic constant and a integer can be mixed in an
+expression (on line 123). In the same way, on line 21 SI is loaded with the address
+of the second element of the linh array, which leaves a machine word containing 0
+at the bottom of this array. The register BX will contain the file address of the first
+unread character of the file, and hence, it is initialized to 0 before the first time that
+the buffer is filled on line 22.
+The filling of the buffer is handled by the fillbuf routine on lines 83 through 93.
+After pushing the arguments for the read, the system call is requested, which puts
+the number of characters actually read in AX. This number is copied into CX and
+the number of characters still in the buffer will be kept in CX thereafter. The file
+position of the first unread character in the file is kept in BX, so CX has to be added
+to BX in line 91. On line 92, the buffer bottom is put into DI in order to get ready to
+scan the buffer for the next new line character.
+
+SEC. C.8
+
+EXAMPLES
+
+743
+
+After returning from fillbuf, line 24 checks whether anything was actually read.
+If not, we jump out of the buffered read loop to the second part of the program in
+line 25.
+Now we are ready to scan the buffer. The symbol \n (line feed) is loaded into
+AL on line 26, and in line 27 this value is scanned for by REP SCASB and compared to the symbols in the buffer. There are two ways to exit the loop: either
+when CX hits zero or when a scanned symbol is a new line character. If the zero
+flag is set, then the last symbol scanned was a \n and the file position of the current
+symbol (one after the new line), is to be stored in the linh array. The count is then
+incremented and the file position is computed from BX and the number of characters still available is in CX (lines 29 through 31). Lines 32 through 34 perform the
+actual store, but since STOS assumes that the destination is in DI instead of in SI,
+these registers are exchanged before and after the STOS. Lines 35 through 37
+check whether more data is available in the buffer, and jump according to the value
+of CX.
+When the end of the file is reached, we have a complete list of file positions of
+the heads of the lines. Because we started the linh array with a 0 word, we know
+that the first line started at address 0, and that the next line starts at the position
+given by linh + 2 etc. The size of line n can be found from the starting address of
+line n + 1 minus the start address of line n.

@@ -1,0 +1,100 @@
+If the byte in MBR happens to be all zeros, the opcode for a NOP instruction,
+the next microinstruction is the one labeled nop1, fetched from location 0. Since
+this instruction does nothing, it simply branches back to the beginning of the main
+loop, where the sequence is repeated, but with a new opcode having been fetched
+into MBR.
+Once again we emphasize that the microinstructions in Fig. 4-17 are not consecutive in memory and that Main1 is not at control store address 0 (because nop1
+
+276
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+must be at address 0). It is up to the microassembler to place each microinstruction at a suitable address and link them together in short sequences using the
+NEXT ADDRESS field. Each sequence starts at the address corresponding to the
+numerical value of the IJVM opcode it interprets (e.g., POP starts at 0x57), but the
+rest of the sequence can be anywhere in the control store, and not necessarily at
+consecutive addresses.
+Now consider the IJVM IADD instruction. The microinstruction branched to by
+the main loop is the one labeled iadd1. This instruction starts the work specific to
+IADD:
+1. TOS is already present, but the next-to-top word of the stack must be
+fetched from memory.
+2. TOS must be added to the next-to-top word fetched from memory.
+3. The result, which is to be pushed on the stack, must be stored back
+into memory, as well as stored in the TOS register.
+In order to fetch the operand from memory, it is necessary to decrement the
+stack pointer and write it into MAR. Note that, conveniently, this address is also the
+address that will be used for the subsequent write. Furthermore, since this location
+will be the new top of stack, SP should be assigned this value. Therefore, a single
+operation can determine the new value of SP and MAR, decrement SP, and write it
+into both registers.
+These things are accomplished in the first cycle, iadd1, and the read operation
+is initiated. In addition, MPC gets the value from iadd1’s NEXT ADDRESS field,
+which is the address of iadd2, wherever it may be. Then iadd2 is read from the
+control store. During the second cycle, while waiting for the operand to be read in
+from memory, we copy the top word of the stack from TOS into H, where it will be
+available for the addition when the read completes.
+At the beginning of the third cycle, iadd3, MDR contains the addend fetched
+from memory. In this cycle it is added to the contents of H, and the result is stored
+back to MDR, as well as back into TOS. A write operation is also initiated, storing
+the new top-of-stack word back into memory. In this cycle the goto has the effect
+of assigning the address of Main1 to MPC, returning us to the starting point for the
+execution of the next instruction.
+If the subsequent IJVM opcode, now contained in MBR, is 0x64 (ISUB), almost
+exactly the same sequence of events occurs again. After Main1 is executed, control
+is transferred to the microinstruction at 0x64 (isub1). This microinstruction is followed by isub2 and isub3, and then Main1 again. The only difference between this
+sequence and the previous one is that in isub3, the contents of H are subtracted
+from MDR rather than added to it.
+The interpretation of IAND is almost identical to that of IADD and ISUB, except
+that the two top words of the stack are bitwise ANDed together instead of being
+added or subtracted. Something similar happens for IOR.
+
+SEC. 4.3
+
+277
+
+AN EXAMPLE IMPLEMENTATION
+
+If the IJVC opcode is DUP, POP, or SWAP, the stack must be adjusted. The
+instruction simply replicates the top word of the stack. Since the value of this
+word is already stored in TOS, the operation is as simple as incrementing SP to
+point to the new location and storing TOS to that location. The POP instruction is
+almost as simple, just decrementing SP to discard the top word on the stack. However, in order to maintain the top word in TOS it is now necessary to read the new
+top word in from memory and write it into TOS. Finally, the SWAP instruction
+involves swapping the values in two memory locations: the top two words on the
+stack. This is made somewhat easier by the fact that TOS already contains one of
+those values, so it need not be read from memory. This instruction will be discussed in more detail later.
+The BIPUSH instruction is a little more complicated because the opcode is followed by a single byte, as shown in Fig. 4-18. The byte is to be interpreted as a
+signed integer. This byte, which has already been fetched into MBR in Main1, must
+be sign-extended to 32 bits and pushed onto the top of the stack. This sequence,
+therefore, must sign-extend the byte in MBR to 32 bits, and copy it to MDR. Finally,
+SP is incremented and copied to MAR, permitting the operand to be written out to
+the top of stack. Along the way, this operand must also be copied to TOS. Note
+that before returning to the main program, PC must be incremented and a fetch operation started so that the next opcode will be available in Main1.
+DUP
+
+BIPUSH
+(0×10)
+
+BYTE
+
+Figure 4-18. The BIPUSH instruction format.
+
+Next consider the ILOAD instruction. ILOAD also has a byte following the opcode, as shown in Fig. 4-19(a), but this byte is an (unsigned) index to identify the
+word in the local variable space that is to be pushed onto the stack. Since there is
+only 1 byte, only 28 = 256 words can be distinguished, namely, the first 256 words
+in the local variable space. The ILOAD instruction requires both a read (to obtain
+the word) and a write (to push it onto the top of the stack). In order to determine
+the address for reading, however, the offset, contained in MBR, must be added to
+the contents of LV. Since both MBR and LV can be accessed only through the B bus,
+first LV is copied into H (in iload1), then MBR is added. The result of this addition
+is copied into MAR and a read initiated (in iload2).
+ILOAD
+(0x15)
+
+INDEX
+(a)
+
+WIDE

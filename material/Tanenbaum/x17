@@ -1,0 +1,100 @@
+Greeting cards
+
+5
+
+Watches, cars, appliances
+
+50
+500
+
+Home video games and smartphones
+Desktop or notebook computer
+
+Server
+
+5K
+
+Network server
+
+Mainframe
+
+5M
+
+Batch data processing in a bank
+
+Figure 1-9. The current spectrum of computers available. The prices should be
+taken with a grain (or better yet, a metric ton) of salt.
+
+In the following sections we will examine each of these categories and discuss
+their properties briefly.
+
+1.3.3 Disposable Computers
+At the bottom end, we find single chips glued to the inside of greeting cards
+for playing ‘‘Happy Birthday,’’ ‘‘Here Comes the Bride,’’ or some equally
+appalling ditty. The authors have not yet spotted a condolence card that plays a
+funeral dirge, but having now released this idea into the public domain, we expect
+it shortly. To anyone who grew up with multimillion-dollar mainframes, the idea
+of disposable computers makes about as much sense as disposable aircraft.
+However, disposable computers are here to stay. Probably the most important
+development in the area of throwaway computers is the RFID (Radio Frequency
+IDentification) chip. It is now possible to manufacture, for a few cents, batteryless RFID chips smaller than 0.5 mm on edge that contain a tiny radio transponder
+and a built-in unique 128-bit number. When pulsed from an external antenna, they
+are powered by the incoming radio signal long enough to transmit their number
+back to the antenna. While the chips are tiny, their implications are certainly not.
+Let us start with a mundane application: removing bar codes from products.
+Experimental trials have already been held in which products in stores have RFID
+chips (instead of bar codes) attached by the manufacturer. Customers select their
+products, put them in a shopping cart, and just wheel them out of the store, bypassing the checkout counter. At the store’s exit, a reader with an antenna sends out a
+signal asking each product to identify itself, which it does by a short wireless transmission. Customers are also identified by chips on their debit or credit card. At
+the end of the month, the store sends each customer an itemized bill for this
+month’s purchases. If the customer does not have a valid RFID bank or credit
+
+32
+
+INTRODUCTION
+
+CHAP. 1
+
+card, an alarm is sounded. Not only does this system eliminate the need for
+cashiers and the corresponding wait in line, but it also serves as an antitheft system
+because hiding a product in a pocket or bag has no effect.
+An interesting property of this system is that while bar codes identify the product type, they do not identify the specific item. With 128 bits available, RFID
+chips do. As a consequence, every package of, say, aspirins, on a supermarket
+shelf will have a different RFID code. This means that if a drug manufacturer discovers a manufacturing defect in a batch of aspirins after they have been shipped,
+supermarkets all over the world can be told to sound the alarm when a customer
+buys any package whose RFID number lies in the affected range, even if the purchase happens in a distant country months later. Aspirins not in the defective batch
+will not sound the alarm.
+But labeling packages of aspirins, cookies, and dog biscuits is only the start.
+Why stop at labeling the dog biscuits when you can label the dog? Pet owners are
+already asking veterinarians to implant RFID chips in their animals, allowing them
+to be traced if they are stolen or lost. Farmers want their livestock tagged as well.
+The obvious next step is for nervous parents to ask their pediatrician to implant
+RFID chips in their children in case they get stolen or lost. While we are at it, why
+not have hospitals put them in all newborns to avoid mixups at the hospital? Governments and the police can no doubt think of many good reasons for tracking all
+citizens all the time. By now, the ‘‘implications’’ of RFID chips alluded to earlier
+may be getting a bit clearer.
+Another (slightly less controversial) application of RFID chips is vehicle tracking. When a string of railroad cars with embedded RFID chips passes by a reader,
+the computer attached to the reader then has a list of which cars passed by. This
+system makes it easy to keep track of the location of all railroad cars, which helps
+suppliers, their customers, and the railroads. A similar scheme can be applied to
+trucks. For cars, the idea is already being used to collect tolls electronically (e.g.,
+the E-Z Pass system).
+Airline baggage systems and many other package transport systems can also
+use RFID chips. An experimental system tested at Heathrow airport in London allowed arriving passengers to remove the lugging from their luggage. Bags carried
+by passengers purchasing this service were tagged with RFID chips, routed separately within the airport, and delivered directly to the passengers’ hotels. Other
+uses of RFID chips include having cars arriving at the painting station of the assembly line specify what color they are supposed to be, studying animal migrations, having clothes tell the washing machine what temperature to use, and many
+more. Some chips may be integrated with sensors so that the low-order bits may
+contain the current temperature, pressure, humidity or other environmental variable.
+Advanced RFID chips also contain permanent storage. This capability led the
+European Central Bank to make a decision to put RFID chips in euro banknotes in
+the coming years. The chips would record where they have been. Not only would
+
+SEC. 1.3
+
+THE COMPUTER ZOO
+
+33
+
+this make counterfeiting euro notes virtually impossible, but it would make tracing
+kidnapping ransoms, the loot taken from robberies, and laundered money much
+easier to track and possibly remotely invalidate. When cash is no longer anonymous, standard police procedure in the future may be to check out where the suspect’s money has been recently. Who needs to implant chips in people when their

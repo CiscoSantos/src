@@ -1,0 +1,100 @@
+
+This page intentionally left blank
+
+ec
+
+C
+ASSEMBLY LANGUAGE
+PROGRAMMING
+
+Evert Wattel
+Vrije Universiteit
+Amsterdam, The Netherlands
+
+Every computer has an ISA (Instruction Set Architecture), which is a set of
+registers, instructions, and other features visible to its low-level programmers.
+This ISA is commonly referred to as machine language, although the term is not
+entirely accurate. A program at this level of abstraction is a long list of binary
+numbers, one per instruction, telling which instructions to execute and what their
+operands are. Programming with binary numbers is very difficult to do, so all
+machines have an assembly language, a symbolic representation of the instruction
+set architecture, with symbolic names like ADD, SUB, and MUL, instead of binary
+numbers. This appendix is a tutorial on assembly language programming for one
+specific machine, the Intel 8088, which was used in the original IBM PC and was
+the base from which the modern Core i7 grew. The appendix also covers the use of
+some tools that can be downloaded to help learn about assembly language programming.
+The purpose of this appendix is not to turn out polished assembly language
+programmers, but to help the reader learn about computer architecture through
+hands-on experience. For this reason, a simple machine—the Intel 8088— has
+691
+
+692
+
+ASSEMBLY LANGUAGE PROGRAMMING
+
+APP. C
+
+been chosen as the running example. While 8088s are rarely encountered any
+more, every Core i7 is capable of executing 8088 programs, so the lessons learned
+here are still applicable to modern machines. Furthermore, most of the Core i7’s
+basic instructions are the same as the 8088’s, only using 32-bit registers instead of
+16-bit registers. Thus, this appendix can also be seen as a gentle introduction to
+Core i7 assembly language programming.
+In order to program any machine in assembly language, the programmer must
+have a detailed knowledge of the machine’s instruction set architecture. Accordingly, Sections C.1 through C.4 of this appendix are devoted to the architecture of
+the 8088, its memory organization, addressing modes, and instructions. Section
+C.5 discusses the assembler, which is used in this appendix and which is available
+for free, as described later. The notation used in this appendix is the one used by
+this assembler. Other assemblers use different notations, so readers already familiar with 8088 assembly programming should be alert for differences. Section C.6
+discusses an interpreter/tracer/debugger tool, which can be downloaded to help the
+beginner programmer get programs debugged. Section C.7 describes the installation of the tools, and how to get started. Section C.8 contain programs, examples,
+exercises and solutions.
+
+C.1 OVERVIEW
+We will start our tour of assembly language programming with a few words on
+assembly language and then give a small example to illustrate it.
+
+C.1.1 Assembly Language
+Every assembler uses mnemonics, that is, short words such as ADD, SUB, and
+for machine instructions such as add, subtract, and multiply, to make them
+easy to remember. In addition, assemblers allow the use of symbolic names for
+constants and labels to indicate instruction and memory addresses. Also, most
+assemblers support some number of pseudoinstructions, which do not translate
+into ISA instructions, but which are commands to the assembler to guide the
+assembly process.
+When a program in assembly language is fed to a program called an assembler, the assembler converts the program into a binary program suitable for
+actual execution. This program can then be run on the actual hardware. However,
+when beginners start to program in assembly language, they often make errors and
+the binary program just stops, without any clue as to what went wrong. To make
+life easier for beginners, it is sometimes possible to run the binary program not on
+the actual hardware, but on a simulator, which executes one instruction at a time
+and gives a detailed display of what it is doing. In this way, debugging is much
+MUL
+
+SEC. C.1
+
+693
+
+OVERVIEW
+
+easier. Programs running on a simulator run slowly, of course, but when the goal is
+to learn assembly language programming, rather than run a production job, this
+loss of speed is not important. This appendix is based on a toolkit that includes
+such a simulator, called the interpreter or tracer, as it interprets and traces the
+execution of the binary program step by step as it runs. The terms ‘‘simulator,’’
+‘‘interpreter,’’ and ‘‘tracer’’ will be used interchangeably throughout this appendix.
+Usually, when we are talking about just executing a program, we will speak of the
+‘‘interpreter’’ and when we are talking about using it as a debugging tool, we will
+call it the ‘‘tracer,’’ but it is the same program.
+
+C.1.2 A Small Assembly Language Program
+To make some of these abstract ideas a bit more concrete, consider the program and tracer image of Fig. C-1. An image of the tracer screen is given in
+Fig. C-1. Fig. C-1(a) shows a simple assembly language program for the 8088.
+The numbers following the exclamation marks are the source line numbers, to
+make it easier to refer to parts of the program. A copy of this program can be
+found in the accompanying material, in the directory examples in the source file
+HlloWrld.s. This assembly program, like all assembly programs discussed in this
+appendix, has the suffix .s, which indicates that it is an assembly language source
+program. The tracer screen, shown in Fig. C-1(b), contains seven windows, each
+containing different information about the state of the binary program being
+executed.

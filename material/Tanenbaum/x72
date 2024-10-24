@@ -1,0 +1,100 @@
+switch from 0 to 1 or 1 to 0. In more sophisticated phase-modulated systems, at
+the start of each indivisible time interval, the phase of the carrier is abruptly shifted
+
+SEC. 2.4
+
+INPUT/OUTPUT
+
+129
+
+by 45, 135, 225, or 315 degrees, to allow 2 bits per time interval, called dibit phase
+encoding. For example, a phase shift of 45 degrees could represent 00, a phase
+shift of 135 degrees could represent 01, and so on. Schemes for transmitting 3 or
+more bits per time interval also exist. The number of time intervals (i.e., the number of potential signal changes per second) is the baud rate. With 2 or more bits
+per interval, the bit rate will exceed the baud rate. Many people confuse these two
+terms. Again: the baud rate is the number of times the signal changes per second
+whereas the bit rate is the number of bits transmitted per second. The bit rate is
+generally a multiple of the baud rate, but theoretically it can be lower.
+If the data to be transmitted consist of a series of 8-bit characters, it would be
+desirable to have a connection capable of transmitting 8 bits simultaneously—that
+is, eight pairs of wires. Because voice-grade telephone lines provide only one
+channel, the bits must be sent serially, one after another (or in groups of two if dibit
+encoding is being used). The device that accepts characters from a computer in the
+form of two-level signals, 1 bit at a time, and transmits the bits in groups of 1 or 2,
+in amplitude-, frequency-, or phase-modulated form, is the modem. To mark the
+start and end of each character, an 8-bit character is normally sent preceded by a
+start bit and followed by a stop bit, making 10 bits in all.
+The transmitting modem sends the individual bits within one character at regularly spaced time intervals. For example, 9600 baud implies one signal change
+every 104 μ sec. A second modem at the receiving end is used to convert a modulated carrier to a binary number. Because the bits arrive at the receiver at regularly
+spaced intervals, once the receiving modem has determined the start of the character, its clock tells it when to sample the line to read the incoming bits.
+Modern modems run at 56 kbps, usually at much lower baud rates. They use a
+combination of techniques to send multiple bits per baud, modulating the amplitude, frequency, and phase. All are full-duplex, meaning they can transmit in both
+directions at the same time (on different frequencies). Modems or transmission
+lines that can transmit only in one direction at a time (like a single-track railroad
+that can handle northbound trains or southbound trains but not at the same time)
+are called half-duplex. Lines that can transmit in only one direction are simplex.
+Digital Subscriber Lines
+When the telephone industry finally got to 56 kbps, it patted itself on the back
+for a job well done. Meanwhile, the cable TV industry was offering speeds up to
+10 Mbps on shared cables, and satellite companies were planning to offer upward
+of 50 Mbps. As Internet access became an increasingly important part of their business, the telcos (telephone companies) began to realize they needed a more competitive product than dialup lines. Their answer was to start offering a new digital
+Internet access service. Services with more bandwidth than standard telephone
+service are sometimes called broadband, although the term really is more of a
+marketing concept than anything else. From a very narrow technical perspective,
+
+130
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+broadband means there are multiple signaling channels whereas baseband means
+there is only one. Thus in theory, 10-gigabit Ethernet, which is far faster than any
+telephone-company-provided ‘‘broadband’’ service, is not broadband at all since it
+has only one signaling channel.
+Initially, there were many overlapping offerings, all under the general name of
+xDSL (Digital Subscriber Line), for various x. Below we will discuss what has
+become the most popular of these services, ADSL (Asymmetric DSL). ADSL is
+still being developed and not all the standards are fully in place, so some of the details given below may change in time, but the basic picture should remain valid.
+For more information about ADSL, see Summers (1999) and Vetter et al. (2000).
+The reason that modems are so slow is that telephones were invented for carrying the human voice and the entire system has been carefully optimized for this
+purpose. Data have always been stepchildren. The wire, called the local loop,
+from each subscriber to the telephone company’s office has traditionally been limited to about 3000 Hz by a filter in the telco office. It is this filter that limits the
+data rate. The actual bandwidth of the local loop depends on its length, but for typical distances of a few kilometers, 1.1 MHz is feasible.
+The most common approach to offering ADSL is illustrated in Fig. 2-39. In
+effect, what it does is remove the filter and divide the available 1.1-MHz spectrum
+on the local loop into 256 independent channels of 4312.5 Hz each. Channel 0 is
+used for POTS (Plain Old Telephone Service). Channels 1–5 are not used, to
+keep the voice signal and data signals from interfering with each other. Of the remaining 250 channels, one is used for upstream control and one for downstream
+control. The rest are available for user data. ADSL is like having 250 modems.
+
+Power
+
+256 4-kHz Channels
+
+0
+Voice
+
+25
+
+1100 kHz
+Upstream
+
+Downstream
+
+Figure 2-39. Operation of ADSL.
+
+In principle, each of the remaining channels can be used for a full-duplex data
+stream, but harmonics, crosstalk, and other effects keep practical systems well
+below the theoretical limit. It is up to the provider to determine how many channels are used for upstream and how many for downstream. A 50–50 mix of
+upstream and downstream is technically possible, but most providers allocate
+something like 80%–90% of the bandwidth to the downstream channel since most
+users download more data than they upload. This choice gives rise to the ‘‘A’’ in
+ADSL. A common split is 32 channels for upstream and the rest for downstream.
+
+SEC. 2.4
+
+131
+
+INPUT/OUTPUT
+

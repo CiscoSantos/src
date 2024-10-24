@@ -1,0 +1,100 @@
+*
+*
+*
+*
+
+IMUL(B)
+MUL(B)
+IDIV(B)
+DIV(B)
+
+Multiply signed
+Multiply unsigned
+Divide signed
+Divide unsigned
+
+e
+e
+e
+e
+
+*
+*
+U
+U
+
+U
+U
+U
+U
+
+U
+U
+U
+U
+
+*
+*
+U
+U
+
+CBW
+CWD
+NEG(B)
+NOT(B)
+INC(B)
+DEC(B)
+
+Sign extend byte-word
+Sign extend word-double
+Negate binary
+Logical complement
+Increment destination
+Decrement destination
+
+e
+e
+e
+e
+
+*
+*
+*
+
+*
+*
+*
+
+*
+*
+*
+
+*
+-
+
+AND(B)
+OR(B)
+XOR(B)
+
+Logical and
+Logical or
+Logical exclusive or
+
+e ← r, r ← e, e ← #
+e ← r, r ← e, e ← #
+e ← r, r ← e, e ← #
+
+0
+0
+0
+
+*
+*
+*
+
+*
+*
+*
+
+0
+0

@@ -1,0 +1,100 @@
+which the actual main memory address corresponding to L is determined is called
+the binding time. At least six possibilities for the binding time exist:
+1. When the program is written.
+2. When the program is translated.
+3. When the program is linked but before it is loaded.
+4. When the program is loaded.
+5. When a base register used for addressing is loaded.
+6. When the instruction containing the address is executed.
+If an instruction containing a memory address is moved after binding, it will be
+incorrect (assuming that the object referred to has also been moved). If the translator produces an executable binary as output, the binding has occurred at translation
+time, and the program must be run at the address at which the translator expected it
+to be run at. The linking method described in the preceding section binds symbolic
+names to absolute addresses during linking, which is why moving programs after
+linking fails, as shown in Fig. 7-16.
+Two related issues are involved here. First, there is the question of when symbolic names are bound to virtual addresses. Second, there is a question of when
+virtual addresses are bound to physical addresses. Only when both operations have
+taken place is binding complete. When the linker merges the separate address
+spaces of the object modules into a single linear address space, it is, in fact, creating a virtual address space. The relocation and linking serve to bind symbolic
+names onto specific virtual addresses. This observation is true whether or not virtual memory is being used.
+Assume for the moment that the address space of Fig. 7-14(b) is paged. It is
+clear that the virtual addresses corresponding to the symbolic names A, B, C, and D
+have already been determined, even though their physical main memory addresses
+will depend on the contents of the page table at the time they are used. An executable binary program is really a binding of symbolic names to virtual addresses.
+Any mechanism that allows the mapping of virtual addresses onto physical
+memory addresses to be changed easily will facilitate moving programs around in
+main memory, even after they have been bound to a virtual address space. One
+such mechanism is paging. After a program has been moved in main memory,
+only its page table need be changed, not the program itself.
+A second mechanism is the use of a runtime relocation register. The CDC
+6600 and its successors had such a register. On machines using this relocation
+
+SEC. 7.4
+
+LINKING AND LOADING
+
+545
+
+technique, the register always points to the physical address of the start of the current program. All memory addresses have the contents of the relocation register
+added to them by the hardware before being sent to the memory. The entire relocation process is transparent to the user programs. They do not even know that it is
+occurring. When a program is moved, the operating system must update the relocation register. This mechanism is less general than paging because the entire program must be moved as a unit (unless there are separate code and data relocation
+registers, as on the Intel 8088, in which case it has to be moved as two units).
+A third mechanism is possible on machines that can refer to memory relative
+to the program counter. Many branch instructions are relative to the program
+counter, which helps. Whenever a program is moved in main memory only the
+program counter need be updated. A program, all of whose memory references are
+either relative to the program counter or absolute (e.g., to I/O device registers at
+absolute addresses) is said to be position independent. A position-independent
+procedure can be placed anywhere within the virtual address space without the
+need for relocation.
+
+7.4.4 Dynamic Linking
+The linking strategy discussed in Sec. 7.4.1 has the property that all procedures
+that a program might call are linked before the program can begin execution. On a
+computer with virtual memory, completing all linking before beginning execution
+does not take advantage of the full capabilities of the virtual memory. Many programs have procedures that are called only under unusual circumstances. For example, compilers have procedures for compiling rarely used statements, plus procedures for handling error conditions that seldom occur.
+A more flexible way to link separately compiled procedures is to link each procedure at the time it is first called. This process is known as dynamic linking. It
+was pioneered by MULTICS whose implementation is in some ways still unsurpassed. In the next sections we will look at dynamic linking in several systems.
+Dynamic Linking in MULTICS
+In the MULTICS form of dynamic linking, associated with each program is a
+segment, called the linkage segment, which contains one block of information for
+each procedure that might be called. This block of information starts with a word
+reserved for the virtual address of the procedure and it is followed by the procedure
+name, which is stored as a character string.
+When dynamic linking is being used, procedure calls in the source language
+are translated into instructions that indirectly address the first word of the corresponding linkage block, as shown in Fig. 7-17(a). The compiler fills this word with
+either an invalid address or a special bit pattern that forces a trap.
+
+546
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+A procedure segment
+
+CALL EARTH
+
+The linkage segment
+rect
+Indi ssing
+e
+Invalid address
+r
+add
+E A R T H
+
+CALL FIRE
+
+Indirect word
+
+Invalid address
+A I R
+
+Linkage information
+for the procedure
+of AIR
+
+Invalid address
+F I R E
+
+Name of the
+procedure is

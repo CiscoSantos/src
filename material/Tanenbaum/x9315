@@ -1,0 +1,100 @@
+
+13. As a simple model of a bus-based multiprocessor system without caching, suppose that
+one instruction in every four references memory, and that a memory reference occupies
+the bus for an entire instruction time. If the bus is busy, the requesting CPU is put into
+a FIFO queue. How much faster will a 64-CPU system run than a 1-CPU system?
+14. The MESI cache coherence protocol has four states. Other write-back cache coherence
+protocols have only three states. Which of the four MESI states could be sacrificed,
+and what would the consequences of each choice be? If you had to pick only three
+states, which would you pick?
+15. Are there any situations with the MESI cache coherence protocol in which a cache line
+is present in the local cache but for which a bus transaction is nevertheless needed? If
+so, explain.
+16. Suppose that there are n CPUs on a common bus. The probability that any CPU tries
+to use the bus in a given cycle is p. What is the chance that
+a. The bus is idle (0 requests).
+b. Exactly one request is made.
+c. More than one request is made.
+17. Name the major advantage and the major disadvantage of a crossbar switch.
+18. How many crossbar switches does a full Sun Fire E25K have?
+19. Suppose that the wire between switch 2A and switch 3B in the omega network of
+Fig. 8-31 breaks. Who is cut off from whom?
+20. Hot spots (heavily referenced memory locations) are clearly a major problem in multistage switching networks. Are they also a problem in bus-based systems?
+21. An omega switching network connects 4096 RISC CPUs, each with a 60-nsec cycle
+time, to 4096 infinitely fast memory modules. The switching elements each have a
+5-nsec delay. How many delay slots are needed by a LOAD instruction?
+22. Consider a machine using an omega switching network, like the one shown in
+Fig. 8-31. Suppose that the program and stack for processor i are kept in memory
+module i. Propose a slight change in the topology that makes a large difference in the
+performance (the IBM RP3 and BBN Butterfly use this modified topology). What
+disadvantage does your new topology have compared to the original?
+23. In a NUMA multiprocessor, local memory references take 20 nsec and remote references 120 nsec. A certain program makes a total of N memory references during its
+execution, of which 1 percent are to a page P. That page is initially remote, and it
+takes C nsec to copy it locally. Under what conditions should the page be copied
+locally in the absence of significant use by other processors?
+24. Consider a CC-NUMA multiprocessor like that of Fig. 8-33 except with 512 nodes of
+8 MB each. If the cache lines are 64 bytes, what is the percentage overhead for the directories? Does increasing the number of nodes increase the overhead, decrease the
+overhead, or leave it unchanged?
+25. What is the difference between NC-NUMA and CC-NUMA?
+26. For each topology shown in Fig. 8-37, compute the diameter of the network.
+
+658
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+27. For each topology shown in Fig. 8-37, determine the degree of fault tolerance each one
+has, defined as the maximum number of links that can be lost without partitioning the
+network in two.
+28. Consider the double-torus topology of Fig. 8-37(f) but expanded to a size of k × k.
+What is the diameter of the network? (Hint: Consider odd k and even k separately).
+29. An interconnection network is in the form of an 8 × 8 × 8 cube. Each link has a fullduplex bandwidth of 1 GB/sec. What is the bisection bandwidth of the network?
+30. Amdahl’s law limits the potential speed-up achievable on a parallel computer. Compute, as a function of f, the maximum possible speed-up as the number of CPUs approaches infinity. What are the implications of this limit for f = 0. 1?
+31. Figure 8-51 shows how scaling fails with a bus but succeeds with a grid. Assuming
+that each bus or link has a bandwidth b, compute the average bandwidth per CPU for
+each of the four cases. Then scale each system to 64 CPUs and repeat the calculations.
+What is the limit as the number of CPUs goes to infinity?
+32. In the text, three variations of send were discussed: synchronous, blocking, and
+nonblocking. Give a fourth method that is similar to a blocking send but has slightly
+different properties. Give an advantage and a disadvantage of your method as compared to blocking send.
+33. Consider a multicomputer running on a network with hardware broadcasting, such as
+Ethernet. Why does the ratio of read operations (those not updating internal state variables) to write operations (those updating internal state variables) matter?
+
+9
+BIBLIOGRAPHY
+
+This chapter is an alphabetical bibliography of all books and articles cited in
+this book.
+ABRAMSON, D.: ‘‘Mixing Cloud and Grid Resources for Many Task Computing,’’ Proc.
+
+Int’l Workshop on Many Task Computing on Grids and Supercomputers, ACM, pp.
+1–2, 2011.
+ADAMS, M., and DULCHINOS, D.: ‘‘OpenCable,’’ IEEE Commun. Magazine, vol. 39, pp.
+
+98–105, June 2001.
+ADIGA, N.R. et al.: ‘‘An Overview of the BlueGene/L Supercomputer,’’ Proc. Supercomput-
+
+ing 2002, ACM, pp. 1–22, 2002.
+ADVE, S.V., and HILL, M.: ‘‘Weak Ordering: A New Definition,’’ Proc. 17th Ann. Int’l
+
+Symp. on Computer Arch., ACM, pp. 2–14, 1990.
+AGERWALA, T., and COCKE, J.: ‘‘High Performance Reduced Instruction Set Processors,’’
+
+IBM T.J. Watson Research Center Technical Report RC12434, 1987.
+AHMADINIA, A., and SHAHRABI, A.: ‘‘A Highly Adaptive and Efficient Router Architec-
+
+ture for Network-on-Chip,’’ Computer J., vol. 54, pp. 1295–1307, Aug. 2011.
+ALAM, S., BARRETT, R., BAST, M., FAHEY, M.R., KUEHN, J., MCCURDY, ROGERS, J.,
+ROTH, P., SANKARAN, R., VETTER, J.S., WORLEY, P., and YU, W.: ‘‘Early Evaluation
+
+of IBM BlueGene/P,’’ Proc. ACM/IEEE Conf. on Supercomputing, ACM/IEEE, 2008.
+ALAMELDEEN, A.R., and WOOD, D.A.: ‘‘Adaptive Cache Compression for High-Perfor-
+
+mance Processors,’’ Proc. 31st Ann. Int’l Symp. on Computer Arch., ACM, pp.
+212–223, 2004.
+659
+
+660
+
+BIBLIOGRAPHY

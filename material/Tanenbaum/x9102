@@ -1,0 +1,100 @@
+
+Disk
+controller
+
+Board-level cache (SRAM)
+
+Figure 4-37. A system with three levels of cache.
+
+To achieve their goal, caches depend on two kinds of address locality. Spatial
+locality is the observation that memory locations with addresses numerically similar to a recently accessed memory location are likely to be accessed in the near
+
+306
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+future. Caches try to exploit this property by bringing in more data than have been
+requested, with the expectation that future requests can be anticipated. Temporal
+locality occurs when recently accessed memory locations are accessed again. This
+may occur, for example, to memory locations near the top of the stack, or instructions inside a loop. Temporal locality is exploited in cache designs primarily by
+the choice of what to discard on a cache miss. Many cache replacement algorithms
+exploit temporal locality by discarding those entries that have not been recently accessed.
+All caches use the following model. Main memory is divided up into fixedsize blocks called cache lines. A cache line typically consists of 4 to 64 consecutive bytes. Lines are numbered consecutively starting at 0, so with a 32-byte line
+size, line 0 is bytes 0 to 31, line 1 is bytes 32 to 63, and so on. At any instant,
+some lines are in the cache. When memory is referenced, the cache controller circuit checks to see if the word referenced is currently in the cache. If so, the value
+there can be used, saving a trip to main memory. If the word is not there, some line
+entry is removed from the cache and the line needed is fetched from memory or
+more distant cache to replace it. Many variations on this scheme exist, but in all of
+them the idea is to keep the most heavily used lines in the cache as much as possible, to maximize the number of memory references satisfied out of the cache.
+Direct-Mapped Caches
+The simplest cache is known as a direct-mapped cache. An example single-level direct-mapped cache is shown in Fig. 4-38(a). This example cache contains 2048 entries. Each entry (row) in the cache can hold exactly one cache line
+from main memory. With a 32-byte cache line size (for this example), the cache
+can hold 2048 entries of 32 bytes or 64 KB in total. Each cache entry consists of
+three parts:
+1. The Valid bit indicates whether there is any valid data in this entry or
+not. When the system is booted (started), all entries are marked as
+invalid.
+2. The Tag field consists of a unique, 16-bit value identifying the corresponding line of memory from which the data came.
+3. The Data field contains a copy of the data in memory. This field
+holds one cache line of 32 bytes.
+In a direct-mapped cache, a given memory word can be stored in exactly one
+place within the cache. Given a memory address, there is only one place to look
+for it in the cache. If it is not there, then it is not in the cache. For storing and
+retrieving data from the cache, the address is broken into four components, as
+shown in Fig. 4-38(b):
+
+SEC. 4.5
+
+307
+
+IMPROVING PERFORMANCE
+Valid
+
+Entry
+
+Addresses that use this entry
+Tag
+
+Data
+
+2047
+
+65504-65535, 131040-131071, …
+
+7
+6
+5
+4
+3
+2
+1
+0
+
+96-127, 65632-65663, 131168-131199
+64-95, 65600-65631, 131136-131167, …
+32-63, 65568-65599, 131104-131135, …
+0-31, 65536-65567, 131072-131103, …
+(a)
+
+Bits
+
+16
+
+11
+
+TAG
+
+LINE
+
+3
+
+2
+
+WORD BYTE
+
+(b)
+
+Figure 4-38. (a) A direct-mapped cache. (b) A 32-bit virtual address.
+

@@ -1,0 +1,100 @@
+File descriptor, 492, 713
+File index, 468
+Filter, 494
+Fine-grained multithreading, 562
+Finite state machine, 290, 314
+Finite-precision numbers, 669–671
+Firewall, 576
+First-fit algorithm, 454
+First pass, assembler, 716
+First-generation computers, 16–19
+First-in, first-out algorithm, 447
+Flags register, 350, 699
+Flash memory, 183
+Flat panel display, 115–117
+Flip-flop, 172–174
+Floating-point number, 681–688
+Floppy disk, 89
+Flow control, 227
+Flow of control, 403–417, 404–417
+branches, 405–406
+coroutines, 410–413
+
+756
+Flow of control (continued)
+interrupts, 414–417
+procedures, 406–410
+sequential, 405–406
+traps, 413
+Flynn’s taxonomy, 591–593
+Formal parameter, macro, 526
+Forrester, Jay, 19
+FORTRAN, 10, 392
+FORTRAN Monitor System, 10
+Forward reference problem, 529
+Fourth-generation computers, 23–26
+FPGA (see Field Programmable Gate Array)
+FPGA (see Field-Programmable Gate Array)
+FPM (see Fast Page Mode)
+Fraction, 682
+Fragmentation, 448–449
+external, 453
+internal, 448
+Fragmentation and reassembly, 581
+Frame, 101
+local variable, 258–260
+Frame pointer, 353
+Free list, 469
+Free page, 490
+Frequency modulation, 128
+Frequency shift keying, 128
+FSM (see Finite State Machine)
+Full adder, 165–166
+Full handshake, 195
+Full interconnect, 620
+Full resource sharing, 566
+Full-duplex line, 129
+Function, 392
+
+G
+Game computer, 35–36
+Game controller, 120–122
+Gamut, color, 125
+Gate, 5, 148–150
+Gate delay, 159
+GDT (see Global Descriptor Table)
+General registers, 695–697
+General-purpose CPU, 584
+Ghosting, 114
+Global descriptor table, 455
+
+INDEX
+Global label, 717
+Goldstine, Herman, 18
+Google cluster, 632–636
+GPGPU (see General Purpose GPU)
+GPU (see Graphics Processing Unit)
+Graphical user interface, 24, 485
+Graphics processing unit, 70–72, 582–585
+Graphics processor, 582–585
+Green book, 103
+Grid, 620
+Grid computing, 652–655
+GridPad, 14
+Guest operating system, 464
+GUI (see Graphical User Interface)
+
+H
+H register 245–246
+Half adder, 164–165
+Half-duplex line, 129
+Halftone screen frequency, 124
+Halftoning, 124
+Hamming, Richard, 30
+Hamming distance, 78
+Handle, 488
+Hard disk, 87–97
+Hardware, 8
+equivalence with software, 8
+Hardware abstraction layer, 486
+Hardware DSM, 607

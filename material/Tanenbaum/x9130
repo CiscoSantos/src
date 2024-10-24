@@ -1,0 +1,100 @@
+CHAP. 5
+
+values. The size of the floating-point register accessed is determined by the instruction; in general, all ARM floating-point instructions come in single- and doubleprecision variants.
+The ARM architecture is a load/store architecture. That is, the only operations that access memory directly are load and store instructions to move data between the registers and the memory. All operands for arithmetic and logical instructions must come from registers or be supplied by the instruction (not memory), and all results must be saved in a register (not memory).
+
+5.1.7 Overview of the ATmega168 AVR ISA Level
+Our third example is the ATmega168. Unlike the Core i7 (which is used primarily in desktop machines and server farms), and the OMAP4430 (which is used
+primarily in phones, tablets, and other mobile devices), the ATmega168 is used in
+low-end embedded systems such as traffic lights and clock radios to control the device and manage the buttons, lights, and other parts of the user interface. In this
+section, we will give a brief technical introduction to the ATmega168 AVR ISA.
+The ATmega168 has one mode and no protection hardware since it never runs
+multiple programs owned by potentially hostile users. The memory model is extremely simple. There is 16 KB of program memory and a second 1 KB of data
+memory. Each is its own distinct address space, so a particular address will reference different memory depending on whether the access is to the program or data
+memory. The program and data spaces are split to make it possible to implement
+the program space in flash and the data space in SRAM.
+Several different implementations of memory are possible, depending on how
+much the designer wants to pay for the processor. In the simplest one, the
+ATmega48, there is a 4-KB flash for the program and a 512-byte SRAM for data.
+Both the flash and the RAM are on chip. For small applications, this amount of
+memory is often enough and having all the memory on the CPU chip is a big win.
+The ATmega88 has twice as much memory on chip: 8 KB of ROM and 1 KB of
+SRAM.
+The ATmega168 uses a two-tiered memory organization to provide better program security. Program flash memory is divided into the boot loader section and
+application section, the size of each being determined by fuse bits that are onetime programmed when the microcontroller is first powered up. For security reasons, only code run from the boot loader section can update flash memory. With
+this feature, any code can be placed in the application area (including downloaded
+third-party applications) with confidence that it will never muck with other code in
+the system (because application code will be running from the application space
+which cannot write flash memory). To really tie down a system, a vendor can digitally sign code. With signed code, the boot loader loads code into the flash memory only if it is digitally signed by an approved software vendor. As such, the system
+
+SEC. 5.1
+
+357
+
+OVERVIEW OF THE ISA LEVEL
+
+will run only code that has been ‘‘blessed’’ by a trusted software vendor. The
+approach is quite flexible in that even the boot loader can be replaced, if the new
+code has been properly digitally signed. This is similar to the way that Apple and
+TiVo ensure that the code running on their devices is safe from mischief.
+The ATmega168 contains 32 8-bit general-purpose registers, which are accessed by instructions via a 5-bit field specifying which register to use. The registers are called R0 through R31. A peculiar property of the ATmega168 registers is
+that they are also present in the memory space. Byte 0 of the data space is equivalent to R0 of register set 0. When an instruction changes R0 and then later reads
+out memory byte 0, it finds the new value of R0 there. Similarly, byte 1 of memory
+is R1 and so on, up to byte 31. This arrangement is shown in Fig. 5-5.
+Program memory
+16383
+Data memory
+Application
+memory
+
+Scratchpad
+
+1023
+95
+
+I/O memory
+Boot loader
+
+Registers
+
+0
+
+32
+31
+0
+
+0
+
+7
+
+Status register (SREG) I T H S V N Z C
+High
+
+Addr 80
+
+Low
+
+Addr 81
+
+Stack pointer (SP)
+
+Figure 5-5. On-chip register and memory organization for the ATmega168.
+
+Directly above the 32 general-purpose registers, at memory addresses 32
+through 95, are 64 bytes of memory reserved for accessing I/O device registers, including the internal system-on-a-chip devices.
+In addition to the four sets of eight registers, the ATmega168 has a small number of special-purpose registers, the most important of which are illustrated in
+Fig. 5-5. The status register contains, from left to right, the interrupt enable bit,
+the half-carry bit, the sign bit, the overflow bit, the negative flag, the zero flag, and
+the carry-out bit. All of these status bits, except the interrupt enable bit, are set as a
+result of arithmetic operations.
+The status register I bit allows interrupts to be enabled or disabled globally. If
+the I bit is 0, all interrupts are disabled. Clearing this bit makes it possible to disable any further interrupts in a single instruction. Setting the bit allows any interrupts currently pending to occur as well as future ones. Each device has associated
+
+358
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+with it an interrupt enable bit. If the device enable is set and the global interrupt
+enable I bit is set, the device can interrupt the processor.

@@ -1,0 +1,100 @@
+Figure A-3. Decimal numbers and their binary, octal, and hexadecimal equivalents.
+
+A.3 CONVERSION FROM ONE RADIX TO ANOTHER
+Conversion between octal or hexadecimal numbers and binary numbers is easy.
+To convert a binary number to octal, divide it into groups of 3 bits, with the 3 bits
+immediately to the left (or right) of the decimal point (often called a binary point)
+forming one group, the 3 bits immediately to their left, another group, and so on.
+Each group of 3 bits can be directly converted to a single octal digit, 0 to 7, according to the conversion given in the first lines of Fig. A-3. It may be necessary to add
+one or two leading or trailing zeros to fill out a group to 3 full bits. Conversion
+from octal to binary is equally trivial. Each octal digit is simply replaced by the equivalent 3-bit binary number. Conversion from hexadecimal to binary is just like
+
+674
+
+BINARY NUMBERS
+
+APP. A
+
+octal-to-binary except that each hexadecimal digit corresponds to a group of 4 bits
+instead of 3 bits. Figure A-4 gives some examples of conversions.
+Example 1
+Hexadecimal
+Binary
+Octal
+
+. B
+6
+0 0 0 1 1 0 0 1 0 1 0 0 1 0 0 0. 1 0 1 1 0 1 1 0 0
+1
+4
+5
+0 . 5
+5
+4
+1
+1
+
+9
+
+4
+
+8
+
+7
+
+B
+
+A
+
+3
+
+Example 2
+Hexadecimal
+Binary
+Octal
+
+.
+.
+.
+
+B
+
+C
+
+4
+
+0111101110100011 101111000100
+7
+
+5
+
+6
+
+4
+
+3
+
+5
+
+7
+
+0
+
+4
+
+Figure A-4. Examples of octal-to-binary and hexadecimal-to-binary conversion.
+
+Conversion of decimal numbers to binary can be done in two different ways.
+The first method follows directly from the definition of binary numbers. The
+largest power of 2 smaller than the number is subtracted from the number. The
+process is then repeated on the difference. Once the number has been decomposed
+into powers of 2, the binary number can be assembled with 1s in the bit positions
+corresponding to powers of 2 used in the decomposition, and 0s elsewhere.
+The other method (for integers only) consists of dividing the number by 2.
+The quotient is written directly beneath the original number and the remainder, 0
+or 1, is written next to the quotient. The quotient is then considered and the process repeated until the number 0 has been reached. The result of this process will be
+two columns of numbers, the quotients and the remainders. The binary number
+can now be read directly from the remainder column starting at the bottom. Figure
+A-5 gives an example of decimal-to-binary conversion.
+Binary integers can also be converted to decimal in two ways. One method
+consists of summing up the powers of 2 corresponding to the 1 bits in the number.

@@ -1,0 +1,100 @@
+other registers that contain addresses use word addresses, like MAR.
+In the actual physical implementation, there is only one real memory and it is
+byte oriented. Allowing MAR to count in words (needed due to the way JVM is defined) while the physical memory counts in bytes is handled by a simple trick.
+When MAR is placed on the address bus, its 32 bits do not map onto the 32 address
+lines, 0–31, directly. Instead MAR bit 0 is wired to address bus line 2, MAR bit 1 to
+address bus line 3, and so on. The upper 2 bits of MAR are discarded since they are
+needed only for word addresses above 232 , none of which are legal for our 4-GB
+machine. Using this mapping, when MAR is 1, address 4 is put onto the bus; when
+MAR is 2, address 8 is put onto the bus, and so forth. This trick is illustrated in
+Fig. 4-4.
+32-Bit MAR (counts in words)
+Discarded
+0 0
+
+32-Bit address bus (counts in bytes)
+
+Figure 4-4. Mapping of the bits in MAR to the address bus.
+
+As mentioned above, data read from memory through the 8-bit memory port
+are returned in MBR, an 8-bit register. MBR can be gated (i.e., copied) onto the B
+bus in one of two ways: unsigned or signed. When the unsigned value is needed,
+the 32-bit word put onto the B bus contains the MBR value in the low-order 8 bits
+and zeros in the upper 24 bits. Unsigned values are useful for indexing into a table, or when a 16-bit integer has to be assembled from 2 consecutive (unsigned)
+bytes in the instruction stream.
+The other option for converting the 8-bit MBR to a 32-bit word is to treat it as a
+signed value between −128 and +127 and use this value to generate a 32-bit word
+with the same numerical value. This conversion is done by duplicating the MBR
+sign bit (leftmost bit) into the upper 24 bit positions of the B bus, a process known
+as sign extension. When this option is chosen, the upper 24 bits will either be all
+0s or all 1s, depending on whether the leftmost bit of the 8-bit MBR is a 0 or a 1.
+The choice of whether the 8-bit MBR is converted to an unsigned or a signed
+32-bit value on the B bus is determined by which of the two control signals (open
+arrows below MBR in Fig. 4-1) is asserted. The need for these two options is why
+two arrows are present. The ability to have the 8-bit MBR act like a 32-bit source to
+the B bus is indicated by the dashed box to the left of MBR in the figure.
+
+SEC. 4.1
+
+AN EXAMPLE MICROARCHITECTURE
+
+251
+
+4.1.2 Microinstructions
+To control the data path of Fig. 4-1, we need 29 signals. These can be divided
+into five functional groups, as described below.
+9 Signals to control writing data from the C bus into registers.
+9 Signals to control enabling registers onto the B bus for ALU input.
+8 Signals to control the ALU and shifter functions.
+2 Signals (not shown) to indicate memory read/write via MAR/MDR.
+1 Signal (not shown) to indicate memory fetch via PC/MBR.
+The values of these 29 control signals specify the operations for one cycle of the
+data path. A cycle consists of gating values out of registers and onto the B bus,
+propagating the signals through the ALU and shifter, driving them onto the C bus,
+and finally writing the results in the appropriate register or registers. In addition, if
+a memory read data signal is asserted, the memory operation is started at the end of
+the data path cycle, after MAR has been loaded. The memory data are available at
+the very end of the following cycle in MBR or MDR and can be used in the cycle
+after that. In other words, a memory read on either port initiated at the end of
+cycle k delivers data that cannot be used in cycle k + 1, but only in cycle k + 2 or
+later.
+This seemingly counterintuitive behavior is explained by Fig. 4-3. The memory control signals are not generated in clock cycle 1 until just after MAR and PC are
+loaded at the rising edge of the clock, toward the end of clock cycle 1. We will assume the memory puts its results on the memory buses within one cycle so that
+MBR and/or MDR can be loaded on the next rising clock edge, along with the other
+registers.
+Put in other words, we load MAR at the end of a data path cycle and start the
+memory shortly thereafter. Consequently, we cannot really expect the results of a
+read operation to be in MDR at the start of the next cycle, especially if the clock
+pulse is narrow. There is just not enough time if the memory takes one clock cycle.
+One data path cycle must intervene between starting a memory read and using the
+result. Of course, other operations can be performed during that cycle, just not
+those that need the memory word.
+The assumption that the memory takes one cycle to operate is equivalent to assuming that the level 1 cache hit rate is 100%. This assumption is never true, but
+the complexity introduced by a variable-length memory cycle time is more than we
+want to deal with here.
+Since MBR and MDR are loaded on the rising edge of the clock, along with all
+the other registers, they may be read during cycles when a new memory read is
+being performed. They return the old values, since the read has not yet had time to
+overwrite them. There is no ambiguity here; until new values are loaded into MBR
+
+252
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+and MDR at the rising edge of the clock, the previous values are still there and
+usable. Note that it is possible to perform back-to-back reads on two consecutive
+cycles, since a read takes only 1 cycle. Also, both memories may operate at the
+same time. However, trying to read and write the same byte simultaneously gives
+undefined results.
+While it may be desirable to write the output on the C bus into more than one
+register, it is never desirable to enable more than one register onto the B bus at a
+time. (In fact, some real implementations will suffer physical damage if this is
+done.) With a small increase in circuitry, we can reduce the number of bits needed
+to select among the possible sources for driving the B bus. There are only nine
+possible input registers that can drive the B bus (where the signed and unsigned
+versions of MBR each count separately). Therefore, we can encode the B bus information in 4 bits and use a decoder to generate the 16 control signals, 7 of which
+are not needed. In a commercial design, the architects would experience an overwhelming urge to get rid of one of the registers so that 3 bits would do the job. As
+academics, we have the enormous luxury of being able to waste 1 bit to give a
+cleaner and simpler design.

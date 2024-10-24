@@ -1,0 +1,100 @@
+will be wasted. Whenever the seventh page is present in memory, those bytes will
+occupy main memory but will serve no useful function. The problem of these
+wasted bytes is called internal fragmentation (because the wasted space is internal to some page).
+If the page size is n bytes, the average amount of space wasted in the last page
+of a program by internal fragmentation will be n/2 bytes—a situation that suggests
+using a small page size to minimize waste. On the other hand, a small page size
+means many pages, as well as a large page table. If the page table is maintained in
+hardware, a large page table means that more registers are needed to store it, which
+increases the cost of the computer. In addition, more time will be required to load
+and save these registers whenever a program is started or stopped.
+Furthermore, small pages make inefficient use of disk bandwidth. Given that
+one is going to wait 10 msec or so before the transfer can begin (seek + rotational
+delay), large transfers are more efficient than small ones. With a 100-MB/sec
+transfer rate, transferring 8 KB adds only 70 μ sec compared to transferring 1 KB.
+
+SEC. 6.1
+
+VIRTUAL MEMORY
+
+449
+
+However, small pages also have the advantage that if the working set consists
+of a large number of small, separated regions in the virtual address space, there
+may be less thrashing with a small page size than with a big one. For example,
+consider a 10,000 × 10,000 matrix, A, stored with A[1, 1], A[2, 1], A[3, 1], and so
+on, in consecutive 8-byte words. This column-ordered storage means that the elements of row 1, A[1, 1], A[1, 2], A[1, 3], and so on, will begin 80,000 bytes apart.
+A program performing an extensive calculation on all the elements of this row
+would use 10,000 regions, each separated from the next one by 79,992 bytes. If
+the page size were 8 KB, a total storage of 80 MB would be needed to hold all the
+pages being used.
+On the other hand, a page size of 1 KB would require only 10 MB of RAM to
+hold all the pages. If the available memory were 32 MB, with an 8-KB page size,
+the program would thrash, but with a 1-KB page size it would not. All things considered, the trend is toward larger page sizes. In practice, 4 KB is the minimum
+these days.
+
+6.1.6 Segmentation
+The virtual memory discussed above is one-dimensional because the virtual
+addresses go from 0 to some maximum address, one address after another. For
+many problems, having two or more separate virtual address spaces may be much
+better than having only one. For example, a compiler might have many tables that
+are built up as compilation proceeds, including
+1. The symbol table, containing the names and attributes of variables.
+2. The source text being saved for the printed listing.
+3. A table containing all the integer and floating-point constants used.
+4. The parse tree, containing the syntactic analysis of the program.
+5. The stack used for procedure calls within the compiler.
+Each of the first four tables grows continuously as compilation proceeds. The last
+one grows and shrinks in unpredictable ways during compilation. In a one-dimensional memory, these five tables would have to be allocated as contiguous chunks
+of virtual address space, as in Fig. 6-7.
+Consider what happens if a program has an exceptionally large number of variables. The chunk of address space allocated for the symbol table may fill up, even
+if there is lots of room in the other tables. The compiler could, of course, simply
+issue a message saying that the compilation cannot continue due to too many variables, but doing so does not seem very sporting when unused space is left in the
+other tables.
+Another possibility is to have the compiler play Robin Hood, taking space
+from the tables with much room and giving it to the tables with little room. This
+
+450
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+Virtual address space
+Free
+Currently used
+
+Call stack
+
+Address space
+allocated to the
+call stack
+
+Parse tree
+Constant table
+
+Source text
+Symbol table
+
+Figure 6-7. In a one-dimensional address space with growing tables, one table
+may bump into another.
+
+shuffling can be done, but it is analogous to managing one’s own overlays—a nuisance at best and a great deal of tedious, unrewarding work at worst.
+What is really needed is a way of freeing the programmer from having to manage the expanding and contracting tables, in the same way that virtual memory
+eliminates the worry of organizing the program into overlays.
+A straightforward solution is to provide many completely independent address
+spaces, called segments. Each segment consists of a linear sequence of addresses,
+from 0 to some maximum. The length of each segment may be anything from 0 to
+the maximum allowed. Different segments may, and usually do, have different
+lengths. Moreover, segment lengths may change during execution. The length of a
+stack segment may be increased whenever something is pushed onto the stack and
+decreased whenever something is popped off the stack.
+Because each segment constitutes a separate address space, different segments
+can grow or shrink independently, without affecting each other. If a stack in a certain segment needs more address space to grow, it can have it, because there is
+nothing else in its address space to bump into. Of course, a segment can fill up
+completely but segments are usually very large, so this occurrence is rare. To specify an address in this segmented or two-dimensional memory, the program must
+supply a two-part address: a segment number, and an address within the segment.
+Figure 6-8 illustrates a segmented memory being used for the compiler tables discussed earlier.
+We emphasize that a segment is a logical entity, which the programmer is
+aware of and uses as a single logical entity. A segment might contain a procedure,
+or an array, or a stack, or a collection of scalar variables, but usually it does not

@@ -1,0 +1,100 @@
+destroyed by the second call. The ability for a procedure to call itself, called
+recursion, is exceedingly important for both theorists and practical programmers.
+Furthermore, if procedure A calls procedure B, and procedure B calls procedure C,
+and procedure C calls procedure A (indirect or daisy-chain recursion), this scheme
+also fails. This scheme for storing the return address in the first word of a procedure was used on the CDC 6600, the fastest computer in the world during much of
+the 1960s. The main language used on the 6600 was FORTRAN, which forbade
+recursion, so it worked then. But it was, and still is, a terrible idea.
+A bigger improvement is to have the procedure-call instruction put the return
+address in a register, leaving the responsibility for storing it in a safe place to the
+procedure. If the procedure is recursive, it will have to put the return address in a
+different place each time it is called.
+The best thing for the procedure-call instruction to do with the return address is
+to push it onto a stack. When the procedure has finished, it pops the return address
+off the stack and stuffs it into the program counter. If this form of procedure call is
+available, recursion does not cause any special problems; the return address will
+
+SEC. 5.5
+
+393
+
+INSTRUCTION TYPES
+
+automatically be saved in such a way as to avoid destroying previous return addresses. Recursion works just fine under these conditions. We saw this form of
+saving the return address in IJVM in Fig. 4-12.
+
+5.5.6 Loop Control
+The need to execute a group of instructions a fixed number of times occurs frequently and thus some machines have instructions to facilitate doing this. All the
+schemes involve a counter that is increased or decreased by some constant once
+each time through the loop. The counter is also tested once each time through the
+loop. If a certain condition holds, the loop is terminated.
+One method initializes a counter outside the loop and then immediately begins
+executing the loop code. The last instruction of the loop updates the counter and,
+if the termination condition has not yet been satisfied, branches back to the first instruction of the loop. Otherwise, the loop is finished and it falls through, executing
+the first instruction beyond the loop. This form of looping is characterized as testat-the-end (or post-test) type looping, and is illustrated in C in Fig. 5-29(a). (We
+could not use Java here because it does not have a goto statement.)
+i = 1;
+L1:
+L1:
+
+first-statement;
+.
+.
+.
+last-statement;
+i = i + 1;
+if (i < n) goto L1;
+
+i = 1;
+if (i > n) goto L2;
+first-statement;
+.
+.
+.
+last-statement
+i = i + 1;
+goto L1;
+
+L2:
+(a)
+
+(b)
+
+Figure 5-29. (a) Test-at-the-end loop. (b) Test-at-the-beginning loop.
+
+Test-at-the-end looping has the property that the loop will always be executed
+at least once, even if n is less than or equal to 0. Consider, as an example, a program that maintains personnel records for a company. At a certain point in the program, it is reading information about a particular employee. It reads in n, the number of children the employee has, and executes a loop n times, once per child, reading the child’s name, sex, and birthday, so that the company can send him or her a
+birthday present, one of the company’s fringe benefits. If the employee does not
+have any children, n will be 0 but the loop will still be executed once sending presents and giving erroneous results.
+Figure 5-29(b) shows another way of performing the test (pretest) that works
+properly even for n less than or equal to 0. Notice that the testing is different in the
+two cases, so that if a single ISA instruction does both the increment and the test,
+the designers are forced to choose one method or the other.
+
+394
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+Consider the code that should be produced for the statement
+for (i = 0; i < n; i++) { statements }
+
+If the compiler does not have any information about n, it must use the approach of
+Fig. 5-29(b) to correctly handle the case of n ≤ 0. If, however, it can determine
+that n > 0, for example, by seeing where n is assigned, it may use the better code
+of Fig. 5-29(a). The FORTRAN standard formerly stated that all loops were to be
+executed once, to allow the more efficient code of Fig. 5-29(a) to be generated all
+the time. In 1977, that defect was corrected when even the FORTRAN community
+began to realize that having a loop statement with outlandish semantics that sometimes gave the wrong answer was not a good idea, even if it did save one branch instruction per loop. C and Java have always done it right.
+
+5.5.7 Input/Output
+No other group of instructions exhibits as much variety from machine to machine as the I/O instructions. Three different I/O schemes are in current use in personal computers. These are
+1. Programmed I/O with busy waiting.
+2. Interrupt-driven I/O.
+3. DMA I/O.
+We now discuss each of these in turn.
+The simplest possible I/O method is programmed I/O, which is commonly
+used in low-end microprocessors, for example, in embedded systems or in systems
+that must respond quickly to external changes (real-time systems). These CPUs
+usually have a single input instruction and a single output instruction. Each of

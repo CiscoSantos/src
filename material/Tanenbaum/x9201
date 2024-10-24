@@ -1,0 +1,100 @@
+The ISA-level instruction set is completely different from the microarchitecture instruction set. Both the operations that can be performed and the formats for
+the instructions are quite different at the two levels. The occasional existence of a
+few instructions that are the same at both levels is essentially accidental.
+In contrast, the OSM-level instruction set contains most of the ISA-level instructions, with a few new, but important, instructions added and a few potentially
+damaging instructions removed. Input/output is one of the areas where the two
+levels differ considerably. The reason is simple: a user who could execute the real
+ISA-level I/O instructions could read confidential data stored anywhere in the system, write in other users’ directories, and, in general, make a big nuisance of himself or herself and even threaten the security of the system itself. Second, normal,
+sane programmers do not want to do I/O at the ISA level themselves because doing
+so is extremely tedious and complex. It is done by setting fields and bits in a number of device registers, waiting until the operation is completed, and then checking
+to see what happened. As an example of the latter, disks typically have device-register bits to detect the following errors, among many others:
+1. Disk arm failed to seek properly.
+2. Nonexistent memory specified as buffer.
+3. Disk I/O started before previous one finished.
+4. Read timing error.
+5. Nonexistent disk addressed.
+6. Nonexistent cylinder addressed.
+7. Nonexistent sector addressed.
+8. Checksum error on read.
+9. Write-check error after write operation.
+When one of these errors occurs, the corresponding bit in a device register is
+set. Few users want to be bothered keeping track of all these error bits and a great
+deal of additional status information.
+
+6.3.1 Files
+One way of organizing the virtual I/O is to use an abstraction called a file. In
+its simplest form, a file consists of a sequence of bytes written to an I/O device. If
+the I/O device is a storage device, such as a disk, the file can be read back later; if
+the device is not a storage device (e.g., a printer), it cannot be read back, of course.
+
+466
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+A disk can hold many files, each with some particular kind of data, for example, a
+picture, a spreadsheet, or the text of a book chapter. Different files have different
+lengths and other properties. The abstraction of a file allows virtual I/O to be
+organized in a simple way.
+To the operating system, a file is normally just a sequence of bytes, as we have
+described above. Any further structure is up to the application programs. File I/O
+is done by system calls for opening, reading, writing, and closing files. Before a
+file can be read, it must be opened. The process of opening a file allows the operating system to locate the file on disk and bring into memory information necessary to access it.
+Once a file has been opened, it can be read. The read system call must have
+the following parameters, at a minimum:
+1. An indication of which open file is to be read.
+2. A pointer to a buffer in memory in which to put the data.
+3. The number of bytes to be read.
+The read call puts the requested data in the buffer. Usually, it returns the count of
+the number of bytes actually read, which may be smaller than the number requested (you cannot read 2000 bytes from a 1000-byte file).
+Associated with each open file is a pointer telling which byte will be read next.
+After a read it is advanced by the number of bytes read, so consecutive reads read
+consecutive blocks of data from the file. Usually, there is a way to set this pointer
+to a specific value, so programs can randomly access any part of the file. When a
+program is done reading a file, it can close it, to inform the operating system that it
+will not be using the file any more, thus allowing the operating system to free up
+the table space being used to hold information about the file.
+Mainframe computers are still around (especially for running very large
+e-commerce Websites) and some of them still run traditional operating systems (although many run Linux). The traditional mainframe operating systems have a different model of what a file is, and it is worth taking a brief look at this model, just
+to show that the UNIX way is not the only way to do things. In these traditional
+systems, a file is a sequence of logical records, each with a well-defined structure.
+For example, a logical record might be a data structure consisting of five items:
+two character strings, ‘‘Name,’’ and ‘‘Supervisor’’; two integers, ‘‘Department’’
+and ‘‘Office’’; and a Boolean, ‘‘SexIsFemale.’’ Some operating systems make a
+distinction between files in which all the records in a file have the same structure
+and files which contain a mixture of different record types.
+The basic virtual input instruction reads the next record from the specified file
+and puts it into main memory beginning at a specified address, as illustrated in
+Fig. 6-20. To perform this operation, the virtual instruction must be told which file
+to read and where in memory to put the record. Often there are options to read a
+specific record, specified either by its position in the file or by its key.
+
+SEC. 6.3
+Logical
+record
+number
+
+467
+
+OSM-LEVEL I/O INSTRUCTIONS
+14
+
+15
+1 logical
+record
+
+15
+16
+
+17
+
+Next logical
+record to be
+read
+
+17
+18
+
+16
+

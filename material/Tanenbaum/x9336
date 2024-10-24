@@ -1,0 +1,100 @@
+Fraction is 1 × 16–3 + B × 16–4
+
+Sign Excess 64
++ exponent is
+69 – 64 = 5
+
+To normalize, shift the fraction left 2 hexadecimal digits, and subtract 2 from the exponent.
+Normalized:
+
+0 1000011
+Sign Excess 64
++ exponent is
+67 – 64 = 3
+
+.
+
+0001
+
+1011
+
+0000
+
+0 0 0 0 = 163 (1 × 16–1+ B × 16–2) = 432
+
+Fraction is 1 × 16–1 + B × 16–2
+
+Figure B-3. Examples of normalized floating-point numbers.
+
+To rectify this situation, in the late 1970s IEEE set up a committee to standardize floating-point arithmetic. The goal was not only to permit floating-point
+data to be exchanged among different computers but also to provide hardware designers with a model known to be correct. The resulting work led to IEEE Standard 754 (IEEE, 1985). Most CPUs these days (including the Intel and JVM ones
+studied in this book) have floating-point instructions that conform to the IEEE
+floating-point standard. Unlike many standards, which tend to be wishy-washy
+compromises that please no one, this one is not bad, in large part because it was
+primarily the work of one person, Berkeley math professor William Kahan. The
+standard will be described in the remainder of this section.
+The standard defines three formats: single precision (32 bits), double precision
+(64 bits), and extended precision (80 bits). The extended-precision format is intended to reduce roundoff errors. It is used primarily inside floating-point arithmetic units, so we will not discuss it further. Both the single- and double-precision
+formats use radix 2 for fractions and excess notation for exponents. The formats
+are shown in Fig. B-4.
+Both formats start with a sign bit for the number as a whole, 0 being positive
+and 1 being negative. Next comes the exponent, using excess 127 for single
+
+686
+
+FLOATING-POINT NUMBERS
+Bits 1
+
+8
+
+APP. B
+
+23
+Fraction
+
+Sign
+
+Exponent
+(a)
+
+Bits 1
+
+11
+
+52
+
+Exponent
+
+Fraction
+
+Sign
+(b)
+
+Figure B-4. IEEE floating-point formats. (a) Single precision. (b) Double precision.
+
+precision and excess 1023 for double precision. The minimum (0) and maximum
+(255 and 2047) exponents are not used for normalized numbers; they have special
+uses described below. Finally, we have the fractions, 23 and 52 bits, respectively.
+A normalized fraction begins with a binary point, followed by a 1 bit, and then
+the rest of the fraction. Following a practice started on the PDP-11, the authors of
+the standard realized that the leading 1 bit in the fraction does not have to be stored, since it can just be assumed to be present. Consequently, the standard defines
+the fraction in a slightly different way than usual. It consists of an implied 1 bit, an
+implied binary point, and then either 23 or 52 arbitrary bits. If all 23 or 52 fraction
+bits are 0s, the fraction has the numerical value 1.0; if all of them are 1s, the fraction is numerically slightly less than 2.0. To avoid confusion with a conventional
+fraction, the combination of the implied 1, the implied binary point, and the 23 or
+52 explicit bits is called a significand instead of a fraction or mantissa. All normalized numbers have a significand, s, in the range 1 ≤ s < 2.
+The numerical characteristics of the IEEE floating-point numbers are given in
+Fig. B-5. As examples, consider the numbers 0.5, 1, and 1.5 in normalized single-precision format. These are represented in hexadecimal as 3F000000,
+3F800000, and 3FC00000, respectively.
+One of the traditional problems with floating-point numbers is how to deal
+with underflow, overflow, and uninitialized numbers. The IEEE standard deals
+with these problems explicitly, borrowing its approach in part from the CDC 6600.
+In addition to normalized numbers, the standard has four other numerical types,
+described below and shown in Fig. B-6.
+A problem arises when the result of a calculation has a magnitude smaller than
+the smallest normalized floating-point number that can be represented in this system. Previously, most hardware took one of two approaches: just set the result to
+zero and continue, or cause a floating-point underflow trap. Neither of these is
+
+SEC. B.2
+
+687

@@ -1,0 +1,100 @@
+
+Instruction
+class
+
+37
+
+1
+
+6
+
+ADD
+
+EAX
+
+immed32
+
+05
+
+5
+
+4
+
+ADD
+
+reg
+
+reg
+
+01
+
+2
+
+19
+
+AND
+
+EAX
+
+immed32
+
+25
+
+5
+
+4
+
+AND
+
+reg
+
+reg
+
+21
+
+2
+
+19
+
+Figure 7-8. A few excerpts from the opcode table for an x86 assembler.
+
+As an example, consider the opcode ADD. If an ADD instruction contains EAX
+as the first operand and a 32-bit constant (immed32) as the second one, then opcode 0x05 is used and the instruction length is 5 bytes. (Constants that can be
+expressed in 8 or 16 bits use different opcodes, not shown.) If ADD is used with
+two registers as operands, the instruction is 2 bytes, with opcode 0x01. The (arbitrary) instruction class 19 would be given to all opcode-operand combinations that
+follow the same rules and should be processed the same way as ADD with two register operands. The instruction class effectively designates a procedure within the
+assembler that is called to process all instructions of a given type.
+Some assemblers allow programmers to write instructions using immediate addressing even though no corresponding target language instruction exists. Such
+‘‘pseudoimmediate’’ instructions are handled as follows. The assembler allocates
+
+532
+
+THE ASSEMBLY LANGUAGE LEVEL
+
+CHAP. 7
+
+memory for the immediate operand at the end of the program and generates an instruction that references it. For instance, the IBM 360 mainframe and its successors have no immediate instructions. Nevertheless, programmers may write
+L 14,=F′5′
+
+to load register 14 with a full word constant 5. In this manner, the programmer
+avoids explicitly writing a pseudoinstruction to allocate a word initialized to 5, giving it a label, and then using that label in the L instruction. Constants for which the
+assembler automatically reserves memory are called literals. In addition to saving
+the programmer a little writing, literals improve the readability of a program by
+making the value of the constant apparent in the source statement. Pass one of the
+assembler must build a table of all literals used in the program. All three of our example computers have immediate instructions, so their assemblers do not provide
+literals. Immediate instructions are quite common nowadays, but formerly they
+were unusual. It is likely that the widespread use of literals made it clear to machine designers that immediate addressing was a good idea. If literals are needed,
+a literal table is maintained during assembly, with a new entry made each time a
+literal is encountered. After the first pass, this table is sorted and duplicates removed.
+Figure 7-9 shows a procedure that could serve as a basis for pass one of an
+assembler. The style of programming is noteworthy in itself. The procedure
+names have been chosen to give a good indication of what the procedures do.
+Most important, Fig. 7-9 represents an outline of pass one which, although not
+complete, forms a good starting point. It is short enough to be easily understood
+and it makes clear what the next step must be—namely, to write the procedures
+used in it.
+Some of these procedures will be relatively short, such as check for symbol,
+which just returns the symbol as a character string if there is one and null if there is
+not. Other procedures, such as get length of type1 and get length of type2, may
+be longer and may call other procedures. In general, the number of types will not
+be two, of course, but will depend on the language being assembled and how many

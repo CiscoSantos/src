@@ -1,0 +1,100 @@
+
+Set carry bit in EFLAGS register
+
+NEG DST
+
+Negate DST (subtract it from 0)
+
+CLC
+
+Clear carry bit in EFLAGS register
+
+CMC
+
+Complement carry bit in EFLAGS
+
+Binary coded decimal
+
+STD
+
+Set direction bit in EFLAGS register
+
+DAA
+
+Decimal adjust
+
+CLD
+
+Clear direction bit in EFLAGS reg
+
+DAS
+
+Decimal adjust for subtraction
+
+STI
+
+Set interrupt bit in EFLAGS register
+
+AAA
+
+ASCII adjust for addition
+
+CLI
+
+Clear interrupt bit in EFLAGS reg
+
+AAS
+
+ASCII adjust for subtraction
+
+PUSHFD
+
+Push EFLAGS register onto stack
+
+AAM
+
+ASCII adjust for multiplication
+
+AAD
+
+ASCII adjust for division
+
+POPFD
+
+Pop EFLAGS register from stack
+
+Boolean
+AND DST,SRC
+
+Boolean AND SRC into DST
+
+OR DST,SRC
+
+Boolean OR SRC into DST
+
+XOR DST,SRC
+
+Boolean Exclusive OR SRC to DST
+
+NOT DST
+
+Replace DST with 1’s complement
+
+Shift/rotate
+SAL/SAR DST,#
+
+Shift DST left/right # bits
+
+SHL/SHR DST,#
+
+Logical shift DST left/right # bits
+
+ROL/ROR DST,#
+
+Rotate DST left/right # bits
+
+RCL/RCR DST,#
+
+Rotate DST through carry # bits
+
+Test/compare

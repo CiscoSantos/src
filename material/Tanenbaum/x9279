@@ -1,0 +1,100 @@
+gets (200, 200) and CPU 4 gets (200, 200). In Fig. 8-24(c), they get (100, 200) and
+(200, 200), respectively. In Fig. 8-24(d), they get (100, 100) and (200, 100), respectively. All of these are legal, as well as some other possibilities that are not
+shown. Note that there is not single ‘‘correct’’ value.
+
+SEC. 8.3
+CPU
+2
+
+Write 200
+1
+
+Write
+100
+
+595
+
+SHARED-MEMORY MULTIPROCESSORS
+
+x
+
+Read 2x
+
+Read 2x
+
+3
+
+W100
+
+W100
+
+W200
+
+W200
+
+R3 = 100
+
+R4 = 200
+
+R3 = 200
+
+W200
+
+W100
+
+R3 = 200
+
+R4 = 200
+
+R3 = 100
+
+R4 = 200
+
+R3 = 200
+
+R4 = 100
+
+R4 = 200
+
+R4 = 200
+
+R3 = 100
+
+(b)
+
+(c)
+
+(d)
+
+4
+(a)
+
+Figure 8-24. (a) Two CPUs writing and two CPUs reading a common memory
+word. (b)–(d) Three possible ways the two writes and four reads might be interleaved in time.
+
+However—and this is the essence of sequential consistency—no matter what, a
+sequentially consistent memory will never allow CPU 3 to get (100, 200) while
+CPU 4 gets (200, 100). If this were to occur, it would mean that according to CPU
+3, the write of 100 by CPU 1 completed after the write of 200 by CPU 2. That is
+fine. But it would also mean that according to CPU 4, the write of 200 by CPU 2
+completed before the write of 100 by CPU 1. By itself, this result is also possible.
+The problem is that sequential consistency guarantees that there is a single global
+ordering of all writes that is visible to all CPUs. If CPU 3 observes that 100 was
+written first, then CPU 4 must also see this order.
+While sequential consistency is not as powerful a rule as strict consistency, it is
+still very useful. In effect, it says that when multiple events are happening concurrently, there is some true order in which they occur. Possibly it is determined by
+timing and chance, but a true ordering exists and all processors observe this same
+order. Although this statement may seem obvious, below we will discuss consistency models that do not guarantee even this much.
+Processor Consistency
+A looser consistency model, but one that is easier to implement on large multiprocessors, is processor consistency (Goodman, 1989). It has two properties:
+1. Writes by any CPU are seen by all in the order they were issued.
+2. For every memory word, all CPUs see writes to it in the same order.
+Both of these points are important. The first point says that if CPU 1 issues writes
+with values 1A, 1B, and 1C to some memory location in that sequence, then all
+
+596
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+

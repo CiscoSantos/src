@@ -1,0 +1,100 @@
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+35. Write a procedure hamming(ascii, encoded) that converts the low-order 7 bits of ascii
+into an 11-bit integer codeword stored in encoded.
+36. Write a function distance(code, n, k) that takes an array code of n characters of k bits
+each as input and returns the distance of the character set as output.
+
+3
+THE DIGITAL LOGIC LEVEL
+
+At the bottom of the hierarchy of Fig. 1-2 we find the digital logic level, the
+computer’s real hardware. In this chapter, we will examine many aspects of digital
+logic, as a building block for the study of higher levels in subsequent chapters.
+This subject is on the boundary of computer science and electrical engineering, but
+the material is self-contained, so no previous hardware or engineering experience
+is needed to follow it.
+The basic elements from which all digital computers are constructed are amazingly simple. We will begin our study by looking at these basic elements and also
+at the special two-valued algebra (Boolean algebra) used to analyze them. Next we
+will examine some fundamental circuits that can be built using gates in simple
+combinations, including circuits for doing arithmetic. The following topic is how
+gates can be combined to store information, that is, how memories are organized.
+After that, we come to the subject of CPUs and especially how single-chip CPUs
+interface with memory and peripheral devices. Numerous examples from industry
+will be discussed later in this chapter.
+
+3.1 GATES AND BOOLEAN ALGEBRA
+Digital circuits can be constructed from a small number of primitive elements
+by combining them in innumerable ways. In the following sections we will describe these primitive elements, show how they can be combined, and introduce a
+powerful mathematical technique that can be used to analyze their behavior.
+147
+
+148
+
+THE DIGITAL LOGIC LEVEL
+
+CHAP. 3
+
+3.1.1 Gates
+A digital circuit is one in which only two logical values are present. Typically,
+a signal between 0 and 0.5 volt represents one value (e.g., binary 0) and a signal
+between 1 and 1.5 volts represents the other value (e.g., binary 1). Voltages outside these two ranges are not permitted. Tiny electronic devices, called gates, can
+compute various functions of these two-valued signals. These gates form the hardware basis on which all digital computers are built.
+The details of how gates work inside is beyond the scope of this book, belonging to the device level, which is below our level 0. Nevertheless, we will now
+digress ever so briefly to take a quick look at the basic idea, which is not difficult.
+All modern digital logic ultimately rests on the fact that a transistor can be made to
+operate as a very fast binary switch. In Fig. 3-1(a) we have shown a bipolar transistor (the circle) embedded in a simple circuit. This transistor has three connections to the outside world: the collector, the base, and the emitter. When the
+input voltage, V in , is below a certain critical value, the transistor turns off and acts
+like an infinite resistance. This causes the output of the circuit, V out , to take on a
+value close to V cc , an externally regulated voltage, typically +1.5 volts for this type
+of transistor. When V in exceeds the critical value, the transistor switches on and
+acts like a wire, causing V out to be pulled down to ground (by convention, 0 volts).
++Vcc
++Vcc
++Vcc
+Vout
+V1
+
+Collector
+
+Vout
+
+Vout
+Vin
+
+V2
+
+V1
+
+V2
+
+Emitter
+
+Base
+(a)
+
+(b)
+
+(c)
+
+Figure 3-1. (a) A transistor inverter. (b) A NAND gate. (c) A NOR gate.
+
+The important thing to notice is that when V in is low, V out is high, and vice
+versa. This circuit is thus an inverter, converting a logical 0 to a logical 1, and a
+logical 1 to a logical 0. The resistor (the jagged line) is needed to limit the amount
+of current drawn by the transistor so it does not burn out. The time required to
+switch from one state to the other is typically a nanosecond or less.
+
+SEC. 3.1
+
+149
+
+GATES AND BOOLEAN ALGEBRA
+
+In Fig. 3-1(b) two transistors are cascaded in series. If both V 1 and V 2 are
+high, both transistors will conduct and V out will be pulled low. If either input is
+low, the corresponding transistor will turn off, and the output will be high. In other
+words, V out will be low if and only if both V 1 and V 2 are high.
+In Fig. 3-1(c) the two transistors are wired in parallel instead of in series. In

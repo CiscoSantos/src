@@ -1,0 +1,100 @@
+added to the Pentium 4, starting with the 3.06-GHz version and continuing with
+faster versions of the Pentium processor, including the Core i7. Intel calls the implementation of multithreading used in its processors hyperthreading.
+The basic idea is to allow two threads (or possibly processes, since the CPU
+cannot tell what is a thread and what is a process) to run at once. To the operating
+
+566
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+system, a hyperthreaded Core i7 chip looks like a dual processor in which both
+CPUs happen to share a common cache and main memory. The operating system
+schedules the threads independently. If two applications are running at the same
+time, the operating system can run each one at the same time. For example, if a
+mail daemon is sending or receiving email in the background while a user is interacting with some program in the foreground, the daemon and the user program can
+be run in parallel, as though there were two CPUs available.
+Application software that has been designed to run as multiple threads can use
+both virtual CPUs. For example, video editing programs usually allow users to
+specify certain filters to apply to each frame in some range. These filters can modify the brightness, contrast, color balance, or other properties of each frame. The
+program can then assign one CPU to process the even-numbered frames and the
+other to process the odd-numbered frames. The two can then run in parallel.
+Since the two threads share all the hardware resources, a strategy is needed to
+manage the sharing. Intel identified four useful strategies for resource sharing in
+conjunction with hyperthreading: resource duplication, partitioned resources,
+threshold sharing, and full sharing. We will now touch on each of these in turn.
+To start with, some resources are duplicated just for threading. For example,
+since each thread has its own flow of control, a second program counter had to be
+added. The table that maps the architectural registers (EAX, EBX, etc.) onto the
+physical registers also had to be duplicated, as did the interrupt controller, since the
+threads can be independently interrupted.
+Next we have partitioned resource sharing, in which the hardware resources
+are rigidly divided between the threads. For example, if the CPU has a queue between two functional pipeline stages, half the slots could be dedicated to thread 1
+and the other half to thread 2. Partitioning is easy to accomplish, has no overhead,
+and keeps the threads out of each other’s hair. If all the resources are partitioned,
+we effectively have two separate CPUs. On the down side, it can easily happen
+that at some point one thread is not using some of its resources that the other one
+wants but is forbidden from accessing. As a consequence, resources that could
+have been used productively lie idle.
+The opposite of partitioned sharing is full resource sharing. When this
+scheme is used, either thread can acquire any resources it needs, first come, first
+served. However, imagine a fast thread consisting primarily of additions and
+subtractions and a slow thread consisting primarily of multiplications and divisions. If instructions are fetched from memory faster than multiplications and divisions can be carried out, the backlog of instructions fetched for the slow thread and
+queued but not yet fed into the pipeline will grow in time.
+Eventually, this backlog will occupy the entire instruction queue, bringing the
+fast thread to a halt for lack of space in the instruction queue. Full resource sharing solves the problem of a resource lying idle while another thread wants it, but
+creates a new problem of one thread potentially hogging so many resources that it
+slows the other one down or stops it altogether.
+
+SEC. 8.1
+
+567
+
+ON-CHIP PARALELLISM
+
+An intermediate scheme is threshold sharing, in which a thread can acquire
+resources dynamically (no fixed partitioning) but only up to some maximum. For
+resources that are replicated, this approach allows flexibility without the danger
+that one thread will starve due to its inability to acquire any of the resource. If, for
+example, no thread can acquire more than 3/4 of the instruction queue, no matter
+what the slow thread does, the fast thread will be able to run. The Core i7
+hyperthreading uses different sharing strategies for different resources in an attempt to address the various problems alluded to above. Duplication is used for resources that each thread requires all the time, such as the program counter, register
+map, and interrupt controller. Duplicating these resources increases the chip area
+by only 5%, a modest price to pay for multithreading. Resources available in such
+abundance that there is no danger of one thread capturing them all, such as cache
+lines, are fully shared in a dynamic way. On the other hand, resources that control
+the operation of the pipeline, such as the various queues within the pipeline, are
+partitioned, giving each thread half of the slots. The main pipeline of the Sandy
+Bridge microarchitecture used in the Core i7 is illustrated in Fig. 8-9, with the
+white and gray boxes indicating how the resources are allocated between the white
+and gray threads.
+PC
+
+I-cache and
+Fetch
+micro-op cache queue
+
+Allocate/
+renaming
+
+Reorder Scheduler Registers Execution
+buffer
+
+D-cache
+
+Register
+write
+
+Retirement
+queue
+
+Figure 8-9. Resource sharing between threads in the Core i7 microarchitecture.
+
+In this figure we can see that all the queues are partitioned, with half the slots
+in each queue reserved for each thread. In this one, neither thread can choke off
+the other. The register allocator and renamer is also partitioned. The scheduler is
+dynamically shared, but with a threshold, to prevent either thread from claiming all
+of the slots. The remaining pipeline stages are fully shared.
+All is not sweetness and light with multithreading, however. There is also a
+downside. While partitioning is cheap, dynamic sharing of any resource, especially with a limit on how much a thread can take, requires bookkeeping at run time to

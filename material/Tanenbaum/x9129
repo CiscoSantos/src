@@ -1,0 +1,100 @@
+the machine is to be configured for big-endian operation.
+It is important that the ISA have a larger address-space limit than implementations need, because future implementations almost certainly will need to increase the size of memory the processor can access. The ARM ISA’s 32-bit address space is giving many designers growing pains, since many ARM-based systems, such as smartphones, already have more than 232 bytes of memory. To date,
+designers have worked around these problems by making the bulk of the memory
+flash-drive storage, which is accessed with a disk interface that supports a larger
+block-oriented address space. To address this potentially market-killing limitation,
+ARM (the company) recently published the definition of the ARM version 8 ISA,
+which support 64-bit address spaces.
+A serious problem encountered with successful architectures has been that
+their ISA limited the amount of addressable memory. In computer science, the
+only error one cannot work around is not enough bits. One day your grandchildren
+will ask you how computers could do anything in the old days with only 32-bit addresses and only 4 GB of real memory when the average game needs 1 TB just to
+boot up.
+The ARM ISA is clean, though the organization of the registers is somewhat
+quirky in an attempt to simplify some instruction encodings. The architecture
+maps the program counter into the integer register file (as register R15), as this allows branches to be created with ALU operations that have R15 as a destination
+register. Experience has shown that the register organization is more trouble than it
+is worth, but ye olde backwarde-compatibility rule made it well nigh impossible to
+get rid of.
+The ARM ISA has two groups of registers. These are the 16 32-bit general-purpose registers and the 32 32-bit floating-point registers (if the VFP coprocessor is supported). The general-purpose registers are called R0 through R15,
+
+SEC. 5.1
+
+OVERVIEW OF THE ISA LEVEL
+
+355
+
+although other names are used in certain contexts. The alternative names and functions of the registers are shown in Fig. 5-4.
+Register
+
+Alt. name
+
+Function
+
+R0–R3
+
+A1–A4
+
+Holds parameters to the procedure being called
+
+R4–R11
+
+V1–V8
+
+Holds local variables for the current procedure
+
+R12
+
+IP
+
+Intraprocedure call register (for 32-bit calls)
+
+R13
+
+SP
+
+Stack pointer
+
+R14
+
+LR
+
+Link register (return address for current function)
+
+R15
+
+PC
+
+Program counter
+
+Figure 5-4. The version 7 ARM’s general registers.
+
+All the general registers are 32 bits wide and can be read and written by a variety of load and store instructions. The uses given in Fig. 5-4 are based partly on
+convention, but also partly on how the hardware treats them. In general, it is
+unwise to deviate from the uses listed in the figure unless you have a Black Belt in
+ARM hacking and really, really know what you are doing. It is the responsibility
+of the compiler or programmer to be sure that the program accesses the registers
+correctly and performs the correct kind of arithmetic on them. For example, it is
+very easy to load floating-point numbers into the general registers and then perform integer addition on them, an operation that will produce utter nonsense, but
+which the CPU will cheerfully perform when so instructed.
+The Vx registers are used to hold constants, variables, and pointers that are
+needed by procedures, and they should be stored and reloaded at procedure entries
+and exits if need be. The Ax registers are used for passing parameters to procedures to avoid memory references. We will explain how this works below.
+Four dedicated registers are used for special purposes. The IP register works
+around the limitations of the ARM functional call instruction (BL) which cannot
+fully address all of its 232 bytes of address space. If the target of a call is too far
+away for the instruction to express, the instruction will call a ‘‘veneer’’ code snippet that uses the address in the IP register as the destination of the function call.
+The SP register indicates the current top of the stack and fluctuates as words are
+pushed onto the stack or popped from it. The third special-purpose register is LR.
+It is used for procedure calls to hold the return address. The fourth special-purpose
+register, as mentioned earlier, is the program counter PC. Storing a value to this
+register redirects the fetching of instructions to that newly deposited PC address.
+Another important register in the ARM architecture is the program status register
+(PSR), which holds the status of previous ALU computations, including Zero, Negative, and Overflow among other bits.
+The ARM ISA (when configured with the VFP coprocessor) also has 32 32-bit
+floating-point registers. These registers can be accessed either directly as 32 single-precision floating-point values or as 16 64-bit double-precision floating-point
+
+356
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+

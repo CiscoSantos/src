@@ -1,0 +1,100 @@
+/* Open files for input and output. */
+inhandle = CreateFile(′′data′′, GENERIC READ, 0, NULL, OPEN EXISTING, 0, NULL);
+outhandle = CreateFile(′′newf′′, GENERIC WRITE, 0, NULL, CREATE ALWAYS,
+FILE ATTRIBUTE NORMAL, NULL);
+/* Copy the file. */
+do {
+s = ReadFile(inhandle, buffer, BUF SIZE, &count, NULL);
+if (s > 0 && count > 0) WriteFile(outhandle, buffer, count, &ocnt, NULL);
+} while (s > 0 && count > 0);
+/* Close the files. */
+CloseHandle(inhandle);
+CloseHandle(outhandle);
+Figure 6-40. A program fragment for copying a file using the Windows 7 API
+functions. This fragment is in C because Java hides the low-level system calls
+and we are trying to expose them.
+
+Windows 7 supports a hierarchical file system, similar to the UNIX file system.
+The separator between component names is \ however, instead of /, a fossil inherited from MS-DOS. There is a concept of a current working directory and path
+names can be relative or absolute. One significant difference, however, is that
+UNIX allows the file systems on different disks and machines to be mounted together in a single naming tree starting at a unique root, thus hiding the disk structure
+from all software. Early versions of Windows (pre Windows 2000) did not have
+this property, so absolute file names had to begin with a drive letter indicating
+which logical disk was meant, as in C:\windows\system\foo.dll. Starting with Windows 2000 UNIX-style mounting of file systems was added.
+The major directory management API functions are given in Fig. 6-41, again
+along with their nearest UNIX equivalents. The functions should be self-explanatory.
+Windows 7 has a much more elaborate security mechanism than most UNIX
+systems. Although there are hundreds of API functions relating to security, the
+
+SEC. 6.5
+
+API function
+
+EXAMPLE OPERATING SYSTEMS
+
+UNIX
+
+501
+
+Meaning
+
+CreateDirectory
+
+mkdir
+
+Create a new directory
+
+RemoveDirectory
+
+rmdir
+
+Remove an empty directory
+
+FindFirstFile
+
+opendir
+
+Initialize to start reading the entries in a directory
+
+FindNextFile
+
+readdir
+
+Read the next directory entry
+
+MoveFile
+SetCurrentDirectory
+
+Move a file from one directory to another
+chdir
+
+Change the current working directory
+
+Figure 6-41. The principal Win32 API functions for directory management. The
+second column gives the nearest UNIX equivalent, when one exists.
+
+following brief description gives the general idea. When a user logs in, his or her
+initial process is given an access token by the operating system. The access token
+contains the user’s SID (Security ID), a list of the security groups to which the
+user belongs, any special privileges available, the integrity level of the process, and
+a few other items. The point of the access token is to concentrate all the security
+information in one easy-to-find place. All processes created by this process inherit
+the same access token.
+One of the parameters that can be supplied when any object is created is its
+security descriptor. The security descriptor contains a list of entries called an
+ACL (Access Control List). Each entry permits or prohibits some set of the operations on the object by some SID or group. For example, a file could have a security descriptor specifying that Elinor has no access to the file at all, Ken can read
+the file, Linda can read or write the file, and all members of the XYZ group can
+read the file’s length but nothing else. Defaults can also be set up to deny access to
+anyone not explicitly listed.
+When a process tries to perform some operation on an object using a handle,
+the security manager gets the process’ access token and first checks the integrity
+level in the object’s security descriptor against the integrity level in the token. A
+process cannot obtain a handle with write permission for any object with a higher
+integrity level. Integrity levels are primarily used to restrict what code loaded by
+Web browsers can do to modify the system. After the integrity-level check, the security manager goes down the list of entries in the ACL in order. As soon as it
+finds an entry that matches the called’s SID or one of the called’s groups, the access found there is taken as definitive. For this reason, it is usual to put entries
+denying access ahead of entries granting access in the ACL, so that a user who is
+specifically denied access cannot get in via a back door by being a member of a
+group that has legitimate access. The security descriptor also contains information
+used for auditing accesses to the object.
+Let us now take a quick look at how files and directories are implemented in

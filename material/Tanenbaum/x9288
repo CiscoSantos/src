@@ -1,0 +1,100 @@
+From Fig. 8-33(c) we see that this line is cached at node 82. At this point the hardware could update directory entry 2 to say that the line is now at node 20 and then
+
+SEC. 8.3
+
+609
+
+SHARED-MEMORY MULTIPROCESSORS
+Node 0
+
+Node 1
+
+CPU Memory
+
+CPU Memory
+
+Local bus
+
+Local bus
+
+Node 255
+CPU Memory
+
+Directory
+
+…
+Local bus
+
+Interconnection network
+(a)
+218-1
+Bits
+
+8
+
+18
+
+6
+
+Node
+
+Block
+
+Offset
+
+(b)
+
+4
+3
+2
+1
+0
+
+0
+0
+1
+0
+0
+
+82
+
+(c)
+
+Figure 8-33. (a) A 256-node directory-based multiprocessor. (b) Division of a
+32-bit memory address into fields. (c) The directory at node 36.
+
+send a message to node 82 instructing it to pass the line to node 20 and invalidate
+its cache. Note that even a so-called ‘‘shared-memory multiprocessor’’ has a lot of
+message passing going on under the hood.
+As a quick aside, let us calculate how much memory is being taken up by the
+directories. Each node has 16 MB of RAM and 218 9-bit entries to keep track of
+that RAM. Thus the directory overhead is about 9 × 218 bits divided by 16 MB or
+about 1.76 percent, which is generally acceptable (although it has to be high-speed
+memory, which increases its cost). Even with 32-byte cache lines the overhead
+would only be 4 percent. With 128-byte cache lines, it would be under 1 percent.
+An obvious limitation of this design is that a line can be cached at only one
+node. To allow lines to be cached at multiple nodes, we would need some way of
+locating all of them, for example, to invalidate or update them on a write. Various
+options are possible to allow caching at several nodes at the same time.
+One possibility is to give each directory entry k fields for specifying other
+nodes, thus allowing each line to be cached at up to k nodes. A second possibility
+is to replace the node number in our simple design with a bit map, with one bit per
+node. In this option there is no limit on how many copies there can be, but there is
+a substantial increase in overhead. Having a directory with 256 bits for each
+
+610
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+64-byte (512-bit) cache line implies an overhead of over 50 percent. A third possibility is to keep one 8-bit field in each directory entry and use it as the head of a
+linked list that threads all the copies of the cache line together. This strategy requires extra storage at each node for the linked list pointers, and it also requires
+following a linked list to find all the copies when that is needed. Each possibility
+has its own advantages and disadvantages, and all three have been used in real systems.
+Another improvement to the directory design is to keep track of whether the
+cache line is clean (home memory is up to date) or dirty (home memory is not up
+to date). If a read request comes in for a clean cache line, the home node can satisfy the request from memory, without having to forward it to a cache. A read request for a dirty cache line, however, must be forwarded to the node holding the
+cache line because only it has a valid copy. If only one cache copy is allowed, as
+in Fig. 8-33, there is no real advantage to keeping track of its cleanliness, because
+any new request requires a message to be sent to the existing copy to invalidate it.

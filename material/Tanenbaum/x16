@@ -1,0 +1,100 @@
+1985
+
+1990
+
+1995
+
+2000
+
+2005
+
+2010
+
+Year
+
+Figure 1-8. Moore’s law predicts a 60 percent annual increase in the number of
+transistors that can be put on a chip. The data points given above and below the
+line are memory sizes, in bits.
+
+solved (Bose, 2004, Kim et al., 2003). However, the reality of shrinking transistors
+is that the thickness of these devices is soon to be only a few atoms. At that point
+transistors will consist of too few atoms to be reliable, or we will simply reach a
+point where further size decreases will require subatomic building blocks. (As a
+matter of good advice, it is recommended that anyone working in a silicon fabrication plant take the day off on the day they decide to split the one-atom transistor!)
+Despite the many challenges in extending Moore’s law trends, there are hopeful
+technologies on the horizon, including advances in quantum computing (Oskin et
+al., 2002) and carbon nanotubes (Heinze et al., 2002) that may create opportunities
+to scale electronics beyond the limits of silicon.
+Moore’s law has created what economists call a virtuous circle. Advances in
+technology (transistors/chip) lead to better products and lower prices. Lower
+prices lead to new applications (nobody was making video games for computers
+when computers cost $10 million each although when the price dropped to
+$120,000 M.I.T. students took up the challenge). New applications lead to new
+markets and new companies springing up to take advantage of them. The existence
+of all these companies leads to competition, which in turn creates economic demand for better technologies with which to beat the others. The circle is then
+round.
+Another factor driving technological improvement is Nathan’s first law of software (due to Nathan Myhrvold, a former top Microsoft executive). It states: ‘‘Software is a gas. It expands to fill the container holding it.’’ Back in the 1980s, word
+
+30
+
+INTRODUCTION
+
+CHAP. 1
+
+processing was done with programs like troff (still used for this book). Troff occupies kilobytes of memory. Modern word processors occupy many megabytes of
+memory. Future ones will no doubt require gigabytes of memory. (To a first
+approximation, the prefixes kilo, mega, giga, and tera mean thousand, million, billion, and trillion, respectively, but see Sec. 1.5 for details.) Software that continues
+to acquire features (not unlike boats that continue to acquire barnacles) creates a
+constant demand for faster processors, bigger memories, and more I/O capacity.
+While the gains in transistors per chip have been dramatic over the years, the
+gains in other computer technologies have been hardly less so. For example, the
+IBM PC/XT was introduced in 1982 with a 10-megabyte hard disk. Thirty years
+later, 1-TB hard disks are common on the PC/XT’s successors. This improvement
+of five orders of magnitude in 30 years represents an annual capacity increase of
+nearly 50 percent. However, measuring disk improvement is trickier, since there
+are other parameters besides capacity, such as data rate, seek time, and price.
+Nevertheless, almost any metric will show that the price/performance ratio has increased since 1982 by about 50 percent per year. These enormous gains in disk
+performance, coupled with the fact that the dollar volume of disks shipped from
+Silicon Valley has exceeded that of CPU chips, led Al Hoagland to suggest that the
+place was named wrong: it should have been called Iron Oxide Valley (since this is
+the recording medium used on disks). Slowly this trend is shifting back in favor of
+silicon as silicon-based flash memories have begun to replace traditional spinning
+disks in many systems.
+Another area that has seen spectacular gains has been telecommunication and
+networking. In less than two decades, we have gone from 300 bit/sec modems to
+analog modems at 56,000 bits/sec to fiber-optic networks at 1012 bits/sec. Fiberoptic transatlantic telephone cables, such as TAT-12/13, cost about $700 million,
+last for 10 years, and can carry 300,000 simultaneous calls, which comes to under
+1 cent for a 10-minute intercontinental call. Optical communication systems running at 1012 bits/sec over distances exceeding 100 km without amplifiers have been
+proven feasible. The exponential growth of the Internet hardly needs comment
+here.
+
+1.3.2 The Computer Spectrum
+Richard Hamming, a former researcher at Bell Labs, once observed that a
+change of an order of magnitude in quantity causes a change in quality. Thus, a
+racing car that can go 1000 km/hour in the Nevada desert is a fundamentally different kind of machine than a normal car that goes 100 km/hour on a highway.
+Similarly, a 100-story skyscraper is not just a scaled up 10-story apartment building. And with computers, we are not talking about factors of 10, but over the
+course of four decades, factors of a million.
+The gains afforded by Moore’s law can be used by chip vendors in several different ways. One way is to build increasingly powerful computers at constant
+
+SEC. 1.3
+
+THE COMPUTER ZOO
+
+31
+
+price. Another approach is to build the same computer for less and less money
+every year. The computer industry has done both of these and more, so that a wide
+variety of computers are available now. A very rough categorization of current
+computers is given in Fig. 1-9.
+Type
+Disposable computer
+Microcontroller
+Mobile and game computers
+Personal computer
+
+Price ($)
+
+Example application
+
+0.5
+

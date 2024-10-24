@@ -1,0 +1,100 @@
+can then complete the down operation that suspended it, resetting the semaphore to
+0 and allowing both processes to continue. An up instruction on a nonzero semaphore simply increases it by 1. In essence, a semaphore provides a counter to store
+wakeups for future use, so that they will not be lost. An essential property of semaphore instructions is that once a process has initiated an instruction on a semaphore, no other process may access the semaphore until the first one has either
+
+SEC. 6.4
+
+OSM-LEVEL INSTRUCTIONS FOR PARALLEL PROCESSING
+
+479
+
+completed its instruction or been suspended trying to perform a down on a 0. Figure 6-28 summarizes the essential properties of the up and down system calls.
+Instruction
+
+Semaphore = 0
+
+Semaphore > 0
+
+Up
+
+Semaphore = semaphore + 1;
+if the other process was halted attempting to complete a down instruction
+on this semaphore, it may now complete the down and continue running
+
+Semaphore = semaphore + 1
+
+Down
+
+Process halts until the other process
+ups this semaphore
+
+Semaphore = semaphore − 1
+
+Figure 6-28. The effect of a semaphore operation.
+
+As mentioned above, Java has a language-based solution for dealing with race
+conditions, and we are discussing operating systems now. Thus we need a way to
+express semaphore usage in Java, even though it is not in the language or the standard classes. We will do this by assuming that two native methods have been written, up and down, which make the up and down system calls, respectively. By calling these with ordinary integers as parameters, we have a way to express the use
+of semaphores in Java programs.
+Figure 6-29 shows how the race condition can be eliminated through the use of
+semaphores. Two semaphores are added to the m class, available, which is initially 100 (the buffer size), and filled, which is initially 0. The producer starts executing at P1 in Fig. 6-29 and the consumer starts executing at C1 as before. The
+down call on filled halts the consumer processor immediately. When the producer
+has found the first prime, it calls down with available as parameter, setting available to 99. At P5 it calls up with filled as parameter, making filled 1. This action
+releases the consumer, which is now able to complete its suspended down call. At
+this point, filled is 0 and both processes are running.
+Let us now reexamine the race condition. At a certain point in time, in = 22,
+out = 21, the producer is at P1, and the consumer is at C5. The consumer finishes
+what it was doing and gets to C1 where it calls down on filled, which had the value
+1 before the call and 0 after it. The consumer then takes the last number out of the
+buffer and ups available, making it 100. The consumer prints the number and goes
+to C1. Just before the consumer can call down, the producer finds the next prime
+and in quick succession executes statements P2, P3, and P4.
+At this point, filled is 0. The producer is about to up it and the consumer is
+about to call down. If the consumer executes its instruction first, it will be suspended until the producer releases it (by calling up). On the other hand, if the producer goes first, the semaphore will be set to 1 and the consumer will not be suspended at all. In both cases, no wakeup is lost. This, of course, was our goal in
+introducing semaphores in the first place.
+The essential property of the semaphore operations is that they are indivisible.
+Once a semaphore operation has been initiated, no other running process can use
+
+480
+
+THE OPERATING SYSTEM MACHINE LEVEL
+
+CHAP. 6
+
+the semaphore until the first process has either completed the operation or been
+suspended trying. Furthermore, with semaphores, no wakeups are lost. In contrast, the if statements of Figure 6-26 are not indivisible. Between the evaluation of
+the condition and the execution of the selected statement, another process can send
+a wakeup signal.
+In effect the problem of process synchronization has been eliminated by
+declaring the up and down system calls made by up and down to be indivisible. In
+order for these operations to be indivisible, the operating system must prohibit two
+or more processes from using the same semaphore at the same time. At the very
+least, once an up or down system call has been made, no other user code will be
+run until the call has been completed. On single-processor systems, semaphores
+are sometimes implemented by disabling interrupts during semaphore operations.
+On multiple-processor systems, this trick does not work.
+Synchronization using semaphores is a technique that works for arbitrarily
+many processes. Several processes may be sleeping, attempting to complete a
+down system call on the same semaphore. When some other process finally performs an up on that semaphore, one of the waiting processes is allowed to complete its down and continue running. The semaphore value remains 0 and the other
+processes continue waiting.
+An analogy may make the nature of semaphores clearer. Imagine a picnic with
+20 volleyball teams divided into 10 games (processes), each playing on its own
+court, and a large basket (the semaphore) for the volleyballs. Unfortunately, only
+seven volleyballs are available. At any instant, there are between zero and seven
+volleyballs in the basket (the semaphore has a value between 0 and 7). Putting a
+ball in the basket is an up because it increases the value of the semaphore; taking a
+ball out of the basket is a down because it decreases the value.
+At the start of the picnic, each court sends a player to the basket to get a volleyball. Seven of them successfully manage to get a volleyball (complete the
+down); three are forced to wait for a volleyball (i.e., fail to complete the down).
+Their games are suspended temporarily. Eventually, one of the other games finishes and puts a ball into the basket (executes an up). This operation allows one of
+the three players waiting around the basket to get a ball (complete an unfinished
+down), allowing one game to continue. The other two games remain suspended
+until two more balls are put into the basket. When two more balls come back (two
+more ups are executed), the last two games can proceed.
+
+6.5 EXAMPLE OPERATING SYSTEMS
+In this section we will continue discussing our example systems, the Core i7
+and the OMAP4430 ARM CPU. For each one we will look at an operating system
+used on that processor. For the Core i7 we will use Windows; for the OMAP4430
+ARM CPU we will use UNIX. Since UNIX is simpler and in many ways more
+

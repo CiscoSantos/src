@@ -1,0 +1,100 @@
+all running on a shared-memory multiprocessor. It is the job of the run-time system to sustain the illusion of shared memory where it really does not exist.
+Operations on shared objects are atomic and sequentially consistent. The system guarantees that if multiple processes perform operations on the same shared
+object nearly simultaneously, the system chooses some order and all processes see
+the same order of events.
+Orca integrates shared data and synchronization in a way not present in pagebased DSM systems. Two kinds of synchronization are needed in parallel programs. The first kind is mutual-exclusion synchronization, to keep two processes
+from executing the same critical region at the same time. In Orca, each operation
+on a shared object is effectively like a critical region because the system guarantees
+that the final result is the same as if all the critical regions were executed one at a
+time (i.e., sequentially). In this respect, an Orca object is like a distributed form of
+a monitor (Hoare, 1975).
+The other kind of synchronization is condition synchronization, in which a
+process blocks waiting for some condition to hold. In Orca, condition synchronization is done with guards. In the example of Fig. 8-48, a process trying to pop an
+item from an empty stack will be suspended until the stack is no longer empty.
+After all, you cannot pop a word from an empty stack.
+The Orca run-time system handles object replication, migration, consistency,
+and operation invocation. Each object can be in one of two states: single copy or
+replicated. An object in single-copy state exists on only one machine, so all requests for it are sent there. A replicated object is present on all machines containing a process using it, which makes read operations easier (since they can be
+done locally), at the expense of making updates more expensive. When an operation that modifies a replicated object is executed, it must first get a sequence number from a centralized process that issues them. Then a message is sent to each
+machine holding a copy of the object, telling it to execute the operation. Since all
+such updates bear sequence numbers, all machines just carry out the operations in
+sequence order, which guarantees sequential consistency.
+
+8.4.7 Performance
+The point of building a parallel computer is to make it go faster than a uniprocessor machine. If it does not achieve that simple goal, it is not worth having. Furthermore, it should achieve the goal in a cost-effective manner. A machine that is
+twice as fast as a uniprocessor at 50 times the cost is not likely to be a big seller.
+In this section we will examine some of the performance issues associated with
+parallel computer architectures, starting with how you even measure it.
+
+SEC. 8.4
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+647
+
+Hardware Metrics
+From a hardware perspective, the performance metrics of interest are the CPU
+and I/O speeds and the performance of the interconnection network. The CPU and
+I/O speeds are the same as in the uniprocessor case, so the key parameters of interest in a parallel system are those associated with the interconnect. There are two
+key items: latency and bandwidth, which we will now look at in turn.
+The roundtrip latency is the time it takes for a CPU to send a packet and get a
+reply. If the packet is sent to a memory, then the latency measures the time to read
+or write a word or block of words. If it is sent to another CPU, it measures the
+interprocessor communication time for packets of that size. Usually, the latency of
+interest is for minimal packets, often one word or a small cache line.
+The latency is built up from several factors and is different for circuit-switched,
+store-and-forward, virtual cut through, and wormhole-routed interconnects. For
+circuit switching, the latency is the sum of the setup time and the transmission
+time. To set up a circuit, a probe packet has to be sent out to reserve the resources
+and then report back. Once that has happened, the data packet has to be assembled. When it is ready, bits can flow at full speed, so if the total setup time is T s ,
+the packet size is p bits, and the bandwidth b bits/sec, the one-way latency is
+T s + p/b. If the circuit is full duplex, then there is no setup time for the reply, so
+the minimum latency for sending a p-bit packet and getting a p-bit reply is
+T s + 2 p/b sec.
+For packet switching, it is not necessary to send a probe packet to the destination in advance, but there is still some internal setup time to assemble the packet,
+T a . Here the one-way transmission time is T a + p/b, but this is only the time to
+get the packet into the first switch. There is a finite delay within the switch, say T d
+and then the process is repeated to the next switch and so on. The T d delay is composed of both processing time and queueing delay, waiting for the output port to
+become free. If there are n switches, then the total one-way latency is given by the
+formula T a + n( p/b + T d ) + p/b, where the final term is due to the copy from the
+last switch to the destination.
+The one-way latencies for virtual cut through and wormhole routing in the best
+case are close to T a + p/b because there is no probe packet to set up a circuit, and
+no store-and-forward delay either. Basically, it is the initial setup time to assemble
+the packet, plus the time to push the bits out the door. In all cases, propagation
+delay has to be added, but that is usually small.
+The other hardware metric is bandwidth. Many parallel programs, especially
+in the natural sciences, move a lot of data around, so the number of bytes/sec that
+the system can move is critical to performance. Several metrics for bandwidth
+exist. We have seen one of them—bisection bandwidth—already. Another is
+aggregate bandwidth, which is computed by simply adding up the capacities of
+all the links. This number gives the maximum number of bits that can be in transit
+at once. Yet another important metric is the average bandwidth out of each CPU.
+
+648
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+If each CPU is capable of outputting 1 MB/sec, it does little good that the interconnect has a bisection bandwidth of 100 GB/sec. Communication will be limited by
+how much data each CPU can output.
+In practice, actually achieving anything even close to the theoretical bandwidth
+is very difficult. Many sources of overhead work to reduce the capacity. For example, there is always some per-packet overhead associated with each packet:
+assembling it, building its header, and getting it going. Sending 1024 4-byte packets will never achieve the same bandwidth as sending one 4096-byte packet. Unfortunately, for achieving low latencies, using small packets is better, since large
+ones block the lines and switches too long. Thus there is an inherent conflict between achieving low average latencies and high-bandwidth utilization. For some
+applications, one is more important than the other and for other applications it is
+the other way around. It is worth noting, however, that you can always buy more
+bandwidth (by putting in more or wider wires), but you cannot buy lower latencies.
+Thus it is generally better to err on the side of making latencies as short as possible, and worry about bandwidth later.
+Software Metrics
+Hardware metrics like latency and bandwidth look at what the hardware is capable of doing. However, users have a different perspective. They want to know
+how much faster their programs are going to run on a parallel computer than on a
+uniprocessor. For them, the key metric is speed-up: how much faster a program
+runs on an n-processor system than on a one-processor system. Typically these results are shown in graphs like those of Fig. 8-49. Here we see several different parallel programs run on a multicomputer consisting of 64 Pentium Pro CPUs. Each
+curve shows the speed-up of one program with k CPUs as a function of k. Perfect
+speed-up is indicated by the dotted line, in which using k CPUs makes the program
+go k times faster, for any k. Few programs achieve perfect speed-up, but some
+come close. The N-body problem parallelizes extremely well; awari (an African
+board game) does reasonably well; but inverting a certain skyline matrix does not
+go more than five times faster no matter how many CPUs are available. The programs and results are discussed in Bal et al. (1998).

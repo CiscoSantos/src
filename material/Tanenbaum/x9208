@@ -1,0 +1,100 @@
+These two processes run in parallel at different rates. If the producer discovers
+that the buffer is full, it goes to sleep; that is, it temporarily suspends its operation
+awaiting a signal from the consumer. Later, when the consumer has removed a
+number from the buffer, it sends a signal to the producer to wake it up—that is,
+restart it. Similarly, if the consumer discovers that the buffer is empty, it goes to
+sleep. When the producer has put a number into the empty buffer, it wakes up the
+sleeping consumer.
+
+In
+
+In
+Out
+
+In
+
+In
+Out
+
+In,
+out
+
+Out
+
+In
+
+Out
+
+Out
+(a)
+
+(b)
+
+(c)
+
+(d)
+
+(e)
+
+(f)
+
+Figure 6-25. Use of a circular buffer.
+
+In this example we will use a circular buffer for interprocess communication.
+The pointers in and out will be used as follows: in points to the next free word
+(where the producer will put the next prime) and out points to the next number to
+be removed by the consumer. When in = out, the buffer is empty, as shown in
+Fig. 6-25(a). After the producer has generated some primes, the situation is as
+shown in Fig. 6-25(b). Fig. 6-25(c) illustrates the buffer after the consumer has removed some of these primes for printing. Figure 6-25(d)–(f) depict the effect of
+continued buffer activity. The top of the buffer is logically contiguous with the
+bottom; that is, the buffer wraps around. When there has been a sudden burst of
+input and in has wrapped around and is only one word behind out (e.g., in = 52,
+and out = 53), the buffer is full. The last word is not used; if it were, there would
+be no way to tell whether in = out meant a full buffer or an empty one.
+Figure 6-26 shows a simple way to implement the producer-consumer problem
+in Java. This solution uses three classes, m, producer, and consumer. The m
+(main) class contains some constant definitions, the buffer pointers in and out, and
+the buffer itself, which in this example holds 100 primes, going from buffer[0] to
+buffer[99]. The producer and consumer classes do the actual work.
+
+SEC. 6.4
+
+OSM-LEVEL INSTRUCTIONS FOR PARALLEL PROCESSING
+
+public class m {
+final public static int BUF SIZE = 100;
+final public static long MAX PRIME = 100000000000L;
+public static int in = 0, out = 0;
+public static long buffer[ ] = new long[BUF SIZE];
+public static producer p;
+public static consumer c;
+public static void main(String args[ ]) {
+p = new producer( );
+c = new consumer( );
+p.start( );
+c.start( );
+}
+
+475
+
+// buffer runs from 0 to 99
+// stop here
+// pointers to the data
+// primes stored here
+// name of the producer
+// name of the consumer
+// main class
+// create the producer
+// create the consumer
+// start the producer
+// start the consumer
+
+// This is a utility function for circularly incrementing in and out
+public static int next(int k) {if (k < BUF SIZE − 1) return(k+1); else return(0);}
+}
+class producer extends Thread {
+public void run( ) {
+long prime = 2;
+while (prime < m.MAX PRIME) {
+prime = next prime(prime);
+if (m.next(m.in) == m.out) suspend( );

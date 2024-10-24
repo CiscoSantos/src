@@ -1,0 +1,100 @@
+Instruction
+
+Instruction
+
+Instruction
+
+Instruction
+
+Instruction
+
+Instruction
+
+(a)
+
+(b)
+
+1 Word
+Instruction
+Instruction
+
+Instr.
+
+Instr.
+
+Instruction
+(c)
+
+Figure 5-10. Some possible relationships between instruction and word length.
+
+new instructions and exploit other opportunities that arise over an extended period
+is of great importance, but only if the architecture—and the company building it—
+survive long enough for the architecture to be a success.
+The efficiency of a particular ISA is highly dependent on the technology with
+which the computer is to be implemented. Over a long period of time, this technology will undergo vast changes, and some of the ISA choices will be seen (with
+20/20 hindsight) as unfortunate. For example, if memory accesses are fast, a stackbased design (like IJVM) is a good one, but if they are slow, then having many registers (like the OMAP4430 ARM CPU) is the way to go. Readers who think this
+choice is easy are invited to find a slip of paper and write down their predictions
+for (1) a typical CPU clock speed, and (2) a typical RAM access time for computers 20 years in the future. Fold this slip neatly and keep it for 20 years. Then
+unfold and read it. The humility-challenged can forget the slip of paper and just
+post their predictions to the Internet now.
+Of course, even far-sighted designers may not be able to make all the right
+choices. And even if they could, they have to deal with the short term, too. If this
+elegant ISA is a little more expensive than its current ugly competitors, the company may not survive long enough for the world to appreciate the elegance of the
+ISA.
+All things being equal, short instructions are better than long ones. A program
+consisting of n 16-bit instructions takes up only half as much memory space as n
+32-bit instructions. With ever-declining memory prices, this factor might be less
+important in the future, were it not for the fact that software is metastasizing even
+faster than memory prices are dropping.
+Furthermore, minimizing the size of the instructions may make them harder to
+decode or harder to overlap. Therefore, achieving the minimum instruction size
+must be weighed against the time required to decode and execute the instructions.
+Another reason for minimizing instruction length is already important and
+becoming more so with faster processors: memory bandwidth (the number of
+bits/sec the memory is capable of supplying). The impressive growth in processor
+speeds over the last few decades has not been matched by equal increases in memory bandwidth. An increasingly common constraint on processors stems from the
+inability of the memory system to supply instructions and operands as rapidly as
+
+364
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+the processor can consume them. Each memory has a bandwidth that is determined by its technology and engineering design. The bandwidth bottleneck applies
+not only to the main memory but also to all the caches.
+If the bandwidth of an instruction cache is t bps and the average instruction
+length is r bits, the cache can deliver at most t/r instructions per second. Notice
+that this is an upper limit on the rate at which the processor can execute instructions, though there are current research efforts to breach even this seemingly insurmountable barrier. Clearly, the rate at which instructions can be executed (i.e., the
+processor speed) may be limited by the instruction length. Shorter instructions
+means a faster processor. Since modern processors can execute multiple instructions every clock cycle, fetching multiple instructions per clock cycle is imperative.
+This aspect of the instruction cache makes the size of instructions an important design criterion that has major implications for performance.
+A second design criterion is sufficient room in the instruction format to express
+all the operations desired. A machine with 2n operations with all instructions
+smaller than n bits is impossible. There simply will not be enough room in the opcode to indicate which instruction is needed. And history has shown over and over
+the folly of not leaving a substantial number of opcodes free for future additions to
+the instruction set.
+A third criterion concerns the number of bits in an address field. Consider the
+design of a machine with an 8-bit character and a main memory that must hold 232
+characters. The designers could choose to assign consecutive addresses to units of
+8, 16, 24, or 32 bits, as well as other possibilities.
+Imagine what would happen if the design team degenerated into two warring
+factions, one advocating making the 8-bit byte the basic unit of memory, and the
+other advocating the 32-bit word. The former group would propose a memory of
+232 bytes, numbered 0, 1, 2, 3, ..., 4,294,967,295. The latter group would propose
+a memory of 230 words numbered 0, 1, 2, 3, ..., 1,073,741,823.
+The first group would point out that in order to compare two characters in the
+32-bit word organization, the program would not only have to fetch the words containing the characters but would also have to extract each character from its word
+in order to compare them. Doing so costs extra instructions and therefore wastes
+space. The 8-bit organization, on the other hand, provides an address for every
+character, thus making the comparison much easier.
+The 32-bit word supporters would retaliate by pointing out that their proposal
+requires only 230 separate addresses, giving an address length of only 30 bits,
+whereas the 8-bit byte proposal requires 32 bits to address the same memory. A
+shorter address means a shorter instruction, which not only takes up less space but
+also requires less time to fetch. Alternatively, they could retain the 32-bit address
+to reference a 16-GB memory instead of a puny 4-GB memory.
+This example demonstrates that in order to gain a finer memory resolution, one
+must pay the price of longer addresses and thus longer instructions. The ultimate
+in resolution is a memory organization in which every bit is directly addressable
+

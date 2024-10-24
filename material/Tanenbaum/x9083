@@ -1,0 +1,100 @@
+The addresses are examples.
+
+ILOAD
+
+and
+
+WIDE ILOAD.
+
+interpretation of WIDE ISTORE starts at 0x136 (instead of 0x36), and so on. In this
+way, every WIDE opcode starts at an address 256 (i.e., 0x100) words higher in the
+control store higher than the corresponding regular opcode. The initial sequence of
+microinstructions for both ILOAD and WIDE ILOAD is shown in Fig. 4-20.
+Once the code is reached for implementing WIDE ILOAD (0x115), the code differs from normal ILOAD only in that the index must be constructed by concatenating 2 index bytes instead of simply sign-extending a single byte. The concatenation and subsequent addition must be accomplished in stages, first copying INDEX
+BYTE 1 into H shifted left by 8 bits. Since the index is an unsigned integer, MBR is
+zero-extended using MBRU. Now the second byte of the index is added (the addition operation is identical to concatenation since the low-order byte of H is now
+zero, guaranteeing that there will be no carry between the bytes), with the result
+again stored in H. From here on, the operation can proceed exactly as if it were a
+standard ILOAD. Rather than duplicate the final instructions of ILOAD (iload3 to
+iload5), we simply branch from wide iload4 to iload3. Note, however, that PC must
+be incremented twice during the execution of the instruction in order to leave it
+pointing to the next opcode. The ILOAD instruction increments it once; the
+WIDE ILOAD sequence also increments it once.
+The same situation occurs for WIDE ISTORE: after the first four microinstructions are executed (wide istore1 to wide istore4), the sequence is the same as the
+
+280
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+sequence for ISTORE after the first two instructions, so wide istore4 branches to
+istore3.
+Our next example is a LDC W instruction. This opcode is different from ILOAD
+in two ways. First, it has a 16-bit unsigned offset (like the wide version of ILOAD).
+Second, it is indexed off CPP rather than LV, since its function is to read from the
+constant pool rather than the local variable frame. (Actually, there is a short form
+of LDC W (LDC), but we did not include it in IJVM, since the long form incorporates all possible variations of the short form, but takes 3 bytes instead of 2.)
+The IINC instruction is the only IJVM instruction other than ISTORE that can
+modify a local variable. It does so by including two operands, each 1 byte long, as
+shown in Fig. 4-21.
+IINC
+(0x84)
+
+INDEX
+
+CONST
+
+Figure 4-21. The IINC instruction has two different operand fields.
+
+The IINC instruction uses INDEX to specify the offset from the beginning of the
+local variable frame. It reads that variable, incrementing it by CONST, a value contained in the instruction, and stores it back in the same location. Note that this instruction can increment by a negative amount, that is, CONST is a signed 8-bit constant, in the range −128 to +127. The full JVM includes a wide version of IINC
+where each operand is 2 bytes long.
+We now come to the first IJVM branch instruction: GOTO. The sole function
+of this instruction is to change the value of PC, so that the next IJVM instruction
+executed is the one at the address computed by adding the (signed) 16-bit offset to
+the address of the branch opcode. A complication here is that the offset is relative
+to the value that PC had at the start of the instruction decoding, not the value it has
+after the 2 offset bytes have been fetched.
+To make this point clear, in Fig. 4-22(a) we see the situation at the start of
+Main1. The opcode is already in MBR, but PC has not yet been incremented. In
+Fig. 4-22(b) we see the situation at the start of goto1. By now PC has been incremented but the first offset byte has not yet been fetched into MBR. One microinstruction later we have Fig. 4-22(c), in which the old PC, which points to the opcode, has been saved in OPC and the first offset byte is in MBR. This value is needed because the offset of the IJVM GOTO instruction is relative to it, not to the current value of PC. In fact, this is the reason we needed the OPC register in the first
+place.
+The microinstruction at goto2 starts the fetch of the second offset byte, leading
+to Fig. 4-22(d) at the start of goto3. After the first offset byte has been shifted left
+8 bits and copied to H, we arrive at goto4 and Fig. 4-22(e). Now we have the first
+offset byte shifted left in H, the second offset byte in MBR, and the base in OPC. By
+constructing the full 16-bit offset in H and then adding it to the base, we get the
+
+SEC. 4.3
+Memory
+
+281
+
+AN EXAMPLE IMPLEMENTATION
+
+1 Byte
+
+n+3
+n + 2 OFFSET BYTE 2
+
+OFFSET BYTE 2
+
+OFFSET BYTE 2
+
+OFFSET BYTE 2
+
+OFFSET BYTE 2
+
+n + 1 OFFSET BYTE 1
+
+OFFSET BYTE 1
+
+OFFSET BYTE 1
+
+OFFSET BYTE 1
+
+OFFSET BYTE 1
+
+GOTO (0xA7)
+

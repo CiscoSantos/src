@@ -1,0 +1,100 @@
+Parameter 3
+Parameter 2
+Parameter 1
+Link ptr
+Previous LV
+Previous PC
+
+LV
+
+Caller's
+local
+variables
+Parameter 2
+Parameter 1
+Link ptr
+(b)
+
+Figure 4-12. (a) Memory before executing INVOKEVIRTUAL. (b) After executing it.
+
+used to construct an index into the constant pool table (the first byte is the highorder byte). The instruction computes the base address of the new local variable
+frame by subtracting off the number of parameters from the stack pointer and setting LV to point to OBJREF. At this location, overwriting OBJREF, the implementation stores the address of the location where the old PC is to be stored. This
+address is computed by adding the size of the local variable frame (parameters +
+local variables) to the address contained in LV. Immediately above the address
+where the old PC is to be stored is the address where the old LV is to be stored. Immediately above that address is the beginning of the stack for the newly called procedure. SP is set to point to the old LV, which is the address immediately below the
+first empty location on the stack. Remember that SP always points to the top word
+on the stack. If the stack is empty, it points to the first location below the end of
+the stack because our stacks grow upward, toward higher addresses. In our figures,
+stacks always grow upward, toward the higher address at the top of the page.
+The last operation needed to carry out INVOKEVIRTUAL is to set PC to point to
+the fifth byte in the method code space.
+The IRETURN instruction reverses the operations of the INVOKEVIRTUAL instruction, as shown in Fig. 4-13. It deallocates the space that was used by the returning method. It also restores the stack to its former state, except that (1) the
+(now overwritten) OBJREF word and all the parameters have been popped from the
+stack, and (2) the returned value has been placed at the top of the stack, at the
+
+SEC. 4.2
+
+265
+
+AN EXAMPLE ISA: IJVM
+Stack before
+IRETURN
+Return value
+Previous LV
+Previous PC
+
+SP
+
+Caller's
+local
+variables
+Parameter 3
+Parameter 2
+Parameter 1
+Link ptr
+Previous LV
+Previous PC
+Caller's
+local
+variable
+frame
+
+Caller's
+local
+variables
+Parameter 2
+Parameter 1
+Link ptr
+(a)
+
+Stack base
+before
+IRETURN
+LV
+
+Stack after
+IRETURN
+Return value
+Previous LV
+Previous PC
+
+Stack base
+after
+IRETURN
+
+SP
+
+Caller's
+local
+variables
+Parameter 2
+Parameter 1
+Link ptr
+
+LV
+
+(b)
+
+Figure 4-13. (a) Memory before executing IRETURN. (b) After executing it.
+
+location formerly occupied by OBJREF. To restore the old state, the IRETURN instruction must be able to restore the PC and LV pointers to their old values. It does

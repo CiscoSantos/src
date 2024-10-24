@@ -1,0 +1,100 @@
+dddd
+
+cQQQ
+
+Load/store: Id/st(c) X/Y/Z+Q, Rd
+
+5
+
+11cc
+
+KKKK
+
+KKKK
+
+KKKK
+
+Branch: br(c) PC + K
+
+31
+6
+
+1001
+
+0
+010K
+
+KKKK
+
+11cK
+
+KKKK
+
+KKKK
+
+KKKK
+
+KKKK
+
+Call/jmp: call/jmp(c) #K
+
+Figure 5-15. The ATmega168 AVR instruction formats.
+
+number of opcode bits is cut in half, allowing only four instructions to use this format (SUBCI, SUBI, ORI, and ANDI).
+Format 4 encodes load and store instruction, which includes a 6-bit unsigned
+immediate operand. The base register is a fixed register not specified in the instruction encoding because it is implied by the load/store opcode.
+Formats 5 and 6 are used for jumps and procedure calls. The first format includes a 12-bit signed immediate value that is added to the instruction’s PC value
+to compute the target of the instruction. The last format expands the offset to 22
+bits, by making the AVR instruction 32 bits in size.
+
+5.4 ADDRESSING
+Most instructions have operands, so some way is needed to specify where they
+are. This subject, which we will now discuss, is called addressing.
+
+5.4.1 Addressing Modes
+Up until now, we have paid little attention to how the bits of an address field
+are interpreted to find the operand. It is now time to investigate this subject, called
+address modes. As we shall see, there are many ways to do it.
+
+372
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+5.4.2 Immediate Addressing
+The simplest way for an instruction to specify an operand is for the address
+part of the instruction actually to contain the operand itself rather than an address
+or other information describing where the operand is. Such an operand is called an
+immediate operand because it is automatically fetched from memory at the same
+time the instruction itself is fetched; hence it is immediately available for use. A
+possible immediate instruction for loading register R1 with the constant 4 is shown
+in Fig. 5-16.
+MOV
+
+R1
+
+4
+
+Figure 5-16. An immediate instruction for loading 4 into register 1.
+
+Immediate addressing has the virtue of not requiring an extra memory reference to fetch the operand. It has the disadvantage that only a constant can be supplied this way. Also, the number of values is limited by the size of the field. Still,
+many architectures use this technique for specifying small integer constants.
+
+5.4.3 Direct Addressing
+A method for specifying an operand in memory is just to give its full address.
+This mode is called direct addressing. Like immediate addressing, direct addressing is restricted in its use: the instruction will always access exactly the same
+memory location. So while the value can change, the location cannot. Thus direct
+addressing can only be used to access global variables whose address is known at
+compile time. Nevertheless, many programs have global variables, so this mode is
+widely used. The details of how the computer knows which addresses are immediate and which are direct will be discussed later.
+
+5.4.4 Register Addressing
+Register addressing is conceptually the same as direct addressing but specifies
+a register instead of a memory location. Because registers are so important (due to
+fast access and short addresses) this addressing mode is the most common one on
+most computers. Many compilers go to great lengths to determine which variables
+will be accessed most often (for example, a loop index) and put these variables in
+registers.
+This addressing mode is known simply as register mode. In load/store architectures such as the OMAP4420 ARM architecture, nearly all instructions use this
+addressing mode exclusively. The only time this addressing mode is not used is

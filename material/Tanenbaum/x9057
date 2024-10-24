@@ -1,0 +1,100 @@
+outputs. The data path of our example microarchitecture is shown in Fig. 4-1.
+While it has been carefully optimized for interpreting IJVM programs, it is fairly
+similar to the data path used in most machines. It contains a number of 32-bit
+
+SEC. 4.1
+
+AN EXAMPLE MICROARCHITECTURE
+
+245
+
+MAR
+
+To
+and
+from
+main
+memory
+
+Memory
+control
+registers
+
+MDR
+
+PC
+
+MBR
+
+SP
+
+LV
+
+Control signals
+Enable onto B bus
+
+CPP
+
+Write C bus to register
+TOS
+
+OPC
+C bus
+
+B bus
+H
+A
+
+ALU control
+
+B
+
+6
+
+N
+Z
+
+ALU
+
+Shifter
+
+Shifter control
+2
+
+Figure 4-1. The data path of the example microarchitecture used in this chapter.
+
+registers, to which we have assigned symbolic names such as PC, SP, and MDR.
+Though some of these names are familiar, it is important to understand that these
+registers are accessible only at the microarchitecture level (by the microprogram).
+They are given these names because they usually hold a value corresponding to the
+variable of the same name in the ISA level architecture. Most registers can drive
+
+246
+
+THE MICROARCHITECTURE LEVEL
+
+CHAP. 4
+
+their contents onto the B bus. The output of the ALU drives the shifter and then
+the C bus, whose value can be written into one or more registers at the same time.
+There is no A bus for the moment; we will add one later.
+The ALU is identical to the one shown in Figs. 3-18 and 3-19. Its function is
+determined by six control lines. The short diagonal line labeled ‘‘6’’ in Fig. 4-1 indicates that there are six ALU control lines. These are F0 and F1 for determining
+the ALU operation, ENA and ENB for individually enabling the inputs, INVA for
+inverting the left input, and INC for forcing a carry into the low-order bit, effectively adding 1 to the result. However, not all 64 combinations of ALU control
+lines do something useful.
+Some of the more interesting combinations are shown in Fig. 4-2. Not all of
+these functions are needed for IJVM, but for the full JVM many of them would
+come in handy. In many cases, there are multiple possibilities for achieving the
+same result. In this table, + means arithmetic plus and − means arithmetic minus,
+so, for example, − A means the two’s complement of A.
+F0
+
+F1
+
+ENA
+
+ENB
+
+INVA
+

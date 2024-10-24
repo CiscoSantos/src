@@ -1,0 +1,100 @@
+and assembly-language programmers are advised to adhere to them to avoid trouble.
+In addition to the ISA-level registers visible to user programs, there are always
+a substantial number of special-purpose registers available only in kernel mode.
+These registers control the various caches, memory, I/O devices, and other hardware features of the machine. They are used only by the operating system, so
+compilers and users do not have to know about them.
+One control register that is something of a kernel/user hybrid is the flags register or PSW (Program Status Word). This register holds various miscellaneous
+bits that are needed by the CPU. The most important bits are the condition codes.
+These bits are set on every ALU cycle and reflect the status of the result of the
+most recent operation. Typical condition code bits include
+N — Set when the result was Negative.
+Z — Set when the result was Zero.
+V — Set when the result caused an oVerflow.
+C — Set when the result caused a Carry out of the leftmost bit.
+A — Set when there was a carry out of bit 3 (Auxiliary carry—see below).
+P — Set when the result had even Parity.
+The condition codes are important because the comparison and conditional branch
+instructions (also called conditional jump instructions) use them. For example, the
+CMP instruction typically subtracts two operands and sets the condition codes
+based on the difference. If the operands are equal, then the difference will be zero
+and the Z condition code bit in the PSW register will be set. A subsequent BEQ
+(Branch EQual) instruction tests the Z bit and branches if it is set.
+The PSW contains more than just the condition codes, but the full contents
+varies from machine to machine. Typical additional fields are the machine mode
+
+SEC. 5.1
+
+OVERVIEW OF THE ISA LEVEL
+
+351
+
+(e.g., user or kernel), trace bit (used for debugging), CPU priority level, and interrupt enable status. Often the PSW is readable in user mode, but some of the fields
+can be written only in kernel mode (e.g., the user/kernel mode bit).
+
+5.1.4 Instructions
+The main feature of the ISA level is its set of machine instructions. These control what the machine can do. There are always LOAD and STORE instructions (in
+one form or another) for moving data between memory and registers and MOVE instructions for copying data among the registers. Arithmetic instructions are always
+present, as are Boolean instructions and instructions for comparing data items and
+branching on the results. We have seen some typical ISA instructions already (see
+Fig. 4-11) and will study many more in this chapter.
+
+5.1.5 Overview of the Core i7 ISA Level
+In this chapter we will discuss three widely different ISAs: Intel’s IA-32, as
+embodied in the Core i7, the ARM v7 architecture, implemented in the
+OMAP4430 system-on-a-chip, and the AVR 8-bit architecture, used by the
+ATmega168 microcontroller. The intent is not to provide an exhaustive description
+of any of the ISAs, but rather to demonstrate important aspects of an ISA, and to
+show how these aspects can vary from one ISA to another. Let us start with the
+Core i7.
+The Core i7 processor has evolved over many generations, tracing its lineage
+back to some of the earliest microprocessors ever built, as we discussed in Chap. 1.
+While the basic ISA maintains full support for execution of programs written for
+the 8086 and 8088 processors (which had the same ISA), it even contains remnants
+of the 8080, an 8-bit processor popular in the 1970s. The 8080, in turn, was
+strongly influenced by compatibility constraints with the still-earlier 8008, which
+was based on the 4004, a 4-bit chip used back when dinosaurs roamed the earth.
+From a pure software standpoint, the 8086 and 8088 were straightforward
+16-bit machines (although the 8088 had an 8-bit data bus). Their successor, the
+80286, was also a 16-bit machine. Its main advantage was a larger address space,
+although few programs ever used it because it consisted of 16,384 64-KB segments
+rather than a linear 230 -byte memory.
+The 80386 was the first 32-bit machine in the Intel family. All the subsequent
+machines (80486, Pentium, Pentium Pro, Pentium II, Pentium III, Pentium 4,
+Celeron, Xeon, Pentium M, Centrino, Core 2 duo, Core i7, etc.) have essentially
+the same 32-bit architecture as the 80386, called IA-32, so it is this architecture
+that we will focus on here. The only major architectural change after the 80386
+was the introduction of the MMX, SSE, and SSE2 instructions in later versions of
+x86 series. These instructions are highly specialized and designed to improve performance on multimedia applications. Another important extension was 64-bit x86
+
+352
+
+THE INSTRUCTION SET ARCHITECTURE LEVEL
+
+CHAP. 5
+
+(often called x86-64), which increased the integer computations and virtual address
+size to 64 bits. While most extensions were introduced by Intel and later implemented by competitors, this was one case where AMD introduced an extension
+that Intel had to adopt.
+The Core i7 has three operating modes, two of which make it act like an 8088.
+In real mode, all the features that have been added since the 8088 are turned off
+and the Core i7 behaves like a simple 8088. If any program does something
+wrong, the whole machine just crashes. If Intel had designed human beings, it
+would have put in a bit that made them revert back to chimpanzee mode (most of
+the brain disabled, no speech, sleeps in trees, eats mostly bananas, etc.)
+One step up is virtual 8086 mode, which makes it possible to run old 8088
+programs in a protected way. In this mode, a real operating system is in control of
+the whole machine. To run an old 8088 program, the operating system creates a
+special isolated environment that acts like an 8088, except that if its program
+crashes, the operating system is notified instead of the machine crashing. When a
+Windows user starts an MS-DOS window, the program run there is started in virtual
+8086 mode to protect Windows itself from misbehaving MS-DOS programs.
+The final mode is protected mode, in which the Core i7 actually acts like a
+Core i7 instead of a very expensive 8088. Four privilege levels are available and
+controlled by bits in the PSW. Level 0 corresponds to kernel mode on other computers and has full access to the machine. It is used by the operating system.
+Level 3 is for user programs. It blocks access to certain critical instructions and
+control registers to prevent a rogue user program from bringing down the entire
+machine. Levels 1 and 2 are rarely used.
+The Core i7 has a huge address space, with memory divided into 16,384 segments, each going from address 0 to address 232 − 1. However, most operating
+systems (including UNIX and all versions of Windows) support only one segment,
+so most application programs effectively see a linear address space of 232 bytes,
+and sometimes part of this is occupied by the operating system. Every byte in the

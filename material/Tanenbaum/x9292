@@ -1,0 +1,100 @@
+and Charlesworth (2001).
+In 2009 Oracle purchased Sun Microsystems, and they have continued development of SPARC-based servers. The SPARC Enterprise M9000 is the successor
+to the E25K. The M9000 incorporates faster quad-core SPARC processors, plus
+additional memory and PCIe slots. A fully equipped M9000 server contains 256
+SPARC processors, 4 TB of DRAM, and 128 PCIe I/O interfaces.
+
+8.3.5 COMA Multiprocessors
+NUMA and CC-NUMA machines have the disadvantage that references to remote memory are much slower than those to local memory. In CC-NUMA, this
+performance difference is hidden to some extent by the caching. Nevertheless, if
+
+SEC. 8.3
+
+SHARED-MEMORY MULTIPROCESSORS
+
+615
+
+the amount of remote data needed greatly exceeds the cache capacity, cache misses
+will occur constantly and performance will be poor.
+Thus we have a situation that UMA machines have excellent performance but
+are limited in size and are quite expensive. NC-NUMA machines scale to somewhat larger sizes but require manual or semi-automated placement of pages, often
+with mixed results. The problem is that it is hard to predict which pages will be
+needed where, and in any case, a page is often too large a unit to move around.
+CC-NUMA machines, such as the Sun Fire E25K, may experience poor performance if many CPUs need a lot of remote data. All in all, each of these designs
+has serious limitations.
+An alternative kind of multiprocessor tries to get around all these problems by
+using each CPU’s main memory as a cache. In this design, called COMA (Cache
+Only Memory Access), pages do not have fixed home machines, as they do in
+NUMA and CC-NUMA machines. In fact, pages are not significant at all.
+Instead, the physical address space is split into cache lines, which migrate
+around the system on demand. Blocks do not have home machines. Like nomads
+in some Third World countries, home is where you are right now. A memory that
+just attracts lines as needed is called an attraction memory. Using the main RAM
+as a big cache greatly increases the hit rate, hence the performance.
+Unfortunately, as usual, there is no such thing as a free lunch. COMA systems
+introduce two new problems:
+1. How are cache lines located?
+2. When a line is purged, what happens if it is the last copy?
+The first problem relates to the fact that after the MMU has translated a virtual address to a physical address, if the line is not in the true hardware cache, there is no
+easy way to tell if it is in main memory at all. The paging hardware does not help
+here at all because each page is made up of many individual cache lines that wander around independently. Furthermore, even if it is known that a line is not in
+main memory, where is it then? It is not possible to just ask the home machine, because there is no home machine.
+Some solutions to the location problem have been proposed. To see if a cache
+line is in main memory, new hardware could be added to keep track of the tag for
+each cached line. The MMU could then compare the tag for the line needed to the
+tags for all the cache lines in memory to look for a hit. This solution needs additional hardware.
+A somewhat different solution is to map entire pages in but not require that all
+the cache lines be present. In this solution, the hardware would need a bit map per
+page, giving one bit per cache line indicating the line’s presence or absence. In
+this design, called simple COMA if a cache line is present, it must be in the right
+position in its page, but if it is not present, any attempt to use it causes a trap to
+allow the software to go find it and bring it in.
+
+616
+
+PARALLEL COMPUTER ARCHITECTURES
+
+CHAP. 8
+
+This leads us to finding lines that are really remote. One solution is to give
+each page a home machine in terms of where its directory entry is, but not where
+the data are. Then a message can be sent to the home machine to at least locate the
+cache line. Other schemes involve organizing memory as a tree and searching upward until the line is found.
+The second problem in the list above relates to not purging the last copy. As in
+CC-NUMA, a cache line may be at multiple nodes at once. When a cache miss occurs, a line must be fetched, which usually means a line must be thrown out. What
+happens if the line chosen happens to be the last copy? In that case, it cannot be
+thrown out.
+One solution is to go back to the directory and check to see if there are other
+copies. If so, the line can be safely thrown out. Otherwise, it has to be migrated
+somewhere else. Another solution is to label one copy of each cache line as the
+master copy and never throw it out. This solution avoids the need to check with
+the directory. All in all, COMA offers promise to provide better performance than
+CC-NUMA, but few COMA machines have been built, so more experience is
+needed. The first two COMA machines built were the KSR-1 (Burkhardt et al.,
+1992) and the Data Diffusion Machine (Hagersten et al., 1992). More recent
+papers on COMA are Vu et al. (2008) and Zhang and Jesshope (2008).
+
+8.4 MESSAGE-PASSING MULTICOMPUTERS
+As we saw in Fig. 8-23, the two kinds of MIMD parallel processors are multiprocessors and multicomputers. In the previous section we studied multiprocessors. We saw that they appear to the operating system as having shared memory
+that can be accessed using ordinary LOAD and STORE instructions. This shared
+memory can be implemented in many ways as we have seen, including snooping
+buses, data crossbars, multistage switching networks, and various directory-based
+schemes. Nevertheless, programs written for a multiprocessor can just access any
+location in memory without knowing anything about the internal topology or implementation scheme. This illusion is what makes multiprocessors so attractive
+and why programmers like this programming model.
+On the other hand, multiprocessors also have their limitations, which is why
+multicomputers are important, too. First and foremost, multiprocessors do not
+scale to large sizes. We saw the enormous amount of hardware Sun had to use to
+get the E25K to scale to 72 CPUs. In contrast, we will study a multicomputer
+below that has 65,536 CPUs. It will be years before anyone builds a commercial
+65,536-node multiprocessor. By then million-node multicomputers will be in use.
+In addition, memory contention in a multiprocessor can severely affect performance. If 100 CPUs are all trying to read and write the same variables constantly, contention for the various memories, buses, and directories can cause an
+enormous performance hit.
+
+SEC. 8.4
+
+617
+
+MESSAGE-PASSING MULTICOMPUTERS
+
+As a consequence of these and other factors, there is a great deal of interest in

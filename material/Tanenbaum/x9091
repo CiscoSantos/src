@@ -1,0 +1,100 @@
+iadd3
+isub1
+isub2
+isub3
+iand1
+iand2
+iand3
+ior1
+ior2
+ior3
+dup1
+dup2
+pop1
+pop2
+pop3
+swap1
+swap2
+swap3
+swap4
+swap5
+swap6
+bipush1
+bipush2
+iload1
+iload2
+iload3
+istore1
+istore2
+istore3
+istore4
+istore5
+wide1
+wide iload1
+wide istore1
+ldc w1
+iinc1
+iinc2
+iinc3
+goto1
+goto2
+goto3
+goto4
+iflt1
+iflt2
+iflt3
+iflt4
+
+THE MICROARCHITECTURE LEVEL
+Operations
+goto (MBR)
+MAR = SP = SP − 1; rd
+H = TOS
+MDR = TOS = MDR+H; wr; goto (MBR1)
+MAR = SP = SP − 1; rd
+H = TOS
+MDR = TOS = MDR−H; wr; goto (MBR1)
+MAR = SP = SP − 1; rd
+H = TOS
+MDR = TOS = MDR AND H; wr; goto (MBR1)
+MAR = SP = SP − 1; rd
+H = TOS
+MDR = TOS = MDR OR H; wr; goto (MBR1)
+MAR = SP = SP + 1
+MDR = TOS; wr; goto (MBR1)
+MAR = SP = SP − 1; rd
+TOS = MDR; goto (MBR1)
+MAR = SP − 1; rd
+MAR = SP
+H = MDR; wr
+MDR = TOS
+MAR = SP − 1; wr
+TOS = H; goto (MBR1)
+SP = MAR = SP + 1
+MDR = TOS = MBR1; wr; goto (MBR1)
+MAR = LV + MBR1U; rd
+MAR = SP = SP + 1
+TOS = MDR; wr; goto (MBR1)
+MAR = LV + MBR1U
+MDR = TOS; wr
+MAR = SP = SP − 1; rd
+TOS = MDR; goto (MBR1)
+goto (MBR1 OR 0x100)
+MAR = LV + MBR2U; rd; goto iload2
+MAR = LV + MBR2U; goto istore2
+MAR = CPP + MBR2U; rd; goto iload2
+MAR = LV + MBR1U; rd
+H = MBR1
+MDR = MDR + H; wr; goto (MBR1)
+H = PC − 1
+PC = H + MBR2
+goto (MBR1)
+MAR = SP = SP − 1; rd
+OPC = TOS
+TOS = MDR
+N = OPC; if (N) goto T; else goto F
+
+CHAP. 4
+
+Comments
+Branch to next instruction

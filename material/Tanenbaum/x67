@@ -1,0 +1,100 @@
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+pixels, the video RAM would contain 1920 × 1080 values, one for each pixel. In
+fact, it might contain many such bit maps, to allow rapid switching from one
+screen image to another.
+On a garden-variety display, each pixel would be represented as a 3-byte RGB
+value, one each for the intensity of the red, green, and blue components of the
+pixel’s color (high-end displays use 10 or more bits per color). From the laws of
+physics, it is known that any color can be constructed from a linear superposition
+of red, green, and blue light.
+A video RAM with 1920 × 1080 pixels at 3 bytes/pixel requires over 6.2 MB
+to store the image and a fair amount of CPU time to do anything with it. For this
+reason, some computers compromise by using an 8-bit number to indicate the color
+desired. This number is then used as an index into a hardware table called the
+color palette that contains 256 entries, each holding a 24-bit RGB value. Such a
+design, called indexed color, reduces the video RAM memory requirements by
+2/3, but allows only 256 colors on the screen at once. Usually, each window on the
+screen has its own mapping, but with only one hardware color palette, often when
+multiple windows are present on the screen, only the current one has its colors rendered correctly. Color palettes with 216 entries are also used, but the gain here is
+only 1/3.
+Bit-mapped video displays require a lot of bandwidth. To display full-screen,
+full-color multimedia on a 1920 × 1080 display requires copying 6.2 MB of data to
+the video RAM for every frame. For full-motion video, a rate of at least 25
+frame/sec is needed, for a total data rate of 155 MB/sec. This load is more than the
+original PCI bus could handle (132 MB/sec) but PCIe can handle it with ease.
+
+2.4.3 Mice
+As time goes on, computers are being used by people with less expertise in
+how computers work. Computers of the ENIAC generation were used only by the
+people who built them. In the 1950s, computers were only used by highly skilled
+professional programmers. Now, computers are widely used by people who need
+to get some job done and do not know (or even want to know) much about how
+computers work or how they are programmed.
+In the old days, most computers had command line interfaces, to which users
+typed commands. Since people who are not computer specialists often perceived
+command line interfaces as user-unfriendly, if not downright hostile, many computer vendors developed point-and-click interfaces, such as the Macintosh and
+Windows. Using this model requires having a way to point at the screen. The
+most common way of allowing users to point at the screen is with a mouse.
+A mouse is a small plastic box that sits on the table next to the keyboard.
+When it is moved around on the table, a little pointer on the screen moves too, allowing users to point at screen items. The mouse has one, two, or three buttons on
+top, to allow users to select items from menus. Much blood has been spilled as a
+
+SEC. 2.4
+
+119
+
+INPUT/OUTPUT
+
+result of arguments about how many buttons a mouse ought to have. Naive users
+prefer one (it is hard to push the wrong button if there is only one), but sophisticated ones like the power of multiple buttons to do fancy things.
+Three kinds of mice have been produced: mechanical mice, optical mice, and
+optomechanical mice. The first mice had two rubber wheels protruding through
+the bottom, with their axles perpendicular to one another. When the mouse was
+moved parallel to its main axis, one wheel turned. When it is moved perpendicular
+to its main axis, the other one turned. Each wheel drove a variable resistor or
+potentiometer. By measuring changes in the resistance, it was possible to see how
+much each wheel had rotated and thus calculate how far the mouse had moved in
+each direction. Later, this design was been replaced by one in which a ball that
+protruded slightly from the bottom was used instead of wheels. It is shown in
+Fig. 2-34.
+Pointer controlled by mouse
+Window
+
+Menu
+
+Cut
+Paste
+Copy
+
+Mouse buttons
+Mouse
+
+Rubber ball
+
+Figure 2-34. A mouse being used to point to menu items.
+
+The second kind of mouse is the optical mouse. This kind has no wheels or
+ball. Instead, it has an LED (Light Emitting Diode) and a photodetector on the
+bottom. Early optical mice required a mouse pad with closely spaced lines on it to
+detect how many lines had been crossed and thus how far the mouse had moved.
+Modern optical mice contain an LED that illuminates the imperfections of the
+underlying surface along with a tiny video camera that records a small image (typically 18 × 18 pixels) up to 1000 times/sec. Consecutive images are compared to
+see how far the mouse has moved. Some optical mice use a laser instead of an
+LED for illumination. They are more accurate, but also more expensive.
+The third kind of mouse is optomechanical. Like the newer mechanical
+mouse, it has a rolling ball that turns two shafts aligned at 90 degrees to each other.
+
+120
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+The shafts are connected to encoders that have slits through which light can pass.
+As the mouse moves, the shafts rotate, and light pulses strike the detectors whenever a slit comes between an LED and its detector. The number of pulses detected
+is proportional to the amount of motion.
+Although mice can be set up in various ways, a common arrangement is to

@@ -1,0 +1,100 @@
+are not at all in the same performance category as magnetic-disk drives, despite
+their large capacity.
+In 1986, Philips struck again with the Green Book, adding graphics and the
+ability to interleave audio, video, and data in the same sector, a feature essential for
+multimedia CD-ROMs.
+The last piece of the CD-ROM puzzle is the file system. To make it possible to
+use the same CD-ROM on different computers, agreement was needed on CDROM file systems. To get this agreement, representatives of many computer companies met at Lake Tahoe in the High Sierras on the California-Nevada boundary
+and devised a file system that they called High Sierra. It later evolved into an International Standard (IS 9660). It has three levels. Level 1 uses file names of up to
+8 characters optionally followed by an extension of up to 3 characters (the MS-DOS
+file naming convention). File names may contain only uppercase letters, digits,
+and the underscore. Directories may be nested up to eight deep, but directory
+names may not contain extensions. Level 1 requires all files to be contiguous,
+which is not a problem on a medium written only once. Any CD-ROM conformant to IS 9660 level 1 can be read using MS-DOS, an Apple computer, a UNIX
+computer, or just about any other computer. CD-ROM publishers regard this property as a big plus.
+IS 9660 level 2 allows names up to 32 characters, and level 3 allows noncontiguous files. The Rock Ridge extensions (whimsically named after the town in the
+Mel Brooks film Blazing Saddles) allow very long names (for UNIX), UIDs, GIDs,
+and symbolic links, but CD-ROMs not conforming to level 1 will not be readable
+on old computers.
+
+2.3.8 CD-Recordables
+Initially, the equipment needed to produce a master CD-ROM (or audio CD,
+for that matter) was extremely expensive. But in the computer industry nothing
+stays expensive for long. By the mid 1990s, CD recorders no bigger than a CD
+player were a common peripheral available in most computer stores. These devices were still different from magnetic disks because once written, CD-ROMs
+could not be erased. Nevertheless, they quickly found a niche as a backup medium
+for large magnetic hard disks and also allowed individuals or startup companies to
+
+104
+
+COMPUTER SYSTEMS ORGANIZATION
+
+CHAP. 2
+
+manufacture their own small-run CD-ROMs (hundreds, not thousands) or make
+masters for delivery to high-volume commercial CD duplication plants. These
+drives are known as CD-Rs (CD-Recordables).
+Physically, CD-Rs start with 120-mm polycarbonate blanks that are like CDROMs, except that they contain a 0.6-mm-wide groove to guide the laser for writing. The groove has a sinusoidal excursion of 0.3 mm at a frequency of exactly
+22.05 kHz to provide continuous feedback so the rotation speed can be accurately
+monitored and adjusted if need be. The first CD-Rs looked like regular CD-ROMs,
+except that they were colored gold on top instead of silver. The gold color came
+from the use of real gold instead of aluminum for the reflective layer. Unlike silver
+CDs, which have physical depressions, on CD-Rs the differing reflectivity of pits
+and lands has to be simulated. This is done by adding a layer of dye between the
+polycarbonate and the reflective layer, as shown in Fig. 2-27. Two kinds of dye are
+used: cyanine, which is green, and pthalocyanine, which is a yellowish orange.
+Chemists can argue endlessly about which one is better. Eventually, an aluminum
+reflective layer replaced the gold one.
+Printed label
+Protective lacquer
+Reflective layer
+layer
+Dye
+
+Dark spot in the
+dye layer burned
+by laser when
+writing
+
+1.2 mm
+Polycarbonate
+Direction
+of motion
+
+Photodetector
+
+Substrate
+
+Lens
+Prism
+Infrared
+laser
+diode
+
+Figure 2-27. Cross section of a CD-R disk and laser (not to scale). A CD-ROM
+has a similar structure, except without the dye layer and with a pitted aluminum
+layer instead of a reflective layer.
+
+In its initial state, the dye layer is transparent and lets the laser light pass
+through and reflect off the reflective layer. To write, the CD-R laser is turned up to
+high power (8–16 mW). When the beam hits a spot of dye, it heats up, breaking a
+chemical bond. This change to the molecular structure creates a dark spot. When
+read back (at 0.5 mW), the photodetector sees a difference between the dark spots
+where the dye has been hit and transparent areas where it is intact. This difference
+
+SEC. 2.3
+
+SECONDARY MEMORY
+
+105
+
+is interpreted as the difference between pits and lands, even when read back on a
+regular CD-ROM reader or even on an audio CD player.
+No new kind of CD could hold up its head with pride without a colored book,
+so CD-R has the Orange Book, published in 1989. This document defines CD-R
+and also a new format, CD-ROM XA, which allows CD-Rs to be written incrementally, a few sectors today, a few tomorrow, and a few next month. A group of
+consecutive sectors written at once is called a CD-ROM track.
+One of the first uses of CD-R was for the Kodak PhotoCD. In this system the
+customer brings a roll of exposed film and his old PhotoCD to the photo processor
+and gets back the same PhotoCD with the new pictures added after the old ones.
+The new batch, which is created by scanning in the negatives, is written onto the

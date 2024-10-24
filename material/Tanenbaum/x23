@@ -1,0 +1,100 @@
+When the next generation appeared, people who were hoping for the Sexium
+(sex is Latin for six) were sorely disappointed. The name Pentium was now so
+
+42
+
+INTRODUCTION
+
+CHAP. 1
+
+well known that the marketing people wanted to keep it, and the new chip was called the Pentium Pro. Despite the small name change from its predecessor, this
+processor represented a major break with the past. Instead, of having two or more
+pipelines, the Pentium Pro had a very different internal organization and could execute up to five instructions at a time.
+Another innovation found in the Pentium Pro was a two-level cache memory.
+The processor chip itself had 8 kilobytes of fast memory to hold commonly used
+instructions and another 8 kilobytes of fast memory to hold commonly used data.
+In the same cavity within the Pentium Pro package (but not on the chip itself) was
+a second cache memory of 256 kilobytes.
+Although the Pentium Pro had a big cache, it lacked the MMX instructions
+(because Intel was unable to manufacture such a large chip with acceptable yields).
+When the technology improved enough to get both the MMX instructions and the
+cache on one chip, the combined product was released as the Pentium II. Next, yet
+more multimedia instructions, called SSE (Streaming SIMD Extensions), were
+added for enhanced 3D graphics (Raman et al., 2000). The new chip was dubbed
+the Pentium III, but internally it was essentially a Pentium II.
+The next Pentium, released in Nov. 2000, was based on a different internal architecture but had the same instruction set as the earlier Pentiums. To celebrate
+this event, Intel switched from Roman numerals to Arabic numbers and called it
+the Pentium 4. As usual, the Pentium 4 was faster than all its predecessors. The
+3.06-GHz version also introduced an intriguing new feature—hyperthreading.
+This feature allowed programs to split their work into two threads of control which
+the Pentium 4 could run in parallel, speeding up execution. In addition, another
+batch of SSE instructions was added to speed up audio and video processing even
+more.
+In 2006, Intel changed the brand name from Pentium to Core and released a
+dual core chip, the Core 2 duo. When Intel decided it wanted a cheaper single-core version of the chip, it just sold Core 2 duos with one core disabled because wasting a little silicon on each chip manufacturered was ultimately cheaper
+than incurring the enormous expense of designing and testing a new chip from
+scratch. The Core series has continued to evolve, with the i3, i5, and i7 being popular variants for low-, medium-, and high-performance computers. No doubt more
+variants will follow. A photo of the i7 is presented in Fig. 1-12. There are actually
+eight cores on it, but except in the Xeon version, only six are enabled. This approach means that a chip with one or two defective cores can still be sold by disabling the defective one(s). Each core has its own level 1 and level 2 caches, but
+there is also a shared level 3 (L3) cache used by all the cores. We will discuss
+caches in detail later in this book.
+In addition to the mainline desktop CPUs discussed so far, Intel has manufactured variants of some of the Pentium chips for special markets. In early 1998,
+Intel introduced a new product line called the Celeron, which was basically a lowprice, low-performance version of the Pentium 2 intended for low-end PCs. Since
+
+SEC. 1.4
+
+EXAMPLE COMPUTER FAMILIES
+
+43
+
+Figure 1-12. The Intel Core i7-3960X die. The die is 21 by 21 mm and has 2.27
+billion transistors. © 2011 Intel Corporation. Used by permission.
+
+the Celeron has the same architecture as the Pentium 2, we will not discuss it further in this book. In June 1998, Intel introduced a special version of the Pentium 2
+for the upper end of the market. This processor, called the Xeon, had a larger
+cache, a faster bus, and better multiprocessor support but was otherwise a normal
+Pentium 2, so we will not discuss it separately either. The Pentium III also had a
+Xeon version as do more recent chips. On more recent chips, one feature of the
+Xeon is more cores.
+1n 2003, Intel introduced the Pentium M (as in Mobile), a chip designed for
+notebook computers. This chip was part of the Centrino architecture, whose goals
+were lower power consumption for longer battery lifetime; smaller, lighter, computers; and built-in wireless networking capability using the IEEE 802.11 (WiFi)
+standard. The Pentium M was very low power and much smaller than the Pentium
+4, two characteristics that would soon allow it (and its successors) to subsume the
+Pentium 4 microarchitecture in future Intel products.
+All the Intel chips are backward compatible with their predecessors as far back
+as the 8086. In other words, a Pentium 4 or Core can run old 8086 programs without modification. This compatibility has always been a design requirement for
+Intel, to allow users to maintain their existing investment in software. Of course,
+
+44
+
+INTRODUCTION
+
+CHAP. 1
+
+the Core is four orders of magnitude more complex than the 8086, so it can do
+quite a few things that the 8086 could not do. These piecemeal extensions have resulted in an architecture that is not as elegant as it might have been had someone
+given the Pentium 4 architects 42 million transistors and instructions to start all
+over again.
+It is interesting to note that although Moore’s law has long been associated
+with the number of bits in a memory, it applies equally well to CPU chips. By
+plotting the transistor counts given in Fig. 1-8 against the date of introduction of
+each chip on a semilog scale, we see that Moore’s law holds here too. This graph
+is given in Fig. 1-13.
+10G
+1G
+Pentium III
+
+100M
+Moore’s law
+
+1M
+Transistors
+
+Core i7
+
+Pentium II
+Pentium
+
+10M
+80286
